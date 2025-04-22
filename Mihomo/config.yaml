@@ -1,1 +1,401 @@
+# 订阅名和订阅链接、图标
+Sub1: &Sub1 "订阅1"
+Sub1Url1: &Sub1Url1 ""
+Sub1Icon: &Sub1Icon ""
+Sub2: &Sub2 "订阅2"
+Sub1Url2: &Sub1Url2 ""
+Sub2Icon: &Sub2Icon ""
 
+# 连通性检测url
+ProxyTestUrl: &ProxyTestUrl "https://www.apple.com/library/test/success.html"
+DirectTestUrl: &DirectTestUrl "https://wifi.vivo.com.cn/generate_204"
+
+# 节点筛选正则
+FilterHK: &FilterHK '(?i)港|香港|🇭🇰|HK|Hong|HKG'
+FilterTW: &FilterTW '(?i)台|台湾|🇼🇸|🇹🇼|TW|tai|TPE|TSA|KHH'
+FilterSG: &FilterSG '(?i)坡|新加坡|🇸🇬|SG|Sing|SIN|XSP'
+FilterJP: &FilterJP '(?i)日|日本|🇯🇵|JP|Japan|NRT|HND|KIX|CTS|FUK'
+FilterKR: &FilterKR '(?i)韩|韩国|🇰🇷|韓|韓國|首尔|南朝鲜|KR|KOR|Korea|South'
+FilterUS: &FilterUS '(?i)美|美国|🇺🇸|US|USA|JFK|LAX|ORD|ATL|DFW|SFO|MIA|SEA|IAD'
+FilterEU: &FilterEU '(?i)(🇧🇪|🇨🇿|🇩🇰|🇫🇮|🇫🇷|🇩🇪|🇮🇪|🇮🇹|🇱🇹|🇱🇺|🇳🇱|🇵🇱|🇸🇪|🇬🇧|CDG|FRA|AMS|MAD|BCN|FCO|MUC|BRU)'
+FilterOther: &FilterOther '^(?!.*(香港|台湾|新加坡|日本|韩国|美国|🇭🇰|🇼🇸|🇹🇼|🇸🇬|🇯🇵|🇰🇷|🇺🇸|🇬🇧|🇦🇹|🇧🇪|🇨🇿|🇩🇰|🇫🇮|🇫🇷|🇩🇪|🇮🇪|🇮🇹|🇱🇹|🇱🇺|🇳🇱|🇵🇱|🇸🇪|HK|TW|SG|JP|KR|US|GB|CDG|FRA|AMS|MAD|BCN|FCO|MUC|BRU|HKG|TPE|TSA|KHH|SIN|XSP|NRT|HND|KIX|CTS|FUK|JFK|LAX|ORD|ATL|DFW|SFO|MIA|SEA|IAD|LHR|LGW))'
+ExcludeFilter: &ExcludeFilter '(?i)(佣金|套餐|官网|官方|售后|免翻|过期|剩余|到期|流量|更新|点外|重置|免流|优惠|超实惠|址|AFF|Direct|Days|Date)'
+# 低倍率
+FilterLowMag: &FilterLowMag '0\.\d+'
+# 高倍率
+FilterHighMag: &FilterHighMag '(?!0\.)[1-9]\d*(?:\.\d+)'
+
+# 订阅更新与测试
+Proxyer: &Proxyer
+    type: http
+    interval: 43200
+    health-check:
+      enable: true
+      url: *ProxyTestUrl
+      interval: 60
+      timeout: 2000
+    exclude-filter: *ExcludeFilter
+    
+# 手动选择策略组
+Selector: &Selector
+  type: select
+  interval: 300
+  include-all-providers: true
+  hidden: true
+
+# 延迟优选策略组
+auto: &auto
+   type: url-test 
+   url: *ProxyTestUrl
+   tolerance : 50
+   interval: 300
+   timeout : 2000
+   max-failed-times: 3
+   lazy: true
+   include-all-providers: true
+   hidden: true     
+
+# 负载均衡策略组策略可选round-robin, consistent-hashing
+loads: &loads
+   type: load-balance
+   url: *ProxyTestUrl
+   interval: 300
+   timeout: 2000
+   max-failed-times: 3
+   strategy: sticky-sessions
+   lazy: true
+   include-all-providers: true
+   hidden: true
+
+# 故障转移策略组
+fallb: &fallb
+  type: fallback
+  url: *ProxyTestUrl
+  interval: 300
+  timeout: 2000
+  max-failed-times: 3
+  lazy: true
+  include-all-providers: true
+  hidden: true
+
+# 规则集类型
+rule-anchor:
+  # 规则类型:domain
+  dom: &dom { type: http, behavior: domain, interval: 86400 }
+  # 规则类型:classical
+  cla: &cla { type: http, behavior: classical, interval: 86400 }
+  # 规则类型:ipcidr
+  ipc: &ipc { type: http, behavior: ipcidr, interval: 86400 }
+
+# 策略组引用
+Proxy_groups: &Proxy_groups
+   type: select
+   proxies: [ 直连, 禁止, 免流, 自选, 香港, 台湾, 狮城, 日本, 韩国, 美国, 欧洲, 其他, 低倍, 高倍 ]
+# 百度直连免流
+Free: &Free
+  type: fallback
+  interval: 300
+  url: *DirectTestUrl
+  proxies: [ 南京电信, 南京电信1, 广州电信, 北京电信, 北京电信1, 北京电信2, 广州联通, 广州联通1, 苏州联通, 南京联通, 保定联通, 保定联通1, 广州移动, 南京移动, 动态百度, 钉钉_广州, 三爱_广州, 天翼_广州, 直连 ]
+
+baidu: &baidu
+  type: http
+  port: 443
+  skip-cert-verify: true
+  udp: true
+  username: ''
+  password: ''
+  headers:
+    Host: 153.3.236.22:443
+    X-T5-Auth: "683556433"
+    Connection: Keep-Alive
+    User-Agent: okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)
+dingding: &dingding
+  type: http
+  port: 443
+  skip-cert-verify: true
+  udp: true
+  username: ''
+  password: ''
+  headers:
+    Host: 153.3.236.22:443
+    X-T5-Auth: "683556433"
+    Connection: Keep-Alive
+    With-At: gw.alicdn.com
+sanai: &sanai
+  type: http
+  port: 443
+  udp: true
+  username: ''
+  password: ''
+  headers:
+    Host: 153.3.236.22:443
+    X-T5-Auth: "683556433"
+    Connection: Keep-Alive
+    With-At: ltetp.tv189.com
+yunpan: &yunpan
+  type: http
+  port: 443
+  udp: true
+  username: ''
+  password: ''
+  headers:
+    X-T5-Auth: "683556433"
+    Host: 153.3.236.22:443
+    Connection: Keep-Alive
+    With-At: download.cloud.189.cn
+#############锚点结束###########
+
+
+# 出站代理
+proxies:
+  - { name: 直连, type: direct }
+  - { name: 禁止, type: reject }
+  - { name: DNS劫持, type: dns }
+  - { name: 动态百度, server: cloudnproxy.baidu.com, <<: *baidu }
+  - { name: 北京电信, server: 220.181.33.174, <<: *baidu }
+  - { name: 北京电信1, server: 220.181.7.1, <<: *baidu }
+  - { name: 北京电信2, server: 220.181.111.189, <<: *baidu }
+  - { name: 南京电信, server: 180.101.50.249, <<: *baidu }
+  - { name: 南京电信1, server: 180.101.50.208, <<: *baidu }
+  - { name: 广州电信, server: 14.215.182.75, <<: *baidu }
+  - { name: 苏州联通, server: 157.0.146.158, <<: *baidu }
+  - { name: 保定联通, server: 110.242.70.68, <<: *baidu }
+  - { name: 保定联通1, server: 110.242.70.69, <<: *baidu }
+  - { name: 广州联通, server: 163.177.17.6, <<: *baidu }
+  - { name: 广州联通1, server: 163.177.17.189, <<: *baidu }
+  - { name: 南京联通, server: 153.3.237.117, <<: *baidu }
+  - { name: 广州移动, server: 183.240.98.84, <<: *baidu }
+  - { name: 南京移动, server: 36.155.169.188, <<: *baidu }
+  - { name: 钉钉_广州, server: 163.177.17.189, <<: *dingding }
+  - { name: 三爱_广州, server: 163.177.17.189, <<: *sanai }
+  - { name: 天翼_广州, server: 163.177.17.189, <<: *yunpan }
+
+# 外部订阅
+proxy-providers:              
+  *Sub1:
+    <<: *Proxyer
+    path: ./proxies/Sub1.yaml
+    url: *Sub1Url
+    override:
+      udp: true
+      additional-prefix: *Sub1
+
+  *Sub2:
+    <<: *Proxyer
+    path: ./proxies/Sub2.yaml
+    url: *Sub2Url
+    override:
+      udp: true
+      additional-prefix: *Sub2
+
+# 策略组
+proxy-groups:
+  - { name: Emby, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png", <<: *Proxy_groups }
+  - { name: TikTok, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok.png", <<: *Proxy_groups }
+  - { name: Netflix, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png", <<: *Proxy_groups }
+  - { name: YouTube, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png", <<: *Proxy_groups }
+  - { name: Media, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ForeignMedia.png", <<: *Proxy_groups }
+  - { name: Ai, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/ChatGPT-green.png", <<: *Proxy_groups }
+  - { name: Telegram, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png", <<: *Proxy_groups }
+  - { name: Facebook, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Facebook.png", <<: *Proxy_groups }
+  - { name: Twitter, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Twitter.png", <<: *Proxy_groups }
+  - { name: GoogleFCM, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/google.png", <<: *Proxy_groups }
+  - { name: Google, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/google(1).png", <<: *Proxy_groups }
+  - { name: Cloudflare, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png", <<: *Proxy_groups }
+  - { name: Github, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png", <<: *Proxy_groups }
+  - { name: Microsoft, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png", <<: *Proxy_groups }
+  - { name: Social, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Proxy.png", <<: *Proxy_groups }
+  - { name: Global, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png", <<: *Proxy_groups }
+  - { name: DomesticMedia, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/direct.png", <<: *Proxy_groups }
+  - { name: Domestic, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png", <<: *Proxy_groups }
+  - { name: Final, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png", <<: *Proxy_groups }
+  - { name: 免流, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Direct.png", <<: *Free }
+  - { name: 自选, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/MY.png", <<: *Selector }
+  - { name: 香港, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png", <<: *fallb, filter: *FilterHK }  
+  - { name: 台湾, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Taiwan.png", <<: *fallb, filter: *FilterTW } 
+  - { name: 狮城, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png", <<: *fallb, filter: *FilterSG } 
+  - { name: 日本, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png", <<: *fallb, filter: *FilterJP }
+  - { name: 韩国, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Korea.png", <<: *fallb, filter: *FilterKR }  
+  - { name: 美国, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png", <<: *fallb, filter: *FilterUS }
+  - { name: 欧洲, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/European_Union.png", <<: *fallb, filter: *FilterEU }
+  - { name: 其他, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/quanqiu(3).png", <<: *fallb, filter: *FilterOther}
+  - { name: 低倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/liuliang(2).png", <<:  *fallb, filter: *FilterLowMag }
+  - { name: 高倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/liuliang(3).png", <<: *fallb, filter: *FilterHighMag }
+# 机场分组
+  - name: *Sub1
+    <<: *Selector
+    filter: *Sub1
+    icon: *Sub1Icon
+  - name: *Sub2
+    <<: *Selector
+    filter: *Sub2
+    icon: *Sub2Icon
+
+
+# 规则集
+rule-providers:
+  AWAvenue: { <<: *dom, format: yaml, url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Clash.yaml", path: ./rules/AWAvenue.yaml }
+  
+# 路由规则
+rules:
+  - DST-PORT,53,DNS劫持
+  - RULE-SET,AWAvenue,REJECT-DROP
+
+  - GEOSITE,category-ads-all,REJECT-DROP
+  - GEOSITE,category-httpdns-cn,REJECT-DROP
+  - GEOSITE,private,DIRECT
+  - GEOSITE,youtube,YouTube
+  - GEOSITE,netflix,Netflix
+  - GEOSITE,tiktok,TikTok
+  - GEOSITE,category-entertainment,Media
+  - GEOSITE,telegram,Telegram
+  - GEOSITE,facebook,Facebook
+  - GEOSITE,twitter,Twitter
+  - GEOSITE,googlefcm,GoogleFCM
+  - GEOSITE,google,Google
+  - GEOSITE,cloudflare,Cloudflare
+  - GEOSITE,category-ai-chat-!cn,Ai
+  - GEOSITE,github,Github
+  - GEOSITE,microsoft,Microsoft
+  - GEOSITE,category-social-media-!cn,Social
+  - GEOSITE,geolocation-!cn,Global
+  - GEOSITE,bytedance,DomesticMedia
+  - GEOSITE,category-entertainment-cn,DomesticMedia
+  - GEOSITE,cn,Domestic 
+   
+  - GEOIP,private,DIRECT,no-resolve
+  - GEOIP,netflix,Netflix
+  - GEOIP,telegram,Telegram,no-resolve
+  - GEOIP,facebook,Facebook
+  - GEOIP,twitter,Twitter
+  - GEOIP,google,Google,no-resolve
+  - GEOIP,cloudflare,Cloudflare,no-resolve
+  - GEOIP,cn,Domestic,no-resolve
+
+  - MATCH,Final
+
+
+#####################
+#通用配置
+mixed-port: 7890
+redir-port: 7891
+tproxy-port: 1536
+mode: Rule
+log-level: silent
+ipv6: false
+udp: true
+disable-keep-alive: false
+keep-alive-interval: 15
+keep-alive-idle: 120
+allow-lan: true
+
+geodata-mode: true
+geo-auto-update: true
+geo-update-interval: 168
+geox-url:
+  geoip: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat"
+  geosite: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
+  mmdb: "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/Country.mmdb"
+  asn: "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/Country-asn.mmdb"
+  
+unified-delay: true
+tcp-concurrent: true
+find-process-mode: strict
+global-client-fingerprint: chrome
+
+external-controller: 0.0.0.0:9090
+external-ui: ../panel/Zash/
+external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip"
+secret: ""
+
+# 策略组选择和fake-ip缓存
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+# 域名嗅探
+sniffer:
+  enable: true
+  force-dns-mapping: true
+  parse-pure-ip: true
+  override-destination: false
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 5228-5230, 8443]
+    QUIC:
+      ports: [ ]
+  force-domain:
+    - "+.v2ex.com"
+  skip-domain:
+    - '+.local'
+    - '+.lan'
+    - 'localhost'
+    - "Mijia Cloud"
+    - "miwifi.com"
+
+# Tunnel配置
+tun:
+  enable: false
+  device: Mihomo
+  stack: mixed
+  dns-hijack:
+    - any:53
+    - tcp://any:53
+  udp-timeout: 300
+  auto-route: true
+  strict-route: true
+  auto-redirect: false
+  auto-detect-interface: true
+  route-address:
+    - 0.0.0.0/1
+    - 128.0.0.0/1
+    - "::/1"
+    - "8000::/1"
+  route-exclude-address:
+    - 10.0.0.0/8
+    - 100.64.0.0/10
+    - 127.0.0.0/8
+    - 169.254.0.0/16
+    - 172.16.0.0/12
+    - 192.168.0.0/16
+    - 198.18.0.0/15
+    - 224.0.0.0/4
+    - 240.0.0.0/4
+    - 255.255.255.255/32
+    - fc00::/7
+    - fe80::/10
+    - ff00::/8
+    - fdfe:dcba:9876::1/126
+    - "::1/128"
+    - "::/128"
+
+# DNS配置
+dns:
+  enable: true
+  listen: :1053
+  ipv6: false
+  prefer-h3: true
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.0/15
+  fake-ip-filter:
+    - 'GEOSITE:private,category-ntp'
+  default-nameserver:
+    - 223.5.5.5
+    - 223.6.6.6
+#    - 2400:3200::1
+#    - 2400:3200:baba::1
+  proxy-server-nameserver:
+    - 'quic://dns.alidns.com'
+  direct-nameserver:
+    - 'quic://dns.alidns.com'
+  nameserver-policy:
+    'GEOSITE:category-ads-all,category-httpdns-cn': rcode://success
+    'GEOSITE:cn':
+      - 'quic://dns.alidns.com'
+  nameserver:
+    - 'https://dns.google/dns-query#Google&h3=true'
+    - 'https://cloudflare-dns.com/dns-query#Cloudflare&h3=true'
