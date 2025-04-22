@@ -151,7 +151,7 @@ yunpan: &yunpan
 proxies:
   - { name: 直连, type: direct }
   - { name: 禁止, type: reject }
-  - { name: DNS劫持, type: dns }
+  - { name: DNS_Hijack, type: dns }
   - { name: 动态百度, server: cloudnproxy.baidu.com, <<: *baidu }
   - { name: 北京电信, server: 220.181.33.174, <<: *baidu }
   - { name: 北京电信1, server: 220.181.7.1, <<: *baidu }
@@ -191,6 +191,7 @@ proxy-providers:
 
 # 策略组
 proxy-groups:
+  - { name: ADBlock, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png", <<: *Proxy_groups }
   - { name: Emby, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png", <<: *Proxy_groups }
   - { name: TikTok, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok.png", <<: *Proxy_groups }
   - { name: Netflix, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png", <<: *Proxy_groups }
@@ -239,11 +240,11 @@ rule-providers:
   
 # 路由规则
 rules:
-  - DST-PORT,53,DNS劫持
-  - RULE-SET,AWAvenue,REJECT-DROP
+  - DST-PORT,53,DNS_Hijack
+  - RULE-SET,AWAvenue,ADBlock
 
-  - GEOSITE,category-ads-all,REJECT-DROP
-  - GEOSITE,category-httpdns-cn,REJECT-DROP
+  - GEOSITE,category-ads-all,ADBlock
+  - GEOSITE,category-httpdns-cn,ADBlock
   - GEOSITE,private,DIRECT
   - GEOSITE,youtube,YouTube
   - GEOSITE,netflix,Netflix
