@@ -340,7 +340,7 @@ sniffer:
 
 # Tunnel配置
 tun:
-  enable: false
+  enable: true
   device: Mihomo
   stack: mixed
   dns-hijack:
