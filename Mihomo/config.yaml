@@ -1,9 +1,9 @@
 # 订阅名和订阅链接、图标
 Sub1: &Sub1 "订阅1"
-Sub1Url1: &Sub1Url1 ""
+Sub1Url: &Sub1Url ""
 Sub1Icon: &Sub1Icon ""
 Sub2: &Sub2 "订阅2"
-Sub1Url2: &Sub1Url2 ""
+Sub2Url: &Sub2Url ""
 Sub2Icon: &Sub2Icon ""
 
 # 连通性检测url
