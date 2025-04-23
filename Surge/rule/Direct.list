@@ -1,6 +1,6 @@
 DOMAIN-KEYWORD,kahaoquan
 DOMAIN-KEYWORD,xiaoyakankan
-DOMAIN-KETWORD,linkeless
+DOMAIN-KEYWORD,linkeless
 OR,((DOMAIN-SUFFIX,gwm.com.cn),(DOMAIN-SUFFIX,gwm.cn),(DOMAIN-KEYWORD,gwm-mn),(DOMAIN-KEYWORD,gwmapp))
 # GoogleFCM
 DOMAIN,alt1-mtalk.google.com
