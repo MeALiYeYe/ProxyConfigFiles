@@ -15,9 +15,6 @@ rules:
 - domain_regex:
     match: ^ad\..*|^ads\..*
     policy: REJECT
-- domain_keyword:
-    match: kahaoquan
-    policy: DIRECT
 - domain_regex:
     match: hk[a-z]+(\.[a-z]+)*\.(weixin|wechat)(\.qq)?\.com$
     policy: 香港
@@ -26,15 +23,6 @@ rules:
     policy: 狮城
 - domain_regex:
     match: ^(?i).*?(imap|smtp).*?\.(qq\.com|163\.com|foxmail\.com|189\.cn|126\.com|sina\.(?:com\.cn|cn)|aliyun\.com|yeah\.net|139\.com|wo\.cn|21cn\.com)$
-    policy: DIRECT
-- domain_suffix:
-    match: metacubex.one
-    policy: Foreign
-- domain_suffix:
-    match: sntp.uk
-    policy: Foreign
-- domain_keyword:
-    match: linkeless
     policy: DIRECT
 - or:
     match:
@@ -66,4 +54,4 @@ rules:
         match: cauenvao
     - domain_keyword:
         match: ouonet
-    policy: GetSub
+    policy: Foreign
