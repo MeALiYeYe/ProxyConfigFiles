@@ -1,6 +1,7 @@
 name=LocalRule
-desc=自用本地分流
+description=自用本地分流
 category=分流
+
 rules:
 - and:
     match:
