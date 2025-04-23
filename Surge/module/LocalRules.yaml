@@ -1,6 +1,5 @@
-name=LocalRule
-description=自用本地分流
-category=分流
+name: LocalRule
+description: 自用本地分流
 
 rules:
 - and:
