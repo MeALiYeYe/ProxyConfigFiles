@@ -1,0 +1,35 @@
+#!name=LocalRules
+#!desc=自用本地分流
+
+[Rule]
+# 防止流量回环
+IP-CIDR,0.0.0.0/32,REJECT,no-resolve
+IP-CIDR6,::/128,REJECT,no-resolve
+# 确保migomo fake-ip地址不被用于伪造的该地址段的外部网络
+IP-CIDR,198.18.0.0/15,REJECT,no-resolve
+AND,((DOMAIN-KEYWORD,gvt),(DOMAIN-KEYWORD,beacons)),REJECT
+DOMAIN,dumall.baidu.com,REJECT
+DOMAIN,haokan.baidu.com,REJECT
+DOMAIN,yingxiao.baidu.com,REJECT
+DOMAIN,e.baidu.com,REJECT
+DOMAIN,jiankang.baidu.com,REJECT
+DOMAIN,news.baidu.com,REJECT
+DOMAIN,xueshu.baidu.com,REJECT
+DOMAIN,baijiahao.baidu.com,REJECT
+DOMAIN,anquan.baidu.com,REJECT
+DOMAIN,wan.baidu.com,REJECT
+DOMAIN-SUFFIX,duxiaoman.com,REJECT
+DOMAIN-SUFFIX,dxmpay.com,REJECT
+DOMAIN-SUFFIX,2345.com,REJECT
+DOMAIN-SUFFIX,hao123.com,REJECT
+DOMAIN-SUFFIX,360.cn,REJECT
+DOMAIN-SUFFIX,so.com,REJECT
+DOMAIN-SUFFIX,qifu.tech,REJECT
+DOMAIN-SUFFIX,xjietiao.com,REJECT
+DOMAIN-SUFFIX,360jie.com.cn,REJECT
+DOMAIN-SUFFIX,360totalsecurity.com,REJECT
+# 防止电报转圈
+IP-CIDR,95.161.76.100/31,no-resolve,REJECT
+
+DOMAIN-KEYWORD,kahaoquan,DIRECT
+DOMAIN-KEYWORD,xiaoyakankan,DIRECT
