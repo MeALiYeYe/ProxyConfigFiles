@@ -1,5 +1,5 @@
-#!name=LocalRules
-#!desc=自用本地分流
+#!name = 本地分流规则
+#!desc = 本地分流
 
 [Rule]
 DOMAIN-KEYWORD,kahaoquan,DIRECT
