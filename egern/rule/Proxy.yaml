@@ -1,0 +1,6 @@
+domain_set:
+  - board.zash.run.place
+domain_suffix_set:
+  - sntp.dev
+  - sntp.uk
+  - metacubex.one
