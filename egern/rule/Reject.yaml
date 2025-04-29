@@ -21,6 +21,8 @@ domain_set:
   - baijiahao.baidu.com
   - anquan.baidu.com
   - wan.baidu.com
+domain_regex_set:
+  - ^ad\..*|^ads\..*
 ip_cidr_set:
   - 0.0.0.0/32
   - 95.161.76.100/31
