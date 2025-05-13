@@ -1,3 +1,6 @@
+DOMAIN,ifconfig.me
+DOMAIN-SUFFIX,*.cn
+
 DOMAIN-KEYWORD,kahaoquan
 DOMAIN-KEYWORD,xiaoyakankan
 DOMAIN-KEYWORD,linkeless
@@ -41,3 +44,9 @@ IP-CIDR,74.125.206.188/32,no-resolve
 IP-CIDR,74.125.23.188/32,no-resolve
 IP-CIDR,74.125.24.188/32,no-resolve
 IP-CIDR,74.125.28.188/32,no-resolve
+IP-CIDR,192.168.0.0/16,no-resolve
+IP-CIDR,10.0.0.0/8,no-resolve
+IP-CIDR,127.0.0.0/8,no-resolve
+IP-CIDR,172.16.0.0/12,no-resolve
+IP-CIDR,192.128.0.0/16,no-resolve
+IP-CIDR,224.0.0.0/24,no-resolve
