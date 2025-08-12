@@ -1,6 +1,6 @@
 DOMAIN,ifconfig.me
 DOMAIN-SUFFIX,nsloon.com
-DOMAIN-SUFFIX,*.cn
+# DOMAIN-SUFFIX,*.cn
 DOMAIN-KEYWORD,kahaoquan
 # DOMAIN-KEYWORD,xiaoyakankan
 # DOMAIN-KEYWORD,linkeless
