@@ -7,7 +7,7 @@ DOMAIN-KEYWORD,kahaoquan
 # gwmapp
 DOMAIN-SUFFIX,gwm.com.cn
 DOMAIN-SUFFIX,gwm.cn
-DOMAIN-KEYOWRD,gwmapp
+DOMAIN-REGEX,gwmapp-[a-z]\.com
 DOMAIN-KEYWORD,gwm-mn
 # GoogleFCM
 DOMAIN,alt1-mtalk.google.com
