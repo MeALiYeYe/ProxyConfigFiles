@@ -4,10 +4,11 @@ DOMAIN-SUFFIX,*.cn
 DOMAIN-KEYWORD,kahaoquan
 # DOMAIN-KEYWORD,xiaoyakankan
 # DOMAIN-KEYWORD,linkeless
+# gwmapp
 DOMAIN-SUFFIX,gwm.com.cn
 DOMAIN-SUFFIX,gwm.cn
+DOMAIN-SUFFFIX,gwmapp-h.com
 DOMAIN-KEYWORD,gwm-mn
-DOMAIN-KEYWORD,gwmapp
 # GoogleFCM
 DOMAIN,alt1-mtalk.google.com
 DOMAIN,alt2-mtalk.google.com
