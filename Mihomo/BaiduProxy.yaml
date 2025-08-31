@@ -1,6 +1,6 @@
 proxies:
   - name: 动态百度:
-    输入: http
+    type: http
     server: cloudnproxy.baidu.com
     port: 443
     skip-cert-verify: true
@@ -13,7 +13,7 @@ proxies:
       Connection: Keep-Alive
       User-Agent: okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)
   - name: 北京电信:
-    输入: http
+    type: http
     server: 220.181.33.174
     port: 443
     skip-cert-verify: true
@@ -26,7 +26,7 @@ proxies:
       Connection: Keep-Alive
       User-Agent: okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)
   - name: 北京电信1:
-    输入: http
+    type: http
     server: 220.181.7.1
     port: 443
     skip-cert-verify: true
