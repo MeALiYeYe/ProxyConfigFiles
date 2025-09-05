@@ -40,6 +40,19 @@ proxies:
       User-Agent: okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)
   - name: 北京电信2
     type: http
+    server: 220.181.33.174
+    port: 443
+    skip-cert-verify: true
+    udp: true
+    username: ''
+    password: ''
+    headers:
+      Host: 153.3.236.22:443
+      X-T5-Auth: "683556433"
+      Connection: Keep-Alive
+      User-Agent: okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)
+  - name: 北京电信3
+    type: http
     server: 220.181.111.189
     port: 443
     skip-cert-verify: true
