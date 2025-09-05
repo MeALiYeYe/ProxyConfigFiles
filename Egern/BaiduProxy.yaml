@@ -1,0 +1,144 @@
+proxies:
+- http:
+    name: 广州电信
+    server: 14.215.182.75
+    port: 443
+    username: ''
+    password: ''
+    headers:
+      Host: 153.3.236.22:443
+      X-T5-Auth: '683556433'
+      Connection: Keep-Alive'
+      User-Agent: okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)
+- http:
+    name: 广州联通
+    server: 163.177.17.6
+    port: 443
+    username: ''
+    password: ''
+    headers:
+      Host: 153.3.236.22:443
+      X-T5-Auth: '683556433'
+      Connection: Keep-Alive
+      User-Agent: okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)
+- http:
+    name: 广州联通x
+    server: 163.177.17.189
+    port: 443
+    username: ''
+    password: ''
+    headers:
+      Host: 153.3.236.22:443
+      X-T5-Auth: '683556433'
+      Connection: Keep-Alive
+      User-Agent: okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)
+- http:
+    name: 广州移动
+    server: 183.240.98.84
+    port: 443
+    username: ''
+    password: ''
+    headers:
+      Host: 153.3.236.22:443
+      X-T5-Auth: '683556433'
+      Connection: Keep-Alive'
+      User-Agent: okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)
+- http:
+    name: 南京电信
+    server: 180.101.50.249
+    port: 443
+    username: ''
+    password: ''
+    headers:
+      Host: 153.3.236.22:443
+      X-T5-Auth: '683556433'
+      Connection: Keep-Alive
+      User-Agent: okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)
+- http:
+    name: 南京电信x
+    server: 180.101.50.208
+    port: 443
+    username: ''
+    password: ''
+    headers:
+      Host: 153.3.236.22:443
+      X-T5-Auth: '683556433'
+      Connection: Keep-Alive
+      User-Agent: okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)
+- http:
+    name: 南京联通
+    server: 153.3.237.117
+    port: 443
+    username: ''
+    password: ''
+    headers:
+      Host: 153.3.236.22:443
+      X-T5-Auth: '683556433'
+      Connection: Keep-Alive
+      User-Agent: okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)
+- http:
+    name: 南京移动
+    server: 36.155.169.188
+    port: 443
+    username: ''
+    password: ''
+    headers:
+      Host: 153.3.236.22:443
+      X-T5-Auth: '683556433'
+      Connection: Keep-Alive
+      User-Agent: okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)
+- http:
+    name: 苏州联通
+    server: 157.0.146.158
+    port: 443
+    username: ''
+    password: ''
+    headers:
+      Host: 153.3.236.22:443
+      X-T5-Auth: '683556433'
+      Connection: Keep-Alive
+      User-Agent: okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)
+- http:
+    name: 北京电信
+    server: 220.181.33.174
+    port: 443
+    username: ''
+    password: ''
+    headers:
+      Host: 153.3.236.22:443
+      X-T5-Auth: '683556433'
+      Connection: Keep-Alive
+      User-Agent: okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)
+- http:
+    name: 北京电信x
+    server: 220.181.7.1
+    port: 443
+    username: ''
+    password: ''
+    headers:
+      Host: 153.3.236.22:443
+      X-T5-Auth: '683556433'
+      Connection: Keep-Alive
+      User-Agent: okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)
+- http:
+    name: 北京电信y
+    server: 220.181.111.189
+    port: 443
+    username: ''
+    password: ''
+    headers:
+      Host: 153.3.236.22:443
+      X-T5-Auth: '683556433'
+      Connection: Keep-Alive
+      User-Agent: okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)
+- http:
+    name: 动态百度
+    server: cloudnproxy.baidu.com
+    port: 443
+    username: ''
+    password: ''
+    headers:
+      Host: 153.3.236.22:443
+      X-T5-Auth: '683556433'
+      Connection: Keep-Alive'
+      User-Agent: okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)
