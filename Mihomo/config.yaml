@@ -8,6 +8,7 @@ Sub2Url: &Sub2Url ""
 BaiduN: &BaiduN "百度直连"
 BaiduNIcon: &BaiduNIcon ""
 BaiduNUrl: &BaiduNUrl "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/BaiduProxy.yaml"
+SubStoreUrl: &SubStoreUrl "http://127.0.0.1:8001/download/collection/Sub?target=ClashMeta"
 
 # 连通性检测url
 ProxyTestUrl: &ProxyTestUrl "https://www.gstatic.com/generate_204"
@@ -68,7 +69,7 @@ proxies:
  
 # 外部订阅
 proxy-providers:
-  Sub_Store: { <<: *Proxyer, path: ./proxies/Sub.yaml, url: "https://sub.store/download/collection/Sub?target=ClashMeta" }
+  Sub_Store: { <<: *Proxyer, path: ./proxies/Sub.yaml, url: *SubStoreUrl }
 #  *Sub1: { <<: *Proxyer, path: ./proxies/Sub1.yaml, url: *Sub1Url, override: {udp: true, additional-prefix: *Sub1} }
 #  *Sub2: { <<: *Proxyer, path: ./proxies/Sub2.yaml, url: *Sub2Url, override: {udp: true, additional-prefix: *Sub2} }
   *BaiduN: { <<: *Proxyer, path: ./proxies/BaiduNProxy.yaml, url: *BaiduNUrl, override: {udp: true}, health-check: {url: *DirectTestUrl} }
