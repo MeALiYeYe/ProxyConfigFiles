@@ -121,9 +121,9 @@ rules:
   - IP-CIDR,0.0.0.0/32,REJECT,no-resolve
   - IP-CIDR,::/128,REJECT,no-resolve
   # FCM
-  - AND,((NETWORK,TCP),(DST-PORT,443,5228-5230),(GEOSITE,googlefcm)),DIRECT
+  - AND,((NETWORK,TCP),(DST-PORT,5228-5230)),DIRECT
   # NTP
-  - AND,((NETWORK,UDP),(DST-PORT,123),(GEOSITE,category-ntp)),DIRECT
+  - AND,((NETWORK,UDP),(DST-PORT,123)),DIRECT
   # DNS
   - OR,((DST-PORT,53),(DST-PORT,853)),dns-out
   - RULE-SET,AWAvenue,REJECT-DROP
@@ -131,7 +131,7 @@ rules:
   - RULE-SET,Redirect,ReDirect
   - RULE-SET,Direct,DIRECT
   - RULE-SET,Proxy,Foreign
-  - OR,((RULE-SET,Emby),(GEOSITE,category-emby)),Media
+  - RULE-SET,Emby,Media
 
   - GEOSITE,private,DIRECT 
   - GEOSITE,category-ads-all,REJECT-DROP
