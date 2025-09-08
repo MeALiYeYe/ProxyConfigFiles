@@ -111,6 +111,9 @@ dns:
     - 2606:50c0:8001::154
     - 2606:50c0:8002::154
     - 2606:50c0:8003::154
+    # App Store 下载请求解析 金山CDN
+    iosapps.itunes.apple.com:
+    - iosapps.itunes.apple.com.download.ks-cdn.com
 policy_groups:
 - external:
     name: BaidunProxy
