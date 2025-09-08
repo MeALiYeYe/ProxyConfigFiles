@@ -8,7 +8,7 @@ Sub2Url: &Sub2Url ""
 BaiduN: &BaiduN "百度直连"
 BaiduNIcon: &BaiduNIcon ""
 BaiduNUrl: &BaiduNUrl "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/BaiduProxy.yaml"
-SubStoreUrl: &SubStoreUrl "http://127.0.0.1:8081/download/collection/Sub?target=ClashMeta"
+SubStoreUrl: &SubStoreUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
 
 # 连通性检测url
 ProxyTestUrl: &ProxyTestUrl "https://www.gstatic.com/generate_204"
