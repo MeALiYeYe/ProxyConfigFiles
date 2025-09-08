@@ -1,3 +1,6 @@
+auto_update:
+  url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/Egern.yaml
+  interval: 86400
 ipv6: true
 http_port: 3080
 socks_port: 3090
