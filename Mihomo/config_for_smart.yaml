@@ -160,7 +160,8 @@ rules:
   #####################
 #通用配置
 mixed-port: 7890
-redir-port: 7891
+socks-port: 7891
+redir-port: 7892
 tproxy-port: 1536
 mode: Rule
 log-level: silent
