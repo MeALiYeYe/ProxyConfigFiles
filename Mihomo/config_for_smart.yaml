@@ -298,3 +298,7 @@ dns:
   nameserver:
     - 'https://dns.alidns.com/dns-query#DIRECT&h3=true'
     - 'quic://dns.alidns.com#DIRECT'
+
+# hosts
+hosts:
+  raw.githubusercontent.com: [ 185.199.108.133, 185.199.109.133，185.199.110.133, 185.199.111.133, '2606:50c0:8000::154', '2606:50c0:8001::154', '2606:50c0:8002::154', '2606:50c0:8003::154' ]
