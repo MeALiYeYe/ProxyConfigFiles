@@ -118,8 +118,6 @@ rule-providers:
   
 # 路由规则
 rules:
-  - IP-CIDR,0.0.0.0/32,REJECT,no-resolve
-  - IP-CIDR,::/128,REJECT,no-resolve
   # FCM
   #- AND,((NETWORK,TCP),(DST-PORT,5228-5230)),DIRECT
   # NTP
