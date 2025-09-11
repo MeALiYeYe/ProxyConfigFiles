@@ -112,7 +112,7 @@ rule-providers:
   Redirect: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rules/Redirect.yaml}
   Direct: {<<: *cla, format: text, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/rule/Direct.list", path: ./rules/Direct.list}
   Reject: {<<: *cla, format: text, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/rule/Reject.list", path: ./rules/Reject.list}
-  Proxy: {<<: *cla， format: text, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/rule/Proxy.list", path: ./rules/Proxy.list}
+  Proxy: {<<: *cla, format: text, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/rule/Proxy.list", path: ./rules/Proxy.list}
   Emby: {<<: *cla, format: text, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/rule/Emby.list", path: ./rules/Emby.list}
   AWAvenue: {<<: *dom, format: yaml, url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Clash.yaml", path: ./rules/AWAvenue.yaml}
   
