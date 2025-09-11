@@ -4,7 +4,14 @@ IP-CIDR6,::/128,no-resolve
 # 确保migomo fake-ip地址不被用于伪造的该地址段的外部网络
 IP-CIDR,198.18.0.0/15,no-resolve
 AND,((DOMAIN-KEYWORD,gvt),(DOMAIN-KEYWORD,beacons))
+# 关闭虎牙直播的P2P上传之类的功能
+DOMAIN-SUFFIX,metric.huya.com
+DOMAIN-SUFFIX,ylog.huya.com
+DOMAIN-SUFFIX,e-ad-monitor.huya.com
 DOMAIN-SUFFIX,p2p.huya.com
+DOMAIN-SUFFIX,statwup.huya.com
+DOMAIN-SUFFIX,e-stat.huya.com
+# 中国移动一直访问
 DOMAIN-SUFFIX,xionguamaqui.com
 # 百度
 DOMAIN,dumall.baidu.com
