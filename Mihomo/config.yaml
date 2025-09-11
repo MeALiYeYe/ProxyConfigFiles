@@ -29,35 +29,35 @@ FilterLowMag: &FilterLowMag '0\.\d+'           #低倍率节点
 FilterHighMag: &FilterHighMag '(?!0\.)[1-9]\d*(?:\.\d+)'            #高倍率节点
 
 # 订阅更新与测试
-Proxyer: &Proxyer {type: http, interval: 43200, exclude-filter: *ExcludeFilter, health-check: {enable: true, url: *ProxyTestUrl, interval: 60, timeout: 2000}}
+Proxyer: &Proxyer {输入: http, interval: 43200, exclude-filter: *ExcludeFilter, health-check: {enable: true, url: *ProxyTestUrl, interval: 60, timeout: 2000}}
 
 # 订阅引用
-Uses: &Uses {type: select, include-all-providers: true, hidden: true}
+Uses: &Uses {输入: select, include-all-providers: true, hidden: true}
 # 延迟优选策略组
-Auto: &Auto {<<: *Uses, type: url-test, url: *ProxyTestUrl, tolerance : 50, interval: 60, timeout : 2000, max-failed-times: 3}
+Auto: &Auto {<<: *Uses, 输入: url-test, url: *ProxyTestUrl, tolerance : 50, interval: 60, timeout : 2000, max-failed-times: 3}
 # 负载均衡策略组策略可选round-robin, consistent-hashing
-Loads: &Loads {<<: *Uses, type: load-balance, url: *ProxyTestUrl, interval: 300, strategy: sticky-sessions}
+Loads: &Loads {<<: *Uses, 输入: load-balance, url: *ProxyTestUrl, interval: 300, strategy: sticky-sessions}
 # 故障转移策略组
-Fallb: &Fallb {<<: *Uses, type: fallback, url: *ProxyTestUrl, interval: 60, timeout: 2000, max-failed-times: 3}
+Fallb: &Fallb {<<: *Uses, 输入: fallback, url: *ProxyTestUrl, interval: 60, timeout: 2000, max-failed-times: 3}
 # Smart策略组
 #Smartg: &Smartg {<<: *Uses, type: smart, url: *ProxyTestUrl, policy-priority: "电信:1.5;联通:1.0;移动:0.5", uselightgbm: false, collectdata: true, strategy: sticky-sessions}
 
 # 规则集类型
 rule-anchor:
   # 规则类型:domain
-  dom: &dom {type: http, behavior: domain, interval: 86400}
+  dom: &dom {输入: http, behavior: domain, interval: 86400}
   # 规则类型:classical
-  cla: &cla {type: http, behavior: classical, interval: 86400}
+  cla: &cla {输入: http, behavior: classical, interval: 86400}
   # 规则类型:ipcidr
-  ipc: &ipc {type: http, behavior: ipcidr, interval: 86400}
+  ipc: &ipc {输入: http, behavior: ipcidr, interval: 86400}
   
 # 策略组引用
-Proxy_For: &Proxy_For
-   type: select
+Group_For: &Group_For
+   输入: select
    proxies: [直连, 香港, 台湾, 狮城, 日本, 韩国, 美国, 其他, 低倍, 高倍]
 
-Proxy_Dom: &Proxy_Dom
-   type: select
+Group_Dom: &Group_Dom
+   输入: select
    proxies: [直连, 江苏, 北京, 广东, 河北]
 
 #############锚点结束###########
@@ -76,20 +76,20 @@ proxy-providers:
 
 # 策略组
 proxy-groups:
-  - {name: TikTok, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok.png", <<: *Proxy_For}
-  - {name: YouTube, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png", <<: *Proxy_For}
-  - {name: Media, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ForeignMedia.png", <<: *Proxy_For}
-  - {name: Ai, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/ChatGPT-green.png", <<: *Proxy_For}
-  - {name: Telegram, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png", <<: *Proxy_For}
-  - {name: Google, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/google(1).png", <<: *Proxy_For}
-  - {name: Cloudflare, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png", <<: *Proxy_For}
-  - {name: Github, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png", <<: *Proxy_For}
-  - {name: Microsoft, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png", <<: *Proxy_For}
-  - {name: Apple, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png", <<: *Proxy_For}  
-  - {name: Foreign, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png", <<: *Proxy_For}
-  - {name: ReDirect, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png", <<: *Proxy_Dom}
-  - {name: Domestic, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png", <<: *Proxy_Dom}
-  - {name: Final, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png", <<: *Proxy_For}
+  - {name: TikTok, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok.png", <<: *Group_For}
+  - {name: YouTube, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png", <<: *Group_For}
+  - {name: Media, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ForeignMedia.png", <<: *Group_For}
+  - {name: Ai, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/ChatGPT-green.png", <<: *Group_For}
+  - {name: Telegram, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png", <<: *Group_For}
+  - {name: Google, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/google(1).png", <<: *Group_For}
+  - {name: Cloudflare, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png", <<: *Group_For}
+  - {name: Github, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png", <<: *Group_For}
+  - {name: Microsoft, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png", <<: *Group_For}
+  - {name: Apple, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png", <<: *Group_For}  
+  - {name: Foreign, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png", <<: *Group_For}
+  - {name: ReDirect, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png", <<: *Group_Dom}
+  - {name: Domestic, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png", <<: *Group_Dom}
+  - {name: Final, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png", <<: *Group_For}
   - {name: 江苏, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(1).png", <<: *Auto, filter: "南京|苏州", url: *DirectTestUrl}
   - {name: 北京, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(2).png", <<: *Auto, filter: "北京", url: *DirectTestUrl}
   - {name: 广东, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(4).png", <<: *Auto, filter: "广州", url: *DirectTestUrl}
@@ -112,7 +112,7 @@ rule-providers:
   Redirect: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rules/Redirect.yaml}
   Direct: {<<: *cla, format: text, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/rule/Direct.list", path: ./rules/Direct.list}
   Reject: {<<: *cla, format: text, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/rule/Reject.list", path: ./rules/Reject.list}
-  Proxy: {<<: *cla, format: text, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/rule/Proxy.list", path: ./rules/Proxy.list}
+  Proxy: {<<: *cla， format: text, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/rule/Proxy.list", path: ./rules/Proxy.list}
   Emby: {<<: *cla, format: text, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/rule/Emby.list", path: ./rules/Emby.list}
   AWAvenue: {<<: *dom, format: yaml, url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Clash.yaml", path: ./rules/AWAvenue.yaml}
   
