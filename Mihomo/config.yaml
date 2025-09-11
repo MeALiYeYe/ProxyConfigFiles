@@ -29,43 +29,43 @@ FilterLowMag: &FilterLowMag '0\.\d+'           #低倍率节点
 FilterHighMag: &FilterHighMag '(?!0\.)[1-9]\d*(?:\.\d+)'            #高倍率节点
 
 # 订阅更新与测试
-Proxyer: &Proxyer {输入: http, interval: 43200, exclude-filter: *ExcludeFilter, health-check: {enable: true, url: *ProxyTestUrl, interval: 60, timeout: 2000}}
+Proxyer: &Proxyer {type: http, interval: 43200, exclude-filter: *ExcludeFilter, health-check: {enable: true, url: *ProxyTestUrl, interval: 60, timeout: 2000}}
 
 # 订阅引用
-Uses: &Uses {输入: select, include-all-providers: true, hidden: true}
+Uses: &Uses {type: select, include-all-providers: true, hidden: true}
 # 延迟优选策略组
-Auto: &Auto {<<: *Uses, 输入: url-test, url: *ProxyTestUrl, tolerance : 50, interval: 60, timeout : 2000, max-failed-times: 3}
+Auto: &Auto {<<: *Uses, type: url-test, url: *ProxyTestUrl, tolerance : 50, interval: 60, timeout : 2000, max-failed-times: 3}
 # 负载均衡策略组策略可选round-robin, consistent-hashing
-Loads: &Loads {<<: *Uses, 输入: load-balance, url: *ProxyTestUrl, interval: 300, strategy: sticky-sessions}
+Loads: &Loads {<<: *Uses, type: load-balance, url: *ProxyTestUrl, interval: 300, strategy: sticky-sessions}
 # 故障转移策略组
-Fallb: &Fallb {<<: *Uses, 输入: fallback, url: *ProxyTestUrl, interval: 60, timeout: 2000, max-failed-times: 3}
+Fallb: &Fallb {<<: *Uses, type: fallback, url: *ProxyTestUrl, interval: 60, timeout: 2000, max-failed-times: 3}
 # Smart策略组
 #Smartg: &Smartg {<<: *Uses, type: smart, url: *ProxyTestUrl, policy-priority: "电信:1.5;联通:1.0;移动:0.5", uselightgbm: false, collectdata: true, strategy: sticky-sessions}
 
 # 规则集类型
 rule-anchor:
   # 规则类型:domain
-  dom: &dom {输入: http, behavior: domain, interval: 86400}
+  dom: &dom {type: http, behavior: domain, interval: 86400}
   # 规则类型:classical
-  cla: &cla {输入: http, behavior: classical, interval: 86400}
+  cla: &cla {type: http, behavior: classical, interval: 86400}
   # 规则类型:ipcidr
-  ipc: &ipc {输入: http, behavior: ipcidr, interval: 86400}
+  ipc: &ipc {type: http, behavior: ipcidr, interval: 86400}
   
 # 策略组引用
 Group_For: &Group_For
-   输入: select
+   type: select
    proxies: [直连, 香港, 台湾, 狮城, 日本, 韩国, 美国, 其他, 低倍, 高倍]
 
 Group_Dom: &Group_Dom
-   输入: select
+   type: select
    proxies: [直连, 江苏, 北京, 广东, 河北]
 
 #############锚点结束###########
 
 # 出站代理
 proxies:
-  - {name: 直连, 输入: direct}
-  - {name: dns-out, 输入: dns}
+  - {name: 直连, type: direct}
+  - {name: dns-out, type: dns}
  
 # 外部订阅
 proxy-providers:
