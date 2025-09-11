@@ -281,8 +281,8 @@ dns:
     - '*.home.arpa'
     - 127.0.0.0/8
     - 0.0.0.0/32
-    - ::1/128
-    - ::/128
+    - '::1/128'
+    - '::/128'
     - 'GEOSITE:private'
   nameserver-policy:
     'GEOSITE:category-ads-all,category-httpdns-cn': rcode://success
