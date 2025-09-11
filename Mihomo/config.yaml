@@ -1,4 +1,4 @@
-# 延迟优选策略组# 订阅名和订阅链接、图标
+# 订阅名和订阅链接、图标
 Sub1: &Sub1 ""
 Sub1Icon: &Sub1Icon ""
 Sub1Url: &Sub1Url ""
@@ -25,8 +25,8 @@ FilterRU: &FilterRU '(?i)(?:俄罗斯|莫斯科|🇷🇺|RU|Russia|Moscow)'
 FilterEU: &FilterEU '(?i)(?:🇧🇪|🇨🇿|🇩🇰|🇫🇮|🇫🇷|🇩🇪|🇮🇪|🇮🇹|🇱🇹|🇱🇺|🇳🇱|🇵🇱|🇸🇪|🇬🇧|CDG|FRA|AMS|MAD|BCN|FCO|MUC|BRU)'
 FilterOther: &FilterOther '^(?!.*(香港|台湾|新加坡|日本|韩国|美国|🇭🇰|🇼🇸|🇨🇳|🇹🇼|🇸🇬|🇯🇵|🇰🇷|🇺🇸|\bHK\b|\bTW\b|\bSG\b|\bJP\b|\bKR\b|\bUS\b))'
 ExcludeFilter: &ExcludeFilter '(?i)(佣金|套餐|官网|官方|售后|免翻|过期|剩余|到期|流量|更新|点外|重置|免流|优惠|超实惠|址|AFF|Days|Date)'
-FilterLowMag: &FilterLowMag '0\.\d+'           #低倍率节点
-FilterHighMag: &FilterHighMag '(?!0\.)[1-9]\d*(?:\.\d+)'            #高倍率节点
+FilterLowMag: &FilterLowMag '0\.\d+'
+FilterHighMag: &FilterHighMag '(?!0\.)[1-9]\d*(?:\.\d+)'
 
 # 订阅更新与测试
 Proxyer: &Proxyer {type: http, interval: 43200, exclude-filter: *ExcludeFilter, health-check: {enable: true, url: *ProxyTestUrl, interval: 60, timeout: 2000}}
