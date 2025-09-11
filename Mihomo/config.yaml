@@ -72,7 +72,7 @@ proxy-providers:
   Sub_Store: {<<: *Proxyer, path: ./proxies/Sub.yaml, url: *SubStoreUrl}
 #  *Sub1: {<<: *Proxyer, path: ./proxies/Sub1.yaml, url: *Sub1Url, override: {udp: true, additional-prefix: *Sub1}}
 #  *Sub2: {<<: *Proxyer, path: ./proxies/Sub2.yaml, url: *Sub2Url, override: {udp: true, additional-prefix: *Sub2}}
-  *BaiduN: {<<: *Proxyer, path: ./proxies/BaiduNProxy.yaml, url: *BaiduNUrl, override: {udp: true}, health-check: {url: *DirectTestUrl}}
+  *BaiduN: {<<: *Proxyer, path: ./proxies/BaiduNProxy.yaml, url: *BaiduNUrl, override: {udp: true}, health-check: {enable: true, url: *DirectTestUrl, interval: 60, timeout: 2000}}
 
 # 策略组
 proxy-groups:
@@ -121,9 +121,9 @@ rules:
   - IP-CIDR,0.0.0.0/32,REJECT,no-resolve
   - IP-CIDR,::/128,REJECT,no-resolve
   # FCM
-  - AND,((NETWORK,TCP),(DST-PORT,5228-5230)),DIRECT
+  #- AND,((NETWORK,TCP),(DST-PORT,5228-5230)),DIRECT
   # NTP
-  - AND,((NETWORK,UDP),(DST-PORT,123)),DIRECT
+  #- AND,((NETWORK,UDP),(DST-PORT,123)),DIRECT
   # DNS
   - OR,((DST-PORT,53),(DST-PORT,853)),dns-out
   - RULE-SET,AWAvenue,REJECT-DROP
