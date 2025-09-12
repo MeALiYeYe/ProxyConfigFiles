@@ -54,18 +54,17 @@ rule-anchor:
 # 策略组引用
 Group_For: &Group_For
    type: select
-   proxies: [直连, 拒绝, 香港, 台湾, 狮城, 日本, 韩国, 美国, 俄国, 其他, 低倍, 高倍]
+   proxies: [直连, 香港, 台湾, 狮城, 日本, 韩国, 美国, 其他, 低倍, 高倍]
 
 Group_Dom: &Group_Dom
    type: select
-   proxies: [直连, 拒绝, 江苏, 北京, 广东, 河北]
+   proxies: [直连, 江苏, 北京, 广东, 河北]
 
 #############锚点结束###########
 
 # 出站代理
 proxies:
   - {name: 直连, type: direct}
-  - {name: 拒绝, type: reject}
   - {name: dns-out, type: dns}
  
 # 外部订阅
@@ -101,7 +100,7 @@ proxy-groups:
   - {name: 日本, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png", <<: *Auto, filter: *FilterJP}
   - {name: 韩国, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Korea.png", <<: *Auto, filter: *FilterKR}  
   - {name: 美国, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png", <<: *Auto, filter: *FilterUS}
-  - {name: 俄国, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Russia.png", <<: *Auto, filter: *FilterRU}
+#  - {name: 俄国, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Russia.png", <<: *Auto, filter: *FilterRU}
 #  - {name: 欧洲, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/European_Union.png", <<: *Auto, filter: *FilterEU}  
   - {name: 其他, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/quanqiu(3).png", <<: *Auto, filter: *FilterOther}
   - {name: 低倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/liuliang(2).png", <<:  *Auto, filter: *FilterLowMag}
