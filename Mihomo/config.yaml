@@ -52,13 +52,23 @@ rule-anchor:
   ipc: &ipc {type: http, behavior: ipcidr, interval: 86400}
   
 # 策略组引用
-Group_For: &Group_For
+Group_For: &Group_For 
    type: select
    proxies: [直连, 香港, 台湾, 狮城, 日本, 韩国, 美国, 其他, 低倍, 高倍]
+   url: *ProxyTestUrl
+   interval: 60
+   lazy: true
+   timeout: 5000
+   max-failed-times: 3
 
 Group_Dom: &Group_Dom
    type: select
    proxies: [直连, 江苏, 北京, 广东, 河北]
+   url: *DirectTestUrl
+   interval: 60
+   lazy: true
+   timeout: 5000
+   max-failed-times: 3
 
 #############锚点结束###########
 
