@@ -84,7 +84,7 @@ proxy-groups:
   - {name: ReDirect, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png", <<: *Groups}
   - {name: Domestic, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png", <<: *Groups}
   - {name: Final, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png", <<: *Groups}
-  - {name: 江苏, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(1).png", <<: *Auto, filter: "南京|苏州"
+  - {name: 江苏, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(1).png", <<: *Auto, filter: "南京|苏州"}
   - {name: 北京, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(2).png", <<: *Auto, filter: "北京"}
   - {name: 广东, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(4).png", <<: *Auto, filter: "广州"}
   - {name: 河北, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(5).png", <<: *Auto, filter: "保定"}
