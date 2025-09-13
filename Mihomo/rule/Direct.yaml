@@ -5,7 +5,7 @@ payload:
   - DOMAIN-SUFFIX,gwmapp-h.com
   - DOMAIN-SUFFIX,gwmapp-w.com
   - DOMAIN-KEYWORD,gwm-mn
-  - DOMAIN,yys.163.com/
+  - DOMAIN,yys.163.com
   - DOMAIN,ifconfig.me
   - DOMAIN-SUFFIX,nsloon.com
 #  - DOMAIN-SUFFIX,*.cn
