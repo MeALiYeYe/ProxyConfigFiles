@@ -9,3 +9,5 @@ payload:
   - DOMAIN-SUFFIX,nsloon.com
 #  - DOMAIN-SUFFIX,*.cn
   - DOMAIN-KEYWORD,kahaoquan
+  - PROCESS-NAME-REGEX,(?i)onmyoji
+  - PROCESS-NAME-REGEX,(?i)jkchess
