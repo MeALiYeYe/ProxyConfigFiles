@@ -44,9 +44,7 @@ Fallb: &Fallb {<<: *Uses, type: fallback}
 
 # 策略组引用组
 # 这里的延迟测试只会测试proxies下的(DIRECT),不会测试proxy-providers下的节点
-Groups: &Groups {type: select, interval: 60, timeout: 5000, max-failed-times: 3, hidden: false}
-Group_For: &Group_For {<<: *Groups, proxies: [直连, 香港, 台湾, 狮城, 日本, 韩国, 美国, 其他, 低倍, 高倍], url: *ProxyTestUrl}
-Group_Dom: &Group_Dom {<<: *Groups, proxies: [直连, 江苏, 北京, 广东, 河北], url: *DirectTestUrl}
+Groups: &Groups {type: select, proxies: [直连, 江苏, 北京, 广东, 河北, 香港, 台湾, 狮城, 日本, 韩国, 美国, 其他, 低倍, 高倍], url: *DirectTestUrl, interval: 60, timeout: 5000, max-failed-times: 3, hidden: false}
 
 # 规则集类型
 rule-anchor:
@@ -72,24 +70,24 @@ proxy-providers:
 
 # 策略组
 proxy-groups:
-  - {name: TikTok, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok.png", <<: *Group_For}
-  - {name: YouTube, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png", <<: *Group_For}
-  - {name: Media, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ForeignMedia.png", <<: *Group_For}
-  - {name: Ai, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/ChatGPT-green.png", <<: *Group_For}
-  - {name: Telegram, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png", <<: *Group_For}
-  - {name: Google, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/google(1).png", <<: *Group_For}
-  - {name: Cloudflare, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png", <<: *Group_For}
-  - {name: Github, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png", <<: *Group_For}
-  - {name: Microsoft, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png", <<: *Group_For}
-  - {name: Apple, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png", <<: *Group_For}  
-  - {name: Foreign, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png", <<: *Group_For}
-  - {name: ReDirect, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png", <<: *Group_Dom}
-  - {name: Domestic, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png", <<: *Group_Dom}
-  - {name: Final, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png", <<: *Group_For}
-  - {name: 江苏, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(1).png", <<: *Auto, filter: "南京|苏州", url: *DirectTestUrl}
-  - {name: 北京, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(2).png", <<: *Auto, filter: "北京", url: *DirectTestUrl}
-  - {name: 广东, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(4).png", <<: *Auto, filter: "广州", url: *DirectTestUrl}
-  - {name: 河北, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(5).png", <<: *Auto, filter: "保定", url: *DirectTestUrl}
+  - {name: TikTok, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok.png", <<: *Groups}
+  - {name: YouTube, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png", <<: *Groups}
+  - {name: Media, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ForeignMedia.png", <<: *Groups}
+  - {name: Ai, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/ChatGPT-green.png", <<: *Groups}
+  - {name: Telegram, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png", <<: *Groups}
+  - {name: Google, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/google(1).png", <<: *Groups}
+  - {name: Cloudflare, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png", <<: *Groups}
+  - {name: Github, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png", <<: *Groups}
+  - {name: Microsoft, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png", <<: *Groups}
+  - {name: Apple, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png", <<: *Groups}  
+  - {name: Foreign, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png", <<: *Groups}
+  - {name: ReDirect, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png", <<: *Groups}
+  - {name: Domestic, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png", <<: *Groups}
+  - {name: Final, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png", <<: *Groups}
+  - {name: 江苏, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(1).png", <<: *Auto, filter: "南京|苏州"
+  - {name: 北京, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(2).png", <<: *Auto, filter: "北京"}
+  - {name: 广东, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(4).png", <<: *Auto, filter: "广州"}
+  - {name: 河北, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(5).png", <<: *Auto, filter: "保定"}
   - {name: 香港, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png", <<: *Auto, filter: *FilterHK}  
   - {name: 台湾, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Taiwan.png", <<: *Auto, filter: *FilterTW} 
   - {name: 狮城, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png", <<: *Auto, filter: *FilterSG} 
