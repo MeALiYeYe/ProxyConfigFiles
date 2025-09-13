@@ -43,6 +43,7 @@ Fallb: &Fallb {<<: *Uses, type: fallback, url: *ProxyTestUrl}
 #Smartg: &Smartg {<<: *Uses, type: smart, url: *ProxyTestUrl, policy-priority: "电信:1.5;联通:1.0;移动:0.5", uselightgbm: false, collectdata: true, strategy: sticky-sessions}
 
 # 策略组引用组
+# 这里的延迟测试只会测试Proxies下的(DIRECT),不会测试proxy-providers下的节点
 Groups: &Groups {type: select, interval: 60, lazy: true, timeout: 5000, max-failed-times: 3, hidden: false}
 Group_For: &Group_For {<<: *Groups, proxies: [直连, 香港, 台湾, 狮城, 日本, 韩国, 美国, 其他, 低倍, 高倍], url: *ProxyTestUrl}
 Group_Dom: &Group_Dom {<<: *Groups, proxies: [直连, 江苏, 北京, 广东, 河北], url: *DirectTestUrl}
