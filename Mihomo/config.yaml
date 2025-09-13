@@ -31,16 +31,21 @@ FilterHighMag: &FilterHighMag '(?!0\.)[1-9]\d*(?:\.\d+)'
 # 订阅更新与测试
 Proxyer: &Proxyer {type: http, interval: 43200, exclude-filter: *ExcludeFilter, health-check: {enable: true, url: *ProxyTestUrl, interval: 60, timeout: 2000}}
 
-# 订阅引用
-Uses: &Uses {type: select, include-all-providers: true, hidden: true}
+# 节点引用组
+Uses: &Uses {type: select, include-all-providers: true, url: *ProxyTestUrl, tolerance: 50, interval: 60, timeout: 2000, max-failed-times: 3, hidden: true}
 # 延迟优选策略组
-Auto: &Auto {<<: *Uses, type: url-test, url: *ProxyTestUrl, tolerance : 50, interval: 60, timeout : 2000, max-failed-times: 3}
+Auto: &Auto {<<: *Uses, type: url-test}
 # 负载均衡策略组策略可选round-robin, consistent-hashing
-Loads: &Loads {<<: *Uses, type: load-balance, url: *ProxyTestUrl, interval: 300, strategy: sticky-sessions}
+Loads: &Loads {<<: *Uses, type: load-balance, strategy: sticky-sessions}
 # 故障转移策略组
-Fallb: &Fallb {<<: *Uses, type: fallback, url: *ProxyTestUrl, interval: 60, timeout: 2000, max-failed-times: 3}
+Fallb: &Fallb {<<: *Uses, type: fallback, url: *ProxyTestUrl}
 # Smart策略组
 #Smartg: &Smartg {<<: *Uses, type: smart, url: *ProxyTestUrl, policy-priority: "电信:1.5;联通:1.0;移动:0.5", uselightgbm: false, collectdata: true, strategy: sticky-sessions}
+
+# 策略组引用组
+Groups: &Groups {type: select, interval: 60, lazy: true, timeout: 5000, max-failed-times: 3, hidden: false}
+Group_For: &Group_For {<<: *Groups, proxies: [直连, 香港, 台湾, 狮城, 日本, 韩国, 美国, 其他, 低倍, 高倍], url: *ProxyTestUrl}
+Group_Dom: &Group_Dom {<<: *Groups, proxies: [直连, 江苏, 北京, 广东, 河北], url: *DirectTestUrl}
 
 # 规则集类型
 rule-anchor:
@@ -50,26 +55,6 @@ rule-anchor:
   cla: &cla {type: http, behavior: classical, interval: 86400}
   # 规则类型:ipcidr
   ipc: &ipc {type: http, behavior: ipcidr, interval: 86400}
-  
-# 策略组引用
-Group_For: &Group_For 
-   type: select
-   proxies: [直连, 香港, 台湾, 狮城, 日本, 韩国, 美国, 其他, 低倍, 高倍]
-   url: *ProxyTestUrl
-   interval: 60
-   lazy: true
-   timeout: 5000
-   max-failed-times: 3
-
-Group_Dom: &Group_Dom
-   type: select
-   proxies: [直连, 江苏, 北京, 广东, 河北]
-   url: *DirectTestUrl
-   interval: 60
-   lazy: true
-   timeout: 5000
-   max-failed-times: 3
-
 #############锚点结束###########
 
 # 出站代理
