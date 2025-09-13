@@ -5,6 +5,7 @@ payload:
   # 确保migomo fake-ip地址不被用于伪造的该地址段的外部网络
   - IP-CIDR,198.18.0.0/15,no-resolve
   - AND,((DOMAIN-KEYWORD,gvt),(DOMAIN-KEYWORD,beacons))
+  - DOMAIN,httpdns.bilivideo.com
   # 关闭虎牙直播的P2P上传之类的功能
   - DOMAIN-SUFFIX,metric.huya.com
   - DOMAIN-SUFFIX,ylog.huya.com
@@ -37,7 +38,6 @@ payload:
   - DOMAIN-SUFFIX,360totalsecurity.com
   # 防止电报转圈
   - IP-CIDR,95.161.76.100/31,no-resolve
-  - DOMAIN,httpdns.bilivideo.com
   - IP-CIDR,47.101.175.206/32,no-resolve
   - IP-CIDR,47.100.123.169/32,no-resolve
   - IP-CIDR,120.46.169.234/32,no-resolve
