@@ -38,9 +38,9 @@ Auto: &Auto {<<: *Uses, type: url-test}
 # 负载均衡策略组策略可选round-robin, consistent-hashing
 Loads: &Loads {<<: *Uses, type: load-balance, strategy: sticky-sessions}
 # 故障转移策略组
-Fallb: &Fallb {<<: *Uses, type: fallback, url: *ProxyTestUrl}
+Fallb: &Fallb {<<: *Uses, type: fallback}
 # Smart策略组
-#Smartg: &Smartg {<<: *Uses, type: smart, url: *ProxyTestUrl, policy-priority: "电信:1.5;联通:1.0;移动:0.5", uselightgbm: false, collectdata: true, strategy: sticky-sessions}
+#Smartg: &Smartg {<<: *Uses, type: smart, policy-priority: "电信:1.5;联通:1.0;移动:0.5", uselightgbm: false, collectdata: true, strategy: sticky-sessions}
 
 # 策略组引用组
 # 这里的延迟测试只会测试proxies下的(DIRECT),不会测试proxy-providers下的节点
