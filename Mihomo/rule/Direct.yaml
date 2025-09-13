@@ -1,0 +1,11 @@
+payload:
+# gwmapp
+  - DOMAIN-SUFFIX,gwm.com.cn
+  - DOMAIN-SUFFIX,gwm.cn
+  - DOMAIN-SUFFIX,gwmapp-h.com
+  - DOMAIN-SUFFIX,gwmapp-w.com
+  - DOMAIN-KEYWORD,gwm-mn
+  - DOMAIN,ifconfig.me
+  - DOMAIN-SUFFIX,nsloon.com
+#  - DOMAIN-SUFFIX,*.cn
+  - DOMAIN-KEYWORD,kahaoquan
