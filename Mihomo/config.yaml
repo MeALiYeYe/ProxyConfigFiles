@@ -31,8 +31,11 @@ FilterHighMag: &FilterHighMag '(?!0\.)[1-9]\d*(?:\.\d+)'
 # 订阅更新与测试
 Proxyer: &Proxyer {type: http, interval: 43200, exclude-filter: *ExcludeFilter, health-check: {enable: true, url: *ProxyTestUrl, interval: 60, timeout: 2000}}
 
+# 策略组
+Group: &Group {interval: 60, timeout: 2000, max-failed-times: 3, lazy: true}
+
 # 节点引用组
-Uses: &Uses {type: select, include-all-providers: true, url: *ProxyTestUrl, tolerance: 50, interval: 60, timeout: 2000, max-failed-times: 3, hidden: true}
+Uses: &Uses {<<: *Group, type: select, include-all-providers: true, url: *ProxyTestUrl, hidden: true}
 # 延迟优选策略组
 Auto: &Auto {<<: *Uses, type: url-test}
 # 负载均衡策略组策略可选round-robin, consistent-hashing
@@ -44,9 +47,8 @@ Fallb: &Fallb {<<: *Uses, type: fallback}
 
 # 策略组引用组
 # 这里的延迟测试只会测试proxies下的(DIRECT),不会测试proxy-providers下的节点
-Group: &Group {type: select, url: *DirectTestUrl, interval: 60, timeout: 5000, max-failed-times: 3, hidden: false}
-GroupF: &GroupF {<<: *Group, proxies: [直连, 香港, 台湾, 狮城, 日本, 韩国, 美国, 其他, 低倍, 高倍]}
-GroupD: &GroupD {<<: *Group, proxies: [直连, 江苏, 北京, 广东, 河北]}
+GroupF: &GroupF {<<: *Group, type: select, url: *ProxyTestUrl, proxies: [直连, 香港, 台湾, 狮城, 日本, 韩国, 美国, 其他, 低倍, 高倍], hidden: false}
+GroupD: &GroupD {<<: *Group, type: select, url: *DirectTestUrl, proxies: [直连, 江苏, 北京, 广东, 河北], hidden: false}
 
 # 规则集类型
 rule-anchor:
