@@ -1,0 +1,268 @@
+# 订阅名和订阅链接、图标
+Sub1: &Sub1 "守候"
+Sub1Icon: &Sub1Icon "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/Linkeless.png"
+Sub1Url: &Sub1Url ""
+Sub2: &Sub2 "TKV"
+Sub2Icon: &Sub2Icon "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/TKV(1).png"
+Sub2Url: &Sub2Url ""
+BaiduN: &BaiduN "百度直连"
+BaiduNIcon: &BaiduNIcon ""
+BaiduNUrl: &BaiduNUrl "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/BaiduProxy.yaml"
+SubStoreUrl: &SubStoreUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
+
+# 连通性检测url
+ProxyTestUrl: &ProxyTestUrl "https://www.gstatic.com/generate_204"
+DirectTestUrl: &DirectTestUrl "https://wifi.vivo.com.cn/generate_204"
+
+# 节点筛选正则
+FilterHK: &FilterHK '(?i)(?:港|香港|🇭🇰|\bHK\b|Hong|HKG)'
+FilterTW: &FilterTW '(?i)(?:台|台湾|🇼🇸|🇨🇳|🇹🇼|\bTW\b|tai|TWN)'
+FilterSG: &FilterSG '(?i)(?:坡|新加坡|🇸🇬|\bSG\b|Singapore|SGP)'
+FilterJP: &FilterJP '(?i)(?:日|日本|🇯🇵|\bJP\b|Japan|JPN)'
+FilterKR: &FilterKR '(?i)(?:韩|韩国|🇰🇷|\bKR\b|KOR|Korea)'
+FilterUS: &FilterUS '(?i)(?:美|美国|🇺🇸|\bUS\b|USA|States)'
+FilterRU: &FilterRU '(?i)(?:俄罗斯|莫斯科|🇷🇺|RU|Russia|Moscow)'
+FilterEU: &FilterEU '(?i)(?:🇧🇪|🇨🇿|🇩🇰|🇫🇮|🇫🇷|🇩🇪|🇮🇪|🇮🇹|🇱🇹|🇱🇺|🇳🇱|🇵🇱|🇸🇪|🇬🇧|CDG|FRA|AMS|MAD|BCN|FCO|MUC|BRU)'
+FilterOther: &FilterOther '^(?!.*(香港|台湾|新加坡|日本|韩国|美国|🇭🇰|🇼🇸|🇨🇳|🇹🇼|🇸🇬|🇯🇵|🇰🇷|🇺🇸|\bHK\b|\bTW\b|\bSG\b|\bJP\b|\bKR\b|\bUS\b))'
+ExcludeFilter: &ExcludeFilter '(?i)(佣金|套餐|官网|官方|售后|免翻|过期|剩余|到期|流量|更新|点外|重置|免流|优惠|超实惠|址|AFF|Days|Date)'
+FilterLowMag: &FilterLowMag '0\.\d+'
+FilterHighMag: &FilterHighMag '(?!0\.)[1-9]\d*(?:\.\d+)'
+
+# 订阅更新与测试
+Proxyer: &Proxyer {type: http, interval: 43200, exclude-filter: *ExcludeFilter, health-check: {enable: true, url: *ProxyTestUrl, interval: 60, timeout: 2000}}
+
+# 节点引用组
+Uses: &Uses {type: select, include-all-providers: true, url: *ProxyTestUrl, tolerance: 50, interval: 60, timeout: 2000, max-failed-times: 3, hidden: true}
+# 延迟优选策略组
+Auto: &Auto {<<: *Uses, type: url-test}
+# 负载均衡策略组策略可选round-robin, consistent-hashing
+Loads: &Loads {<<: *Uses, type: load-balance, strategy: sticky-sessions}
+# 故障转移策略组
+Fallb: &Fallb {<<: *Uses, type: fallback}
+# Smart策略组
+Smartg: &Smartg {<<: *Uses, type: smart, policy-priority: "电信:1.5;联通:1.0;移动:0.5", uselightgbm: false, collectdata: true, strategy: sticky-sessions}
+
+# 策略组引用组
+# 这里的延迟测试只会测试proxies下的(DIRECT),不会测试proxy-providers下的节点
+Groups: &Groups {type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: *DirectTestUrl, interval: 60, timeout: 5000, max-failed-times: 3, hidden: false}
+Groupd: &Groupd {type: select, proxies: [直连, 江苏, 北京, 广东], url: *DirectTestUrl, interval: 60, timeout: 5000, max-failed-times: 3, hidden: false}
+
+# 规则集类型
+rule-anchor:
+  # 规则类型:domain
+  dom: &dom {type: http, behavior: domain, interval: 86400}
+  # 规则类型:classical
+  cla: &cla {type: http, behavior: classical, interval: 86400}
+  # 规则类型:ipcidr
+  ipc: &ipc {type: http, behavior: ipcidr, interval: 86400}
+#############锚点结束###########
+
+# 出站代理
+proxies:
+  - {name: 直连, type: direct}
+  - {name: dns-out, type: dns}
+ 
+# 外部订阅
+proxy-providers:
+  Sub_Store: {<<: *Proxyer, path: ./proxies/Sub.yaml, url: *SubStoreUrl}
+#  *Sub1: {<<: *Proxyer, path: ./proxies/Sub1.yaml, url: *Sub1Url, override: {udp: true, additional-prefix: *Sub1}}
+#  *Sub2: {<<: *Proxyer, path: ./proxies/Sub2.yaml, url: *Sub2Url, override: {udp: true, additional-prefix: *Sub2}}
+  *BaiduN: {<<: *Proxyer, path: ./proxies/BaiduNProxy.yaml, url: *BaiduNUrl, override: {udp: true},
+        health-check: {enable: true, url: *DirectTestUrl, interval: 60, timeout: 2000}}
+
+# 策略组
+proxy-groups:
+  # 软件分组
+  - {name: TikTok, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok.png", <<: *Groups}
+  - {name: YouTube, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png", <<: *Groups}
+  - {name: Media, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ForeignMedia.png", <<: *Groups}
+  - {name: Ai, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/ChatGPT-green.png", <<: *Groups}
+  - {name: Telegram, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png", <<: *Groups}
+  - {name: Google, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/google(1).png", <<: *Groups}
+  - {name: Cloudflare, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png", <<: *Groups}
+  - {name: Github, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png", <<: *Groups}
+  - {name: Microsoft, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png", <<: *Groups}
+  - {name: Apple, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png", <<: *Groups}  
+  - {name: Foreign, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png", <<: *Groups}
+  - {name: ReDirect, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png", <<: *Groupd}
+  - {name: Domestic, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png", <<: *Groupd}
+  - {name: Final, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png", <<: *Groups}
+  # 地区分组
+  - {name: 江苏, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(1).png", <<: *Smartg, filter: "南京|苏州"}
+  - {name: 北京, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(2).png", <<: *Smartg, filter: "北京"}
+  - {name: 广东, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(4).png", <<: *Smartg, filter: "广州"}
+#  - {name: 河北, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(5).png", <<: *Smartg, filter: "保定"}
+  - {name: 香港, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png", <<: *Smartg, filter: *FilterHK}  
+  - {name: 台湾, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Taiwan.png", <<: *Smartg, filter: *FilterTW} 
+  - {name: 狮城, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png", <<: *Smartg, filter: *FilterSG} 
+  - {name: 日本, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png", <<: *Smartg, filter: *FilterJP}
+#  - {name: 韩国, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Korea.png", <<: *Smartg, filter: *FilterKR}  
+  - {name: 美国, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png", <<: *Smartg, filter: *FilterUS}
+#  - {name: 俄国, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Russia.png", <<: *Smartg, filter: *FilterRU}
+#  - {name: 欧洲, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/European_Union.png", <<: *Smartg, filter: *FilterEU}  
+#  - {name: 其他, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/quanqiu(3).png", <<: *Smartg, filter: *FilterOther}
+  - {name: 低倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/liuliang(2).png", <<:  *Smartg, filter: *FilterLowMag}
+  - {name: 高倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/liuliang(3).png", <<: *Smartg, filter: *FilterHighMag}
+
+# 规则集
+rule-providers:
+  Redirect: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rules/Redirect.yaml}
+  Direct: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Direct.yaml", path: ./rules/Direct.yaml}
+  Reject: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject.yaml", path: ./rules/Reject.yaml}
+  Proxy: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Proxy.yaml", path: ./rules/Proxy.yaml}
+  Emby: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Emby.yaml", path: ./rules/Emby.yaml}
+  AWAvenue: {<<: *dom, format: yaml, url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Clash.yaml", path: ./rules/AWAvenue.yaml}
+  
+# 路由规则
+rules:
+  # FCM
+  #- AND,((NETWORK,TCP),(DST-PORT,5228-5230)),DIRECT
+  # NTP
+  #- AND,((NETWORK,UDP),(DST-PORT,123)),DIRECT
+  # DNS
+  - OR,((DST-PORT,53),(DST-PORT,853)),dns-out
+  - RULE-SET,AWAvenue,REJECT-DROP
+  - RULE-SET,Reject,REJECT
+  - RULE-SET,Redirect,ReDirect
+  - RULE-SET,Direct,DIRECT
+  - RULE-SET,Proxy,Foreign
+  - RULE-SET,Emby,Media
+
+  - GEOSITE,private,DIRECT 
+  - GEOSITE,category-ads-all,REJECT-DROP
+  - GEOSITE,category-httpdns-cn,REJECT-DROP
+  - GEOSITE,youtube,YouTube
+  - GEOSITE,tiktok,TikTok
+  - GEOSITE,category-entertainment,Media
+  - GEOSITE,telegram,Telegram
+  - GEOSITE,google,Google
+  - GEOSITE,cloudflare,Cloudflare
+  - GEOSITE,category-ai-chat-!cn,Ai
+  - GEOSITE,github,Github
+  - GEOSITE,microsoft,Microsoft
+  - GEOSITE,geolocation-!cn,Foreign
+  - GEOSITE,cn,Domestic
+   
+  - GEOIP,private,DIRECT,no-resolve
+  - GEOIP,telegram,Telegram,no-resolve
+  - GEOIP,google,Google,no-resolve
+  - GEOIP,cloudflare,Cloudflare,no-resolve
+  - GEOIP,cn,Domestic,no-resolve
+
+  - MATCH,Final
+
+
+  #####################
+#通用配置
+mixed-port: 7890
+socks-port: 7891
+redir-port: 7892
+tproxy-port: 1536
+mode: Rule
+log-level: silent
+ipv6: true
+udp: true
+disable-keep-alive: false
+keep-alive-interval: 15
+keep-alive-idle: 120
+allow-lan: true
+
+geodata-mode: true
+geodata-loader: standard
+geo-auto-update: true
+geo-update-interval: 168
+geox-url:
+  geoip: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat"
+  geosite: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
+  mmdb: "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/Country.mmdb"
+  asn: "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/Country-asn.mmdb"
+unified-delay: true
+tcp-concurrent: true
+find-process-mode: strict
+global-client-fingerprint: chrome
+
+lgbm-auto-update: true
+lgbm-update-interval: 72
+lgbm-url: "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin"
+
+external-controller: 0.0.0.0:9090
+external-ui: /panel/Zash/ 
+external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip"
+secret: ""
+
+# 策略组选择和fake-ip缓存
+profile:
+  store-selected: true
+  store-fake-ip: true
+  smart-collector-size: 500
+
+# 域名嗅探
+sniffer:
+  enable: true
+  force-dns-mapping: true
+  parse-pure-ip: true
+  override-destination: false
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 5228-5230, 8443]
+    QUIC:
+      ports: []
+  force-domain:
+    - "+.v2ex.com"
+  skip-domain: ["+.local", "+.lan", "localhost", "Mijia Cloud", "miwifi.com"]
+
+# Tunnel配置
+tun:
+  enable: false
+  device: Mihomo
+  stack: mixed
+  dns-hijack:
+    - any:53
+    - tcp://any:53
+  udp-timeout: 300
+  auto-route: true
+  strict-route: true
+  auto-redirect: false
+  auto-detect-interface: true
+  route-address: [0.0.0.0/1, 128.0.0.0/1, "::/1", "8000::/1"]
+  route-exclude-address: [10.0.0.0/8, 100.64.0.0/10, 127.0.0.0/8, 169.254.0.0/16, 172.16.0.0/12, 192.168.0.0/16,
+    198.18.0.0/15, 224.0.0.0/4, 240.0.0.0/4, 255.255.255.255/32, "fc00::/7", "fe80::/10",
+    "ff00::/8", "fdfe:dcba:9876::1/126", "::1/128", "::/128"]
+
+########################## 全局通用配置 #########################
+# DNS配置
+dns:
+  enable: true
+  listen: :1053
+  ipv6: true
+  prefer-h3: true
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.0/15
+  fake-ip-filter: ["*.lan", "*.localdomain", "*.example", "*.invalid", "*.localhost", "*.test", "*.local",
+    "localhost.*", "*.home.arpa", 127.0.0.0/8， 0.0.0.0/32, "::1/128", "::/128", "GEOSITE:private"]
+  nameserver-policy:
+    'GEOSITE:category-ads-all,category-httpdns-cn': rcode://success
+    'GEOSITE:geolocation-!cn':
+      - 'https://dns.google/dns-query#Google&h3=true'
+      - 'https://cloudflare-dns.com/dns-query#Cloudflare&h3=true'
+  direct-nameserver:
+    - tls://223.5.5.5
+    - tls://223.6.6.6
+  proxy-server-nameserver:
+    - tls://223.5.5.5
+    - tls://223.6.6.6
+  nameserver:
+    - 'https://dns.alidns.com/dns-query#DIRECT&h3=true'
+    - 'quic://dns.alidns.com#DIRECT'
+
+# hosts
+hosts:
+  raw.githubusercontent.com: [185.199.108.133, 185.199.109.133, 185.199.110.133, 185.199.111.133, "2606:50c0:8000::154", "2606:50c0:8001::154", "2606:50c0:8002::154", "2606:50c0:8003::154"]
+  doh.pub: [119.28.28.28, 119.29.29.29, "2402:4e00::", "2402:4e00:1::"]
+  dns.alidns.com: [223.5.5.5, 223.6.6.6, "2400:3200::1", "2400:3200:baba::1"]
+  dns.google: [8.8.4.4, 8.8.8.8, "2001:4860:4860::8844", "2001:4860:4860::8888"]
+  cloudflarr-dns.com: [1.0.0.1, 1.1.1.1, "2606:4700:4700::1001", "2606:4700:4700::1111"]
+  dns.cloudflare.com: [1.0.0.1, 1.1.1.1, "2606:4700:4700::1001", "2606:4700:4700::1111"]
