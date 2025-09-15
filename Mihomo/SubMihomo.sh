@@ -73,7 +73,6 @@ deploy_mihomo() {
     mkdir -p "$MIHOMO_DIR"
     cd "$MIHOMO_DIR"
 
-    local MIHOMO_URL
     MIHOMO_URL=$(get_latest_vernesong_url "arm64-v8-alpha")
     if [ -z "$MIHOMO_URL" ]; then
         log_error "未找到合适的 Mihomo 下载链接。"
