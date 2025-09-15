@@ -124,12 +124,20 @@ update_services() { stop_services; deploy_substore; deploy_mihomo; start_service
 #------------------------------------------------
 setup_boot() {
     mkdir -p "$BOOT_SCRIPT_DIR"
-    cat > "$BOOT_SCRIPT_DIR/start-services.sh" << EOF
+    BOOT_FILE="$BOOT_SCRIPT_DIR/start-services.sh"
+    cat > "$BOOT_FILE" << EOF
 #!/data/data/com.termux/files/usr/bin/bash
 bash "$HOME/SubMihomo.sh" start
 EOF
-    chmod +x "$BOOT_SCRIPT_DIR/start-services.sh"
-    log_info "已设置开机自启: $BOOT_SCRIPT_DIR/start-services.sh"
+    chmod +x "$BOOT_FILE"
+    log_info "已设置开机自启: $BOOT_FILE"
+
+    #------------------------------------------------
+    # 定时更新 crontab
+    # 每 12 小时自动更新
+    #------------------------------------------------
+    (crontab -l 2>/dev/null | grep -v "SubMihomo.sh update" ; echo "0 */12 * * * bash $HOME/SubMihomo.sh update >> $HOME/SubMihomo-update.log 2>&1") | crontab -
+    log_info "已设置每 12 小时自动更新 SubMihomo.sh"
 }
 
 #------------------------------------------------
