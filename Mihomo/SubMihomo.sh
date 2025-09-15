@@ -79,9 +79,17 @@ deploy_mihomo() {
         log_error "未找到合适的 Mihomo 下载链接。"
     fi
 
-    wget -O mihomo.gz "$MIHOMO_URL"
-    gunzip -f mihomo.gz
-    chmod +x mihomo
+    wget -O mihomo.tar.gz "$MIHOMO_URL"
+
+    # 解压处理
+    if file mihomo.tar.gz | grep -q "gzip compressed"; then
+        tar -xzf mihomo.tar.gz
+        rm -f mihomo.tar.gz
+    else
+        gunzip -f mihomo.tar.gz
+    fi
+
+    chmod +x mihomo || true
 
     download_mihomo_assets
     log_info "✅ Mihomo 部署完成。"
@@ -126,21 +134,24 @@ start_substore() {
     if pgrep -f "sub-store.bundle.js" > /dev/null; then
         log_warn "Sub-Store 已在运行中。"
     else
-        nohup node sub-store.bundle.js > substore.log 2>&1 &
+        nohup node sub-store.bundle.js >> substore.log 2>&1 &
         log_info "✅ Sub-Store 已启动。"
     fi
 }
+
 start_mihomo() {
     cd "$MIHOMO_DIR"
-    if pgrep -f "mihomo -d" > /dev/null; then
+    if pgrep -f "mihomo" > /dev/null; then
         log_warn "Mihomo 已在运行中。"
     else
-        nohup ./mihomo -d . > mihomo.log 2>&1 &
+        echo "---- 启动 Mihomo: $(date) ----" >> mihomo.log
+        nohup ./mihomo -d . >> mihomo.log 2>&1 &
         log_info "✅ Mihomo 已启动。"
     fi
 }
+
 stop_substore() { pkill -f "sub-store.bundle.js" || true; log_info "✅ Sub-Store 已停止。"; }
-stop_mihomo() { pkill -f "mihomo -d" || true; log_info "✅ Mihomo 已停止。"; }
+stop_mihomo() { pkill -f "mihomo" || true; log_info "✅ Mihomo 已停止。"; }
 
 update_all() {
     stop_substore
@@ -152,7 +163,16 @@ update_all() {
 
     stop_mihomo
     cd "$MIHOMO_DIR"
-    bash "$HOME/SubClash.sh"  # 重新下载配置和规则
+    # 更新配置和规则
+    wget -O config.yaml "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Alpha/config.yaml"
+    mkdir -p rules geo
+    wget -O rules/Direct.yaml "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Direct.yaml"
+    wget -O rules/Reject.yaml "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject.yaml"
+    wget -O rules/Proxy.yaml "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Proxy.yaml"
+    wget -O geo/geoip.dat "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat"
+    wget -O geo/geosite.dat "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
+    wget -O geo/Country.mmdb "https://github.com/Loyalsoldier/geoip/releases/latest/download/Country.mmdb"
+    wget -O geo/Country-asn.mmdb "https://github.com/Loyalsoldier/geoip/releases/latest/download/Country-asn.mmdb"
     start_mihomo
 }
 
@@ -172,7 +192,7 @@ EOF
 
 setup_automation() {
     log_info "5️⃣ 设置定时任务和开机自启..."
-    (crontab -l 2>/dev/null | grep -v "sub-mihomo.sh update" ; echo "0 4 * * * bash $HOME/sub-mihomo.sh update >> $HOME/update-cron.log 2>&1") | crontab -
+    (crontab -l 2>/dev/null | grep -v "sub-mihomo.sh update" ; echo "0 */12 * * * bash $HOME/sub-mihomo.sh update >> $HOME/update-cron.log 2>&1") | crontab -
     mkdir -p "$BOOT_SCRIPT_DIR"
     cat > "$BOOT_SCRIPT_DIR/start-services.sh" << EOF
 #!/data/data/com.termux/files/usr/bin/bash
