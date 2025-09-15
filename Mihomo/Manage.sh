@@ -6,8 +6,29 @@ set -e
 #------------------------------------------------
 SUBSTORE_DIR="$HOME/substore"
 MIHOMO_DIR="$HOME/mihomo"
-SUB_MIHOMO_SCRIPT="$HOME/SubMihomo.sh"
 BOOT_SCRIPT_DIR="$HOME/.termux/boot"
+
+# Mihomo 下载链接模板
+MIHOMO_DOWNLOAD_URL_ARM64="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-f83f0c7.gz"
+MIHOMO_DOWNLOAD_URL_X86_64="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-x86_64-alpha-smart-f83f0c7.gz"
+
+CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Alpha/config.yaml"
+
+RULES_SOURCES=(
+    "rules/Redirect.yaml,https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml"
+    "rules/Direct.yaml,https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Direct.yaml"
+    "rules/Reject.yaml,https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject.yaml"
+    "rules/Proxy.yaml,https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Proxy.yaml"
+    "rules/Emby.yaml,https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Emby.yaml"
+    "rules/AWAvenue.yaml,https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Clash.yaml"
+)
+
+GEO_FILES=(
+    "geo/geoip.dat,https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat"
+    "geo/geosite.dat,https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
+    "geo/Country.mmdb,https://github.com/Loyalsoldier/geoip/releases/latest/download/Country.mmdb"
+    "geo/Country-asn.mmdb,https://github.com/Loyalsoldier/geoip/releases/latest/download/Country-asn.mmdb"
+)
 
 #------------------------------------------------
 # 工具函数
@@ -16,62 +37,184 @@ log_info() { echo -e "\e[32m[INFO]\e[0m $1"; }
 log_warn() { echo -e "\e[33m[WARN]\e[0m $1"; }
 log_error() { echo -e "\e[31m[ERROR]\e[0m $1"; exit 1; }
 
-#------------------------------------------------
-# 检查是否已部署
-#------------------------------------------------
-is_deployed() {
-    [[ -d "$SUBSTORE_DIR" && -d "$MIHOMO_DIR" && -f "$SUB_MIHOMO_SCRIPT" ]]
+get_arch() {
+    ARCH_RAW=$(uname -m)
+    case "$ARCH_RAW" in
+        aarch64)
+            ARCH="arm64-v8a"
+            MIHOMO_DOWNLOAD_URL="$MIHOMO_DOWNLOAD_URL_ARM64"
+            ;;
+        x86_64)
+            ARCH="x86_64"
+            MIHOMO_DOWNLOAD_URL="$MIHOMO_DOWNLOAD_URL_X86_64"
+            ;;
+        *)
+            log_warn "未知架构: $ARCH_RAW"
+            ARCH="unknown"
+            MIHOMO_DOWNLOAD_URL=""
+            ;;
+    esac
+    log_info "检测到架构: $ARCH"
 }
 
 #------------------------------------------------
-# 部署 SubMihomo.sh 脚本
+# 安装依赖
 #------------------------------------------------
-deploy_submihomo() {
-    log_info "下载 SubMihomo.sh..."
-    curl -L https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/SubMihomo.sh -o "$SUB_MIHOMO_SCRIPT"
-    chmod +x "$SUB_MIHOMO_SCRIPT"
-    log_info "SubMihomo.sh 已下载并赋予可执行权限"
+install_dependencies() {
+    log_info "安装依赖..."
+    pkg up -y
+    pkg i -y nodejs-lts wget unzip curl jq cronie termux-services
+    sv-enable crond && sv up crond
+    log_info "依赖安装完成"
 }
 
 #------------------------------------------------
-# 执行 SubMihomo.sh 部署
+# 部署 Sub-Store
 #------------------------------------------------
-deploy_services() {
-    bash "$SUB_MIHOMO_SCRIPT" deploy
+deploy_substore() {
+    log_info "部署 Sub-Store..."
+    mkdir -p "$SUBSTORE_DIR"
+    cd "$SUBSTORE_DIR"
+    wget -O sub-store.bundle.js "https://github.com/sub-store-org/Sub-Store/releases/latest/download/sub-store.bundle.js"
+    wget -O dist.zip "https://github.com/sub-store-org/Sub-Store-Front-End/releases/latest/download/dist.zip"
+    unzip -o dist.zip -d frontend && rm -f dist.zip
+    log_info "Sub-Store 部署完成"
+}
+
+#------------------------------------------------
+# 部署 Mihomo
+#------------------------------------------------
+deploy_mihomo() {
+    get_arch
+    [[ -z "$MIHOMO_DOWNLOAD_URL" ]] && log_error "无法获取 Mihomo 下载链接"
+
+    log_info "部署 Mihomo..."
+    mkdir -p "$MIHOMO_DIR"
+    cd "$MIHOMO_DIR"
+
+    wget -O mihomo.gz "$MIHOMO_DOWNLOAD_URL"
+    gunzip -f mihomo.gz
+    chmod +x mihomo || true
+
+    download_config
+    download_rules
+    download_geo
+    log_info "Mihomo 部署完成"
+}
+
+#------------------------------------------------
+# 下载配置和规则
+#------------------------------------------------
+download_config() {
+    log_info "下载 config.yaml..."
+    cd "$MIHOMO_DIR"
+    wget -O config.yaml "$CONFIG_URL"
+}
+
+download_rules() {
+    log_info "下载规则集..."
+    mkdir -p "$MIHOMO_DIR/rules"
+    cd "$MIHOMO_DIR"
+    for item in "${RULES_SOURCES[@]}"; do
+        IFS=',' read -r dest src <<< "$item"
+        wget -O "$dest" "$src"
+    done
+}
+
+download_geo() {
+    log_info "下载 Geo 数据..."
+    mkdir -p "$MIHOMO_DIR/geo"
+    cd "$MIHOMO_DIR"
+    for item in "${GEO_FILES[@]}"; do
+        IFS=',' read -r dest src <<< "$item"
+        wget -O "$dest" "$src"
+    done
 }
 
 #------------------------------------------------
 # 服务管理
 #------------------------------------------------
-start_services() { bash "$SUB_MIHOMO_SCRIPT" start; }
-stop_services() { bash "$SUB_MIHOMO_SCRIPT" stop; }
-restart_services() { bash "$SUB_MIHOMO_SCRIPT" restart; }
-update_services() { bash "$SUB_MIHOMO_SCRIPT" update; }
+start_services() {
+    log_info "启动 Sub-Store..."
+    cd "$SUBSTORE_DIR"
+    if ! pgrep -f "sub-store.bundle.js" > /dev/null; then
+        nohup node sub-store.bundle.js >> substore.log 2>&1 &
+    else log_warn "Sub-Store 已在运行"; fi
 
+    log_info "启动 Mihomo..."
+    cd "$MIHOMO_DIR"
+    if ! pgrep -f "mihomo" > /dev/null; then
+        nohup ./mihomo -d . >> mihomo.log 2>&1 &
+    else log_warn "Mihomo 已在运行"; fi
+
+    log_info "服务已启动"
+}
+
+stop_services() {
+    pkill -f "sub-store.bundle.js" || true
+    pkill -f "mihomo" || true
+    log_info "服务已停止"
+}
+
+restart_services() {
+    stop_services
+    start_services
+}
+
+#------------------------------------------------
+# 更新功能
+#------------------------------------------------
+update_config() { download_config; log_info "✅ config.yaml 更新完成"; }
+update_rules() { download_rules; log_info "✅ 规则集更新完成"; }
+update_geo() { download_geo; log_info "✅ Geo 数据更新完成"; }
+update_core() {
+    deploy_mihomo
+    log_info "✅ Mihomo 核心更新完成"
+}
+
+#------------------------------------------------
+# 查看日志
+#------------------------------------------------
 view_log() { tail -f "$SUBSTORE_DIR/substore.log"; }
 view_mihomo_log() { tail -f "$MIHOMO_DIR/mihomo.log"; }
+
+#------------------------------------------------
+# Termux 开机自启
+#------------------------------------------------
+setup_boot() {
+    mkdir -p "$BOOT_SCRIPT_DIR"
+    cat > "$BOOT_SCRIPT_DIR/start-services.sh" << EOF
+#!/data/data/com.termux/files/usr/bin/bash
+bash "$HOME/$(basename "$0")" start
+EOF
+    chmod +x "$BOOT_SCRIPT_DIR/start-services.sh"
+    log_info "已设置开机自启: $BOOT_SCRIPT_DIR/start-services.sh"
+}
 
 #------------------------------------------------
 # 主逻辑
 #------------------------------------------------
 case "$1" in
     deploy)
-        if is_deployed; then
-            log_warn "系统已部署过，如需重新部署请先删除 $SUB_MIHOMO_SCRIPT 及相关目录。"
-        else
-            deploy_submihomo
-            deploy_services
-            log_info "✅ 初次部署完成"
-        fi
+        install_dependencies
+        deploy_substore
+        deploy_mihomo
+        start_services
+        setup_boot
+        log_info "✅ 初次部署完成"
         ;;
     start) start_services ;;
     stop) stop_services ;;
     restart) restart_services ;;
-    update) update_services ;;
+    update) update_config; update_rules; update_geo; update_core ;;
+    update-config) update_config ;;
+    update-rules) update_rules ;;
+    update-geo) update_geo ;;
+    update-core) update_core ;;
     log) view_log ;;
     log-mihomo) view_mihomo_log ;;
     *)
-        echo "用法: $0 {deploy|start|stop|restart|update|log|log-mihomo}"
+        echo "用法: $0 {deploy|start|stop|restart|update|update-config|update-rules|update-geo|update-core|log|log-mihomo}"
         exit 1
         ;;
 esac
