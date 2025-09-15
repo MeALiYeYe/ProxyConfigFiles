@@ -56,7 +56,7 @@ view_mihomo_log() { tail -f "$MIHOMO_DIR/mihomo.log"; }
 #------------------------------------------------
 case "$1" in
     deploy)
-        if is_deployed; 键，然后
+        if is_deployed; then
             log_warn "系统已部署过，如需重新部署请先删除 $SUB_MIHOMO_SCRIPT 及相关目录。"
         else
             deploy_submihomo
@@ -70,5 +70,8 @@ case "$1" in
     update) update_services ;;
     log) view_log ;;
     log-mihomo) view_mihomo_log ;;
-    *) echo "用法: $0 {deploy|start|stop|restart|update|log|log-mihomo}"; exit 1 ;;
+    *)
+        echo "用法: $0 {deploy|start|stop|restart|update|log|log-mihomo}"
+        exit 1
+        ;;
 esac
