@@ -136,12 +136,16 @@ update_rules() {
     log_info "✅ 规则集更新完成"
 }
 update_geo() {
-    mkdir -p "$MIHOMO_DIR/geo"
-    cd "$MIHOMO_DIR/geo"
+    mkdir -p "$MIHOMO_DIR"
     for item in "${GEO_FILES[@]}"; do
         IFS=',' read -r dest src <<< "$item"
-        # 使用 wget -N 自动比较远程和本地时间戳
-        wget -N "$src" -O "$dest"
+        if [ ! -f "$dest" ]; then
+            log_warn "$dest 不存在，开始下载..."
+            wget -O "$dest" "$src"
+        else
+            log_info "检测 $dest 是否需要更新..."
+            wget -N -O "$dest" "$src"
+        fi
     done
     log_info "✅ GEO 数据已更新（如有新版本）"
 }
