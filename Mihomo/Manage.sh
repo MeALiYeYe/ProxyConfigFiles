@@ -137,12 +137,15 @@ update_rules() {
 }
 update_geo() {
     mkdir -p "$MIHOMO_DIR/geo"
+    cd "$MIHOMO_DIR/geo"
     for item in "${GEO_FILES[@]}"; do
         IFS=',' read -r dest src <<< "$item"
-        download_with_check "$MIHOMO_DIR/$dest" "$src"
+        # 使用 wget -N 自动比较远程和本地时间戳
+        wget -N "$src" -O "$dest"
     done
-    log_info "✅ Geo 数据更新完成"
+    log_info "✅ GEO 数据已更新（如有新版本）"
 }
+
 update_core() {
     get_arch
     [[ -z "$MIHOMO_DOWNLOAD_URL" ]] && log_error "无法获取 Mihomo 下载链接"
