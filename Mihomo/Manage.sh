@@ -24,15 +24,26 @@ is_deployed() {
 }
 
 #------------------------------------------------
+# 自动下载 SubMihomo.sh
+#------------------------------------------------
+ensure_submihomo() {
+    if [ ! -f "$SUB_MIHOMO_SCRIPT" ]; then
+        log_info "📥 下载 SubMihomo.sh..."
+        curl -L https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/SubMihomo.sh -o "$SUB_MIHOMO_SCRIPT"
+        chmod +x "$SUB_MIHOMO_SCRIPT"
+        log_info "✅ SubMihomo.sh 下载完成"
+    fi
+}
+
+#------------------------------------------------
 # 部署流程
 #------------------------------------------------
 deploy() {
     log_info "🛠️ 发现未部署，开始初次部署..."
-    curl -L https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/SubMihomo.sh -o "$SUB_MIHOMO_SCRIPT"
-    chmod +x "$SUB_MIHOMO_SCRIPT"
-    bash "$SUB_MIHOMO_SCRIPT"
+    ensure_submihomo
+    bash "$SUB_MIHOMO_SCRIPT" deploy
     setup_boot_autostart
-    log_info "✅ 初次部署完成。"
+    log_info "✅ 初次部署完成"
 }
 
 #------------------------------------------------
@@ -55,6 +66,7 @@ restart_services() {
 
 update_services() {
     log_info "🔄 更新 Sub-Store 和 Mihomo 资源..."
+    ensure_submihomo
     bash "$SUB_MIHOMO_SCRIPT" update
 }
 
@@ -63,12 +75,12 @@ update_services() {
 #------------------------------------------------
 view_log() {
     log_info "📄 Sub-Store 日志 (Ctrl+C 退出):"
-    tail -f "$SUBSTORE_DIR/substore.log"
+    tail -n 100 -f "$SUBSTORE_DIR/substore.log"
 }
 
 view_mihomo_log() {
     log_info "📄 Mihomo 日志 (Ctrl+C 退出):"
-    tail -f "$MIHOMO_DIR/mihomo.log"
+    tail -n 100 -f "$MIHOMO_DIR/mihomo.log"
 }
 
 #------------------------------------------------
@@ -91,7 +103,7 @@ EOF
 case "$1" in
     deploy)
         if is_deployed; then
-            log_warn "系统已部署过，如需重新部署请先删除 $SUB_MIHOMO_SCRIPT 及相关目录。"
+            log_warn "系统已部署过，如需重新部署请先删除 $SUB_MIHOMO_SCRIPT 及相关目录"
         else
             deploy
         fi
@@ -103,7 +115,11 @@ case "$1" in
     log) view_log ;;
     log-mihomo) view_mihomo_log ;;
     *)
-        echo "用法: $0 {deploy|start|stop|restart|update|log|log-mihomo}"
-        exit 1
+        # 自动判断部署或更新
+        if ! is_deployed; then
+            deploy
+        else
+            update_services
+        fi
         ;;
 esac
