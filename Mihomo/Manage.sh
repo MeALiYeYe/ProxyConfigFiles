@@ -168,8 +168,24 @@ update_config() { download_config; log_info "✅ config.yaml 更新完成"; }
 update_rules() { download_rules; log_info "✅ 规则集更新完成"; }
 update_geo() { download_geo; log_info "✅ Geo 数据更新完成"; }
 update_core() {
-    deploy_mihomo
-    log_info "✅ Mihomo 核心更新完成"
+    get_arch
+    [[ -z "$MIHOMO_DOWNLOAD_URL" ]] && log_error "无法获取 Mihomo 下载链接"
+
+    log_info "检查 Mihomo 核心更新..."
+    mkdir -p "$MIHOMO_DIR"
+    cd "$MIHOMO_DIR"
+
+    # 使用 wget -N 仅在远程文件比本地新时下载
+    wget -N "$MIHOMO_DOWNLOAD_URL" -O mihomo.gz
+
+    # 如果 mihomo.gz 有更新，解压覆盖
+    if [ -f "mihomo.gz" ]; then
+        gunzip -f mihomo.gz
+        chmod +x mihomo || true
+        log_info "✅ Mihomo 核心已更新（如有新版本）"
+    else
+        log_info "✅ Mihomo 核心已是最新，无需更新"
+    fi
 }
 
 #------------------------------------------------
