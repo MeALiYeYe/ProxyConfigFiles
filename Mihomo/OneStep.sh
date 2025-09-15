@@ -32,7 +32,7 @@ echo "=========================="
 echo "2️⃣ 部署 Sub-Store"
 cd ~/substore
 if [ ! -f sub-store.bundle.js ]; then
-    wget -O sub-store.bundle.js https://github.com/MeALiYeYe/substore/releases/download/v1.0.0/sub-store.bundle.js
+    wget -O sub-store.bundle.js https://github.com/sub-store-org/Sub-Store/releases/latest/download/sub-store.bundle.js
 fi
 nohup node sub-store.bundle.js > substore.log 2>&1 &
 echo "Sub-Store 已启动，日志: ~/substore/substore.log"
