@@ -8,7 +8,6 @@ SUBSTORE_DIR="$HOME/substore"
 MIHOMO_DIR="$HOME/mihomo"
 BOOT_SCRIPT_DIR="$HOME/.termux/boot"
 
-# Mihomo 核心下载链接
 MIHOMO_DOWNLOAD_URL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-f83f0c7.gz"
 CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Alpha/config.yaml"
 
@@ -33,14 +32,13 @@ GEO_FILES=(
 #------------------------------------------------
 log_info() { echo -e "\e[32m[INFO]\e[0m $1"; }
 log_warn() { echo -e "\e[33m[WARN]\e[0m $1"; }
-log_error() { echo -e "\e[31m[ERROR]\e[0m $1"; exit 1; }
 
 get_arch() {
     ARCH_RAW=$(uname -m)
     case "$ARCH_RAW" in
         aarch64) ARCH="arm64-v8a" ;;
-        x86_64)  ARCH="x86_64" ;;
-        *) log_error "不支持的架构: $ARCH_RAW" ;;
+        x86_64) ARCH="x86_64" ;;
+        *) log_warn "未知架构: $ARCH_RAW" ;;
     esac
 }
 
@@ -76,37 +74,24 @@ deploy_mihomo() {
     mkdir -p "$MIHOMO_DIR"
     cd "$MIHOMO_DIR"
     wget -O mihomo.gz "$MIHOMO_DOWNLOAD_URL"
-
-    # 解压
-    if file mihomo.gz | grep -q "gzip compressed"; then
-        gunzip -f mihomo.gz
-    else
-        log_warn "Mihomo 文件非 gzip 压缩"
-    fi
-
+    gunzip -f mihomo.gz
     chmod +x mihomo || true
     download_assets
     log_info "Mihomo 部署完成"
 }
 
 #------------------------------------------------
-# 下载配置与规则
+# 下载配置和规则
 #------------------------------------------------
 download_assets() {
-    cd "$MIHOMO_DIR" || exit
-    log_info "下载 config.yaml..."
+    mkdir -p "$MIHOMO_DIR/rules" "$MIHOMO_DIR/geo"
+    cd "$MIHOMO_DIR"
     wget -O config.yaml "$CONFIG_URL"
-
-    log_info "下载规则集..."
-    mkdir -p rules
-    for item in "${RULES_SOURCES[@]}"; do
+    for item 在 "${RULES_SOURCES[@]}"; do
         IFS=',' read -r dest src <<< "$item"
         wget -O "$dest" "$src"
     done
-
-    log_info "下载 Geo 数据..."
-    mkdir -p geo
-    for item in "${GEO_FILES[@]}"; do
+    for item 在 "${GEO_FILES[@]}"; do
         IFS=',' read -r dest src <<< "$item"
         wget -O "$dest" "$src"
     done
@@ -116,33 +101,27 @@ download_assets() {
 # 服务管理
 #------------------------------------------------
 start_services() {
-    log_info "启动 Sub-Store 与 Mihomo..."
+    log_info "启动 Sub-Store..."
     cd "$SUBSTORE_DIR"
     if ! pgrep -f "sub-store.bundle.js" > /dev/null; then
         nohup node sub-store.bundle.js >> substore.log 2>&1 &
-    fi
+    else log_warn "Sub-Store 已在运行"; fi
+
+    log_info "启动 Mihomo..."
     cd "$MIHOMO_DIR"
     if ! pgrep -f "mihomo" > /dev/null; then
         nohup ./mihomo -d . >> mihomo.log 2>&1 &
-    fi
+    else log_warn "Mihomo 已在运行"; fi
+
     log_info "服务已启动"
 }
 
-stop_services() {
-    pkill -f "sub-store.bundle.js" || true
-    pkill -f "mihomo" || true
-    log_info "服务已停止"
-}
+stop_services() { pkill -f "sub-store.bundle.js" || true; pkill -f "mihomo" || true; log_info "服务已停止"; }
+update_services() { stop_services; deploy_substore; deploy_mihomo; start_services; log_info "更新完成"; }
 
-update_services() {
-    log_info "更新 Sub-Store 与 Mihomo..."
-    stop_services
-    deploy_substore
-    deploy_mihomo
-    start_services
-    log_info "更新完成"
-}
-
+#------------------------------------------------
+# 开机自启
+#------------------------------------------------
 setup_boot() {
     mkdir -p "$BOOT_SCRIPT_DIR"
     cat > "$BOOT_SCRIPT_DIR/start-services.sh" << EOF
@@ -157,16 +136,10 @@ EOF
 # 主逻辑
 #------------------------------------------------
 case "$1" in
+    deploy) install_dependencies; deploy_substore; deploy_mihomo; start_services; setup_boot ;;
     start) start_services ;;
     stop) stop_services ;;
     restart) stop_services; start_services ;;
     update) update_services ;;
-    deploy)
-        install_dependencies
-        deploy_substore
-        deploy_mihomo
-        start_services
-        setup_boot
-        ;;
     *) echo "用法: $0 {deploy|start|stop|restart|update}" ;;
 esac
