@@ -41,7 +41,7 @@ get_arch() {
 }
 
 get_latest_vernesong_url() {
-    local keyword="arm64-v8-alpha"
+    local keyword=$1
     curl -s "https://api.github.com/repos/vernesong/mihomo/releases" | \
     jq -r '.[] | .assets[] | select(.name | contains("'"$keyword"'")) | .browser_download_url' | head -n1
 }
