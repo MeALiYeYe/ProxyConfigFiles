@@ -8,6 +8,9 @@ SUBSTORE_DIR="$HOME/substore"
 MIHOMO_DIR="$HOME/mihomo"
 BOOT_SCRIPT_DIR="$HOME/.termux/boot"
 
+# Mihomo 核心固定下载链接
+MIHOMO_DOWNLOAD_URL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-f83f0c7.gz"
+
 CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Alpha/config.yaml"
 RULES_SOURCES=(
     "rules/Redirect.yaml,https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml"
@@ -40,12 +43,6 @@ get_arch() {
     esac
 }
 
-get_latest_vernesong_url() {
-    local keyword=$1
-    curl -s "https://api.github.com/repos/vernesong/mihomo/releases" | \
-    jq -r '.[] | .assets[] | select(.name | contains("'"$keyword"'")) | .browser_download_url' | head -n1
-}
-
 #================================================
 # --- 安装流程 ---
 #================================================
@@ -73,12 +70,8 @@ deploy_mihomo() {
     mkdir -p "$MIHOMO_DIR"
     cd "$MIHOMO_DIR"
 
-    MIHOMO_URL=$(get_latest_vernesong_url "arm64-v8-alpha")
-    if [ -z "$MIHOMO_URL" ]; then
-        log_error "未找到合适的 Mihomo 下载链接。"
-    fi
-
-    wget -O mihomo.tar.gz "$MIHOMO_URL"
+    log_info "下载 Mihomo 核心..."
+    wget -O mihomo.gz "$MIHOMO_DOWNLOAD_URL"
 
     # 解压处理
     if file mihomo.tar.gz | grep -q "gzip compressed"; then
