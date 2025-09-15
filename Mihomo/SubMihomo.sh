@@ -72,15 +72,7 @@ deploy_mihomo() {
 
     log_info "下载 Mihomo 核心..."
     wget -O mihomo.gz "$MIHOMO_DOWNLOAD_URL"
-
-    # 解压处理
-    if file mihomo.tar.gz | grep -q "gzip compressed"; then
-        tar -xzf mihomo.tar.gz
-        rm -f mihomo.tar.gz
-    else
-        gunzip -f mihomo.tar.gz
-    fi
-
+    gunzip -f mihomo.gz
     chmod +x mihomo || true
 
     download_mihomo_assets
