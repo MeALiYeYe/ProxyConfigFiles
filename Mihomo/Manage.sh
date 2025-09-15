@@ -37,6 +37,27 @@ log_info() { echo -e "\e[32m[INFO]\e[0m $1"; }
 log_warn() { echo -e "\e[33m[WARN]\e[0m $1"; }
 log_error() { echo -e "\e[31m[ERROR]\e[0m $1"; exit 1; }
 
+# 下载函数，带重试和文件检查
+download_with_check() {
+    local dest="$1"
+    local url="$2"
+    local retries=3
+    local wait_time=3
+    local success=0
+
+    for i in $(seq 1 $retries); do
+        log_info "下载 $dest (尝试 $i/$retries)..."
+        wget -c "$url" -O "$dest" && [[ -s "$dest" ]] && success=1 && break
+        log_warn "下载失败，等待 $wait_time 秒后重试..."
+        sleep $wait_time
+    done
+
+    [[ $success -ne 1 ]] && log_error "下载失败或文件为空: $dest"
+}
+
+#------------------------------------------------
+# 架构检测
+#------------------------------------------------
 get_arch() {
     ARCH_RAW=$(uname -m)
     case "$ARCH_RAW" in
@@ -75,8 +96,8 @@ deploy_substore() {
     log_info "部署 Sub-Store..."
     mkdir -p "$SUBSTORE_DIR"
     cd "$SUBSTORE_DIR"
-    wget -O sub-store.bundle.js "https://github.com/sub-store-org/Sub-Store/releases/latest/download/sub-store.bundle.js"
-    wget -O dist.zip "https://github.com/sub-store-org/Sub-Store-Front-End/releases/latest/download/dist.zip"
+    download_with_check "sub-store.bundle.js" "https://github.com/sub-store-org/Sub-Store/releases/latest/download/sub-store.bundle.js"
+    download_with_check "dist.zip" "https://github.com/sub-store-org/Sub-Store-Front-End/releases/latest/download/dist.zip"
     unzip -o dist.zip -d frontend && rm -f dist.zip
     log_info "Sub-Store 部署完成"
 }
@@ -92,49 +113,61 @@ deploy_mihomo() {
     mkdir -p "$MIHOMO_DIR"
     cd "$MIHOMO_DIR"
 
-    wget -O mihomo.gz "$MIHOMO_DOWNLOAD_URL"
+    download_with_check "mihomo.gz" "$MIHOMO_DOWNLOAD_URL"
     gunzip -f mihomo.gz
     chmod +x mihomo || true
 
-    download_config
-    download_rules
-    download_geo
+    update_config
+    update_rules
+    update_geo
     log_info "Mihomo 部署完成"
 }
 
 #------------------------------------------------
-# 下载配置和规则
+# 下载与更新功能
 #------------------------------------------------
-download_config() {
-    log_info "下载 config.yaml..."
-    cd "$MIHOMO_DIR"
-    wget -O config.yaml "$CONFIG_URL"
-}
-
-download_rules() {
-    log_info "下载规则集..."
+update_config() { download_with_check "$MIHOMO_DIR/config.yaml" "$CONFIG_URL"; log_info "✅ config.yaml 更新完成"; }
+update_rules() {
     mkdir -p "$MIHOMO_DIR/rules"
-    cd "$MIHOMO_DIR"
     for item in "${RULES_SOURCES[@]}"; do
         IFS=',' read -r dest src <<< "$item"
-        wget -O "$dest" "$src"
+        download_with_check "$MIHOMO_DIR/$dest" "$src"
     done
+    log_info "✅ 规则集更新完成"
 }
-
-download_geo() {
-    log_info "下载 Geo 数据..."
+update_geo() {
     mkdir -p "$MIHOMO_DIR/geo"
-    cd "$MIHOMO_DIR"
     for item in "${GEO_FILES[@]}"; do
         IFS=',' read -r dest src <<< "$item"
-        wget -O "$dest" "$src"
+        download_with_check "$MIHOMO_DIR/$dest" "$src"
     done
+    log_info "✅ Geo 数据更新完成"
+}
+update_core() {
+    get_arch
+    [[ -z "$MIHOMO_DOWNLOAD_URL" ]] && log_error "无法获取 Mihomo 下载链接"
+    download_with_check "$MIHOMO_DIR/mihomo.gz" "$MIHOMO_DOWNLOAD_URL"
+    gunzip -f "$MIHOMO_DIR/mihomo.gz"
+    chmod +x "$MIHOMO_DIR/mihomo" || true
+    log_info "✅ Mihomo 核心更新完成"
+}
+
+#------------------------------------------------
+# 启动前检查必要文件
+#------------------------------------------------
+check_mihomo_ready() {
+    [[ ! -x "$MIHOMO_DIR/mihomo" ]] && log_error "Mihomo 核心不存在或不可执行"
+    [[ ! -s "$MIHOMO_DIR/config.yaml" ]] && log_error "config.yaml 不存在或为空"
+    [[ ! -s "$MIHOMO_DIR/geo/geosite.dat" ]] && log_error "Geo 文件 geosite.dat 不存在或为空"
+    [[ ! -s "$MIHOMO_DIR/geo/geoip.dat" ]] && log_error "Geo 文件 geoip.dat 不存在或为空"
 }
 
 #------------------------------------------------
 # 服务管理
 #------------------------------------------------
 start_services() {
+    check_mihomo_ready
+
     log_info "启动 Sub-Store..."
     cd "$SUBSTORE_DIR"
     if ! pgrep -f "sub-store.bundle.js" > /dev/null; then
@@ -162,39 +195,6 @@ restart_services() {
 }
 
 #------------------------------------------------
-# 更新功能
-#------------------------------------------------
-update_config() { download_config; log_info "✅ config.yaml 更新完成"; }
-update_rules() { download_rules; log_info "✅ 规则集更新完成"; }
-update_geo() { download_geo; log_info "✅ Geo 数据更新完成"; }
-update_core() {
-    get_arch
-    [[ -z "$MIHOMO_DOWNLOAD_URL" ]] && log_error "无法获取 Mihomo 下载链接"
-
-    log_info "检查 Mihomo 核心更新..."
-    mkdir -p "$MIHOMO_DIR"
-    cd "$MIHOMO_DIR"
-
-    # 使用 wget -N 仅在远程文件比本地新时下载
-    wget -N "$MIHOMO_DOWNLOAD_URL" -O mihomo.gz
-
-    # 如果 mihomo.gz 有更新，解压覆盖
-    if [ -f "mihomo.gz" ]; then
-        gunzip -f mihomo.gz
-        chmod +x mihomo || true
-        log_info "✅ Mihomo 核心已更新（如有新版本）"
-    else
-        log_info "✅ Mihomo 核心已是最新，无需更新"
-    fi
-}
-
-#------------------------------------------------
-# 查看日志
-#------------------------------------------------
-view_log() { tail -f "$SUBSTORE_DIR/substore.log"; }
-view_mihomo_log() { tail -f "$MIHOMO_DIR/mihomo.log"; }
-
-#------------------------------------------------
 # Termux 开机自启
 #------------------------------------------------
 setup_boot() {
@@ -206,6 +206,12 @@ EOF
     chmod +x "$BOOT_SCRIPT_DIR/start-services.sh"
     log_info "已设置开机自启: $BOOT_SCRIPT_DIR/start-services.sh"
 }
+
+#------------------------------------------------
+# 查看日志
+#------------------------------------------------
+view_log() { tail -f "$SUBSTORE_DIR/substore.log"; }
+view_mihomo_log() { tail -f "$MIHOMO_DIR/mihomo.log"; }
 
 #------------------------------------------------
 # 主逻辑
@@ -222,7 +228,12 @@ case "$1" in
     start) start_services ;;
     stop) stop_services ;;
     restart) restart_services ;;
-    update) update_config; update_rules; update_geo; update_core ;;
+    update)
+        update_config
+        update_rules
+        update_geo
+        update_core
+        ;;
     update-config) update_config ;;
     update-rules) update_rules ;;
     update-geo) update_geo ;;
