@@ -113,7 +113,7 @@ start_services() {
         nohup node sub-store.bundle.js >> substore.log 2>&1 &
     fi
     cd "$MIHOMO_DIR"
-    if ! pgrep -f "mihomo" > /dev/null; 键，然后
+    if ! pgrep -f "mihomo" > /dev/null; then
         nohup ./mihomo -d . >> mihomo.log 2>&1 &
     fi
     log_info "服务已启动"
