@@ -4,9 +4,9 @@ set -e
 #------------------------------------------------
 # 目录配置
 #------------------------------------------------
-SUB_MIHOMO_SCRIPT="$HOME/SubMihomo.sh"
 SUBSTORE_DIR="$HOME/substore"
 MIHOMO_DIR="$HOME/mihomo"
+SUB_MIHOMO_SCRIPT="$HOME/SubMihomo.sh"
 BOOT_SCRIPT_DIR="$HOME/.termux/boot"
 
 #------------------------------------------------
@@ -24,88 +24,44 @@ is_deployed() {
 }
 
 #------------------------------------------------
-# 自动下载 SubMihomo.sh
+# 部署 SubMihomo.sh 脚本
 #------------------------------------------------
-ensure_submihomo() {
-    if [ ! -f "$SUB_MIHOMO_SCRIPT" ]; then
-        log_info "📥 下载 SubMihomo.sh..."
-        curl -L https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/SubMihomo.sh -o "$SUB_MIHOMO_SCRIPT"
-        chmod +x "$SUB_MIHOMO_SCRIPT"
-        log_info "✅ SubMihomo.sh 下载完成"
-    fi
+deploy_submihomo() {
+    log_info "下载 SubMihomo.sh..."
+    curl -L https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/SubMihomo.sh -o "$SUB_MIHOMO_SCRIPT"
+    chmod +x "$SUB_MIHOMO_SCRIPT"
+    log_info "SubMihomo.sh 已下载并赋予可执行权限"
 }
 
 #------------------------------------------------
-# 部署流程
+# 执行 SubMihomo.sh 部署
 #------------------------------------------------
-deploy() {
-    log_info "🛠️ 发现未部署，开始初次部署..."
-    ensure_submihomo
+deploy_services() {
     bash "$SUB_MIHOMO_SCRIPT" deploy
-    setup_boot_autostart
-    log_info "✅ 初次部署完成"
 }
 
 #------------------------------------------------
 # 服务管理
 #------------------------------------------------
-start_services() {
-    log_info "🚀 启动 Sub-Store 和 Mihomo 服务..."
-    bash "$SUB_MIHOMO_SCRIPT" start
-}
+start_services() { bash "$SUB_MIHOMO_SCRIPT" start; }
+stop_services() { bash "$SUB_MIHOMO_SCRIPT" stop; }
+restart_services() { bash "$SUB_MIHOMO_SCRIPT" restart; }
+update_services() { bash "$SUB_MIHOMO_SCRIPT" update; }
 
-stop_services() {
-    log_info "🛑 停止 Sub-Store 和 Mihomo 服务..."
-    bash "$SUB_MIHOMO_SCRIPT" stop
-}
-
-restart_services() {
-    log_info "🔄 重启 Sub-Store 和 Mihomo 服务..."
-    bash "$SUB_MIHOMO_SCRIPT" restart
-}
-
-update_services() {
-    log_info "🔄 更新 Sub-Store 和 Mihomo 资源..."
-    ensure_submihomo
-    bash "$SUB_MIHOMO_SCRIPT" update
-}
-
-#------------------------------------------------
-# 日志查看
-#------------------------------------------------
-view_log() {
-    log_info "📄 Sub-Store 日志 (Ctrl+C 退出):"
-    tail -n 100 -f "$SUBSTORE_DIR/substore.log"
-}
-
-view_mihomo_log() {
-    log_info "📄 Mihomo 日志 (Ctrl+C 退出):"
-    tail -n 100 -f "$MIHOMO_DIR/mihomo.log"
-}
-
-#------------------------------------------------
-# Termux 开机自启
-#------------------------------------------------
-setup_boot_autostart() {
-    mkdir -p "$BOOT_SCRIPT_DIR"
-    BOOT_FILE="$BOOT_SCRIPT_DIR/start-services.sh"
-    cat > "$BOOT_FILE" << EOF
-#!/data/data/com.termux/files/usr/bin/bash
-bash "$SUB_MIHOMO_SCRIPT" start
-EOF
-    chmod +x "$BOOT_FILE"
-    log_info "✅ 已设置 Termux 开机自启: $BOOT_FILE"
-}
+view_log() { tail -f "$SUBSTORE_DIR/substore.log"; }
+view_mihomo_log() { tail -f "$MIHOMO_DIR/mihomo.log"; }
 
 #------------------------------------------------
 # 主逻辑
 #------------------------------------------------
 case "$1" in
     deploy)
-        if is_deployed; then
-            log_warn "系统已部署过，如需重新部署请先删除 $SUB_MIHOMO_SCRIPT 及相关目录"
+        if is_deployed; 键，然后
+            log_warn "系统已部署过，如需重新部署请先删除 $SUB_MIHOMO_SCRIPT 及相关目录。"
         else
-            deploy
+            deploy_submihomo
+            deploy_services
+            log_info "✅ 初次部署完成"
         fi
         ;;
     start) start_services ;;
@@ -114,12 +70,5 @@ case "$1" in
     update) update_services ;;
     log) view_log ;;
     log-mihomo) view_mihomo_log ;;
-    *)
-        # 自动判断部署或更新
-        if ! is_deployed; then
-            deploy
-        else
-            update_services
-        fi
-        ;;
+    *) echo "用法: $0 {deploy|start|stop|restart|update|log|log-mihomo}"; exit 1 ;;
 esac
