@@ -4,7 +4,7 @@ set -e
 #------------------------------------------------
 # 目录配置
 #------------------------------------------------
-SUB_MIHOMO_SCRIPT="$HOME/mihomo/SubMihomo.sh"
+SUB_MIHOMO_SCRIPT="$HOME/SubMihomo.sh"
 SUBSTORE_DIR="$HOME/substore"
 MIHOMO_DIR="$HOME/mihomo"
 BOOT_SCRIPT_DIR="$HOME/.termux/boot"
