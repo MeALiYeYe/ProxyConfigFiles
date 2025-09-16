@@ -41,7 +41,7 @@ log_error() { echo -e "\e[31m[ERROR]\e[0m $1"; exit 1; }
 # 检查部署状态
 #------------------------------------------------
 is_deployed() {
-    [[ -d "$SUBSTORE_DIR" && -d "$MIHOMO_DIR" ]]
+    [[ -d "$SUBSTORE_DIR" && -d "$MIHOMO_DIR" && -f "$SUB_MIHOMO_SCRIPT" ]]
 }
 
 #------------------------------------------------
@@ -92,12 +92,12 @@ download_assets() {
 
     for item in "${RULES_SOURCES[@]}"; do
         IFS=',' read -r dest src <<< "$item"
-        wget -O "$dest" "$src"
+        wget -O "$dest" "$src" || { log_error "下载失败: $src"; return 1; }
     done
 
     for item in "${GEO_FILES[@]}"; do
         IFS=',' read -r dest src <<< "$item"
-        wget -O "$dest" "$src"
+        wget -O "$dest" "$src" || { log_error "下载失败: $src"; return 1; }
     done
 }
 
