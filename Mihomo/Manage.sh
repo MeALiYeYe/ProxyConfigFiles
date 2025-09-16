@@ -32,7 +32,11 @@ GEO_FILES=(
 #------------------------------------------------
 log_info() { echo -e "\e[32m[INFO]\e[0m $1"; }
 log_warn() { echo -e "\e[33m[WARN]\e[0m $1"; }
+log_error() { echo -e "\e[31m[ERROR]\e[0m $1"; exit 1; }
 
+#------------------------------------------------
+# 架构检测
+#------------------------------------------------
 get_arch() {
     ARCH_RAW=$(uname -m)
     case "$ARCH_RAW" in
@@ -71,7 +75,7 @@ deploy_substore() {
 #------------------------------------------------
 deploy_mihomo() {
     log_info "部署 Mihomo..."
-    mkdir -p "$MIHOMO_DIR" "$MIHOMO_DIR/rules" "$MIHOMO_DIR/geo"
+    mkdir -p "$MIHOMO_DIR"
     cd "$MIHOMO_DIR"
     wget -O mihomo.gz "$MIHOMO_DOWNLOAD_URL"
     gunzip -f mihomo.gz
@@ -81,26 +85,18 @@ deploy_mihomo() {
 }
 
 #------------------------------------------------
-# 下载配置、规则和 GEO
+# 下载配置和规则
 #------------------------------------------------
 download_assets() {
     mkdir -p "$MIHOMO_DIR/rules" "$MIHOMO_DIR/geo"
     cd "$MIHOMO_DIR"
-
-    log_info "下载 config.yaml..."
     wget -O config.yaml "$CONFIG_URL"
-
-    log_info "下载规则集..."
     for item in "${RULES_SOURCES[@]}"; do
         IFS=',' read -r dest src <<< "$item"
-        mkdir -p "$(dirname "$dest")"
         wget -O "$dest" "$src"
     done
-
-    log_info "下载 Geo 数据..."
     for item in "${GEO_FILES[@]}"; do
         IFS=',' read -r dest src <<< "$item"
-        mkdir -p "$(dirname "$dest")"
         wget -O "$dest" "$src"
     done
 }
@@ -136,47 +132,42 @@ restart_services() {
 }
 
 #------------------------------------------------
-# 更新功能
+# 更新部分分开
 #------------------------------------------------
-update_config() {
-    log_info "更新 config.yaml..."
-    wget -O "$MIHOMO_DIR/config.yaml" "$CONFIG_URL"
-}
-
-update_ruleset() {
-    log_info "更新规则集..."
-    for item in "${RULES_SOURCES[@]}"; do
-        IFS=',' read -r dest src <<< "$item"
-        mkdir -p "$(dirname "$dest")"
-        wget -O "$dest" "$src"
-    done
-}
-
-update_geo() {
-    log_info "更新 GEO 数据..."
-    for item in "${GEO_FILES[@]}"; do
-        IFS=',' read -r dest src <<< "$item"
-        mkdir -p "$(dirname "$dest")"
-        wget -O "$dest" "$src"
-    done
-}
-
-update_mihomo_core() {
+update_mihomo() {
     log_info "更新 Mihomo 核心..."
     cd "$MIHOMO_DIR"
     wget -O mihomo.gz "$MIHOMO_DOWNLOAD_URL"
     gunzip -f mihomo.gz
     chmod +x mihomo || true
+    log_info "Mihomo 核心更新完成"
 }
 
-update_services() {
-    stop_services
-    update_mihomo_core
-    update_config
-    update_ruleset
-    update_geo
-    start_services
-    log_info "更新完成"
+update_config() {
+    log_info "更新 config.yaml..."
+    cd "$MIHOMO_DIR"
+    wget -O config.yaml "$CONFIG_URL"
+    log_info "config.yaml 更新完成"
+}
+
+update_rules() {
+    log_info "更新规则集..."
+    cd "$MIHOMO_DIR"
+    for item in "${RULES_SOURCES[@]}"; do
+        IFS=',' read -r dest src <<< "$item"
+        wget -O "$dest" "$src"
+    done
+    log_info "规则集更新完成"
+}
+
+update_geo() {
+    log_info "更新 Geo 数据..."
+    cd "$MIHOMO_DIR"
+    for item in "${GEO_FILES[@]}"; do
+        IFS=',' read -r dest src <<< "$item"
+        wget -O "$dest" "$src"
+    done
+    log_info "Geo 数据更新完成"
 }
 
 #------------------------------------------------
@@ -186,7 +177,7 @@ setup_boot() {
     mkdir -p "$BOOT_SCRIPT_DIR"
     cat > "$BOOT_SCRIPT_DIR/start-services.sh" << EOF
 #!/data/data/com.termux/files/usr/bin/bash
-bash "$HOME/Manage.sh" start
+bash "$HOME/bin/Manage.sh" start
 EOF
     chmod +x "$BOOT_SCRIPT_DIR/start-services.sh"
     log_info "已设置开机自启: $BOOT_SCRIPT_DIR/start-services.sh"
@@ -206,6 +197,13 @@ case "$1" in
     start) start_services ;;
     stop) stop_services ;;
     restart) restart_services ;;
-    update) update_services ;;
-    *) echo "用法: $0 {deploy|start|stop|restart|update}" ;;
+    update)
+        update_mihomo
+        update_config
+        update_rules
+        update_geo
+        ;;
+    log) tail -f "$SUBSTORE_DIR/substore.log" ;;
+    log-mihomo) tail -f "$MIHOMO_DIR/mihomo.log" ;;
+    *) echo "用法: $0 {deploy|start|stop|restart|update|log|log-mihomo}" ;;
 esac
