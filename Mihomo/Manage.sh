@@ -35,15 +35,10 @@ log_warn() { echo -e "\e[33m[WARN]\e[0m $1"; }
 log_error() { echo -e "\e[31m[ERROR]\e[0m $1"; exit 1; }
 
 #------------------------------------------------
-# 架构检测
+# 检查是否已部署
 #------------------------------------------------
-get_arch() {
-    ARCH_RAW=$(uname -m)
-    case "$ARCH_RAW" in
-        aarch64) ARCH="arm64-v8a" ;;
-        x86_64)  ARCH="x86_64" ;;
-        *) log_warn "未知架构: $ARCH_RAW" ;;
-    esac
+is_deployed() {
+    [[ -d "$SUBSTORE_DIR" && -d "$MIHOMO_DIR" && -f "$MIHOMO_DIR/mihomo" ]]
 }
 
 #------------------------------------------------
@@ -85,18 +80,24 @@ deploy_mihomo() {
 }
 
 #------------------------------------------------
-# 下载配置和规则
+# 下载配置、规则和 Geo 文件
 #------------------------------------------------
 download_assets() {
     mkdir -p "$MIHOMO_DIR/rules" "$MIHOMO_DIR/geo"
     cd "$MIHOMO_DIR"
     wget -O config.yaml "$CONFIG_URL"
+
+    # 下载规则集
     for item in "${RULES_SOURCES[@]}"; do
         IFS=',' read -r dest src <<< "$item"
+        mkdir -p "$(dirname "$dest")"
         wget -O "$dest" "$src"
     done
+
+    # 下载 Geo 文件
     for item in "${GEO_FILES[@]}"; do
         IFS=',' read -r dest src <<< "$item"
+        mkdir -p "$(dirname "$dest")"
         wget -O "$dest" "$src"
     done
 }
@@ -126,14 +127,32 @@ stop_services() {
     log_info "服务已停止"
 }
 
-restart_services() {
-    stop_services
-    start_services
+update_geo() {
+    log_info "更新 Geo 数据..."
+    for item in "${GEO_FILES[@]}"; do
+        IFS=',' read -r dest src <<< "$item"
+        mkdir -p "$(dirname "$dest")"
+        wget -O "$dest" "$src"
+    done
+    log_info "Geo 更新完成"
 }
 
-#------------------------------------------------
-# 更新部分分开
-#------------------------------------------------
+update_rules() {
+    log_info "更新规则集..."
+    for item in "${RULES_SOURCES[@]}"; do
+        IFS=',' read -r dest src <<< "$item"
+        mkdir -p "$(dirname "$dest")"
+        wget -O "$dest" "$src"
+    done
+    log_info "规则集更新完成"
+}
+
+update_config() {
+    log_info "更新 config.yaml..."
+    wget -O "$MIHOMO_DIR/config.yaml" "$CONFIG_URL"
+    log_info "config.yaml 更新完成"
+}
+
 update_mihomo() {
     log_info "更新 Mihomo 核心..."
     cd "$MIHOMO_DIR"
@@ -143,31 +162,14 @@ update_mihomo() {
     log_info "Mihomo 核心更新完成"
 }
 
-update_config() {
-    log_info "更新 config.yaml..."
-    cd "$MIHOMO_DIR"
-    wget -O config.yaml "$CONFIG_URL"
-    log_info "config.yaml 更新完成"
-}
-
-update_rules() {
-    log_info "更新规则集..."
-    cd "$MIHOMO_DIR"
-    for item in "${RULES_SOURCES[@]}"; do
-        IFS=',' read -r dest src <<< "$item"
-        wget -O "$dest" "$src"
-    done
-    log_info "规则集更新完成"
-}
-
-update_geo() {
-    log_info "更新 Geo 数据..."
-    cd "$MIHOMO_DIR"
-    for item in "${GEO_FILES[@]}"; do
-        IFS=',' read -r dest src <<< "$item"
-        wget -O "$dest" "$src"
-    done
-    log_info "Geo 数据更新完成"
+update_all() {
+    stop_services
+    update_mihomo
+    update_config
+    update_rules
+    update_geo
+    start_services
+    log_info "全部更新完成"
 }
 
 #------------------------------------------------
@@ -177,7 +179,7 @@ setup_boot() {
     mkdir -p "$BOOT_SCRIPT_DIR"
     cat > "$BOOT_SCRIPT_DIR/start-services.sh" << EOF
 #!/data/data/com.termux/files/usr/bin/bash
-bash "$HOME/bin/Manage.sh" start
+Manage.sh start
 EOF
     chmod +x "$BOOT_SCRIPT_DIR/start-services.sh"
     log_info "已设置开机自启: $BOOT_SCRIPT_DIR/start-services.sh"
@@ -188,22 +190,26 @@ EOF
 #------------------------------------------------
 case "$1" in
     deploy)
-        install_dependencies
-        deploy_substore
-        deploy_mihomo
-        start_services
-        setup_boot
+        if is_deployed; then
+            log_warn "系统已部署过"
+        else
+            install_dependencies
+            deploy_substore
+            deploy_mihomo
+            start_services
+            setup_boot
+            log_info "✅ 部署完成"
+        fi
         ;;
     start) start_services ;;
     stop) stop_services ;;
-    restart) restart_services ;;
-    update)
-        update_mihomo
-        update_config
-        update_rules
-        update_geo
-        ;;
+    restart) stop_services; start_services ;;
+    update-geo) update_geo ;;
+    update-rules) update_rules ;;
+    update-config) update_config ;;
+    update-mihomo) update_mihomo ;;
+    update-all) update_all ;;
     log) tail -f "$SUBSTORE_DIR/substore.log" ;;
     log-mihomo) tail -f "$MIHOMO_DIR/mihomo.log" ;;
-    *) echo "用法: $0 {deploy|start|stop|restart|update|log|log-mihomo}" ;;
+    *) echo "用法: $0 {deploy|start|stop|restart|update-geo|update-rules|update-config|update-mihomo|update-all|log|log-mihomo}" ;;
 esac
