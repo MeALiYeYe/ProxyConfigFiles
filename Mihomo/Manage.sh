@@ -63,8 +63,8 @@ deploy_substore() {
     log_info "部署 Sub-Store..."
     mkdir -p "$SUBSTORE_DIR"
     cd "$SUBSTORE_DIR"
-    wget -O sub-store.bundle.js "https://github.com/sub-store-org/Sub-Store/releases/latest/download/sub-store.bundle.js"
-    wget -O dist.zip "https://github.com/sub-store-org/Sub-Store-Front-End/releases/latest/download/dist.zip"
+    wget -q --show-progress -O sub-store.bundle.js "https://github.com/sub-store-org/Sub-Store/releases/latest/download/sub-store.bundle.js"
+    wget -q --show-progress -O dist.zip "https://github.com/sub-store-org/Sub-Store-Front-End/releases/latest/download/dist.zip"
     unzip -o dist.zip -d dist && rm -f dist.zip
     log_info "Sub-Store 部署完成"
 }
@@ -76,7 +76,7 @@ deploy_mihomo() {
     log_info "部署 Mihomo..."
     mkdir -p "$MIHOMO_DIR"
     cd "$MIHOMO_DIR"
-    wget -O mihomo.gz "$MIHOMO_DOWNLOAD_URL"
+    wget -q --show-progress -O mihomo.gz "$MIHOMO_DOWNLOAD_URL"
     gunzip -f mihomo.gz
     mv mihomo-* mihomo
     chmod +x mihomo
@@ -90,16 +90,16 @@ deploy_mihomo() {
 download_assets() {
     mkdir -p "$MIHOMO_DIR/rules" "$MIHOMO_DIR/geo"
     cd "$MIHOMO_DIR"
-    wget -O config.yaml "$CONFIG_URL"
+    wget -q --show-progress -O config.yaml "$CONFIG_URL"
 
     for item in "${RULES_SOURCES[@]}"; do
         IFS=',' read -r dest src <<< "$item"
-        wget -O "$dest" "$src" || { log_error "下载失败: $src"; return 1; }
+        wget -q --show-progress -O "$dest" "$src" || { log_error "下载失败: $src"; return 1; }
     done
 
     for item in "${GEO_FILES[@]}"; do
         IFS=',' read -r dest src <<< "$item"
-        wget -O "$dest" "$src" || { log_error "下载失败: $src"; return 1; }
+        wget -q --show-progress -O "$dest" "$src" || { log_error "下载失败: $src"; return 1; }
     done
 }
 
@@ -177,15 +177,16 @@ update_geo() {
 update_config() {
     log_info "更新 config.yaml..."
     cd "$MIHOMO_DIR"
-    wget -O config.yaml "$CONFIG_URL"
+    wget -q --show-progress -O config.yaml "$CONFIG_URL"
     log_info "config.yaml 更新完成"
 }
 
 update_mihomo_core() {
     log_info "更新 Mihomo 核心..."
     cd "$MIHOMO_DIR"
-    wget -O mihomo.gz "$MIHOMO_DOWNLOAD_URL"
+    wget -q --show-progress -O mihomo.gz "$MIHOMO_DOWNLOAD_URL"
     gunzip -f mihomo.gz
+    mv mihomo-* mihomo
     chmod +x mihomo || true
     log_info "Mihomo 核心更新完成"
 }
@@ -201,12 +202,24 @@ view_mihomo_log() { tail -f "$MIHOMO_DIR/mihomo.log"; }
 #------------------------------------------------
 setup_boot() {
     mkdir -p "$BOOT_SCRIPT_DIR"
+
+    # 写入启动脚本
     cat > "$BOOT_SCRIPT_DIR/start-services.sh" << EOF
 #!/data/data/com.termux/files/usr/bin/bash
 bash "$HOME/bin/Manage.sh" start
 EOF
     chmod +x "$BOOT_SCRIPT_DIR/start-services.sh"
+
+    # 自动创建软链接，指向 Manage.sh
+    LINK_PATH="$BOOT_SCRIPT_DIR/Manage.sh"
+    if [ -L "$LINK_PATH" ] || [ -f "$LINK_PATH" ]; then
+        rm -f "$LINK_PATH"
+    fi
+    ln -sf "$HOME/bin/Manage.sh" "$LINK_PATH"
+    chmod +x "$LINK_PATH"
+
     log_info "已设置开机自启: $BOOT_SCRIPT_DIR/start-services.sh"
+    log_info "已创建软链接: $LINK_PATH -> $HOME/bin/Manage.sh"
 }
 
 #------------------------------------------------
