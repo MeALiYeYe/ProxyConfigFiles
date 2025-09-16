@@ -85,8 +85,14 @@ deploy_mihomo() {
     cd "$MIHOMO_DIR"
     wget -q --show-progress -O mihomo.gz "$MIHOMO_DOWNLOAD_URL"
     gunzip -f mihomo.gz
-    mv mihomo-* mihomo
-    chmod +x mihomo
+    if [ -f mihomo ]; then
+        chmod +x mihomo
+    elif ls mihomo-* 1> /dev/null 2>&1; then
+        mv mihomo-* mihomo
+        chmod +x mihomo
+    else
+        log_error "Mihomo 核心文件不存在，部署失败"
+    fi
     download_assets
     log_info "Mihomo 部署完成"
 }
@@ -193,8 +199,14 @@ update_mihomo_core() {
     cd "$MIHOMO_DIR"
     wget -q --show-progress -O mihomo.gz "$MIHOMO_DOWNLOAD_URL"
     gunzip -f mihomo.gz
-    mv mihomo-* mihomo
-    chmod +x mihomo || true
+    if [ -f mihomo ]; then
+        chmod +x mihomo
+    elif ls mihomo-* 1> /dev/null 2>&1; then
+        mv mihomo-* mihomo
+        chmod +x mihomo
+    else
+        log_error "Mihomo 核心文件不存在，部署失败"
+    fi
     log_info "Mihomo 核心更新完成"
 }
 
