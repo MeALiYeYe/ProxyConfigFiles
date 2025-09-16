@@ -41,7 +41,7 @@ log_error() { echo -e "\e[31m[ERROR]\e[0m $1"; exit 1; }
 # 检查部署状态
 #------------------------------------------------
 is_deployed() {
-    [[ -d "$SUBSTORE_DIR" && -d "$MIHOMO_DIR" && -f "$SUB_MIHOMO_SCRIPT" ]]
+    [[ -d "$SUBSTORE_DIR" && -d "$MIHOMO_DIR" && -f "$MIHOMO_DIR/mihomo" ]]
 }
 
 #------------------------------------------------
@@ -51,7 +51,8 @@ install_dependencies() {
     log_info "安装依赖..."
     pkg up -y
     pkg i -y nodejs-lts wget unzip curl jq cronie termux-services
-    sv-enable crond && sv up crond
+    sv-enable crond
+    sv up crond
     log_info "依赖安装完成"
 }
 
@@ -64,7 +65,7 @@ deploy_substore() {
     cd "$SUBSTORE_DIR"
     wget -O sub-store.bundle.js "https://github.com/sub-store-org/Sub-Store/releases/latest/download/sub-store.bundle.js"
     wget -O dist.zip "https://github.com/sub-store-org/Sub-Store-Front-End/releases/latest/download/dist.zip"
-    unzip -o dist.zip -d frontend && rm -f dist.zip
+    unzip -o dist.zip -d dist && rm -f dist.zip
     log_info "Sub-Store 部署完成"
 }
 
@@ -77,7 +78,8 @@ deploy_mihomo() {
     cd "$MIHOMO_DIR"
     wget -O mihomo.gz "$MIHOMO_DOWNLOAD_URL"
     gunzip -f mihomo.gz
-    chmod +x mihomo || true
+    mv mihomo-* mihomo
+    chmod +x mihomo
     download_assets
     log_info "Mihomo 部署完成"
 }
@@ -108,7 +110,7 @@ start_substore() {
     log_info "启动 Sub-Store..."
     cd "$SUBSTORE_DIR"
     if ! pgrep -f "sub-store.bundle.js" > /dev/null; then
-        nohup node sub-store.bundle.js >> substore.log 2>&1 &
+        nohup node sub-store.bundle.js >> "$SUBSTORE_DIR/substore.log" 2>&1 &
     else
         log_warn "Sub-Store 已在运行"
     fi
@@ -128,7 +130,7 @@ start_mihomo() {
     log_info "启动 Mihomo..."
     cd "$MIHOMO_DIR"
     if ! pgrep -f "mihomo" > /dev/null; then
-        nohup ./mihomo -d . >> mihomo.log 2>&1 &
+        nohup ./mihomo -d . >> "$MIHOMO_DIR/mihomo.log" 2>&1 &
     else
         log_warn "Mihomo 已在运行"
     fi
@@ -156,7 +158,7 @@ update_rules() {
     cd "$MIHOMO_DIR"
     for item in "${RULES_SOURCES[@]}"; do
         IFS=',' read -r dest src <<< "$item"
-        wget -O "$dest" "$src"
+        wget -q --show-progress -O "$dest" "$src" || log_error "下载失败: $src"
     done
     log_info "规则集更新完成"
 }
@@ -167,7 +169,7 @@ update_geo() {
     cd "$MIHOMO_DIR"
     for item in "${GEO_FILES[@]}"; do
         IFS=',' read -r dest src <<< "$item"
-        wget -O "$dest" "$src"
+        wget -q --show-progress -O "$dest" "$src" || log_error "下载失败: $src"
     done
     log_info "Geo 数据更新完成"
 }
