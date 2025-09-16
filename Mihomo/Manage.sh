@@ -44,15 +44,22 @@ is_deployed() {
     [[ -d "$SUBSTORE_DIR" && -d "$MIHOMO_DIR" && -f "$MIHOMO_DIR/mihomo" ]]
 }
 
-#------------------------------------------------
-# 安装依赖
-#------------------------------------------------
 install_dependencies() {
     log_info "安装依赖..."
     pkg up -y
     pkg i -y nodejs-lts wget unzip curl jq cronie termux-services
-    sv-enable crond
-    sv up crond
+
+    # 确保服务目录存在
+    mkdir -p "$PREFIX/var/service"
+
+    # 尝试启用 crond
+    if command -v sv-enable >/dev/null 2>&1; then
+        sv-enable crond 2>/dev/null || log_warn "无法启用 crond 服务，可能 termux-services 未正确初始化"
+        sv up crond 2>/dev/null || log_warn "无法启动 crond 服务"
+    else
+        log_warn "sv-enable 命令不存在，跳过 crond 启动"
+    fi
+
     log_info "依赖安装完成"
 }
 
