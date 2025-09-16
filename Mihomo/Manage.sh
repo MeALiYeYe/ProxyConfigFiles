@@ -179,7 +179,7 @@ setup_boot() {
     mkdir -p "$BOOT_SCRIPT_DIR"
     cat > "$BOOT_SCRIPT_DIR/start-services.sh" << EOF
 #!/data/data/com.termux/files/usr/bin/bash
-Manage.sh start
+"$HOME/bin/Manage.sh" start
 EOF
     chmod +x "$BOOT_SCRIPT_DIR/start-services.sh"
     log_info "已设置开机自启: $BOOT_SCRIPT_DIR/start-services.sh"
