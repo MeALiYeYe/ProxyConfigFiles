@@ -1,14 +1,28 @@
-# 创建 bin 目录（如果不存在）
-mkdir -p "$HOME/bin"
+#!/data/data/com.termux/files/usr/bin/bash
+set -e
 
-# 下载 Manage.sh 到 bin
+#------------------------------------------------
+# 创建 bin 目录并下载 Manage.sh
+#------------------------------------------------
+mkdir -p "$HOME/bin"
 curl -sL https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Manage.sh -o "$HOME/bin/Manage.sh"
 chmod +x "$HOME/bin/Manage.sh"
+log_info() { echo -e "\e[32m[INFO]\e[0m $1"; }
 
-# 执行 Manage.sh，根据目录判断 deploy 或 update
-"$HOME/bin/Manage.sh" $( [ ! -d "$HOME/substore" ] || [ ! -d "$HOME/mihomo" ] && echo "deploy" || echo "update" )
+#------------------------------------------------
+# 首次执行部署或更新
+#------------------------------------------------
+if [ ! -d "$HOME/substore" ] || [ ! -d "$HOME/mihomo" ]; then
+    log_info "检测到未部署，执行首次部署..."
+    "$HOME/bin/Manage.sh" deploy
+else
+    log_info "目录已存在，执行更新..."
+    "$HOME/bin/Manage.sh" update
+fi
 
-# 设置开机自启，确保 start-services.sh 调用的是 bin 下的 Manage.sh
+#------------------------------------------------
+# 设置开机自启
+#------------------------------------------------
 mkdir -p "$HOME/.termux/boot"
 cat > "$HOME/.termux/boot/start-services.sh" << EOF
 #!/data/data/com.termux/files/usr/bin/bash
@@ -16,4 +30,4 @@ bash "$HOME/bin/Manage.sh" start
 EOF
 chmod +x "$HOME/.termux/boot/start-services.sh"
 
-echo "✅ Manage.sh 部署完成，开机自启已设置"
+log_info "✅ Manage.sh 已部署到 $HOME/bin，开机自启已设置"
