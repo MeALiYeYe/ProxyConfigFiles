@@ -6,8 +6,12 @@ set -e
 #------------------------------------------------
 SUBSTORE_DIR="$HOME/substore"
 MIHOMO_DIR="$HOME/mihomo"
+SUB_MIHOMO_SCRIPT="$HOME/SubMihomo.sh"
 BOOT_SCRIPT_DIR="$HOME/.termux/boot"
 
+#------------------------------------------------
+# 配置文件和规则集下载链接
+#------------------------------------------------
 MIHOMO_DOWNLOAD_URL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-f83f0c7.gz"
 CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Alpha/config.yaml"
 
@@ -38,18 +42,7 @@ log_error() { echo -e "\e[31m[ERROR]\e[0m $1"; exit 1; }
 # 检查是否已部署
 #------------------------------------------------
 is_deployed() {
-    [[ -d "$SUBSTORE_DIR" && -d "$MIHOMO_DIR" && -f "$MIHOMO_DIR/mihomo" ]]
-}
-
-#------------------------------------------------
-# 安装依赖
-#------------------------------------------------
-install_dependencies() {
-    log_info "安装依赖..."
-    pkg up -y
-    pkg i -y nodejs-lts wget unzip curl jq cronie termux-services
-    sv-enable crond && sv up crond
-    log_info "依赖安装完成"
+    [[ -d "$SUBSTORE_DIR" && -d "$MIHOMO_DIR" && -f "$SUB_MIHOMO_SCRIPT" ]]
 }
 
 #------------------------------------------------
@@ -75,101 +68,112 @@ deploy_mihomo() {
     wget -O mihomo.gz "$MIHOMO_DOWNLOAD_URL"
     gunzip -f mihomo.gz
     chmod +x mihomo || true
-    download_assets
     log_info "Mihomo 部署完成"
 }
 
 #------------------------------------------------
-# 下载配置、规则和 Geo 文件
+# 启动 Sub-Store
 #------------------------------------------------
-download_assets() {
-    mkdir -p "$MIHOMO_DIR/rules" "$MIHOMO_DIR/geo"
-    cd "$MIHOMO_DIR"
-    wget -O config.yaml "$CONFIG_URL"
-
-    # 下载规则集
-    for item in "${RULES_SOURCES[@]}"; do
-        IFS=',' read -r dest src <<< "$item"
-        mkdir -p "$(dirname "$dest")"
-        wget -O "$dest" "$src"
-    done
-
-    # 下载 Geo 文件
-    for item in "${GEO_FILES[@]}"; do
-        IFS=',' read -r dest src <<< "$item"
-        mkdir -p "$(dirname "$dest")"
-        wget -O "$dest" "$src"
-    done
-}
-
-#------------------------------------------------
-# 服务管理
-#------------------------------------------------
-start_services() {
+start_substore() {
     log_info "启动 Sub-Store..."
     cd "$SUBSTORE_DIR"
     if ! pgrep -f "sub-store.bundle.js" > /dev/null; then
         nohup node sub-store.bundle.js >> substore.log 2>&1 &
-    else log_warn "Sub-Store 已在运行"; fi
+        log_info "Sub-Store 启动成功"
+    else
+        log_warn "Sub-Store 已在运行"
+    fi
+}
 
+#------------------------------------------------
+# 启动 Mihomo
+#------------------------------------------------
+start_mihomo() {
     log_info "启动 Mihomo..."
     cd "$MIHOMO_DIR"
     if ! pgrep -f "mihomo" > /dev/null; then
         nohup ./mihomo -d . >> mihomo.log 2>&1 &
-    else log_warn "Mihomo 已在运行"; fi
-
-    log_info "服务已启动"
+        log_info "Mihomo 启动成功"
+    else
+        log_warn "Mihomo 已在运行"
+    fi
 }
 
-stop_services() {
+#------------------------------------------------
+# 停止 Sub-Store
+#------------------------------------------------
+stop_substore() {
     pkill -f "sub-store.bundle.js" || true
+    log_info "Sub-Store 停止成功"
+}
+
+#------------------------------------------------
+# 停止 Mihomo
+#------------------------------------------------
+stop_mihomo() {
     pkill -f "mihomo" || true
-    log_info "服务已停止"
+    log_info "Mihomo 停止成功"
 }
 
-update_geo() {
-    log_info "更新 Geo 数据..."
-    for item in "${GEO_FILES[@]}"; do
-        IFS=',' read -r dest src <<< "$item"
-        mkdir -p "$(dirname "$dest")"
-        wget -O "$dest" "$src"
-    done
-    log_info "Geo 更新完成"
+#------------------------------------------------
+# 重启 Sub-Store
+#------------------------------------------------
+restart_substore() {
+    stop_substore
+    start_substore
 }
 
-update_rules() {
-    log_info "更新规则集..."
+#------------------------------------------------
+# 重启 Mihomo
+#------------------------------------------------
+restart_mihomo() {
+    stop_mihomo
+    start_mihomo
+}
+
+#------------------------------------------------
+# 更新 Sub-Store
+#------------------------------------------------
+update_substore() {
+    log_info "更新 Sub-Store..."
+    stop_substore
+    deploy_substore
+    start_substore
+    log_info "Sub-Store 更新完成"
+}
+
+#------------------------------------------------
+# 更新 Mihomo
+#------------------------------------------------
+update_mihomo() {
+    log_info "更新 Mihomo..."
+    stop_mihomo
+    deploy_mihomo
+    start_mihomo
+    log_info "Mihomo 更新完成"
+}
+
+#------------------------------------------------
+# 下载配置与规则
+#------------------------------------------------
+download_assets() {
+    cd "$MIHOMO_DIR" || exit
+    log_info "下载 config.yaml..."
+    wget -O config.yaml "$CONFIG_URL"
+
+    log_info "下载规则集..."
+    mkdir -p rules
     for item in "${RULES_SOURCES[@]}"; do
         IFS=',' read -r dest src <<< "$item"
-        mkdir -p "$(dirname "$dest")"
         wget -O "$dest" "$src"
     done
-    log_info "规则集更新完成"
-}
 
-update_config() {
-    log_info "更新 config.yaml..."
-    wget -O "$MIHOMO_DIR/config.yaml" "$CONFIG_URL"
-    log_info "config.yaml 更新完成"
-}
-
-update_mihomo() {
-    log_info "更新 Mihomo 核心..."
-    cd "$MIHOMO_DIR"
-    wget -O mihomo.gz "$MIHOMO_DOWNLOAD_URL"
-    gunzip -f mihomo.gz
-    chmod +x mihomo || true
-    log_info "Mihomo 核心更新完成"
-}
-
-update_all() {
-    stop_services
-    update_mihomo
-    update_config
-    update_rules
-    update_geo
-    start_services
-    log_info "全部更新完成"
+    log_info "下载 Geo 数据..."
+    mkdir -p geo
+    for item in "${GEO_FILES[@]}"; do
+        IFS=',' read -r dest src <<< "$item"
+        wget -O "$dest" "$src"
+    done
 }
 
 #------------------------------------------------
@@ -179,7 +183,7 @@ setup_boot() {
     mkdir -p "$BOOT_SCRIPT_DIR"
     cat > "$BOOT_SCRIPT_DIR/start-services.sh" << EOF
 #!/data/data/com.termux/files/usr/bin/bash
-"$HOME/bin/Manage.sh" start
+bash "$HOME/SubMihomo.sh" start
 EOF
     chmod +x "$BOOT_SCRIPT_DIR/start-services.sh"
     log_info "已设置开机自启: $BOOT_SCRIPT_DIR/start-services.sh"
@@ -191,25 +195,28 @@ EOF
 case "$1" in
     deploy)
         if is_deployed; then
-            log_warn "系统已部署过"
+            log_warn "系统已部署过，如需重新部署请先删除 $SUB_MIHOMO_SCRIPT 及相关目录。"
         else
-            install_dependencies
             deploy_substore
             deploy_mihomo
-            start_services
+            start_substore
+            start_mihomo
             setup_boot
             log_info "✅ 部署完成"
         fi
         ;;
-    start) start_services ;;
-    stop) stop_services ;;
-    restart) stop_services; start_services ;;
-    update-geo) update_geo ;;
-    update-rules) update_rules ;;
-    update-config) update_config ;;
+    start-substore) start_substore ;;
+    start-mihomo) start_mihomo ;;
+    stop-substore) stop_substore ;;
+    stop-mihomo) stop_mihomo ;;
+    restart-substore) restart_substore ;;
+    restart-mihomo) restart_mihomo ;;
+    update-substore) update_substore ;;
     update-mihomo) update_mihomo ;;
-    update-all) update_all ;;
     log) tail -f "$SUBSTORE_DIR/substore.log" ;;
     log-mihomo) tail -f "$MIHOMO_DIR/mihomo.log" ;;
-    *) echo "用法: $0 {deploy|start|stop|restart|update-geo|update-rules|update-config|update-mihomo|update-all|log|log-mihomo}" ;;
+    *)
+        echo "用法: $0 {deploy|start-substore|start-mihomo|stop-substore|stop-mihomo|restart-substore|restart-mihomo|update-substore|update-mihomo|log|log-mihomo}"
+        exit 1
+        ;;
 esac
