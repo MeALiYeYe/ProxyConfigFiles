@@ -29,7 +29,7 @@ FilterLowMag: &FilterLowMag '0\.\d+'
 FilterHighMag: &FilterHighMag '(?!0\.)[1-9]\d*(?:\.\d+)'
 
 # 订阅更新与测试
-Proxyer: &Proxyer {type: http, interval: 43200, exclude-filter: *ExcludeFilter, health-check: {enable: true, url: *ProxyTestUrl, interval: 60, timeout: 2000}}
+Proxyer: &Proxyer {type: http, interval: 43200, exclude-filter: *ExcludeFilter, health-check: {enable: true, url: *ProxyTestUrl, interval: 300, timeout: 2000}}
 
 # 节点引用组
 Uses: &Uses {type: select, include-all-providers: true, url: *ProxyTestUrl, tolerance: 50, interval: 60, timeout: 2000, max-failed-times: 3, hidden: true}
@@ -44,7 +44,7 @@ Smartg: &Smartg {<<: *Uses, type: smart, policy-priority: "电信:1.5;联通:1.0
 
 # 策略组引用组
 # 这里的延迟测试只会测试proxies下的(DIRECT),不会测试proxy-providers下的节点
-Groups: &Groups {type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: *DirectTestUrl, interval: 60, timeout: 5000, max-failed-times: 3, hidden: false}
+Groups: &Groups {type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: *ProxyTestUrl, interval: 60, timeout: 5000, max-failed-times: 3, hidden: false}
 Groupd: &Groupd {type: select, proxies: [直连, 江苏, 北京, 广东], url: *DirectTestUrl, interval: 60, timeout: 5000, max-failed-times: 3, hidden: false}
 
 # 规则集类型
