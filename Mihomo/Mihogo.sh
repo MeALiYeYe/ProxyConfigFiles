@@ -19,15 +19,3 @@ else
     log_info "目录已存在，执行更新..."
     "$HOME/bin/Manage.sh" update
 fi
-
-#------------------------------------------------
-# 设置开机自启
-#------------------------------------------------
-mkdir -p "$HOME/.termux/boot"
-cat > "$HOME/.termux/boot/start-services.sh" << EOF
-#!/data/data/com.termux/files/usr/bin/bash
-bash "$HOME/bin/Manage.sh" start
-EOF
-chmod +x "$HOME/.termux/boot/start-services.sh"
-
-log_info "✅ Manage.sh 已部署到 $HOME/bin，开机自启已设置"
