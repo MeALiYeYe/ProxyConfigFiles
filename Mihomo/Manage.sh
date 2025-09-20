@@ -314,3 +314,27 @@ case "$1" in
         exit 1
         ;;
 esac
+
+#------------------------------------------------
+# 确保 $HOME/bin 在 PATH 中
+#------------------------------------------------
+if [[ ":$PATH:" != *":$HOME/bin:"* ]]; then
+    echo 'export PATH="$HOME/bin:$PATH"' >> "$HOME/.bashrc"
+    export PATH="$HOME/bin:$PATH"
+    echo -e "\e[32m[INFO]\e[0m 已将 \$HOME/bin 添加到 PATH"
+fi
+
+#------------------------------------------------
+# 设置开机自启 (mihomo + substore)
+# 依赖 Termux:Boot 插件
+#------------------------------------------------
+mkdir -p "$HOME/.termux/boot"
+cat > "$HOME/.termux/boot/start-services.sh" << EOF
+#!/data/data/com.termux/files/usr/bin/bash
+export PATH="\$HOME/bin:\$PATH"
+Manage.sh start
+Manage.sh substore-start
+EOF
+chmod +x "$HOME/.termux/boot/start-services.sh"
+
+echo -e "\e[32m[INFO]\e[0m ✅ 开机自启已设置 (mihomo + substore)"
