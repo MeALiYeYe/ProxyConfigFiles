@@ -9,7 +9,12 @@ MIHOMO_DIR="$HOME/mihomo"
 BOOT_SCRIPT_DIR="$HOME/.termux/boot"
 
 # Mihomo 核心下载链接 & config
-MIHOMO_DOWNLOAD_URL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-f83f0c7.gz"
+MIHOMO_DOWNLOAD_URL=$(curl -s https://api.github.com/repos/vernesong/mihomo/releases/tags/Prerelease-Alpha \
+  | grep "browser_download_url" \
+  | grep "android-arm64-v8-alpha-smart" \
+  | grep "\.gz" \
+  | cut -d '"' -f 4)
+
 CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Alpha/config.yaml"
 
 # 规则集下载链接
