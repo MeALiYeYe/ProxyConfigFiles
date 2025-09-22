@@ -73,7 +73,7 @@ proxy-providers:
 # 策略组
 proxy-groups:
   # 软件分组
-  - {name: ReDirect, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png", <<: *Groupd}
+  - {name: Location, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png", <<: *Groupd}
   - {name: Domestic, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png", <<: *Groupd}
   - {name: TikTok, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok.png", <<: *Groups}
   - {name: YouTube, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png", <<: *Groups}
@@ -106,7 +106,7 @@ proxy-groups:
 
 # 规则集
 rule-providers:
-  Redirect: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rules/Redirect.yaml}
+  FakeLocation: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rules/FakeLocation.yaml}
   Direct: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Direct.yaml", path: ./rules/Direct.yaml}
   Reject: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject.yaml", path: ./rules/Reject.yaml}
   Proxy: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Proxy.yaml", path: ./rules/Proxy.yaml}
@@ -123,7 +123,7 @@ rules:
   - OR,((DST-PORT,53),(DST-PORT,853)),dns-out
   - RULE-SET,AWAvenue,REJECT-DROP
   - RULE-SET,Reject,REJECT
-  - RULE-SET,Redirect,ReDirect
+  - RULE-SET,FakeLocation,Location
   - RULE-SET,Direct,DIRECT
   - RULE-SET,Proxy,Foreign
   - RULE-SET,Emby,Media
