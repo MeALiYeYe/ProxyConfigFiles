@@ -8,6 +8,9 @@ SUBSTORE_DIR="$HOME/substore"
 MIHOMO_DIR="$HOME/mihomo"
 BOOT_SCRIPT_DIR="$HOME/.termux/boot"
 
+# 本脚本链接
+SHELL_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Manage.sh"
+
 # Mihomo 核心下载链接 & config
 MIHOMO_DOWNLOAD_URL=$(curl -s https://api.github.com/repos/vernesong/mihomo/releases/tags/Prerelease-Alpha \
   | grep "browser_download_url" \
@@ -15,6 +18,7 @@ MIHOMO_DOWNLOAD_URL=$(curl -s https://api.github.com/repos/vernesong/mihomo/rele
   | grep "\.gz" \
   | cut -d '"' -f 4)
 
+# mihomo远程配置链接
 CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Alpha/config.yaml"
 
 # 规则集下载链接
@@ -170,8 +174,7 @@ restart_mihomo() {
 update_self() {
     log_info "更新 Manage.sh..."
     cd "$HOME/bin"
-    NEW_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Manage.sh"
-    wget -q --show-progress -O Manage.sh "$NEW_URL" || log_error "下载失败: $NEW_URL"
+    wget -q --show-progress -O Manage.sh "$SHELL_URL" || log_error "下载失败: $SHELL_URL"
     chmod +x Manage.sh
     log_info "Manage.sh 已更新完成，请重新执行命令"
 }
