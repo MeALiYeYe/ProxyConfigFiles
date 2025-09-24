@@ -167,6 +167,15 @@ restart_mihomo() {
 #------------------------------------------------
 # 更新功能
 #------------------------------------------------
+update_self() {
+    log_info "更新 Manage.sh..."
+    cd "$HOME/bin"
+    NEW_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Manage.sh"
+    wget -q --show-progress -O Manage.sh "$NEW_URL" || log_error "下载失败: $NEW_URL"
+    chmod +x Manage.sh
+    log_info "Manage.sh 已更新完成，请重新执行命令"
+}
+
 update_substore() { stop_substore; deploy_substore; start_substore; }
 update_mihomo() { stop_mihomo; deploy_mihomo; start_mihomo; }
 
@@ -286,6 +295,7 @@ case "$1" in
     start_mihomo) start_mihomo ;;
     stop_mihomo) stop_mihomo ;;
     restart_mihomo) restart_mihomo ;;
+    update_self) update_self ;;
     update_substore) update_substore ;;
     update_mihomo) update_mihomo ;;
     update_rules) update_rules ;;
@@ -307,6 +317,7 @@ case "$1" in
         restart_mihomo
         ;;
     update)
+        update_self
         update_substore
         update_mihomo
         update_rules
@@ -315,7 +326,7 @@ case "$1" in
         update_mihomo_core
         ;;
     *)
-        echo "用法: $0 {deploy|deploy_substore|deploy_mihomo|start_substore|stop_substore|restart_substore|start_mihomo|stop_mihomo|restart_mihomo|update_substore|update_mihomo|update_rules|update_geo|update_config|update_mihomo_core|log_substore|log_mihomo|start|stop|restart|update}"
+        echo "用法: $0 {deploy|deploy_substore|deploy_mihomo|start_substore|stop_substore|restart_substore|start_mihomo|stop_mihomo|restart_mihomo|update_self|update_substore|update_mihomo|update_rules|update_geo|update_config|update_mihomo_core|log_substore|log_mihomo|start|stop|restart|update}"
         exit 1
         ;;
 esac
