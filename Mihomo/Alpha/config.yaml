@@ -59,7 +59,7 @@ rule-anchor:
 proxies:
   - {name: 直连, type: direct}
 #  - {name: dns-out, type: dns}
- 
+
 # 外部订阅
 proxy-providers:
   Sub_Store: {<<: *Proxyer, path: ./proxies/Sub.yaml, url: *SubStoreUrl}
@@ -109,7 +109,7 @@ rule-providers:
   Proxy: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Proxy.yaml", path: ./rules/Proxy.yaml}
   Emby: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Emby.yaml", path: ./rules/Emby.yaml}
   AWAvenue: {<<: *dom, format: yaml, url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Clash.yaml", path: ./rules/AWAvenue.yaml}
-  
+
 # 路由规则
 rules:
   # FCM
@@ -125,7 +125,7 @@ rules:
   - RULE-SET,Proxy,Foreign
   - RULE-SET,Emby,Media
 
-  - GEOSITE,private,DIRECT 
+  - GEOSITE,private,DIRECT
   - GEOSITE,category-ads-all,REJECT-DROP
   - GEOSITE,category-httpdns-cn,REJECT-DROP
   - GEOSITE,youtube,YouTube
@@ -139,7 +139,7 @@ rules:
   - GEOSITE,microsoft,Microsoft
   - GEOSITE,geolocation-!cn,Foreign
   - GEOSITE,cn,Domestic
-   
+  
   - GEOIP,private,DIRECT,no-resolve
   - GEOIP,telegram,Telegram,no-resolve
   - GEOIP,google,Google,no-resolve
