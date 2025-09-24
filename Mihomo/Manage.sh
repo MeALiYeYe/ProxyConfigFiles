@@ -338,7 +338,7 @@ cat > "$HOME/.termux/boot/start-services.sh" << EOF
 #!/data/data/com.termux/files/usr/bin/bash
 export PATH="\$HOME/bin:\$PATH"
 Manage.sh start
-Manage.sh substore-start
+Manage.sh start_substore
 EOF
 chmod +x "$HOME/.termux/boot/start-services.sh"
 
