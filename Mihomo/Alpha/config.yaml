@@ -58,7 +58,7 @@ rule-anchor:
 # 出站代理
 proxies:
   - {name: 直连, type: direct}
-  - {name: dns-out, type: dns}
+#  - {name: dns-out, type: dns}
  
 # 外部订阅
 proxy-providers:
