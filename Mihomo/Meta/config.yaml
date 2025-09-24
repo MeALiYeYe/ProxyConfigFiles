@@ -240,7 +240,7 @@ dns:
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.0/15
   fake-ip-filter: ["*.lan", "*.localdomain", "*.example", "*.invalid", "*.localhost", "*.test", "*.local",
-    "localhost.*", "*.home.arpa", 127.0.0.0/8， 0.0.0.0/32, "::1/128", "::/128", "GEOSITE:private"]
+    "localhost.*", "*.home.arpa", 127.0.0.0/8, 0.0.0.0/32, "::1/128", "::/128", "GEOSITE:private"]
   nameserver-policy:
     'GEOSITE:category-ads-all,category-httpdns-cn': rcode://success
     'GEOSITE:geolocation-!cn':
