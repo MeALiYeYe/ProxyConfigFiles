@@ -139,7 +139,7 @@ rules:
   - GEOSITE,microsoft,Microsoft
   - GEOSITE,geolocation-!cn,Foreign
   - GEOSITE,cn,Domestic
-  
+
   - GEOIP,private,DIRECT,no-resolve
   - GEOIP,telegram,Telegram,no-resolve
   - GEOIP,google,Google,no-resolve
