@@ -325,17 +325,16 @@ if [[ ":$PATH:" != *":$HOME/bin:"* ]]; then
 fi
 
 #------------------------------------------------
-# 开机自启 (依赖 Termux:Boot 插件)
+# 设置开机自启 (mihomo + substore)
+# 依赖 Termux:Boot 插件
 #------------------------------------------------
-setup_boot() {
-    mkdir -p "$BOOT_SCRIPT_DIR"
-
-    cat > "$BOOT_SCRIPT_DIR/start-services.sh" << EOF
+mkdir -p "$HOME/.termux/boot"
+cat > "$HOME/.termux/boot/start-services.sh" << EOF
 #!/data/data/com.termux/files/usr/bin/bash
 export PATH="\$HOME/bin:\$PATH"
-bash "$HOME/bin/Manage.sh" start
+Manage.sh start
+Manage.sh substore-start
 EOF
-    chmod +x "$BOOT_SCRIPT_DIR/start-services.sh"
+chmod +x "$HOME/.termux/boot/start-services.sh"
 
-    log_info "✅ 已设置开机自启: $BOOT_SCRIPT_DIR/start-services.sh"
-}
+echo -e "\e[32m[INFO]\e[0m ✅ 开机自启已设置 (mihomo + substore)"
