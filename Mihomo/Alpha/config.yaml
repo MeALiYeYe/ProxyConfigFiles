@@ -118,7 +118,6 @@ rules:
   # DNS
   #- OR,((DST-PORT,53),(DST-PORT,853)),dns-out
   - RULE-SET,AWAvenue,REJECT-DROP
-  - RULE-SET,Anti-AD,REJECT-DROP
   - RULE-SET,Reject,REJECT
   - RULE-SET,FakeLocation,Location
   - RULE-SET,Direct,DIRECT
@@ -240,7 +239,6 @@ dns:
   fake-ip-filter: ["*.lan", "*.localdomain", "*.example", "*.invalid", "*.localhost", "*.test", "*.local",
     "localhost.*", "*.home.arpa", 127.0.0.0/8, 0.0.0.0/32, "::1/128", "::/128", "GEOSITE:private"]
   nameserver-policy:
-    'RULE-SET:Anti-AD': rcode://name_error
     'GEOSITE:category-ads-all,category-httpdns-cn': rcode://name_error
     'GEOSITE:google':
       - 'https://dns.google/dns-query#Google&h3=true'
