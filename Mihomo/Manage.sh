@@ -156,8 +156,14 @@ start_substore() {
     fi
 }
 
-stop_substore() { pkill -f "sub-store.bundle.js" || true; log_info "Sub-Store 已停止"; }
-restart_substore() { stop_substore; start_substore; }
+stop_substore() {
+    pkill -f "sub-store.bundle.js" || true
+    log_info "Sub-Store 已停止"
+}
+restart_substore() {
+    stop_substore
+    start_substore
+}
 
 start_mihomo() {
     log_info "启动 Mihomo..."
@@ -169,8 +175,15 @@ start_mihomo() {
     fi
 }
 
-stop_mihomo() { pkill -f "mihomo" || true; log_info "Mihomo 已停止"; }
-restart_mihomo() { stop_mihomo; start_mihomo; }
+stop_mihomo() {
+    pkill -f "mihomo" || true
+    log_info "Mihomo 已停止"
+}
+
+restart_mihomo() {
+    stop_mihomo
+    start_mihomo
+}
 
 #------------------------------------------------
 # 更新功能
