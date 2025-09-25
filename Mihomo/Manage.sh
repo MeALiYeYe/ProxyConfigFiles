@@ -266,6 +266,32 @@ view_substore_log() { tail -f "$SUBSTORE_DIR/substore.log"; }
 view_mihomo_log() { tail -f "$MIHOMO_DIR/mihomo.log"; }
 
 #------------------------------------------------
+# 设置开机自启 (mihomo + substore)
+# 依赖 Termux:Boot 插件
+#------------------------------------------------
+setup_boot() {
+    mkdir -p "$BOOT_SCRIPT_DIR"
+
+    # 写入启动脚本
+    cat > "$BOOT_SCRIPT_DIR/start-services.sh" << EOF
+#!/data/data/com.termux/files/usr/bin/bash
+bash "$HOME/bin/Manage.sh" start
+EOF
+    chmod +x "$BOOT_SCRIPT_DIR/start-services.sh"
+
+    # 自动创建软链接，指向 Manage.sh
+    LINK_PATH="$BOOT_SCRIPT_DIR/Manage.sh"
+    if [ -L "$LINK_PATH" ] || [ -f "$LINK_PATH" ]; then
+        rm -f "$LINK_PATH"
+    fi
+    ln -sf "$HOME/bin/Manage.sh" "$LINK_PATH"
+    chmod +x "$LINK_PATH"
+
+    log_info "已设置开机自启: $BOOT_SCRIPT_DIR/start-services.sh"
+    log_info "已创建软链接: $LINK_PATH -> $HOME/bin/Manage.sh"
+}
+
+#------------------------------------------------
 # 主逻辑
 #------------------------------------------------
 if [ "$1" = "deploy" ]; then
@@ -335,29 +361,3 @@ if [[ ":$PATH:" != *":$HOME/bin:"* ]]; then
     export PATH="$HOME/bin:$PATH"
     log_info "已将 \$HOME/bin 添加到 PATH"
 fi
-
-#------------------------------------------------
-# 设置开机自启 (mihomo + substore)
-# 依赖 Termux:Boot 插件
-#------------------------------------------------
-setup_boot() {
-    mkdir -p "$BOOT_SCRIPT_DIR"
-
-    # 写入启动脚本
-    cat > "$BOOT_SCRIPT_DIR/start-services.sh" << EOF
-#!/data/data/com.termux/files/usr/bin/bash
-bash "$HOME/bin/Manage.sh" start
-EOF
-    chmod +x "$BOOT_SCRIPT_DIR/start-services.sh"
-
-    # 自动创建软链接，指向 Manage.sh
-    LINK_PATH="$BOOT_SCRIPT_DIR/Manage.sh"
-    if [ -L "$LINK_PATH" ] || [ -f "$LINK_PATH" ]; then
-        rm -f "$LINK_PATH"
-    fi
-    ln -sf "$HOME/bin/Manage.sh" "$LINK_PATH"
-    chmod +x "$LINK_PATH"
-
-    log_info "已设置开机自启: $BOOT_SCRIPT_DIR/start-services.sh"
-    log_info "已创建软链接: $LINK_PATH -> $HOME/bin/Manage.sh"
-}
