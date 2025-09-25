@@ -108,6 +108,7 @@ rule-providers:
   Proxy: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Proxy.yaml", path: ./rules/Proxy.yaml}
   Emby: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Emby.yaml", path: ./rules/Emby.yaml}
   AWAvenue: {<<: *dom, format: yaml, url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Clash.yaml", path: ./rules/AWAvenue.yaml}
+  Anti-AD: {<<: *dom, format: mrs, url: "https://raw.githubusercontent.com/privacy-protection-tools/anti-ad.github.io/master/docs/mihomo.mrs", path: ./rules/anti-ad.mrs}
 
 # 路由规则
 rules:
@@ -118,6 +119,7 @@ rules:
   # DNS
   #- OR,((DST-PORT,53),(DST-PORT,853)),dns-out
   - RULE-SET,AWAvenue,REJECT-DROP
+  - RULE-SET,Anti-AD,REJECT-DROP
   - RULE-SET,Reject,REJECT
   - RULE-SET,FakeLocation,Location
   - RULE-SET,Direct,DIRECT
@@ -239,7 +241,8 @@ dns:
   fake-ip-filter: ["*.lan", "*.localdomain", "*.example", "*.invalid", "*.localhost", "*.test", "*.local",
     "localhost.*", "*.home.arpa", 127.0.0.0/8, 0.0.0.0/32, "::1/128", "::/128", "GEOSITE:private"]
   nameserver-policy:
-    'GEOSITE:category-ads-all,category-httpdns-cn': rcode://success
+    'RULE-SET:Anti-AD': rcode://name_error
+    'GEOSITE:category-ads-all,category-httpdns-cn': rcode://name_error
     'GEOSITE:google':
       - 'https://dns.google/dns-query#Google&h3=true'
     'GEOSITE:cloudflare':
