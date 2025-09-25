@@ -60,52 +60,7 @@ function FindProxyForURL(url, host) {
     }
 
     // ==============================
-    // 3. 国内常见网站 / CDN → 直连
-    // ==============================
-    if (
-        dnsDomainIs(host, ".bilibili.com") ||
-        dnsDomainIs(host, ".iqiyi.com") ||
-        dnsDomainIs(host, ".youku.com") ||
-        dnsDomainIs(host, ".mgtv.com") ||
-        dnsDomainIs(host, ".douyin.com") ||
-        dnsDomainIs(host, ".taobao.com") ||
-        dnsDomainIs(host, ".tmall.com") ||
-        dnsDomainIs(host, ".jd.com") ||
-        dnsDomainIs(host, ".mi.com") ||
-        dnsDomainIs(host, ".xiaomi.com") ||
-        dnsDomainIs(host, ".baidu.com") ||
-        dnsDomainIs(host, ".aliyun.com")
-    ) {
-        return "DIRECT";
-    }
-
-    // ==============================
-    // 4. 国外常见服务 → 代理
-    // ==============================
-    if (
-        dnsDomainIs(host, ".google.com") ||
-        dnsDomainIs(host, ".youtube.com") ||
-        dnsDomainIs(host, ".telegram.org") ||
-        dnsDomainIs(host, ".t.me") ||
-        dnsDomainIs(host, ".twitter.com") ||
-        dnsDomainIs(host, ".x.com") ||
-        dnsDomainIs(host, ".github.com") ||
-        dnsDomainIs(host, ".github.io") ||
-        dnsDomainIs(host, ".githubusercontent.com") ||
-        dnsDomainIs(host, ".wikipedia.org")
-    ) {
-        return proxy;
-    }
-
-    // ==============================
-    // 5. 国内部分 IP 网段直连（可选）
-    // ==============================
-    if (isInNet(dnsResolve(host), "36.0.0.0", "255.0.0.0")) return "DIRECT";
-    if (isInNet(dnsResolve(host), "101.0.0.0", "255.0.0.0")) return "DIRECT";
-    if (isInNet(dnsResolve(host), "111.0.0.0", "255.0.0.0")) return "DIRECT";
-
-    // ==============================
-    // 6. 默认：其余全部走代理
+    // 3. 默认：其余全部走代理
     // ==============================
     return proxy;
 }
