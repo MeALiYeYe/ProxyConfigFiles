@@ -23,7 +23,7 @@ MIHOMO_API_URL=$(curl -s https://api.github.com/repos/vernesong/mihomo/releases/
   | grep "\.gz" \
   | cut -d '"' -f 4)
 
-MIHOMO_URLL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-acf8e3b.gz"
+MIHOMO_URL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-acf8e3b.gz"
 
 # mihomo远程配置链接
 CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Alpha/config.yaml"
@@ -238,8 +238,12 @@ update_mihomo_core() {
     log_info "更新 Mihomo 核心..."
     cd "$MIHOMO_DIR"
 
+    # 如果 API 没有取到结果，就使用固定链接
     if [ -z "$MIHOMO_API_URL" ]; then
-        log_error "无法获取 Mihomo 下载链接，跳过更新"
+        MIHOMO_URL="$MIHOMO_URL"
+        log_warn "未能从 GitHub API 获取 Mihomo 下载链接，已切换到固定备用链接"
+    else
+        log_info "已从 GitHub API 获取 Mihomo 下载链接"
     fi
 
     wget -q --show-progress -O mihomo.gz "$MIHOMO_API_URL"
