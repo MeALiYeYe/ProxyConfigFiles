@@ -17,11 +17,13 @@ BOOT_SCRIPT_DIR="$HOME/.termux/boot"
 SHELL_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Manage.sh"
 
 # Mihomo 核心下载链接 & config
-MIHOMO_DOWNLOAD_URL=$(curl -s https://api.github.com/repos/vernesong/mihomo/releases/tags/Prerelease-Alpha \
+MIHOMO_API_URL=$(curl -s https://api.github.com/repos/vernesong/mihomo/releases/tags/Prerelease-Alpha \
   | grep "browser_download_url" \
   | grep "android-arm64-v8-alpha-smart" \
   | grep "\.gz" \
   | cut -d '"' -f 4)
+
+MIHOMO_URLL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-acf8e3b.gz"
 
 # mihomo远程配置链接
 CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Alpha/config.yaml"
@@ -104,11 +106,15 @@ deploy_mihomo() {
     mkdir -p "$MIHOMO_DIR"
     cd "$MIHOMO_DIR"
 
-    if [ -z "$MIHOMO_DOWNLOAD_URL" ]; then
-        log_error "无法获取 Mihomo 下载链接，跳过部署"
+    # 如果 API 没有取到结果，就使用固定链接
+    if [ -z "$MIHOMO_API_URL" ]; then
+        MIHOMO_API_URL="$MIHOMO_URL"
+        log_warn "未能从 GitHub API 获取 Mihomo 下载链接，已切换到固定备用链接"
+    else
+        log_info "已从 GitHub API 获取 Mihomo 下载链接"
     fi
 
-    wget -q --show-progress -O mihomo.gz "$MIHOMO_DOWNLOAD_URL" || log_error "下载 Mihomo 核心失败"
+    wget -q --show-progress -O mihomo.gz "$MIHOMO_API_URL" || log_error "下载 Mihomo 核心失败"
     gunzip -f mihomo.gz
 
     if [ -f mihomo ]; then
@@ -232,11 +238,11 @@ update_mihomo_core() {
     log_info "更新 Mihomo 核心..."
     cd "$MIHOMO_DIR"
 
-    if [ -z "$MIHOMO_DOWNLOAD_URL" ]; then
+    if [ -z "$MIHOMO_API_URL" ]; then
         log_error "无法获取 Mihomo 下载链接，跳过更新"
     fi
 
-    wget -q --show-progress -O mihomo.gz "$MIHOMO_DOWNLOAD_URL"
+    wget -q --show-progress -O mihomo.gz "$MIHOMO_API_URL"
     gunzip -f mihomo.gz
     if [ -f mihomo ]; then
         chmod +x mihomo
