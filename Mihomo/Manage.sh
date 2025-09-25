@@ -2,6 +2,11 @@
 set -e
 
 #------------------------------------------------
+# Termux 自身使用代理 (防止 GitHub API、wget 受限)
+#------------------------------------------------
+export all_proxy="socks5://127.0.0.1:7890"
+
+#------------------------------------------------
 # 目录配置
 #------------------------------------------------
 SUBSTORE_DIR="$HOME/substore"
@@ -53,6 +58,12 @@ is_deployed() {
     [[ -d "$SUBSTORE_DIR" && -d "$MIHOMO_DIR" && -f "$MIHOMO_DIR/mihomo" ]]
 }
 
+# 确保 $HOME/bin 存在
+mkdir -p "$HOME/bin"
+
+#------------------------------------------------
+# 安装依赖
+#------------------------------------------------
 install_dependencies() {
     log_info "安装依赖..."
     pkg up -y
@@ -92,8 +103,14 @@ deploy_mihomo() {
     log_info "部署 Mihomo..."
     mkdir -p "$MIHOMO_DIR"
     cd "$MIHOMO_DIR"
-    wget -q --show-progress -O mihomo.gz "$MIHOMO_DOWNLOAD_URL"
+
+    if [ -z "$MIHOMO_DOWNLOAD_URL" ]; then
+        log_error "无法获取 Mihomo 下载链接，跳过部署"
+    fi
+
+    wget -q --show-progress -O mihomo.gz "$MIHOMO_DOWNLOAD_URL" || log_error "下载 Mihomo 核心失败"
     gunzip -f mihomo.gz
+
     if [ -f mihomo ]; then
         chmod +x mihomo
     elif ls mihomo-* 1> /dev/null 2>&1; then
@@ -102,6 +119,7 @@ deploy_mihomo() {
     else
         log_error "Mihomo 核心文件不存在，部署失败"
     fi
+
     download_assets
     log_info "Mihomo 部署完成"
 }
@@ -138,15 +156,8 @@ start_substore() {
     fi
 }
 
-stop_substore() {
-    pkill -f "sub-store.bundle.js" || true
-    log_info "Sub-Store 已停止"
-}
-
-restart_substore() {
-    stop_substore
-    start_substore
-}
+stop_substore() { pkill -f "sub-store.bundle.js" || true; log_info "Sub-Store 已停止"; }
+restart_substore() { stop_substore; start_substore; }
 
 start_mihomo() {
     log_info "启动 Mihomo..."
@@ -158,15 +169,8 @@ start_mihomo() {
     fi
 }
 
-stop_mihomo() {
-    pkill -f "mihomo" || true
-    log_info "Mihomo 已停止"
-}
-
-restart_mihomo() {
-    stop_mihomo
-    start_mihomo
-}
+stop_mihomo() { pkill -f "mihomo" || true; log_info "Mihomo 已停止"; }
+restart_mihomo() { stop_mihomo; start_mihomo; }
 
 #------------------------------------------------
 # 更新功能
@@ -214,6 +218,11 @@ update_config() {
 update_mihomo_core() {
     log_info "更新 Mihomo 核心..."
     cd "$MIHOMO_DIR"
+
+    if [ -z "$MIHOMO_DOWNLOAD_URL" ]; then
+        log_error "无法获取 Mihomo 下载链接，跳过更新"
+    fi
+
     wget -q --show-progress -O mihomo.gz "$MIHOMO_DOWNLOAD_URL"
     gunzip -f mihomo.gz
     if [ -f mihomo ]; then
@@ -222,7 +231,7 @@ update_mihomo_core() {
         mv mihomo-* mihomo
         chmod +x mihomo
     else
-        log_error "Mihomo 核心文件不存在，部署失败"
+        log_error "Mihomo 核心文件不存在，更新失败"
     fi
     log_info "Mihomo 核心更新完成"
 }
@@ -232,31 +241,6 @@ update_mihomo_core() {
 #------------------------------------------------
 view_substore_log() { tail -f "$SUBSTORE_DIR/substore.log"; }
 view_mihomo_log() { tail -f "$MIHOMO_DIR/mihomo.log"; }
-
-#------------------------------------------------
-# 开机自启
-#------------------------------------------------
-setup_boot() {
-    mkdir -p "$BOOT_SCRIPT_DIR"
-
-    # 写入启动脚本
-    cat > "$BOOT_SCRIPT_DIR/start-services.sh" << EOF
-#!/data/data/com.termux/files/usr/bin/bash
-bash "$HOME/bin/Manage.sh" start
-EOF
-    chmod +x "$BOOT_SCRIPT_DIR/start-services.sh"
-
-    # 自动创建软链接，指向 Manage.sh
-    LINK_PATH="$BOOT_SCRIPT_DIR/Manage.sh"
-    if [ -L "$LINK_PATH" ] || [ -f "$LINK_PATH" ]; then
-        rm -f "$LINK_PATH"
-    fi
-    ln -sf "$HOME/bin/Manage.sh" "$LINK_PATH"
-    chmod +x "$LINK_PATH"
-
-    log_info "已设置开机自启: $BOOT_SCRIPT_DIR/start-services.sh"
-    log_info "已创建软链接: $LINK_PATH -> $HOME/bin/Manage.sh"
-}
 
 #------------------------------------------------
 # 主逻辑
@@ -272,26 +256,19 @@ if [ "$1" = "deploy" ]; then
         start_substore
         start_mihomo
         setup_boot
+        # ✅ 部署后为 Termux 设置代理环境变量
+        {
+            echo 'export all_proxy="socks5://127.0.0.1:7890"'
+        } >> "$HOME/.bashrc"
+        log_info "已将 Termux 自身代理写入 ~/.bashrc"
         log_info "✅ 首次部署完成"
         exit 0
     fi
 fi
 
 case "$1" in
-    deploy_substore) 
-        if [ -d "$SUBSTORE_DIR" ]; then
-            log_warn "Sub-Store 已存在，如需重新部署请先删除 $SUBSTORE_DIR"
-        else
-            deploy_substore
-        fi
-        ;;
-    deploy_mihomo) 
-        if [ -d "$MIHOMO_DIR" ]; then
-            log_warn "Mihomo 已存在，如需重新部署请先删除 $MIHOMO_DIR"
-        else
-            deploy_mihomo
-        fi
-        ;;
+    deploy_substore) [ -d "$SUBSTORE_DIR" ] && log_warn "Sub-Store 已存在" || deploy_substore ;;
+    deploy_mihomo) [ -d "$MIHOMO_DIR" ] && log_warn "Mihomo 已存在" || deploy_mihomo ;;
     start_substore) start_substore ;;
     stop_substore) stop_substore ;;
     restart_substore) restart_substore ;;
@@ -307,18 +284,9 @@ case "$1" in
     update_mihomo_core) update_mihomo_core ;;
     log_substore) view_substore_log ;;
     log_mihomo) view_mihomo_log ;;
-    start)
-        start_substore
-        start_mihomo
-        ;;
-    stop)
-        stop_substore
-        stop_mihomo
-        ;;
-    restart)
-        restart_substore
-        restart_mihomo
-        ;;
+    start) start_substore; start_mihomo ;;
+    stop) stop_substore; stop_mihomo ;;
+    restart) restart_substore; restart_mihomo ;;
     update)
         update_self
         update_substore
@@ -340,20 +308,21 @@ esac
 if [[ ":$PATH:" != *":$HOME/bin:"* ]]; then
     echo 'export PATH="$HOME/bin:$PATH"' >> "$HOME/.bashrc"
     export PATH="$HOME/bin:$PATH"
-    echo -e "\e[32m[INFO]\e[0m 已将 \$HOME/bin 添加到 PATH"
+    log_info "已将 \$HOME/bin 添加到 PATH"
 fi
 
 #------------------------------------------------
-# 设置开机自启 (mihomo + substore)
-# 依赖 Termux:Boot 插件
+# 开机自启 (依赖 Termux:Boot 插件)
 #------------------------------------------------
-mkdir -p "$HOME/.termux/boot"
-cat > "$HOME/.termux/boot/start-services.sh" << EOF
+setup_boot() {
+    mkdir -p "$BOOT_SCRIPT_DIR"
+
+    cat > "$BOOT_SCRIPT_DIR/start-services.sh" << EOF
 #!/data/data/com.termux/files/usr/bin/bash
 export PATH="\$HOME/bin:\$PATH"
-Manage.sh start
-Manage.sh start_substore
+bash "$HOME/bin/Manage.sh" start
 EOF
-chmod +x "$HOME/.termux/boot/start-services.sh"
+    chmod +x "$BOOT_SCRIPT_DIR/start-services.sh"
 
-echo -e "\e[32m[INFO]\e[0m ✅ 开机自启已设置 (mihomo + substore)"
+    log_info "✅ 已设置开机自启: $BOOT_SCRIPT_DIR/start-services.sh"
+}
