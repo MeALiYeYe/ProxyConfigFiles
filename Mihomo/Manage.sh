@@ -334,13 +334,24 @@ fi
 # 设置开机自启 (mihomo + substore)
 # 依赖 Termux:Boot 插件
 #------------------------------------------------
-mkdir -p "$HOME/.termux/boot"
-cat > "$HOME/.termux/boot/start-services.sh" << EOF
-#!/data/data/com.termux/files/usr/bin/bash
-export PATH="\$HOME/bin:\$PATH"
-Manage.sh start
-Manage.sh substore-start
-EOF
-chmod +x "$HOME/.termux/boot/start-services.sh"
+setup_boot() {
+    mkdir -p "$BOOT_SCRIPT_DIR"
 
-echo -e "\e[32m[INFO]\e[0m ✅ 开机自启已设置 (mihomo + substore)"
+    # 写入启动脚本
+    cat > "$BOOT_SCRIPT_DIR/start-services.sh" << EOF
+#!/data/data/com.termux/files/usr/bin/bash
+bash "$HOME/bin/Manage.sh" start
+EOF
+    chmod +x "$BOOT_SCRIPT_DIR/start-services.sh"
+
+    # 自动创建软链接，指向 Manage.sh
+    LINK_PATH="$BOOT_SCRIPT_DIR/Manage.sh"
+    if [ -L "$LINK_PATH" ] || [ -f "$LINK_PATH" ]; then
+        rm -f "$LINK_PATH"
+    fi
+    ln -sf "$HOME/bin/Manage.sh" "$LINK_PATH"
+    chmod +x "$LINK_PATH"
+
+    log_info "已设置开机自启: $BOOT_SCRIPT_DIR/start-services.sh"
+    log_info "已创建软链接: $LINK_PATH -> $HOME/bin/Manage.sh"
+}
