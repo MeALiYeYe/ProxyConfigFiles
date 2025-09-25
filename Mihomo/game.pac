@@ -12,7 +12,7 @@ function FindProxyForURL(url, host) {
         dnsDomainIs(host, "analytics.163.com") ||
         dnsDomainIs(host, "adgeo.163.com")
     ) {
-        return "DIRECT";   // 或者 return "PROXY 127.0.0.1:0";  // 等于屏蔽
+        return "PROXY 127.0.0.1:0";   // 等于屏蔽
     }
 
     // ======== 游戏平台直连（腾讯、网易、米哈游、完美、世纪天成） ========
