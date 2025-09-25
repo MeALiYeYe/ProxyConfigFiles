@@ -277,6 +277,8 @@ if [ "$1" = "deploy" ]; then
         setup_boot
         # ✅ 部署后为 Termux 设置代理环境变量
         {
+            echo 'export http_proxy="http://127.0.0.1:7890"'
+            echo 'export https_proxy="http://127.0.0.1:7890"'
             echo 'export all_proxy="socks5://127.0.0.1:7890"'
         } >> "$HOME/.bashrc"
         log_info "已将 Termux 自身代理写入 ~/.bashrc"
