@@ -1,8 +1,28 @@
 #!name=Telegram IP 分流
 #!category=社交
-#!desc=基于 IP-CIDR 的 Telegram 分流模块，支持自定义三个策略组，默认分别为 狮城 / 美国 / 欧洲
-#!arguments=SGGroup=狮城,USGroup=美国,EUGroup=欧洲
-#!arguments-desc=请分别填写已存在的策略组名称，默认 SG=狮城，US=美国，EU=欧洲
+#!desc=基于 IP-CIDR 的 Telegram 分流模块，支持选择三个地区的策略组
+#!author=ChatGPT
+
+compat_arguments:
+  SGGroup@selector:
+    default: 狮城
+    options: [香港, 台湾, 狮城, 日本, 韩国, 美国, 欧洲, 其他]
+  USGroup@selector:
+    default: 美国
+    options: [香港, 台湾, 狮城, 日本, 韩国, 美国, 欧洲, 其他]
+  EUGroup@selector:
+    default: 欧洲
+    options: [香港, 台湾, 狮城, 日本, 韩国, 美国, 欧洲, 其他]
+
+compat_arguments_desc: |
+  1️⃣ SGGroup  
+  新加坡节点策略组，默认「狮城」  
+
+  2️⃣ USGroup  
+  美国节点策略组，默认「美国」  
+
+  3️⃣ EUGroup  
+  欧洲节点策略组，默认「欧洲」  
 
 [Rule]
 # Telegram - SG
