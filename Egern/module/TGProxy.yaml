@@ -1,0 +1,34 @@
+name: Telegram IP 分流
+category: 社交
+description: 基于 IP-CIDR 的 Telegram 分流模块，支持自定义三个策略组，默认分别为 狮城 / 美国 / 欧洲
+
+compat_arguments:
+  SGGroup: 狮城
+  USGroup: 美国
+  EUGroup: 欧洲
+
+compat_arguments_desc: |
+  1️⃣ SGGroup  
+  新加坡节点策略组，默认值为「狮城」  
+
+  2️⃣ USGroup  
+  美国节点策略组，默认值为「美国」  
+
+  3️⃣ EUGroup  
+  欧洲节点策略组，默认值为「欧洲」  
+
+rules:
+# Telegram - SG
+rule_set:
+  match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/rule/TGSG.yaml
+  policy: {{{SGGroup}}}
+
+# Telegram - US
+rule_set:
+  match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/rule/TGUS.yaml
+  policy: {{{USGroup}}}
+
+# Telegram - EU
+rule_set:
+  match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/rule/TGEU.yaml
+  policy: {{{EUGroup}}}
