@@ -1,34 +1,31 @@
 #!name=Telegram IP 分流
-#!desc=基于 IP-CIDR 的 Telegram 分流规则（SG / US / EU），可在参数里填写对应的策略组名称。
-#!author=ChatGPT
-
-[Param]
-SGGroup=SG
-USGroup=US
-EUGroup=EU
+#!category=社交
+#!desc=基于 IP-CIDR 的 Telegram 分流模块，支持自定义三个策略组，默认分别为 狮城 / 美国 / 欧洲
+#!arguments=SGGroup=狮城,USGroup=美国,EUGroup=欧洲
+#!arguments-desc=请分别填写已存在的策略组名称，默认 SG=狮城，US=美国，EU=欧洲
 
 [Rule]
 # Telegram - SG
-IP-CIDR,91.108.16.0/21,${SGGroup},no-resolve
-IP-CIDR,91.108.56.0/23,${SGGroup},no-resolve
-IP-CIDR,149.154.168.0/22,${SGGroup},no-resolve
-IP-CIDR6,2001:b28:f23c::/48,${SGGroup},no-resolve
-IP-CIDR6,2001:b28:f23f::/48,${SGGroup},no-resolve
+IP-CIDR,91.108.16.0/21,{{{SGGroup}}},no-resolve
+IP-CIDR,91.108.56.0/23,{{{SGGroup}}},no-resolve
+IP-CIDR,149.154.168.0/22,{{{SGGroup}}},no-resolve
+IP-CIDR6,2001:b28:f23c::/48,{{{SGGroup}}},no-resolve
+IP-CIDR6,2001:b28:f23f::/48,{{{SGGroup}}},no-resolve
 
 # Telegram - US
-IP-CIDR,91.108.12.0/22,${USGroup},no-resolve
-IP-CIDR,149.154.172.0/22,${USGroup},no-resolve
-IP-CIDR6,2001:b28:f23d::/48,${USGroup},no-resolve
+IP-CIDR,91.108.12.0/22,{{{USGroup}}},no-resolve
+IP-CIDR,149.154.172.0/22,{{{USGroup}}},no-resolve
+IP-CIDR6,2001:b28:f23d::/48,{{{USGroup}}},no-resolve
 
 # Telegram - EU
-IP-CIDR,5.28.192.0/18,${EUGroup},no-resolve
-IP-CIDR,91.105.192.0/23,${EUGroup},no-resolve
-IP-CIDR,91.108.4.0/22,${EUGroup},no-resolve
-IP-CIDR,91.108.8.0/22,${EUGroup},no-resolve
-IP-CIDR,91.108.56.0/22,${EUGroup},no-resolve
-IP-CIDR,95.161.64.0/20,${EUGroup},no-resolve
-IP-CIDR,109.239.140.0/24,${EUGroup},no-resolve
-IP-CIDR,149.154.160.0/21,${EUGroup},no-resolve
-IP-CIDR,185.76.151.0/24,${EUGroup},no-resolve
-IP-CIDR6,2001:67c:4e8::/48,${EUGroup},no-resolve
-IP-CIDR6,2a0a:f280:203::/48,${EUGroup},no-resolve
+IP-CIDR,5.28.192.0/18,{{{EUGroup}}},no-resolve
+IP-CIDR,91.105.192.0/23,{{{EUGroup}}},no-resolve
+IP-CIDR,91.108.4.0/22,{{{EUGroup}}},no-resolve
+IP-CIDR,91.108.8.0/22,{{{EUGroup}}},no-resolve
+IP-CIDR,91.108.56.0/22,{{{EUGroup}}},no-resolve
+IP-CIDR,95.161.64.0/20,{{{EUGroup}}},no-resolve
+IP-CIDR,109.239.140.0/24,{{{EUGroup}}},no-resolve
+IP-CIDR,149.154.160.0/21,{{{EUGroup}}},no-resolve
+IP-CIDR,185.76.151.0/24,{{{EUGroup}}},no-resolve
+IP-CIDR6,2001:67c:4e8::/48,{{{EUGroup}}},no-resolve
+IP-CIDR6,2a0a:f280:203::/48,{{{EUGroup}}},no-resolve
