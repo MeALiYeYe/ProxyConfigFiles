@@ -1,11 +1,11 @@
 #!name=Telegram IP 分流
-#!desc=基于 IP-CIDR 的 Telegram 分流模块（SG / US / EU）
-#!params=SGGroup,USGroup,EUGroup
+#!desc=基于 IP-CIDR 的 Telegram 分流规则（SG / US / EU），可在参数里填写对应的策略组名称。
+#!author=ChatGPT
 
 [Param]
-SGGroup=狮城
-USGroup=美国
-EUGroup=欧洲
+SGGroup=SG
+USGroup=US
+EUGroup=EU
 
 [Rule]
 # Telegram - SG
