@@ -10,7 +10,8 @@ BaiduNUrl: &BaiduNUrl "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFi
 SubStoreUrl: &SubStoreUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
 
 # 连通性检测url
-TestUrl: &TestUrl "https://wifi.vivo.com.cn/generate_204"
+ProxyTestUrl: &ProxyTestUrl "https://www.gstatic.com/generate_204"
+DirectTestUrl: &DirectTestUrl "https://wifi.vivo.com.cn/generate_204"
 
 # 节点筛选正则
 FilterHK: &FilterHK '(?i)(?:港|香港|🇭🇰|\bHK\b|Hong|HKG)'
@@ -27,10 +28,10 @@ FilterLowMag: &FilterLowMag '0\.\d+'
 FilterHighMag: &FilterHighMag '(?!0\.)[1-9]\d*(?:\.\d+)'
 
 # 订阅更新与测试
-Proxyer: &Proxyer {type: http, interval: 43200, exclude-filter: *ExcludeFilter, health-check: {enable: true, url: *TestUrl, interval: 300, timeout: 2000}}
+Proxyer: &Proxyer {type: http, interval: 43200, exclude-filter: *ExcludeFilter, health-check: {enable: true, url: *ProxyTestUrl, interval: 300, timeout: 2000}}
 
 # 节点引用组
-Uses: &Uses {type: select, include-all-providers: true, url: *TestUrl, tolerance: 50, interval: 60, timeout: 2000, max-failed-times: 3, hidden: true}
+Uses: &Uses {type: select, include-all-providers: true, url: *ProxyTestUrl, tolerance: 50, interval: 60, timeout: 2000, max-failed-times: 3, hidden: true}
 # 延迟优选策略组
 Auto: &Auto {<<: *Uses, type: url-test}
 # 负载均衡策略组策略可选round-robin, consistent-hashing
@@ -41,8 +42,8 @@ Fallb: &Fallb {<<: *Uses, type: fallback}
 Smartg: &Smartg {<<: *Uses, type: smart, policy-priority: "电信:1.5;联通:1.0;移动:0.5", uselightgbm: false, collectdata: true, strategy: sticky-sessions}
 
 # 策略组引用组
-Groups: &Groups {type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: *TestUrl, interval: 60, timeout: 2000, max-failed-times: 3, hidden: false}
-Groupd: &Groupd {type: select, proxies: [直连, 江苏, 北京, 广东], url: *TestUrl, interval: 60, timeout: 2000, max-failed-times: 3, hidden: false}
+Groups: &Groups {type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: *ProxyTestUrl, interval: 60, timeout: 2000, max-failed-times: 3, hidden: false}
+Groupd: &Groupd {type: select, proxies: [直连, 江苏, 北京, 广东], url: *DirectTestUrl, interval: 60, timeout: 2000, max-failed-times: 3, hidden: false}
 
 # 规则集类型
 rule-anchor:
@@ -64,7 +65,7 @@ proxy-providers:
   Sub_Store: {<<: *Proxyer, path: ./proxies/Sub.yaml, url: *SubStoreUrl}
 #  *Sub1: {<<: *Proxyer, path: ./proxies/Sub1.yaml, url: *Sub1Url, override: {udp: true, additional-prefix: *Sub1}}
 #  *Sub2: {<<: *Proxyer, path: ./proxies/Sub2.yaml, url: *Sub2Url, override: {udp: true, additional-prefix: *Sub2}}
-  *BaiduN: {<<: *Proxyer, path: ./proxies/BaiduNProxy.yaml, url: *BaiduNUrl, override: {udp: true}}
+  *BaiduN: {<<: *Proxyer, path: ./proxies/BaiduNProxy.yaml, url: *BaiduNUrl, override: {udp: true}, health-check: {enable: true, url: *DirectTestUrl, interval: 300, timeout: 2000}}
 
 # 策略组
 proxy-groups:
