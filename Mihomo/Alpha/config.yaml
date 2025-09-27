@@ -137,7 +137,7 @@ rules:
   - GEOSITE,microsoft,Microsoft
   - GEOSITE,apple,Apple
   - GEOSITE,geolocation-!cn,Foreign
-  - GEOSITE,bytedance,ReDirect
+  - GEOSITE,bytedance,Location
   - GEOSITE,category-entertainment-cn,Location  
   - GEOSITE,category-social-media-cn,Location 
   - GEOSITE,cn,Domestic
