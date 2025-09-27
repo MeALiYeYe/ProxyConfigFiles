@@ -102,7 +102,6 @@ proxy-groups:
 
 # 规则集
 rule-providers:
-  FakeLocation: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rules/FakeLocation.yaml}
   Direct: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Direct.yaml", path: ./rules/Direct.yaml}
   Reject: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject.yaml", path: ./rules/Reject.yaml}
   Proxy: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Proxy.yaml", path: ./rules/Proxy.yaml}
@@ -119,7 +118,6 @@ rules:
   #- OR,((DST-PORT,53),(DST-PORT,853)),dns-out
   - RULE-SET,AWAvenue,REJECT-DROP
   - RULE-SET,Reject,REJECT
-  - RULE-SET,FakeLocation,Location
   - RULE-SET,Direct,DIRECT
   - RULE-SET,Proxy,Foreign
   - RULE-SET,Emby,Media
@@ -137,6 +135,8 @@ rules:
   - GEOSITE,github,Github
   - GEOSITE,microsoft,Microsoft
   - GEOSITE,geolocation-!cn,Foreign
+  - GEOSITE,category-entertainment-cn,ReDirect  
+  - GEOSITE,category-social-media-cn,ReDirect 
   - GEOSITE,cn,Domestic
 
   - GEOIP,private,DIRECT,no-resolve
