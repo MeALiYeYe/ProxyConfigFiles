@@ -138,8 +138,8 @@ rules:
   - GEOSITE,apple,Apple
   - GEOSITE,geolocation-!cn,Foreign
   - GEOSITE,bytedance,ReDirect
-  - GEOSITE,category-entertainment-cn,ReDirect  
-  - GEOSITE,category-social-media-cn,ReDirect 
+  - GEOSITE,category-entertainment-cn,Location  
+  - GEOSITE,category-social-media-cn,Location 
   - GEOSITE,cn,Domestic
 
   - GEOIP,private,DIRECT,no-resolve
