@@ -149,7 +149,7 @@ rules:
   - GEOIP,tw,台湾,no-resolve
   - GEOIP,sg,狮城,no-resolve
   - GEOIP,jp,日本,no-resolve
-  - GEOIP,kr,韩国,no-resolve
+#  - GEOIP,kr,韩国,no-resolve
   - GEOIP,us,美国,no-resolve
   - GEOIP,cn,Domestic,no-resolve
 
