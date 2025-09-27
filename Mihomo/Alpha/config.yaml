@@ -41,8 +41,8 @@ Fallb: &Fallb {<<: *Uses, type: fallback}
 Smartg: &Smartg {<<: *Uses, type: smart, policy-priority: "电信:1.5;联通:1.0;移动:0.5", uselightgbm: false, collectdata: true, strategy: sticky-sessions}
 
 # 策略组引用组
-Groups: &Groups {type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], hidden: false}
-Groupd: &Groupd {type: select, proxies: [直连, 江苏, 北京, 广东], hidden: false}
+Groups: &Groups {type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: *TestUrl, interval: 60, timeout: 2000, max-failed-times: 3, hidden: false}
+Groupd: &Groupd {type: select, proxies: [直连, 江苏, 北京, 广东], url: *TestUrl, interval: 60, timeout: 2000, max-failed-times: 3, hidden: false}
 
 # 规则集类型
 rule-anchor:
