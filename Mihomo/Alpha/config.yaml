@@ -103,6 +103,7 @@ proxy-groups:
 
 # 规则集
 rule-providers:
+  FakeLocation: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rules/FakeLocation.yaml}
   Direct: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Direct.yaml", path: ./rules/Direct.yaml}
   Reject: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject.yaml", path: ./rules/Reject.yaml}
   Proxy: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Proxy.yaml", path: ./rules/Proxy.yaml}
@@ -122,6 +123,7 @@ rules:
   - RULE-SET,Direct,DIRECT
   - RULE-SET,Proxy,Foreign
   - RULE-SET,Emby,Media
+  - RULE-SET,FakeLocation,Location
 
   - GEOSITE,private,DIRECT
   - GEOSITE,category-ads-all,REJECT-DROP
@@ -137,9 +139,9 @@ rules:
   - GEOSITE,microsoft,Microsoft
   - GEOSITE,apple,Apple
   - GEOSITE,geolocation-!cn,Foreign
-  - GEOSITE,bytedance,Location
-  - GEOSITE,category-entertainment-cn,Location
-  - GEOSITE,category-social-media-cn,Location
+#  - GEOSITE,bytedance,Location
+#  - GEOSITE,category-entertainment-cn,Location
+#  - GEOSITE,category-social-media-cn,Location
   - GEOSITE,cn,Domestic
 
   - GEOIP,private,DIRECT,no-resolve
