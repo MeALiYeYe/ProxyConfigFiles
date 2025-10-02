@@ -42,8 +42,8 @@ Fallb: &Fallb {<<: *Uses, type: fallback}
 Smartg: &Smartg {<<: *Uses, type: smart, policy-priority: "电信:1.5;联通:1.0;移动:0.5", uselightgbm: false, collectdata: true, strategy: sticky-sessions}
 
 # 策略组引用组
-Groups: &Groups {type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: *ProxyTestUrl, interval: 60, timeout: 2000, max-failed-times: 3, hidden: false}
-Groupd: &Groupd {type: select, proxies: [直连, 江苏, 北京, 广东], url: *DirectTestUrl, interval: 60, timeout: 2000, max-failed-times: 3, hidden: false}
+Groups: &Groups {type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], hidden: false}
+Groupd: &Groupd {type: select, proxies: [直连, 江苏, 北京, 广东], hidden: false}
 
 # 规则集类型
 rule-anchor:
@@ -65,7 +65,7 @@ proxy-providers:
   Sub_Store: {<<: *Proxyer, path: ./proxies/Sub.yaml, url: *SubStoreUrl}
 #  *Sub1: {<<: *Proxyer, path: ./proxies/Sub1.yaml, url: *Sub1Url, override: {udp: true, additional-prefix: *Sub1}}
 #  *Sub2: {<<: *Proxyer, path: ./proxies/Sub2.yaml, url: *Sub2Url, override: {udp: true, additional-prefix: *Sub2}}
-  *BaiduN: {<<: *Proxyer, path: ./proxies/BaiduNProxy.yaml, url: *BaiduNUrl, override: {udp: true}, health-check: {enable: true, url: *DirectTestUrl, interval: 300, timeout: 2000}}
+  *BaiduN: {<<: *Proxyer, path: ./proxies/BaiduNProxy.yaml, url: *BaiduNUrl}
 
 # 策略组
 proxy-groups:
