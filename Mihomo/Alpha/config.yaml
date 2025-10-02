@@ -58,7 +58,7 @@ rule-anchor:
 # 出站代理
 proxies:
   - {name: 直连, type: direct}
-  - {name: dns-out, type: dns}
+#  - {name: dns-out, type: dns}
 
 # 外部订阅
 proxy-providers:
@@ -117,9 +117,7 @@ rules:
   # NTP
   #- AND,((NETWORK,UDP),(DST-PORT,123)),DIRECT
   # DNS
-  - OR,((DST-PORT,53),(DST-PORT,853),(DST-PORT,8853)),dns-out
-  # QUIC
-  - AND,((NETWORK,UDP),(DST-PORT,443),(NOT,((GEOSITE,cn))),(NOT,((GEOIP,cn))),(NOT,((SRC-GEOIP,cn)))),REJECT
+  #- OR,((DST-PORT,53),(DST-PORT,853),(DST-PORT,8853)),dns-out
   - RULE-SET,AWAvenue,REJECT-DROP
   - RULE-SET,Reject,REJECT
   - RULE-SET,Direct,DIRECT
