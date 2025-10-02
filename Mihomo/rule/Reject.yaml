@@ -13,6 +13,8 @@ payload:
   - DOMAIN-SUFFIX,p2p.huya.com
   - DOMAIN-SUFFIX,statwup.huya.com
   - DOMAIN-SUFFIX,e-stat.huya.com
+  # 知乎伪装OpenAi的域名
+  - DOMAIN-SUFFIX,sentry.io
   # 中国移动一直访问
   - DOMAIN-SUFFIX,xionguamaqui.com
   # 百度
