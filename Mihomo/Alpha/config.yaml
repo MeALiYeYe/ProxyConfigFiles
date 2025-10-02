@@ -261,6 +261,7 @@ dns:
       - 'https://dns.google/dns-query#Google&h3=true'
       - 'https://cloudflare-dns.com/dns-query#Cloudflare&h3=true'
   direct-nameserver:
+    - system
     - tls://223.5.5.5
     - tls://223.6.6.6
   proxy-server-nameserver:
