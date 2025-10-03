@@ -148,12 +148,6 @@ rules:
   - GEOIP,telegram,Telegram,no-resolve
   - GEOIP,google,Google,no-resolve
   - GEOIP,cloudflare,Cloudflare,no-resolve
-  - GEOIP,hk,香港,no-resolve
-  - GEOIP,tw,台湾,no-resolve
-  - GEOIP,sg,狮城,no-resolve
-  - GEOIP,jp,日本,no-resolve
-#  - GEOIP,kr,韩国,no-resolve
-  - GEOIP,us,美国,no-resolve
   - GEOIP,cn,Domestic,no-resolve
 
   - MATCH,Final
