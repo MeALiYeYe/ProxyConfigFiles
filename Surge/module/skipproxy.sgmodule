@@ -1,14 +1,5 @@
-#!name=CN Apps Bypass (Bank/Payment/ISP/Gov)
-#!desc=银行、支付、运营商、政务类 App VIF/TUN 下稳定直连及真实IP配置
-
-[General]
-# 直接绕过代理，保证 App 正常工作
-skip-proxy = %APPEND%
-  *.icbc.com.cn, *.95588.com, *.ccb.com, *.ccb.com.cn, *.boc.cn, *.bankofchina.com, *.abchina.com, *.abchina.com.cn, *.cmbchina.com, *.bankcomm.com, *.pingan.com, *.pingan.com.cn, *.psbc.com, *.psbc.com.cn, *.10086.cn, *.chinamobile.com, *.10010.com, *.chinaunicom.com, *.189.cn, *.chinatelecom.com.cn, *.gov.cn, *.chinatax.gov.cn, *.etax.cn, *.tiantianfund.com, *.szse.cn, *.csrc.gov.cn, *.cnipa.gov.cn, *.医保.cn, *.yibao.cn, *.iask.cn, *.12306.cn
-
-# 保持真实 IP，防止风控检测
-always-real-ip = %APPEND%
-  *.alipay.com, *.alipayobjects.com, *.alipaydns.com, *.tenpay.com, *.wechat.com, *.weixin.qq.com
+#!name=CN Apps Skip Proxy & Real-IP
+#!desc=银行、支付、运营商、政务及常用App直连，兼容VIF/TUN，融合用户自定义域名
 
 [Rule]
 # --- 银行类 ---
@@ -26,6 +17,10 @@ DOMAIN-SUFFIX,pingan.com,DIRECT
 DOMAIN-SUFFIX,pingan.com.cn,DIRECT
 DOMAIN-SUFFIX,psbc.com,DIRECT
 DOMAIN-SUFFIX,psbc.com.cn,DIRECT
+DOMAIN-SUFFIX,www.abchina.com.cn,DIRECT
+DOMAIN-SUFFIX,login-service.mobile-bank.psbc.com,DIRECT
+DOMAIN-SUFFIX,mobile-bank.psbc.com,DIRECT
+DOMAIN-SUFFIX,msmp.abchina.com.cn,DIRECT
 
 # --- 运营商类 ---
 DOMAIN-SUFFIX,10086.cn,DIRECT
@@ -34,6 +29,8 @@ DOMAIN-SUFFIX,10010.com,DIRECT
 DOMAIN-SUFFIX,chinaunicom.com,DIRECT
 DOMAIN-SUFFIX,189.cn,DIRECT
 DOMAIN-SUFFIX,chinatelecom.com.cn,DIRECT
+DOMAIN-SUFFIX,open.e.189.cn,DIRECT
+DOMAIN-SUFFIX,id6.me,DIRECT
 
 # --- 支付类 ---
 DOMAIN-SUFFIX,alipay.com,DIRECT
@@ -42,6 +39,8 @@ DOMAIN-SUFFIX,alipaydns.com,DIRECT
 DOMAIN-SUFFIX,tenpay.com,DIRECT
 DOMAIN-SUFFIX,wechat.com,DIRECT
 DOMAIN-SUFFIX,weixin.qq.com,DIRECT
+DOMAIN-SUFFIX,easy-login.10099.com.cn,DIRECT
+DOMAIN-SUFFIX,*-update.xoyocdn.com,DIRECT
 
 # --- 政务/政企类 ---
 DOMAIN-SUFFIX,gov.cn,DIRECT
@@ -55,3 +54,17 @@ DOMAIN-SUFFIX,医保.cn,DIRECT
 DOMAIN-SUFFIX,yibao.cn,DIRECT
 DOMAIN-SUFFIX,iask.cn,DIRECT
 DOMAIN-SUFFIX,12306.cn,DIRECT
+
+# --- 常用 App 类 ---
+DOMAIN-SUFFIX,www.baidu.com,DIRECT
+DOMAIN-SUFFIX,yunbusiness.ccb.com,DIRECT
+DOMAIN-SUFFIX,wxh.wo.cn,DIRECT
+DOMAIN-SUFFIX,gate.lagou.com,DIRECT
+DOMAIN-SUFFIX,www.shanbay.com,DIRECT
+
+[General]
+# 直接绕过代理，保证 App 正常工作
+skip-proxy = %APPEND% ccb.com,wxh.wo.cn,gate.lagou.com,www.abchina.com.cn,www.shanbay.com,login-service.mobile-bank.psbc.com,mobile-bank.psbc.com,id6.me, *.icbc.com.cn, *.95588.com, *.ccb.com, *.ccb.com.cn, *.boc.cn, *.bankofchina.com, *.abchina.com, *.abchina.com.cn, *.cmbchina.com, *.bankcomm.com, *.pingan.com, *.pingan.com.cn, *.psbc.com, *.psbc.com.cn, *.10086.cn, *.chinamobile.com, *.10010.com, *.chinaunicom.com, *.189.cn, *.chinatelecom.com.cn, *.gov.cn, *.chinatax.gov.cn, *.etax.cn, *.tiantianfund.com, *.szse.cn, *.csrc.gov.cn, *.cnipa.gov.cn, *.医保.cn, *.yibao.cn, *.iask.cn, *.12306.cn
+
+# 保持真实 IP，防止风控检测
+always-real-ip = %APPEND% easy-login.10099.com.cn,*-update.xoyocdn.com,id6.me,open.e.189.cn, *.alipay.com, *.alipayobjects.com, *.alipaydns.com, *.tenpay.com, *.wechat.com, *.weixin.qq.com
