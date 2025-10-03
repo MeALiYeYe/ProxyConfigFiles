@@ -1,8 +1,14 @@
-#!name=Bypass Tunnel Proxy (CN Apps)
-#!desc=直连国内银行、支付、运营商、视频与政务类App，避免TUN/VIF检测
+#!name=CN Apps Bypass (Bank/Payment/ISP/Gov)
+#!desc=银行、支付、运营商、政务类 App VIF/TUN 下稳定直连及真实IP配置
 
 [General]
-skip-proxy = %APPEND%, *.icbc.com.cn, *.95588.com, *.ccb.com, *.ccb.com.cn, *.boc.cn, *.bankofchina.com, *.abchina.com, *.abchina.com.cn, *.cmbchina.com, *.bankcomm.com, *.pingan.com, *.pingan.com.cn, *.psbc.com, *.psbc.com.cn, *.10086.cn, *.chinamobile.com, *.10010.com, *.chinaunicom.com, *.189.cn, *.chinatelecom.com.cn, *.alipay.com, *.alipayobjects.com, *.alipaydns.com, *.tenpay.com, *.wechat.com, *.weixin.qq.com, *.gov.cn, *.chinatax.gov.cn, *.etax.cn, *.tiantianfund.com, *.szse.cn, *.csrc.gov.cn, *.cnipa.gov.cn, *.医保.cn, *.yibao.cn, *.iask.cn, *.12306.cn
+# 直接绕过代理，保证 App 正常工作
+skip-proxy = %APPEND%
+  *.icbc.com.cn, *.95588.com, *.ccb.com, *.ccb.com.cn, *.boc.cn, *.bankofchina.com, *.abchina.com, *.abchina.com.cn, *.cmbchina.com, *.bankcomm.com, *.pingan.com, *.pingan.com.cn, *.psbc.com, *.psbc.com.cn, *.10086.cn, *.chinamobile.com, *.10010.com, *.chinaunicom.com, *.189.cn, *.chinatelecom.com.cn, *.gov.cn, *.chinatax.gov.cn, *.etax.cn, *.tiantianfund.com, *.szse.cn, *.csrc.gov.cn, *.cnipa.gov.cn, *.医保.cn, *.yibao.cn, *.iask.cn, *.12306.cn
+
+# 保持真实 IP，防止风控检测
+always-real-ip = %APPEND%
+  *.alipay.com, *.alipayobjects.com, *.alipaydns.com, *.tenpay.com, *.wechat.com, *.weixin.qq.com
 
 [Rule]
 # --- 银行类 ---
