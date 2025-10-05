@@ -31,9 +31,9 @@ FilterHighMag: &FilterHighMag '(?!0\.)[1-9]\d*(?:\.\d+)'
 Proxyer: &Proxyer {type: http, interval: 43200, exclude-filter: *ExcludeFilter, health-check: {enable: true, url: *ProxyTestUrl, interval: 300, timeout: 2000}}
 
 # 节点引用组
-Uses: &Uses {type: select, include-all-providers: true, url: *ProxyTestUrl, tolerance: 50, interval: 60, timeout: 2000, max-failed-times: 3, hidden: true}
+Uses: &Uses {type: select, include-all-providers: true, url: *ProxyTestUrl, interval: 300, timeout: 2000, max-failed-times: 3, hidden: true}
 # 延迟优选策略组
-Auto: &Auto {<<: *Uses, type: url-test}
+Auto: &Auto {<<: *Uses, type: url-test, tolerance: 50}
 # 负载均衡策略组策略可选round-robin, consistent-hashing
 Loads: &Loads {<<: *Uses, type: load-balance, strategy: sticky-sessions}
 # 故障转移策略组
@@ -42,8 +42,8 @@ Fallb: &Fallb {<<: *Uses, type: fallback}
 Smartg: &Smartg {<<: *Uses, type: smart, policy-priority: "电信:1.5;联通:1.0;移动:0.5", uselightgbm: false, collectdata: true, strategy: sticky-sessions}
 
 # 策略组引用组
-Groups: &Groups {type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: *ProxyTestUrl, hidden: false}
-Groupd: &Groupd {type: select, proxies: [直连, 江苏, 北京, 广东], url: *DirectTestUrl, hidden: false}
+Groups: &Groups {type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], interval: 300, timeout: 2000, max-failed-times: 3, hidden: false}
+Groupd: &Groupd {type: select, proxies: [直连, 江苏, 北京, 广东], url: *DirectTestUrl, interval: 300, timeout: 2000, max-failed-times: 3, hidden: false}
 
 # 规则集类型
 rule-anchor:
