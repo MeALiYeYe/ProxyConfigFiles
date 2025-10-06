@@ -1,5 +1,5 @@
 function FindProxyForURL(url, host) {
-    var proxy = "PROXY 127.0.0.1:7890";
+    var proxy = "SOCKS5 127.0.0.1:7890; DIRECT";
 
     // ==============================
     // 1. 广告/追踪域名 → 直连（等效拦截）
