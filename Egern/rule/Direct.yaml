@@ -1,4 +1,6 @@
 domain_suffix_set:
+  - gwmapp-h.com
+  - gwmapp-w.com
   - gwm.com.cn
   - gwm.cn
 domain_keyword_set:
