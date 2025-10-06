@@ -1,5 +1,13 @@
 no_resolve: true
 domain_suffix_set:
+  - metric.huya.com
+  - ylog.huya.com
+  - e-ad-monitor.huya.com
+  - p2p.huya.com
+  - statwup.huya.com
+  - e-stat.huya.com
+  - sentry.io
+  - xionguamaqui.com
   - duxiaoman.com
   - dxmpay.com
   - 2345.com
@@ -10,7 +18,6 @@ domain_suffix_set:
   - xjietiao.com
   - 360jie.com.cn
   - 360totalsecurity.com
-  - sentry.io
 domain_set:
   - dumall.baidu.com
   - haokan.baidu.com
@@ -26,6 +33,23 @@ domain_regex_set:
   - ^ad\..*|^ads\..*
 ip_cidr_set:
   - 0.0.0.0/32
+  - 198.18.0.0/15
   - 95.161.76.100/31
+  - 47.101.175.206/32
+  - 47.100.123.169/32
+  - 120.46.169.234/32
+  - 121.36.72.124/32
+  - 116.63.10.135/32
+  - 122.9.7.134/32
+  - 117.185.228.108/32
+  - 117.144.238.29/32
+  - 122.9.13.79/32
+  - 122.9.15.129/32
+  - 101.91.140.224/32
+  - 101.91.140.124/32
+  - 114.116.215.110/32
+  - 116.63.10.31/32
+  - 112.64.218.119/32
+  - 112.65.200.117/32
 ip_cidr6_set:
   - ::/128
