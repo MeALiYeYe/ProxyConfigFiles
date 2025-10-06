@@ -2,25 +2,7 @@ function FindProxyForURL(url, host) {
     var proxy = "SOCKS5 127.0.0.1:7890; DIRECT";
 
     // ==============================
-    // 1. 广告/追踪域名 → 直连（等效拦截）
-    // ==============================
-    if (
-        dnsDomainIs(host, "ad.qq.com") ||
-        dnsDomainIs(host, "beacon.qq.com") ||
-        dnsDomainIs(host, "pingma.qq.com") ||
-        dnsDomainIs(host, "bugly.qq.com") ||
-        dnsDomainIs(host, "iad.g.163.com") ||
-        dnsDomainIs(host, "crash.163.com") ||
-        dnsDomainIs(host, "analytics.163.com") ||
-        dnsDomainIs(host, "adgeo.163.com") ||
-        dnsDomainIs(host, "doubleclick.net") ||
-        dnsDomainIs(host, "admob.com")
-    ) {
-        return "DIRECT";
-    }
-
-    // ==============================
-    // 2. 游戏平台直连（腾讯、网易、米哈游、完美、世纪天成等）
+    //  游戏平台直连（腾讯、网易、米哈游、完美、世纪天成等）
     // ==============================
     if (
         // 腾讯
