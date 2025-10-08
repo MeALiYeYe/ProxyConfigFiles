@@ -450,19 +450,19 @@ rules:
     policy: REJECT
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/rule/Reject.list
+    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/rule/Reject.yaml
     policy: REJECT
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/rule/Direct.list
+    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/rule/Direct.yaml
     policy: DIRECT
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/rule/Proxy.list
+    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/rule/Proxy.yaml
     policy: Foreign
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/rule/Emby.list
+    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/rule/Emby.yaml
     policy: Media
     disabled: false
 - rule_set:
