@@ -340,7 +340,7 @@ policy_groups:
     flatten: true
     filter: 香港|HK|🇭🇰
     icon: https://raw.githubusercontent.com/Centralmatrix3/Matrix-io/master/Gallery/Color/HK.png
-    hidden: false
+    hidden: true
 - auto_test:
     name: 台湾
     policies:
@@ -348,7 +348,7 @@ policy_groups:
     flatten: true
     filter: 台湾|TW|🇹🇼|🇼🇸|🇨🇳
     icon: https://raw.githubusercontent.com/Centralmatrix3/Matrix-io/master/Gallery/Color/TW.png
-    hidden: false
+    hidden: true
 - auto_test:
     name: 狮城
     policies:
@@ -356,7 +356,7 @@ policy_groups:
     flatten: true
     filter: 新加坡|SG|狮城|🇸🇬
     icon: https://raw.githubusercontent.com/Centralmatrix3/Matrix-io/master/Gallery/Color/SG.png
-    hidden: false
+    hidden: true
 - auto_test:
     name: 日本
     policies:
@@ -364,7 +364,7 @@ policy_groups:
     flatten: true
     filter: 日本|JP|🇯🇵
     icon: https://raw.githubusercontent.com/Centralmatrix3/Matrix-io/master/Gallery/Color/JP.png
-    hidden: false
+    hidden: true
 - auto_test:
     name: 韩国
     policies:
@@ -372,7 +372,7 @@ policy_groups:
     flatten: true
     filter: 韩国|\bKR\b|🇰🇷
     icon: https://raw.githubusercontent.com/Centralmatrix3/Matrix-io/master/Gallery/Color/KR.png
-    hidden: false
+    hidden: true
 - auto_test:
     name: 美国
     policies:
@@ -380,7 +380,7 @@ policy_groups:
     flatten: true
     filter: 美国|US|🇺🇸
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/US(2).png
-    hidden: false
+    hidden: true
 - auto_test:
     name: 其他
     policies:
@@ -388,7 +388,7 @@ policy_groups:
     flatten: true
     filter: ^(?!.*((?i)🇭🇰|🇨🇳|🇸🇬|🇯🇵|🇰🇷|🇺🇸|香港|台湾|新加坡|狮城|日本|韩国|美国|HK|TW|SG|JP|\bKR\b|US|Hong|Taiwan|Singapore|Japan|Korea|States)).*
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/ssrdog.png
-    hidden: false
+    hidden: true
 - auto_test:
     name: 低倍
     policies:
@@ -396,7 +396,7 @@ policy_groups:
     flatten: true
     filter: 0\.\d+
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/liuliang(2).png
-    hidden: false
+    hidden: true
 - auto_test:
     name: 高倍
     policies:
@@ -404,7 +404,7 @@ policy_groups:
     flatten: true
     filter: (?!0\.)[1-9]\d*(?:\.\d+)
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/liuliang(3).png
-    hidden: false
+    hidden: true
 - auto_test:
     name: 江苏
     policies:
@@ -414,7 +414,7 @@ policy_groups:
     interval: 60
     tolerance: 50
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Round_Robin_1.png
-    hidden: false
+    hidden: true
 - auto_test:
     name: 广东
     policies:
@@ -424,7 +424,7 @@ policy_groups:
     interval: 60
     tolerance: 50
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Quantumult_X.png
-    hidden: false
+    hidden: true
 - auto_test:
     name: 北京
     policies:
@@ -434,7 +434,7 @@ policy_groups:
     interval: 60
     tolerance: 50
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Qure.png
-    hidden: false
+    hidden: true
 rules:
 - and:
     match:
