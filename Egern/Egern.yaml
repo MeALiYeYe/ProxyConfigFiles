@@ -5,12 +5,12 @@ ipv6: true
 http_port: 3080
 socks_port: 3090
 allow_external_connections: false
-vif_only: false
+vif_only: true
 hide_vpn_icon: false
 hijack_dns:
-- '*:8853'
-- '*:853'
 - '*:53'
+- '*:853'
+- '*:8853'
 geoip_db_url: https://raw.githubusercontent.com/Loyalsoldier/geoip/release/Country-without-asn.mmdb
 asn_db_url: https://raw.githubusercontent.com/Loyalsoldier/geoip/release/Country-asn.mmdb
 proxy_latency_test_url: https://www.apple.com/library/test/success.html
