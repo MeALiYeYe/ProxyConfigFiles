@@ -13,7 +13,7 @@ hijack_dns:
 - '*:8853'
 geoip_db_url: https://raw.githubusercontent.com/Loyalsoldier/geoip/release/Country-without-asn.mmdb
 asn_db_url: https://raw.githubusercontent.com/Loyalsoldier/geoip/release/Country-asn.mmdb
-proxy_latency_test_url: https://www.apple.com/library/test/success.html
+proxy_latency_test_url: https://www.gstatic.com/generate_204
 direct_latency_test_url: https://wifi.vivo.com.cn/generate_204
 compat_route: true
 include_all_networks: false
@@ -111,7 +111,6 @@ dns:
     - 2606:50c0:8001::154
     - 2606:50c0:8002::154
     - 2606:50c0:8003::154
-    # App Store 下载请求解析 金山CDN
     iosapps.itunes.apple.com:
     - iosapps.itunes.apple.com.download.ks-cdn.com
 policy_groups:
@@ -450,10 +449,6 @@ rules:
             no_resolve: true
     policy: REJECT
     disabled: false
-- domain_regex:
-    match: ^ad\..*|^ads\..*
-    policy: REJECT
-    disabled: false
 - rule_set:
     match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/rule/Reject.list
     policy: REJECT
@@ -475,16 +470,12 @@ rules:
     policy: DIRECT
     disabled: false
 - rule_set:
-    match: https://gist.githubusercontent.com/sec7et/0c17021dec65107ff099e6a638a20d52/raw/Simple_Reject_Rule.list
-    policy: REJECT
-    disabled: false
-- rule_set:
     match: https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/refs/heads/main/Filters/AWAvenue-Ads-Rule-Surge-RULE-SET.list
-    policy: REJECT
+    policy: REJECT-DROP
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/limbopro/Adblock4limbo/main/Adblock4limbo_surge.list
-    policy: REJECT
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Advertising/Advertising_All_No_Resolve.list
+    policy: REJECT-DROP
     disabled: false
 - rule_set:
     name: ReDirect
@@ -561,13 +552,15 @@ modules:
   enabled: true
 - url: https://raw.githubusercontent.com/sub-store-org/Sub-Store/refs/heads/master/config/Egern.yaml
   enabled: true
+- url: 本地规则
+  enabled: true
 - url: http://script.hub/file/_start_/https://kelee.one/Tool/Loon/Lpx/BlockAdvertisers.lpx/_end_/BlockAdvertisers.sgmodule?type=loon-plugin&target=surge-module&del=true&jqEnabled=true
   enabled: true
 - url: http://script.hub/file/_start_/https://kelee.one/Tool/Loon/Lpx/Remove_ads_by_keli.lpx/_end_/Remove_ads_by_keli.sgmodule?type=loon-plugin&target=surge-module&del=true&jqEnabled=true
   enabled: true
-- url: https://raw.githubusercontent.com/ddgksf2013/Modules/refs/heads/main/Adblock.sgmodule
+- url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rewrite/Surge/AllInOne/AllInOne.sgmodule
   enabled: true
-- url: https://limbopro.com/Adblock4limbo.sgmodule
+- url: https://raw.githubusercontent.com/ddgksf2013/Modules/refs/heads/main/Adblock.sgmodule
   enabled: true
 - url: https://github.com/BiliUniverse/Enhanced/releases/latest/download/BiliBili.Enhanced.yaml
   enabled: true
