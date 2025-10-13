@@ -173,9 +173,8 @@ geodata-loader: standard
 geo-auto-update: true
 geo-update-interval: 168
 geox-url:
-  geoip: "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/geoip.dat"
-  geosite: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
-  mmdb: "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/Country.mmdb"
+  geoip: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
+  geosite: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
   asn: "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/geoip-asn.dat"
 unified-delay: true
 tcp-concurrent: true
