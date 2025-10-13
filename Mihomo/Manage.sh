@@ -40,10 +40,9 @@ RULES_SOURCES=(
 
 # Geo 数据
 GEO_FILES=(
-    "geo/geoip.dat,https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat"
-    "geo/geosite.dat,https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
-    "geo/Country.mmdb,https://github.com/Loyalsoldier/geoip/releases/latest/download/Country.mmdb"
-    "geo/Country-asn.mmdb,https://github.com/Loyalsoldier/geoip/releases/latest/download/Country-asn.mmdb"
+    "geo/geoip.dat,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
+    "geo/geosite.dat,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+    "geo/geoip-asn.dat,https://raw.githubusercontent.com/Loyalsoldier/geoip/release/geoip-asn.dat"
 )
 
 #------------------------------------------------
