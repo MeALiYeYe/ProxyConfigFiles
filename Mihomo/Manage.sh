@@ -42,7 +42,6 @@ RULES_SOURCES=(
 GEO_FILES=(
     "geo/geoip.dat,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
     "geo/geosite.dat,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
-    "geo/geoip-asn.dat,https://raw.githubusercontent.com/Loyalsoldier/geoip/release/geoip-asn.dat"
 )
 
 #------------------------------------------------
