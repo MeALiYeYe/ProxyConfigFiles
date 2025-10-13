@@ -182,7 +182,7 @@ global-client-fingerprint: chrome
 
 lgbm-auto-update: true
 lgbm-update-interval: 72
-lgbm-url: "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin"
+lgbm-url: "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model-large.bin"
 
 external-controller: 0.0.0.0:9090
 external-ui: ~/.config/mihomo/panel/Zash/
