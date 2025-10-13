@@ -25,6 +25,9 @@ MIHOMO_API_URL=$(curl -s https://api.github.com/repos/vernesong/mihomo/releases/
 
 MIHOMO_URL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-acf8e3b.gz"
 
+# **新增：Smart大模型下载链接**
+MODEL_URL="https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model-large.bin"
+
 # mihomo远程配置链接
 CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Alpha/config.yaml"
 
@@ -42,6 +45,7 @@ RULES_SOURCES=(
 GEO_FILES=(
     "geo/geoip.dat,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
     "geo/geosite.dat,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+    "geo/ASN.mmdb,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
 )
 
 #------------------------------------------------
@@ -123,6 +127,10 @@ deploy_mihomo() {
     else
         log_error "Mihomo 核心文件不存在，部署失败"
     fi
+
+    # **新增：下载 Smart 大模型**
+    log_info "下载 Smart 大模型..."
+    wget -q --show-progress -O Model.bin "$MODEL_URL" || log_error "下载 Smart 模型失败"
 
     download_assets
     log_info "Mihomo 部署完成"
@@ -225,6 +233,16 @@ update_geo() {
     log_info "Geo 数据更新完成"
 }
 
+#------------------------------------------------
+# 更新模型文件
+#------------------------------------------------
+update_model() {
+    log_info "更新 Smart 大模型..."
+    cd "$MIHOMO_DIR"
+    wget -q --show-progress -O Model.bin "$MODEL_URL" || log_error "下载 Smart 模型失败"
+    log_info "Smart 大模型更新完成"
+}
+
 update_config() {
     log_info "更新 config.yaml..."
     cd "$MIHOMO_DIR"
@@ -323,6 +341,7 @@ case "$1" in
     update_rules) update_rules ;;
     update_geo) update_geo ;;
     update_config) update_config ;;
+    update_model) update_model ;;
     update_mihomo_core) update_mihomo_core ;;
     log_substore) view_substore_log ;;
     log_mihomo) view_mihomo_log ;;
@@ -335,11 +354,12 @@ case "$1" in
         update_mihomo
         update_rules
         update_geo
+        update_model
         update_config
         update_mihomo_core
         ;;
     *)
-        echo "用法: $0 {deploy|deploy_substore|deploy_mihomo|start_substore|stop_substore|restart_substore|start_mihomo|stop_mihomo|restart_mihomo|update_self|update_substore|update_mihomo|update_rules|update_geo|update_config|update_mihomo_core|log_substore|log_mihomo|start|stop|restart|update}"
+        echo "用法: $0 {deploy|deploy_substore|deploy_mihomo|start_substore|stop_substore|restart_substore|start_mihomo|stop_mihomo|restart_mihomo|update_self|update_substore|update_mihomo|update_mode|update_rules|update_geo|update_config|update_mihomo_core|log_substore|log_mihomo|start|stop|restart|update}"
         exit 1
         ;;
 esac
