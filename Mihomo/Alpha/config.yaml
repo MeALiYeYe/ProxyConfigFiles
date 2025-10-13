@@ -42,7 +42,7 @@ Fallb: &Fallb {<<: *Uses, type: fallback}
 Smartg: &Smartg {<<: *Uses, type: smart, policy-priority: "电信:1.5;联通:1.0;移动:0.5", uselightgbm: false, collectdata: true, strategy: sticky-sessions}
 
 # 策略组引用组
-Groups: &Groups {type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], interval: 300, timeout: 2000, max-failed-times: 3, hidden: false}
+Groups: &Groups {type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国], interval: 300, timeout: 2000, max-failed-times: 3, hidden: false}
 Groupd: &Groupd {type: select, proxies: [直连, 江苏, 北京, 广东], url: *DirectTestUrl, interval: 300, timeout: 2000, max-failed-times: 3, hidden: false}
 
 # 规则集类型
@@ -98,8 +98,8 @@ proxy-groups:
 #  - {name: 俄国, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Russia.png", <<: *Smartg, filter: *FilterRU}
 #  - {name: 欧洲, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/European_Union.png", <<: *Smartg, filter: *FilterEU}  
 #  - {name: 其他, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/quanqiu(3).png", <<: *Smartg, filter: *FilterOther}
-  - {name: 低倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/liuliang(2).png", <<:  *Smartg, filter: *FilterLowMag}
-  - {name: 高倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/liuliang(3).png", <<: *Smartg, filter: *FilterHighMag}
+#  - {name: 低倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/liuliang(2).png", <<:  *Smartg, filter: *FilterLowMag}
+#  - {name: 高倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/liuliang(3).png", <<: *Smartg, filter: *FilterHighMag}
 
 # 规则集
 rule-providers:
