@@ -3,9 +3,13 @@ domain_suffix_set:
   - gwmapp-w.com
   - gwm.com.cn
   - gwm.cn
+  - ojbktv.com
 domain_keyword_set:
   - kahaoquan
   - xiaoyakankan
   - linkeless
+  - sntp
   - gwm-mn
   - gwmapp
+domain_set:
+  - liangxin.xyz
