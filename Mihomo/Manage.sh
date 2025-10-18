@@ -140,9 +140,6 @@ deploy_mihomo() {
 #------------------------------------------------
 # 部署 AdGuard Home
 #------------------------------------------------
-#------------------------------------------------
-# 部署 AdGuard Home
-#------------------------------------------------
 deploy_adguard_home() {
     log_info "部署 AdGuard Home..."
     ADGUARD_DIR="$HOME/adguardhome"
@@ -152,7 +149,12 @@ deploy_adguard_home() {
     cd "$ADGUARD_DIR"
 
     # 获取最新版本的 AdGuard Home 发布链接
-    AGH_LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/AdguardTeam/AdGuardHome/releases/latest | jq -r '.assets[] | select(.name | test("linux-amd64.tar.gz")) | .browser_download_url')
+    API_RESPONSE=$(curl -s https://api.github.com/repos/AdguardTeam/AdGuardHome/releases/latest)
+    
+    # 打印 GitHub API 响应，帮助调试
+    echo "GitHub API 响应: $API_RESPONSE"
+
+    AGH_LATEST_RELEASE_URL=$(echo "$API_RESPONSE" | jq -r '.assets[] | select(.name | test("linux-amd64.tar.gz")) | .browser_download_url')
 
     # 如果获取不到最新的版本链接，使用固定的备用链接
     if [ -z "$AGH_LATEST_RELEASE_URL" ]; then
