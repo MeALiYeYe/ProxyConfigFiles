@@ -11,6 +11,7 @@ set -e
 #------------------------------------------------
 SUBSTORE_DIR="$HOME/substore"
 MIHOMO_DIR="$HOME/mihomo"
+ADGUARD_DIR="$HOME/adguardhome"
 BOOT_SCRIPT_DIR="$HOME/.termux/boot"
 
 # 本脚本链接
@@ -134,6 +135,46 @@ deploy_mihomo() {
 
     download_assets
     log_info "Mihomo 部署完成"
+}
+
+#------------------------------------------------
+# 部署 AdGuard Home
+#------------------------------------------------
+deploy_adguard_home() {
+    log_info "部署 AdGuard Home..."
+    if [ ! -d "$ADGUARD_DIR" ]; then
+        git clone https://github.com/AdguardTeam/AdGuardHome.git "$ADGUARD_DIR" || log_error "下载 AdGuard Home 失败"
+    fi
+    cd "$ADGUARD_DIR" && ./AdGuardHome -s install
+    log_info "AdGuard Home 部署完成"
+}
+
+#------------------------------------------------
+# 启动 AdGuard Home
+#------------------------------------------------
+start_adguard_home() {
+    log_info "启动 AdGuard Home..."
+    cd "$ADGUARD_DIR" && ./AdGuardHome -s start
+}
+
+#------------------------------------------------
+# 停止 AdGuard Home
+#------------------------------------------------
+stop_adguard_home() {
+    log_info "停止 AdGuard Home..."
+    cd "$ADGUARD_DIR" && ./AdGuardHome -s stop
+}
+
+#------------------------------------------------
+# 更新 AdGuard Home
+#------------------------------------------------
+update_adguard_home() {
+    log_info "更新 AdGuard Home..."
+    cd "$ADGUARD_DIR"
+    git pull origin main
+    ./AdGuardHome -s stop
+    ./AdGuardHome -s install
+    ./AdGuardHome -s start
 }
 
 #------------------------------------------------
@@ -318,8 +359,10 @@ if [ "$1" = "deploy" ]; then
         install_dependencies
         deploy_substore
         deploy_mihomo
+        deploy_adguard_home
         start_substore
         start_mihomo
+        start_adguard_home
         setup_boot
         log_info "✅ 首次部署完成"
         exit 0
@@ -329,29 +372,33 @@ fi
 case "$1" in
     deploy_substore) [ -d "$SUBSTORE_DIR" ] && log_warn "Sub-Store 已存在" || deploy_substore ;;
     deploy_mihomo) [ -d "$MIHOMO_DIR" ] && log_warn "Mihomo 已存在" || deploy_mihomo ;;
+    deploy_adguard_home) [ -d "$ADGUARD_DIR" ] && log_warn "AdGuard Home 已存在" || deploy_adguard_home ;;
     start_substore) start_substore ;;
     stop_substore) stop_substore ;;
     restart_substore) restart_substore ;;
     start_mihomo) start_mihomo ;;
     stop_mihomo) stop_mihomo ;;
     restart_mihomo) restart_mihomo ;;
+    start_adguard_home) start_adguard_home ;;
+    stop_adguard_home) stop_adguard_home ;;
     update_self) update_self ;;
     update_substore) update_substore ;;
     update_mihomo) update_mihomo ;;
+    update_adguard_home) update_adguard_home ;;
     update_rules) update_rules ;;
     update_geo) update_geo ;;
-    update_config) update_config ;;
     update_model) update_model ;;
     update_mihomo_core) update_mihomo_core ;;
     log_substore) view_substore_log ;;
     log_mihomo) view_mihomo_log ;;
-    start) start_substore; start_mihomo ;;
-    stop) stop_substore; stop_mihomo ;;
-    restart) restart_substore; restart_mihomo ;;
+    start) start_substore; start_mihomo; start_adguard_home ;;
+    stop) stop_substore; stop_mihomo; stop_adguard_home ;;
+    restart) restart_substore; restart_mihomo; restart_adguard_home ;;
     update)
         update_self
         update_substore
         update_mihomo
+        update_adguard_home
         update_rules
         update_geo
         update_model
@@ -359,7 +406,7 @@ case "$1" in
         update_mihomo_core
         ;;
     *)
-        echo "用法: $0 {deploy|deploy_substore|deploy_mihomo|start_substore|stop_substore|restart_substore|start_mihomo|stop_mihomo|restart_mihomo|update_self|update_substore|update_mihomo|update_mode|update_rules|update_geo|update_config|update_mihomo_core|log_substore|log_mihomo|start|stop|restart|update}"
+        echo "用法: $0 {deploy|deploy_substore|deploy_mihomo|deploy_adguard_home|start_substore|stop_substore|restart_substore|start_mihomo|stop_mihomo|restart_mihomo|start_adguard_home|stop_adguard_home|update_self|update_substore|update_mihomo|update_adguard_home|update_rules|update_geo|update_model|update_mihomo_core|log_substore|log_mihomo|start|stop|restart|update}"
         exit 1
         ;;
 esac
