@@ -140,6 +140,9 @@ deploy_mihomo() {
 #------------------------------------------------
 # 部署 AdGuard Home
 #------------------------------------------------
+#------------------------------------------------
+# 部署 AdGuard Home
+#------------------------------------------------
 deploy_adguard_home() {
     log_info "部署 AdGuard Home..."
     ADGUARD_DIR="$HOME/adguardhome"
@@ -162,7 +165,12 @@ deploy_adguard_home() {
 
     # 解压并安装
     tar -xvzf adguardhome.tar.gz && rm -f adguardhome.tar.gz
-    mv AdGuardHome*/adguardhome .
+
+    # 检查解压后的文件结构
+    ls -l
+
+    # 查找并移动正确的 AdGuardHome 可执行文件
+    mv AdGuardHome*/AdGuardHome ./adguardhome
     chmod +x adguardhome
 
     # 配置 AdGuard Home
