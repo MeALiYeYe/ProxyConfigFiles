@@ -255,9 +255,8 @@ dns:
     - tls://223.5.5.5
     - tls://223.6.6.6
   nameserver:
-#    - 'https://dns.alidns.com/dns-query#DIRECT&h3=true'
-#    - 'quic://dns.alidns.com#DIRECT'
-    - 127.0.0.1:5591
+    - 'https://dns.alidns.com/dns-query#DIRECT&h3=true'
+    - 'quic://dns.alidns.com#DIRECT'
 
 # hosts
 hosts:
