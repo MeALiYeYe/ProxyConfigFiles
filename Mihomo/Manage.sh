@@ -142,10 +142,32 @@ deploy_mihomo() {
 #------------------------------------------------
 deploy_adguard_home() {
     log_info "部署 AdGuard Home..."
-    if [ ! -d "$ADGUARD_DIR" ]; then
-        git clone https://github.com/AdguardTeam/AdGuardHome.git "$ADGUARD_DIR" || log_error "下载 AdGuard Home 失败"
+    ADGUARD_DIR="$HOME/adguardhome"
+
+    # 创建目录
+    mkdir -p "$ADGUARD_DIR"
+    cd "$ADGUARD_DIR"
+
+    # 获取最新版本的 AdGuard Home 发布链接
+    AGH_LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/AdguardTeam/AdGuardHome/releases/latest | jq -r '.assets[] | select(.name | test("linux-amd64.tar.gz")) | .browser_download_url')
+
+    # 如果获取不到最新的版本链接，使用固定的备用链接
+    if [ -z "$AGH_LATEST_RELEASE_URL" ]; then
+        log_warn "未能获取最新的 AdGuard Home 版本，使用备用链接"
+        AGH_LATEST_RELEASE_URL="https://github.com/AdguardTeam/AdGuardHome/releases/download/v0.107.6/AdGuardHome_linux_amd64.tar.gz"
     fi
-    cd "$ADGUARD_DIR" && ./AdGuardHome -s install
+
+    log_info "下载 AdGuard Home: $AGH_LATEST_RELEASE_URL"
+    wget -q --show-progress -O adguardhome.tar.gz "$AGH_LATEST_RELEASE_URL" || log_error "下载 AdGuard Home 失败"
+
+    # 解压并安装
+    tar -xvzf adguardhome.tar.gz && rm -f adguardhome.tar.gz
+    mv AdGuardHome*/adguardhome .
+    chmod +x adguardhome
+
+    # 配置 AdGuard Home
+    log_info "初始化 AdGuard Home..."
+    ./adguardhome -s install
     log_info "AdGuard Home 部署完成"
 }
 
