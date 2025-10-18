@@ -176,6 +176,28 @@ deploy_adguard_home() {
     # 配置 AdGuard Home
     log_info "初始化 AdGuard Home..."
     ./adguardhome -s install
+
+    # 创建 Termux 服务脚本
+    log_info "配置 Termux 服务..."
+    SERVICE_SCRIPT="$HOME/.termux/boot/adguardhome-service.sh"
+
+    # 创建启动脚本
+    cat > "$SERVICE_SCRIPT" << EOF
+#!/data/data/com.termux/files/usr/bin/bash
+$ADGUARD_DIR/adguardhome -s start
+EOF
+
+    chmod +x "$SERVICE_SCRIPT"
+
+    # 确保 termux:boot 插件已启用
+    if ! command -v termux-wake-lock &>/dev/null; then
+        log_warn "Termux:Boot 插件未安装，无法设置自启"
+    else
+        log_info "配置开机自启..."
+        termux-wake-lock
+        log_info "Termux:Boot 配置完成"
+    fi
+
     log_info "AdGuard Home 部署完成"
 }
 
