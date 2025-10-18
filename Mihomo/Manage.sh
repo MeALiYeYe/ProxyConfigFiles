@@ -138,28 +138,26 @@ deploy_mihomo() {
 }
 
 #------------------------------------------------
-# 部署 AdGuard Home
+# 部署 AdGuard Home (ARM64 版本)
 #------------------------------------------------
 deploy_adguard_home() {
-    log_info "部署 AdGuard Home..."
+    log_info "部署 AdGuard Home (ARM64)..."
     ADGUARD_DIR="$HOME/adguardhome"
 
     # 创建目录
     mkdir -p "$ADGUARD_DIR"
     cd "$ADGUARD_DIR"
 
-    # 获取最新版本的 AdGuard Home 发布链接
-    API_RESPONSE=$(curl -s https://api.github.com/repos/AdguardTeam/AdGuardHome/releases/latest)
-    
+    # 获取 AdGuard Home ARM64 版本的最新发布链接
+    AGH_LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/AdguardTeam/AdGuardHome/releases/latest | jq -r '.assets[] | select(.name | test("linux-arm64.tar.gz")) | .browser_download_url')
+
     # 打印 GitHub API 响应，帮助调试
-    echo "GitHub API 响应: $API_RESPONSE"
+    echo "GitHub API 响应: $AGH_LATEST_RELEASE_URL"
 
-    AGH_LATEST_RELEASE_URL=$(echo "$API_RESPONSE" | jq -r '.assets[] | select(.name | test("linux-amd64.tar.gz")) | .browser_download_url')
-
-    # 如果获取不到最新的版本链接，使用固定的备用链接
+    # 如果获取不到最新的版本链接，使用备用链接
     if [ -z "$AGH_LATEST_RELEASE_URL" ]; then
-        log_warn "未能获取最新的 AdGuard Home 版本，使用备用链接"
-        AGH_LATEST_RELEASE_URL="https://github.com/AdguardTeam/AdGuardHome/releases/download/v0.107.6/AdGuardHome_linux_amd64.tar.gz"
+        log_warn "未能获取最新的 AdGuard Home ARM64 版本，使用备用链接"
+        AGH_LATEST_RELEASE_URL="https://github.com/AdguardTeam/AdGuardHome/releases/download/v0.107.6/AdGuardHome_linux_arm64.tar.gz"
     fi
 
     log_info "下载 AdGuard Home: $AGH_LATEST_RELEASE_URL"
