@@ -11,7 +11,6 @@ set -e
 #------------------------------------------------
 SUBSTORE_DIR="$HOME/substore"
 MIHOMO_DIR="$HOME/mihomo"
-ADGUARD_DIR="$HOME/adguardhome"
 BOOT_SCRIPT_DIR="$HOME/.termux/boot"
 
 # 本脚本链接
@@ -135,98 +134,6 @@ deploy_mihomo() {
 
     download_assets
     log_info "Mihomo 部署完成"
-}
-
-#------------------------------------------------
-# 部署 AdGuard Home (ARM64 版本)
-#------------------------------------------------
-deploy_adguard_home() {
-    log_info "部署 AdGuard Home (ARM64)..."
-    ADGUARD_DIR="$HOME/adguardhome"
-
-    # 创建目录
-    mkdir -p "$ADGUARD_DIR"
-    cd "$ADGUARD_DIR"
-
-    # 获取 AdGuard Home ARM64 版本的最新发布链接
-    AGH_LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/AdguardTeam/AdGuardHome/releases/latest | jq -r '.assets[] | select(.name | test("linux-arm64.tar.gz")) | .browser_download_url')
-
-    # 打印 GitHub API 响应，帮助调试
-    echo "GitHub API 响应: $AGH_LATEST_RELEASE_URL"
-
-    # 如果获取不到最新的版本链接，使用备用链接
-    if [ -z "$AGH_LATEST_RELEASE_URL" ]; then
-        log_warn "未能获取最新的 AdGuard Home ARM64 版本，使用备用链接"
-        AGH_LATEST_RELEASE_URL="https://github.com/AdguardTeam/AdGuardHome/releases/download/v0.107.6/AdGuardHome_linux_arm64.tar.gz"
-    fi
-
-    log_info "下载 AdGuard Home: $AGH_LATEST_RELEASE_URL"
-    wget -q --show-progress -O adguardhome.tar.gz "$AGH_LATEST_RELEASE_URL" || log_error "下载 AdGuard Home 失败"
-
-    # 解压并安装
-    tar -xvzf adguardhome.tar.gz && rm -f adguardhome.tar.gz
-
-    # 检查解压后的文件结构
-    ls -l
-
-    # 查找并移动正确的 AdGuardHome 可执行文件
-    mv AdGuardHome*/AdGuardHome ./adguardhome
-    chmod +x adguardhome
-
-    # 配置 AdGuard Home
-    log_info "初始化 AdGuard Home..."
-    ./adguardhome -s install
-
-    # 创建 Termux 服务脚本
-    log_info "配置 Termux 服务..."
-    SERVICE_SCRIPT="$HOME/.termux/boot/adguardhome-service.sh"
-
-    # 创建启动脚本
-    cat > "$SERVICE_SCRIPT" << EOF
-#!/data/data/com.termux/files/usr/bin/bash
-$ADGUARD_DIR/adguardhome -s start
-EOF
-
-    chmod +x "$SERVICE_SCRIPT"
-
-    # 确保 termux:boot 插件已启用
-    if ! command -v termux-wake-lock &>/dev/null; then
-        log_warn "Termux:Boot 插件未安装，无法设置自启"
-    else
-        log_info "配置开机自启..."
-        termux-wake-lock
-        log_info "Termux:Boot 配置完成"
-    fi
-
-    log_info "AdGuard Home 部署完成"
-}
-
-#------------------------------------------------
-# 启动 AdGuard Home
-#------------------------------------------------
-start_adguard_home() {
-    log_info "启动 AdGuard Home..."
-    cd "$ADGUARD_DIR" && ./AdGuardHome -s start
-}
-
-#------------------------------------------------
-# 停止 AdGuard Home
-#------------------------------------------------
-stop_adguard_home() {
-    log_info "停止 AdGuard Home..."
-    cd "$ADGUARD_DIR" && ./AdGuardHome -s stop
-}
-
-#------------------------------------------------
-# 更新 AdGuard Home
-#------------------------------------------------
-update_adguard_home() {
-    log_info "更新 AdGuard Home..."
-    cd "$ADGUARD_DIR"
-    git pull origin main
-    ./AdGuardHome -s stop
-    ./AdGuardHome -s install
-    ./AdGuardHome -s start
 }
 
 #------------------------------------------------
@@ -411,10 +318,8 @@ if [ "$1" = "deploy" ]; then
         install_dependencies
         deploy_substore
         deploy_mihomo
-        deploy_adguard_home
         start_substore
         start_mihomo
-        start_adguard_home
         setup_boot
         log_info "✅ 首次部署完成"
         exit 0
@@ -424,33 +329,28 @@ fi
 case "$1" in
     deploy_substore) [ -d "$SUBSTORE_DIR" ] && log_warn "Sub-Store 已存在" || deploy_substore ;;
     deploy_mihomo) [ -d "$MIHOMO_DIR" ] && log_warn "Mihomo 已存在" || deploy_mihomo ;;
-    deploy_adguard_home) [ -d "$ADGUARD_DIR" ] && log_warn "AdGuard Home 已存在" || deploy_adguard_home ;;
     start_substore) start_substore ;;
     stop_substore) stop_substore ;;
     restart_substore) restart_substore ;;
     start_mihomo) start_mihomo ;;
     stop_mihomo) stop_mihomo ;;
     restart_mihomo) restart_mihomo ;;
-    start_adguard_home) start_adguard_home ;;
-    stop_adguard_home) stop_adguard_home ;;
     update_self) update_self ;;
     update_substore) update_substore ;;
     update_mihomo) update_mihomo ;;
-    update_adguard_home) update_adguard_home ;;
     update_rules) update_rules ;;
     update_geo) update_geo ;;
     update_model) update_model ;;
     update_mihomo_core) update_mihomo_core ;;
     log_substore) view_substore_log ;;
     log_mihomo) view_mihomo_log ;;
-    start) start_substore; start_mihomo; start_adguard_home ;;
-    stop) stop_substore; stop_mihomo; stop_adguard_home ;;
-    restart) restart_substore; restart_mihomo; restart_adguard_home ;;
+    start) start_substore; start_mihomo ;;
+    stop) stop_substore; stop_mihomo ;;
+    restart) restart_substore; restart_mihomo ;;
     update)
         update_self
         update_substore
         update_mihomo
-        update_adguard_home
         update_rules
         update_geo
         update_model
@@ -458,7 +358,7 @@ case "$1" in
         update_mihomo_core
         ;;
     *)
-        echo "用法: $0 {deploy|deploy_substore|deploy_mihomo|deploy_adguard_home|start_substore|stop_substore|restart_substore|start_mihomo|stop_mihomo|restart_mihomo|start_adguard_home|stop_adguard_home|update_self|update_substore|update_mihomo|update_adguard_home|update_rules|update_geo|update_model|update_mihomo_core|log_substore|log_mihomo|start|stop|restart|update}"
+        echo "用法: $0 {deploy|deploy_substore|deploy_mihomo|start_substore|stop_substore|restart_substore|start_mihomo|stop_mihomo|restart_mihomo|update_self|update_substore|update_mihomo|update_rules|update_geo|update_model|update_mihomo_core|log_substore|log_mihomo|start|stop|restart|update}"
         exit 1
         ;;
 esac
