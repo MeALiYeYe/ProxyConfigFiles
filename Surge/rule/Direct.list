@@ -2,8 +2,8 @@ DOMAIN,ifconfig.me
 DOMAIN-SUFFIX,nsloon.com
 # DOMAIN-SUFFIX,*.cn
 DOMAIN-KEYWORD,kahaoquan
-# DOMAIN-KEYWORD,xiaoyakankan
-# DOMAIN-KEYWORD,linkeless
+DOMAIN-SUFFIX,tkv.one
+DOMAIN-SUFFIX,ojbktv.com
 # gwmapp
 DOMAIN-SUFFIX,gwm.com.cn
 DOMAIN-SUFFIX,gwm.cn
