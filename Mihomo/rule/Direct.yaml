@@ -3,13 +3,15 @@ payload:
   - DOMAIN,yys.163.com
   - DOMAIN,ifconfig.me
   - DOMAIN-SUFFIX,nsloon.com
+  - DOMAIN-SUFFIX,tkv.one
+  - DOMAIN-SUFFIX,ojbktv.com
   - DOMAIN-SUFFIX,gwm.com.cn
   - DOMAIN-SUFFIX,gwm.cn
   - DOMAIN-SUFFIX,gwmapp-h.com
   - DOMAIN-SUFFIX,gwmapp-w.com
   - DOMAIN-KEYWORD,gwm-mn
-#  - DOMAIN-SUFFIX,*.cn
   - DOMAIN-KEYWORD,kahaoquan
+#  - DOMAIN-SUFFIX,*.cn
   - PROCESS-NAME,onmyoji.exe,DIRECT
   - PROCESS-NAME-REGEX,(?i)onmyoji
   - PROCESS-NAME-REGEX,(?i)jkchess
