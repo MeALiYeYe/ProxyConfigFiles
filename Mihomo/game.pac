@@ -12,13 +12,9 @@ function FindProxyForURL(url, host) {
         dnsDomainIs(host, ".gtimg.com") ||
         dnsDomainIs(host, ".idqqimg.com") ||
         dnsDomainIs(host, ".qpic.cn") ||
-        dnsDomainIs(host, ".tencent.com") ||
-        dnsDomainIs(host, ".qq.com") ||
 
         // 网易
         dnsDomainIs(host, ".netease.com") ||
-        dnsDomainIs(host, ".126.net") ||
-        dnsDomainIs(host, ".163.com") ||
         dnsDomainIs(host, ".neteasegames.com") ||
         dnsDomainIs(host, ".yximg.cn") ||
 
