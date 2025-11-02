@@ -1,6 +1,6 @@
 payload:
   # 屏蔽QUIC
-  - AND,((DST-PORT,443),(NETWORK,UDP),(NOT,(OR,((GEOSITE,cn),(GEOIP,cn))))
+  - AND,((DST-PORT,443),(NETWORK,UDP),(NOT,(OR,((GEOSITE,cn),(GEOIP,cn,no-resolve))))
   # 防止流量回环
   - IP-CIDR,0.0.0.0/32,no-resolve
   - IP-CIDR6,::/128,no-resolve
