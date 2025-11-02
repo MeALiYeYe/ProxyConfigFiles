@@ -1,6 +1,5 @@
 payload:
   # 屏蔽QUIC
-  rules:
   - AND,((DST-PORT,443),(NETWORK,UDP),(NOT,(GEOIP,cn,no-resolve)))
   - AND,((DST-PORT,443),(NETWORK,UDP),(NOT,(GEOSITE,cn)))
   # 防止流量回环
