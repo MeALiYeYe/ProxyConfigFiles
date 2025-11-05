@@ -43,7 +43,7 @@ Smartg: &Smartg {<<: *Uses, type: smart, policy-priority: "电信:1.5;联通:1.0
 
 # 策略组引用组
 Groups: &Groups {type: select, proxies: [直连, 香港, 狮城, 日本, 美国], url: *ProxyTestUrl, interval: 300, timeout: 2000, max-failed-times: 3, hidden: false}
-Groupd: &Groupd {type: select, proxies: [直连, 江苏, 北京, 广东, 河北], url: *ProxyTestUrl, interval: 300, timeout: 2000, max-failed-times: 3, hidden: false}
+Groupd: &Groupd {type: select, proxies: [直连, 江苏, 北京, 广东, 河北], url: *DirectTestUrl, interval: 300, timeout: 2000, max-failed-times: 3, hidden: false}
 
 # 规则集类型
 rule-anchor:
