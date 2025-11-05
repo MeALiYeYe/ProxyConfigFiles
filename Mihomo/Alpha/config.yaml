@@ -68,7 +68,7 @@ proxy-providers:
   *BaiduN: {<<: *Proxyer, path: ./proxies/BaiduNProxy.yaml, url: *BaiduNUrl, health-check: {enable: true, url: *DirectTestUrl, interval: 300, timeout: 2000}}
 
 # 策略组
-proxy-Groupp:
+proxy-Groups:
   # 软件分组
   - {name: Location, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png", <<: *Groupd}
   - {name: Domestic, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png", <<: *Groupd}
