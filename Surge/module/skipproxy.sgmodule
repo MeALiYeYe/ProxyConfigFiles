@@ -67,4 +67,4 @@ DOMAIN-SUFFIX,www.shanbay.com,DIRECT
 skip-proxy = %APPEND% ccb.com,wxh.wo.cn,gate.lagou.com,www.abchina.com.cn,www.shanbay.com,login-service.mobile-bank.psbc.com,mobile-bank.psbc.com,id6.me, *.icbc.com.cn, *.95588.com, *.ccb.com, *.ccb.com.cn, *.boc.cn, *.bankofchina.com, *.abchina.com, *.abchina.com.cn, *.cmbchina.com, *.bankcomm.com, *.pingan.com, *.pingan.com.cn, *.psbc.com, *.psbc.com.cn, *.10086.cn, *.chinamobile.com, *.10010.com, *.chinaunicom.com, *.189.cn, *.chinatelecom.com.cn, *.gov.cn, *.chinatax.gov.cn, *.etax.cn, *.tiantianfund.com, *.szse.cn, *.csrc.gov.cn, *.cnipa.gov.cn, *.医保.cn, *.yibao.cn, *.iask.cn, *.12306.cn
 
 # 保持真实 IP，防止风控检测
-always-real-ip = %APPEND% easy-login.10099.com.cn,*-update.xoyocdn.com,id6.me,open.e.189.cn, *.alipay.com, *.alipayobjects.com, *.alipaydns.com, *.tenpay.com, *.wechat.com, *.weixin.qq.com
+always-real-ip = %APPEND% api.push.apple.com, gateway.push.apple.com, idmsa.apple.com, ocsp.apple.com, ocsp.digicert.com, crl3.digicert.com, ocsp.int-x3.letsencrypt.org, r3.o.lencr.org, pay.weixin.qq.com, wx.tenpay.com, mapi.weixin.qq.com, api.mch.weixin.qq.com
