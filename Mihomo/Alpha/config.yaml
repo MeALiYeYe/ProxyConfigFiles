@@ -38,7 +38,7 @@ Loads: &Loads {<<: *Uses, type: load-balance, strategy: sticky-sessions}
 # 故障转移策略组
 Fallb: &Fallb {<<: *Uses, type: fallback}
 # Smart策略组
-Smartg: &Smartg {<<: *Uses, type: smart, policy-priority: "电信:1.5;联通:1.0;移动:0.5", uselightgbm: true, collectdata: true, strategy: sticky-sessions}
+Smartg: &Smartg {<<: *Uses, type: smart, policy-priority: "电信:1.5;联通:1.0;移动:0.5", uselightgbm: true, collectdata: false, strategy: sticky-sessions}
 
 # 策略组引用组
 Groupp: &Groupp {type: select, proxies: [直连, 香港, 狮城, 日本, 美国], url: *ProxyTestUrl, interval: 300, timeout: 2000, max-failed-times: 3, hidden: false}
