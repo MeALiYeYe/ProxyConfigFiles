@@ -100,7 +100,7 @@ proxy-groups:
 
 # 规则集
 rule-providers:
-  FakeLocation: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rules/FakeLocation.yaml}
+  FakeLocation: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rules/FakeLocation.yaml}
   Direct: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Direct.yaml", path: ./rules/Direct.yaml}
   Reject: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject.yaml", path: ./rules/Reject.yaml}
   Proxy: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Proxy.yaml", path: ./rules/Proxy.yaml}
