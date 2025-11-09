@@ -250,6 +250,7 @@ dns:
     'RULE-SET:chinamax,apple,microsoft':
       - 'https://dns.alidns.com/dns-query#DIRECT&h3=true'
       - 'quic://dns.alidns.com#DIRECT'
+      - 'https://doh.pub/dns-query'
   direct-nameserver:
     - system
   proxy-server-nameserver:
