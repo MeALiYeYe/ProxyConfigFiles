@@ -101,10 +101,13 @@ proxy-groups:
   - {name: 高倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/liuliang(3).png", <<: *Smartg, filter: *FilterHighMag}
 
 rule-providers:
-  fakelocation: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rules/FakeLocation.yaml}
-  mydirect: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Direct/Direct_No_Resolve.yaml", path: ./rules/Direct.yaml}
-  myreject: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Advertising/Advertising_Classical_No_Resolve.yaml", path: ./rules/Reject.yaml}
-  myproxy: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Proxy/Proxy_Classical_No_Resolve.yaml", path: ./rules/Proxy.yaml}
+  fakelocation: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rules/fakelocation.yaml}
+  blackdirect: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Direct/Direct_No_Resolve.yaml", path: ./rules/blackdirect.yaml}
+  blackreject: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Advertising/Advertising_Classical_No_Resolve.yaml", path: ./rules/blackreject.yaml}
+  blackproxy: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Proxy/Proxy_Classical_No_Resolve.yaml", path: ./rules/blackproxy.yaml}
+  mydirect: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Direct.yaml", path: ./rules/mydirect.yaml}
+  myreject: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject.yaml", path: ./rules/myreject.yaml}
+  myproxy: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Proxy.yaml", path: ./rules/myproxy.yaml}
   emby: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Emby/Emby_No_Resolve.yaml", path: ./rules/Emby.yaml}
   awavenue: {<<: *dom, format: mrs, url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/refs/heads/main/Filters/AWAvenue-Ads-Rule-Clash.mrs", path: ./rules/AWAvenue.mrs}
 
@@ -116,16 +119,19 @@ rules:
   #- AND,((NETWORK,UDP),(DST-PORT,123)),DIRECT
   # DNS
   #- OR,((DST-PORT,53),(DST-PORT,853),(DST-PORT,8853)),dns-out
-  - RULE-SET,awavenue,REJECT-DROP
+  - RULE-SET,awavenue,REJECT
   - RULE-SET,myreject,REJECT
   - RULE-SET,mydirect,DIRECT
   - RULE-SET,myproxy,Foreign
+  - RULE-SET,blackreject,REJECT
+  - RULE-SET,blackdirect,DIRECT
+  - RULE-SET,blackproxy,Foreign
   - RULE-SET,emby,Media
   - RULE-SET,fakelocation,Location
 
   - GEOSITE,private,DIRECT
-  - GEOSITE,category-ads-all,REJECT-DROP
-  - GEOSITE,category-httpdns-cn,REJECT-DROP
+  - GEOSITE,category-ads-all,REJECT
+  - GEOSITE,category-httpdns-cn,REJECT
   - GEOSITE,youtube,Youtube
   - GEOSITE,tiktok,Tiktok
   - GEOSITE,category-entertainment,Media
