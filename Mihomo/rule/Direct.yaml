@@ -13,6 +13,6 @@ payload:
   - DOMAIN-KEYWORD,gwm-mn
   - DOMAIN-KEYWORD,kahaoquan
 #  - DOMAIN-SUFFIX,*.cn
-  - PROCESS-NAME,onmyoji.exe,DIRECT
+  - PROCESS-NAME,onmyoji.exe
   - PROCESS-NAME-REGEX,(?i)onmyoji
   - PROCESS-NAME-REGEX,(?i)jkchess
