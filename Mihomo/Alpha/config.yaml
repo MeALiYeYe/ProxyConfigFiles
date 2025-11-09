@@ -132,16 +132,15 @@ rules:
   #- AND,((NETWORK,UDP),(DST-PORT,123)),DIRECT
   # DNS
   #- OR,((DST-PORT,53),(DST-PORT,853),(DST-PORT,8853)),dns-out
-  - RULE-SET,awavenue,REJECT-DROP
+  - RULE-SET,lan,DIRECT
   - RULE-SET,myreject,REJECT
   - RULE-SET,mydirect,DIRECT
   - RULE-SET,myproxy,Foreign
   - RULE-SET,emby,Media
-  - RULE-SET,fakelocation,Location
-
-  - RULE-SET,lan,DIRECT
+  - RULE-SET,awavenue,REJECT-DROP
   - RULE-SET,advertising,REJECT-DROP
   - RULE-SET,httpdns,REJECT-DROP
+  - RULE-SET,fakelocation,Location
   - RULE-SET,chinamax,Domestic
   - RULE-SET,tiktok,Tiktok
   - RULE-SET,youtube,Youtube
