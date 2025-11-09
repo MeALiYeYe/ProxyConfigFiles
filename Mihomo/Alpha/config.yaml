@@ -220,7 +220,7 @@ sniffer:
 
 # Tunnel配置
 tun:
-  enable: false
+  enable: true
   device: Mihomo
   stack: mixed
   dns-hijack:
@@ -247,9 +247,8 @@ dns:
   nameserver-policy:
     'RULE-SET:advertising,httpdns': rcode://name_error
     'RULE-SET:chinamax,apple,microsoft':
-      - 'https://dns.alidns.com/dns-query#h3=true'
-      - 'quic://dns.alidns.com'
-      - 'https://doh.pub/dns-query'
+      - 'https://dns.alidns.com/dns-query#DIRECT&h3=true'
+      - 'quic://dns.alidns.com#DIRECT'
   direct-nameserver:
     - system
   proxy-server-nameserver:
