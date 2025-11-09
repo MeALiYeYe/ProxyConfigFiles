@@ -126,8 +126,8 @@ rules:
   - GEOSITE,private,DIRECT
   - GEOSITE,category-ads-all,REJECT-DROP
   - GEOSITE,category-httpdns-cn,REJECT-DROP
-  - GEOSITE,youtube,YouTube
-  - GEOSITE,tiktok,TikTok
+  - GEOSITE,youtube,Youtube
+  - GEOSITE,tiktok,Tiktok
   - GEOSITE,category-entertainment,Media
   - GEOSITE,telegram,Telegram
   - GEOSITE,google,Google
