@@ -57,7 +57,7 @@ rule-anchor:
 # 出站代理
 proxies:
   - {name: 直连, type: direct}
-  - {name: dns-out, type: dns}
+#  - {name: dns-out, type: dns}
 
 # 外部订阅
 proxy-providers:
@@ -100,29 +100,13 @@ proxy-groups:
   - {name: 低倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/liuliang(2).png", <<:  *Smartg, filter: *FilterLowMag}
   - {name: 高倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/liuliang(3).png", <<: *Smartg, filter: *FilterHighMag}
 
-# 规则集
 rule-providers:
-  awavenue: {<<: *dom, format: mrs, url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/refs/heads/main/Filters/AWAvenue-Ads-Rule-Clash.mrs", path: ./rules/awavenue.mrs}
-  mydirect: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Direct.yaml", path: ./rules/mydirect.yaml}
-  myreject: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject.yaml", path: ./rules/myreject.yaml}
-  myproxy: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Proxy.yaml", path: ./rules/myproxy.yaml}
-  emby: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Emby.yaml", path: ./rules/emby.yaml}
-  fakelocation: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rules/fakeLocation.yaml}
-  lan: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Lan/Lan_No_Resolve.yaml", path: ./rules/lan.yaml}
-  advertising: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Advertising/Advertising_Classical_No_Resolve.yaml", path: ./rules/advertising.yaml}
-  httpdns: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/BlockHttpDNS/BlockHttpDNS_No_Resolve.yaml", path: ./rules/httpdns.yaml}
-  tiktok: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/TikTok/TikTok_No_Resolve.yaml", path: ./rules/tiktok.yaml}
-  youtube: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/YouTube/YouTube_No_Resolve.yaml", path: ./rules/youtube.yaml}
-  globalmedia: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/GlobalMedia/GlobalMedia_Classical_No_Resolve.yaml", path: ./rules/globalMedia.yaml}
-  chinamax: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/ChinaMax/ChinaMax_Classical_No_Resolve.yaml", path: ./rules/chinaMax.yaml}
-  telegram: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Telegram/Telegram_No_Resolve.yaml", path: ./rules/telegram.yaml}
-  google: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Google/Google_No_Resolve.yaml", path: ./rules/google.yaml}
-  cloudflare: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Cloudflare/Cloudflare_No_Resolve.yaml", path: ./rules/cloudflare.yaml}
-  openai: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/OpenAI/OpenAI_No_Resolve.yaml", path: ./rules/openAi.yaml}
-  github: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/GitHub/GitHub_No_Resolve.yaml", path: ./rules/github.yaml}
-  microsoft: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Microsoft/Microsoft_No_Resolve.yaml", path: ./rules/microsoft.yaml}
-  apple: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Apple/Apple_Classical_No_Resolve.yaml", path: ./rules/apple.yaml}
-  foreign: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Global/Global_Classical_No_Resolve.yaml", path: ./rules/foreign.yaml}
+  fakelocation: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rules/FakeLocation.yaml}
+  direct: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Direct/Direct_No_Resolve.yaml", path: ./rules/Direct.yaml}
+  reject: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Advertising/Advertising_Classical_No_Resolve.yaml", path: ./rules/Reject.yaml}
+  proxy: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Proxy/Proxy_Classical_No_Resolve.yaml", path: ./rules/Proxy.yaml}
+  emby: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Emby/Emby_No_Resolve.yaml", path: ./rules/Emby.yaml}
+  awavenue: {<<: *dom, format: mrs, url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/refs/heads/main/Filters/AWAvenue-Ads-Rule-Clash.mrs", path: ./rules/AWAvenue.mrs}
 
 # 路由规则
 rules:
@@ -131,28 +115,38 @@ rules:
   # NTP
   #- AND,((NETWORK,UDP),(DST-PORT,123)),DIRECT
   # DNS
-  - OR,((DST-PORT,53),(DST-PORT,853),(DST-PORT,8853)),dns-out
-  - RULE-SET,lan,DIRECT
+  #- OR,((DST-PORT,53),(DST-PORT,853),(DST-PORT,8853)),dns-out
+  - RULE-SET,awavenue,REJECT-DROP
   - RULE-SET,myreject,REJECT
   - RULE-SET,mydirect,DIRECT
   - RULE-SET,myproxy,Foreign
   - RULE-SET,emby,Media
-  - RULE-SET,awavenue,REJECT-DROP
-  - RULE-SET,advertising,REJECT-DROP
-  - RULE-SET,httpdns,REJECT-DROP
-  - RULE-SET,fakelocation,Location
-  - RULE-SET,chinamax,Domestic
-  - RULE-SET,tiktok,Tiktok
-  - RULE-SET,youtube,Youtube
-  - RULE-SET,globalmedia,Media
-  - RULE-SET,telegram,Telegram
-  - RULE-SET,google,Google
-  - RULE-SET,cloudflare,Cloudflare
-  - RULE-SET,openai,Ai
-  - RULE-SET,github,Github
-  - RULE-SET,microsoft,Microsoft
-  - RULE-SET,apple,Apple
-  - RULE-SET,foreign,Foreign
+  - RULE-SET,fakelocation,FKLocation
+
+  - GEOSITE,private,DIRECT
+  - GEOSITE,category-ads-all,REJECT-DROP
+  - GEOSITE,category-httpdns-cn,REJECT-DROP
+  - GEOSITE,youtube,YouTube
+  - GEOSITE,tiktok,TikTok
+  - GEOSITE,category-entertainment,Media
+  - GEOSITE,telegram,Telegram
+  - GEOSITE,google,Google
+  - GEOSITE,cloudflare,Cloudflare
+  - GEOSITE,category-ai-chat-!cn,Ai
+  - GEOSITE,github,Github
+  - GEOSITE,microsoft,Microsoft
+  - GEOSITE,apple,Apple
+  - GEOSITE,geolocation-!cn,Foreign
+#  - GEOSITE,bytedance,FKLocation
+#  - GEOSITE,category-entertainment-cn,FKLocation
+#  - GEOSITE,category-social-media-cn,FKLocation
+  - GEOSITE,cn,Domestic
+
+  - GEOIP,private,DIRECT,no-resolve
+  - GEOIP,telegram,Telegram,no-resolve
+  - GEOIP,google,Google,no-resolve
+  - GEOIP,cloudflare,Cloudflare,no-resolve
+  - GEOIP,cn,Domestic,no-resolve
 
   - MATCH,Final
 
@@ -177,8 +171,8 @@ geodata-loader: standard
 geo-auto-update: true
 geo-update-interval: 168
 geox-url:
-#  geoip: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
-#  geosite: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+  geoip: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
+  geosite: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
   asn: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
 unified-delay: true
 tcp-concurrent: true
@@ -220,7 +214,7 @@ sniffer:
 
 # Tunnel配置
 tun:
-  enable: true
+  enable: false
   device: Mihomo
   stack: mixed
   dns-hijack:
@@ -243,14 +237,16 @@ dns:
   prefer-h3: true
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.0/15
-  fake-ip-filter: ["RULE-SET:lan"]
+  fake-ip-filter: ["GEOSITE:private"]
   nameserver-policy:
-    'RULE-SET:advertising,httpdns': rcode://name_error
-    'RULE-SET:chinamax,apple,microsoft':
+    'GEOSITE:category-ads-all,category-httpdns-cn': rcode://name_error
+    'GEOSITE:cn,apple,microsoft':
       - 'https://dns.alidns.com/dns-query#DIRECT&h3=true'
       - 'quic://dns.alidns.com#DIRECT'
   direct-nameserver:
     - system
+    - tls://223.5.5.5
+    - tls://223.6.6.6
   proxy-server-nameserver:
     - tls://223.5.5.5
     - tls://223.6.6.6
