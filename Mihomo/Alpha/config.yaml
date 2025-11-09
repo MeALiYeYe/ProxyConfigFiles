@@ -139,7 +139,7 @@ rules:
   - RULE-SET,emby,Media
   - RULE-SET,fakelocation,Location
 
-  - RULE-SET,lan,DIRECT 
+  - RULE-SET,lan,DIRECT
   - RULE-SET,advertising,REJECT-DROP
   - RULE-SET,httpdns,REJECT-DROP
   - RULE-SET,chinamax,Domestic
@@ -258,7 +258,6 @@ dns:
   nameserver:
     - 'https://dns.google/dns-query#Google&h3=true'
     - 'https://cloudflare-dns.com/dns-query#Cloudflare&h3=true'
-    
 
 # hosts
 hosts:
