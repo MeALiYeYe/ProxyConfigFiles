@@ -31,20 +31,8 @@ MODEL_URL="https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/
 # mihomo远程配置链接
 CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Alpha/config.yaml"
 
-# 规则集下载链接
-RULES_SOURCES=(
-    "rules/Redirect.yaml,https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml"
-    "rules/Direct.yaml,https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Direct.yaml"
-    "rules/Reject.yaml,https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject.yaml"
-    "rules/Proxy.yaml,https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Proxy.yaml"
-    "rules/Emby.yaml,https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Emby.yaml"
-    "rules/AWAvenue.mrs,https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/refs/heads/main/Filters/AWAvenue-Ads-Rule-Clash.mrs"
-)
-
 # Geo 数据
 GEO_FILES=(
-    "geoip.dat,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
-    "geosite.dat,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
     "ASN.mmdb,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
 )
 
@@ -144,11 +132,6 @@ download_assets() {
     cd "$MIHOMO_DIR"
     wget -q --show-progress -O config.yaml "$CONFIG_URL"
 
-    for item in "${RULES_SOURCES[@]}"; do
-        IFS=',' read -r dest src <<< "$item"
-        wget -q --show-progress -O "$dest" "$src" || { log_error "下载失败: $src"; return 1; }
-    done
-
     for item in "${GEO_FILES[@]}"; do
         IFS=',' read -r dest src <<< "$item"
         wget -q --show-progress -O "$dest" "$src" || { log_error "下载失败: $src"; return 1; }
@@ -210,17 +193,6 @@ update_self() {
 
 update_substore() { stop_substore; deploy_substore; start_substore; }
 update_mihomo() { stop_mihomo; deploy_mihomo; start_mihomo; }
-
-update_rules() {
-    log_info "更新规则集..."
-    mkdir -p "$MIHOMO_DIR/rules"
-    cd "$MIHOMO_DIR"
-    for item in "${RULES_SOURCES[@]}"; do
-        IFS=',' read -r dest src <<< "$item"
-        wget -q --show-progress -O "$dest" "$src" || log_error "下载失败: $src"
-    done
-    log_info "规则集更新完成"
-}
 
 update_geo() {
     log_info "更新 Geo 数据..."
@@ -338,7 +310,6 @@ case "$1" in
     update_self) update_self ;;
     update_substore) update_substore ;;
     update_mihomo) update_mihomo ;;
-    update_rules) update_rules ;;
     update_geo) update_geo ;;
     update_config) update_config ;;
     update_model) update_model ;;
