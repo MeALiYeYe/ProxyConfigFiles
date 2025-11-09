@@ -102,9 +102,9 @@ proxy-groups:
 
 rule-providers:
   fakelocation: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rules/FakeLocation.yaml}
-  direct: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Direct/Direct_No_Resolve.yaml", path: ./rules/Direct.yaml}
-  reject: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Advertising/Advertising_Classical_No_Resolve.yaml", path: ./rules/Reject.yaml}
-  proxy: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Proxy/Proxy_Classical_No_Resolve.yaml", path: ./rules/Proxy.yaml}
+  mydirect: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Direct/Direct_No_Resolve.yaml", path: ./rules/Direct.yaml}
+  myreject: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Advertising/Advertising_Classical_No_Resolve.yaml", path: ./rules/Reject.yaml}
+  myproxy: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Proxy/Proxy_Classical_No_Resolve.yaml", path: ./rules/Proxy.yaml}
   emby: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Emby/Emby_No_Resolve.yaml", path: ./rules/Emby.yaml}
   awavenue: {<<: *dom, format: mrs, url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/refs/heads/main/Filters/AWAvenue-Ads-Rule-Clash.mrs", path: ./rules/AWAvenue.mrs}
 
@@ -121,7 +121,7 @@ rules:
   - RULE-SET,mydirect,DIRECT
   - RULE-SET,myproxy,Foreign
   - RULE-SET,emby,Media
-  - RULE-SET,fakelocation,FKLocation
+  - RULE-SET,fakelocation,Location
 
   - GEOSITE,private,DIRECT
   - GEOSITE,category-ads-all,REJECT-DROP
@@ -137,9 +137,9 @@ rules:
   - GEOSITE,microsoft,Microsoft
   - GEOSITE,apple,Apple
   - GEOSITE,geolocation-!cn,Foreign
-#  - GEOSITE,bytedance,FKLocation
-#  - GEOSITE,category-entertainment-cn,FKLocation
-#  - GEOSITE,category-social-media-cn,FKLocation
+#  - GEOSITE,bytedance,Location
+#  - GEOSITE,category-entertainment-cn,Location
+#  - GEOSITE,category-social-media-cn,Location
   - GEOSITE,cn,Domestic
 
   - GEOIP,private,DIRECT,no-resolve
