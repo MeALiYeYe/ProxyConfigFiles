@@ -57,7 +57,7 @@ rule-anchor:
 # 出站代理
 proxies:
   - {name: 直连, type: direct}
-#  - {name: dns-out, type: dns}
+  - {name: dns-out, type: dns}
 
 # 外部订阅
 proxy-providers:
@@ -132,7 +132,9 @@ rules:
   # NTP
   #- AND,((NETWORK,UDP),(DST-PORT,123)),DIRECT
   # DNS
-  #- OR,((DST-PORT,53),(DST-PORT,853),(DST-PORT,8853)),dns-out
+  - OR,((DST-PORT,53),(DST-PORT,853),(DST-PORT,8853)),dns-out
+  - RULE-SET,lan,DIRECT
+  - RULE-SET,httpdns,REJECT
   - RULE-SET,awavenue,REJECT
   - RULE-SET,myreject,REJECT
   - RULE-SET,mydirect,DIRECT
@@ -141,7 +143,6 @@ rules:
   - RULE-SET,blackdirect,DIRECT
   - RULE-SET,blackproxy,Foreign
   - RULE-SET,emby,Media
-  - RULE-SET,httpdns,REJECT
   - RULE-SET,fakelocation,Location
   - RULE-SET,chinamax,Domestic
   - RULE-SET,tiktok,Tiktok
@@ -155,8 +156,6 @@ rules:
   - RULE-SET,microsoft,Microsoft
   - RULE-SET,apple,Apple
   - RULE-SET,foreign,Foreign
-
-  - RULE-SET,lan,DIRECT
 
   - MATCH,Final
 
@@ -254,6 +253,8 @@ dns:
       - 'quic://dns.alidns.com#DIRECT'
   direct-nameserver:
     - system
+    - tls://223.5.5.5
+    - tls://223.6.6.6
   proxy-server-nameserver:
     - tls://223.5.5.5
     - tls://223.6.6.6
