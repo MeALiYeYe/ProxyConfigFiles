@@ -142,7 +142,6 @@ rules:
   - RULE-SET,blackproxy,Foreign
   - RULE-SET,emby,Media
   - RULE-SET,httpdns,REJECT
-  - RULE-SET,lan,DIRECT
   - RULE-SET,fakelocation,Location
   - RULE-SET,chinamax,Domestic
   - RULE-SET,tiktok,Tiktok
@@ -156,6 +155,8 @@ rules:
   - RULE-SET,microsoft,Microsoft
   - RULE-SET,apple,Apple
   - RULE-SET,foreign,Foreign
+
+  - RULE-SET,lan,DIRECT
 
   - MATCH,Final
 
