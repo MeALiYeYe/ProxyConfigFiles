@@ -124,7 +124,7 @@ rule-providers:
   microsoft: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Microsoft/Microsoft_No_Resolve.yaml", path: ./rules/microsoft.yaml}
   apple: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Apple/Apple_Classical_No_Resolve.yaml", path: ./rules/apple.yaml}
   foreign: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Global/Global_Classical_No_Resolve.yaml", path: ./rules/foreign.yaml}
-  
+
 # 路由规则
 rules:
   # FCM
@@ -143,7 +143,7 @@ rules:
   - RULE-SET,emby,Media
   - RULE-SET,httpdns,REJECT
   - RULE-SET,lan,DIRECT
-  - RULE-SET,fakelocation,Location 
+  - RULE-SET,fakelocation,Location
   - RULE-SET,chinamax,Domestic
   - RULE-SET,tiktok,Tiktok
   - RULE-SET,youtube,Youtube
