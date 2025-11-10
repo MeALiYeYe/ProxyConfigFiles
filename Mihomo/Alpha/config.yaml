@@ -43,7 +43,7 @@ Smartg: &Smartg {<<: *Uses, type: smart, policy-priority: "TKV:1.5;YTOO:.5:", us
 # 策略组引用组
 Groupp: &Groupp {type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: *ProxyTestUrl, interval: 300, hidden: false}
 Groupd: &Groupd {type: select, proxies: [直连, 江苏, 北京, 广东], url: *DirectTestUrl, interval: 300, hidden: false}
-Groupa: &Groupa {type: select, proxies: [禁止, 抛弃, 绕过, 直连], url: *DirectTestUrl, interval: 300, hidden: false}
+Groupa: &Groupa {type: select, proxies: [禁止, 直连], url: *DirectTestUrl, interval: 300, hidden: false}
 
 # 规则集类型
 rule-anchor:
@@ -59,8 +59,6 @@ rule-anchor:
 proxies:
   - {name: 直连, type: direct}
   - {name: 禁止, type: reject}
-  - {name: 抛弃, type: rejec-drop}
-  - {name: 绕过, type: pass}
   - {name: dns-out, type: dns}
 
 # 外部订阅
