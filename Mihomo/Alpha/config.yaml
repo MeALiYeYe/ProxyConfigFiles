@@ -105,9 +105,7 @@ rule-providers:
   mydirect: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Direct.yaml", path: ./rules/mydirect.yaml}
   myreject: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject.yaml", path: ./rules/myreject.yaml}
   myproxy: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Proxy.yaml", path: ./rules/myproxy.yaml}
-  blackdirect: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Direct/Direct_No_Resolve.yaml", path: ./rules/blackdirect.yaml}
   blackreject: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Advertising/Advertising_Classical_No_Resolve.yaml", path: ./rules/blackreject.yaml}
-  blackproxy: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Proxy/Proxy_Classical_No_Resolve.yaml", path: ./rules/blackproxy.yaml}
   emby: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Emby.yaml", path: ./rules/emby.yaml}
   fakelocation: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rules/fakeLocation.yaml}
   lan: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Lan/Lan_No_Resolve.yaml", path: ./rules/lan.yaml}
@@ -136,12 +134,10 @@ rules:
   - RULE-SET,lan,DIRECT
   - RULE-SET,httpdns,REJECT
   - RULE-SET,awavenue,REJECT
+  - RULE-SET,blackreject,REJECT
   - RULE-SET,myreject,REJECT
   - RULE-SET,mydirect,DIRECT
   - RULE-SET,myproxy,Foreign
-  - RULE-SET,blackreject,REJECT
-  - RULE-SET,blackdirect,DIRECT
-  - RULE-SET,blackproxy,Foreign
   - RULE-SET,emby,Media
   - RULE-SET,fakelocation,Location
   - RULE-SET,chinamax,Domestic
