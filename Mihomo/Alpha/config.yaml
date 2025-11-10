@@ -138,9 +138,9 @@ rules:
   - RULE-SET,myreject,REJECT
   - RULE-SET,mydirect,DIRECT
   - RULE-SET,myproxy,Foreign
-  - RULE-SET,emby,Media
   - RULE-SET,fakelocation,Location
   - RULE-SET,chinamax,Domestic
+  - RULE-SET,emby,Media
   - RULE-SET,tiktok,Tiktok
   - RULE-SET,youtube,Youtube
   - RULE-SET,globalmedia,Media
