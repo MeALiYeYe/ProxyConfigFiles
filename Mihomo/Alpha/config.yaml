@@ -43,6 +43,7 @@ Smartg: &Smartg {<<: *Uses, type: smart, policy-priority: "TKV:1.5;YTOO:.5:", us
 # 策略组引用组
 Groupp: &Groupp {type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: *ProxyTestUrl, interval: 300, hidden: false}
 Groupd: &Groupd {type: select, proxies: [直连, 江苏, 北京, 广东], url: *DirectTestUrl, interval: 300, hidden: false}
+Groupa: &Groupa {type: select, proxies: [禁止, 抛弃, 绕过, 直连], url: *DirectTestUrl, interval: 300, hidden: false}
 
 # 规则集类型
 rule-anchor:
@@ -57,6 +58,9 @@ rule-anchor:
 # 出站代理
 proxies:
   - {name: 直连, type: direct}
+  - {name: 禁止, type: reject}
+  - {name: 抛弃, type: rejec-drop}
+  - {name: 绕过, type: pass}
   - {name: dns-out, type: dns}
 
 # 外部订阅
@@ -69,16 +73,28 @@ proxy-providers:
 # 策略组
 proxy-groups:
   # 软件分组
+  - {name: ADBlock, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png", <<: *Groupa}
   - {name: Location, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png", <<: *Groupd}
   - {name: Domestic, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png", <<: *Groupd}
+  - {name: Emby, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png", <<: *Groupp}
+  - {name: Netflix, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png", <<: *Groupp}
+  - {name: Spotify, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Spotify.png", <<: *Groupp}
   - {name: Tiktok, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_2.png", <<: *Groupp}
   - {name: Youtube, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Youtube.png", <<: *Groupp}
   - {name: Media, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ForeignMedia.png", <<: *Groupp}
-  - {name: Ai, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/ChatGPT-green.png", <<: *Groupp}
+  - {name: Steam, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Steam.png", <<: *Groupp}
+  - {name: Openai, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png", <<: *Groupp}
+  - {name: Discord, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Discord.png", <<: *Groupp}
+  - {name: Facebook, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Facebook.png", <<: *Groupp}
+  - {name: Instagram, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Instagram.png", <<: *Groupp}
   - {name: Telegram, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png", <<: *Groupp}
-  - {name: Google, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/google(1).png", <<: *Groupp}
+  - {name: Twitter, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Twitter.png", <<: *Groupp}
   - {name: Cloudflare, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png", <<: *Groupp}
+  - {name: Google, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png", <<: *Groupp}
+  - {name: Bing, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/bing.png", <<: *Groupp}
+  - {name: Copilot, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Copilot.png", <<: *Groupp}
   - {name: Github, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png", <<: *Groupp}
+  - {name: Onedrive, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/OneDrive.png", <<: *Groupp}
   - {name: Microsoft, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png", <<: *Groupp}
   - {name: Apple, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png", <<: *Groupp}
   - {name: Foreign, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png", <<: *Groupp}
@@ -110,15 +126,25 @@ rule-providers:
   fakelocation: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rules/fakeLocation.yaml}
   lan: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Lan/Lan_No_Resolve.yaml", path: ./rules/lan.yaml}
   httpdns: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/BlockHttpDNS/BlockHttpDNS_No_Resolve.yaml", path: ./rules/httpdns.yaml}
+  netflix: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Netflix/Netflix_Classical_No_Resolve.yaml", path: ./rules/netflix.yaml}
+  spotify: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Spotify/Spotify_No_Resolve.yaml", path: ./rules/spotify.yaml}
   tiktok: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/TikTok/TikTok_No_Resolve.yaml", path: ./rules/tiktok.yaml}
   youtube: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/YouTube/YouTube_No_Resolve.yaml", path: ./rules/youtube.yaml}
   globalmedia: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/GlobalMedia/GlobalMedia_Classical_No_Resolve.yaml", path: ./rules/globalMedia.yaml}
+  steam: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Steam/Steam_No_Resolve.yaml", path: ./rules/steam.yaml}
   chinamax: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/ChinaMax/ChinaMax_Classical_No_Resolve.yaml", path: ./rules/chinaMax.yaml}
+  discord: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Discord/Discord_No_Resolve.yaml", path: ./rules/discord.yaml}
+  facebook: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Facebook/Facebook_No_Resolve.yaml", path: ./rules/facebook.yaml}
+  instagram: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Instagram/Instagram_No_Resolve.yaml", path: ./rules/instagram.yaml}
   telegram: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Telegram/Telegram_No_Resolve.yaml", path: ./rules/telegram.yaml}
+  twitter: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Twitter/Twitter_No_Resolve.yaml", path: ./rules/twitter.yaml}
   google: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Google/Google_No_Resolve.yaml", path: ./rules/google.yaml}
   cloudflare: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Cloudflare/Cloudflare_No_Resolve.yaml", path: ./rules/cloudflare.yaml}
   openai: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/OpenAI/OpenAI_No_Resolve.yaml", path: ./rules/openAi.yaml}
+  bing: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Bing/Bing_No_Resolve.yaml", path: ./rules/bing.yaml}
+  copilot: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Copilot/Copilot_No_Resolve.yaml", path: ./rules/copilot.yaml}
   github: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/GitHub/GitHub_No_Resolve.yaml", path: ./rules/github.yaml}
+  onedrive: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/OneDrive/OneDrive_No_Resolve.yaml", path: ./rules/onedrive.yaml}
   microsoft: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Microsoft/Microsoft_No_Resolve.yaml", path: ./rules/microsoft.yaml}
   apple: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Apple/Apple_Classical_No_Resolve.yaml", path: ./rules/apple.yaml}
   foreign: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Global/Global_Classical_No_Resolve.yaml", path: ./rules/foreign.yaml}
@@ -132,24 +158,34 @@ rules:
   # DNS
   - OR,((DST-PORT,53),(DST-PORT,853),(DST-PORT,8853)),dns-out
   - RULE-SET,lan,DIRECT
-  - RULE-SET,httpdns,REJECT
-  - RULE-SET,awavenue,REJECT
-  - RULE-SET,blackreject,REJECT
-  - RULE-SET,myreject,REJECT
+  - RULE-SET,httpdns,ADBlock
+  - RULE-SET,awavenue,ADBlock
+  - RULE-SET,blackreject,ADBlock
+  - RULE-SET,myreject,ADBlock
   - RULE-SET,mydirect,DIRECT
   - RULE-SET,myproxy,Foreign
   - RULE-SET,fakelocation,Location
   - RULE-SET,chinamax,Domestic
-  - RULE-SET,emby,Media
+  - RULE-SET,emby,Emby
+  - RULE-SET,netflix,Netflix
+  - RULE-SET,spotify,Spotify
   - RULE-SET,tiktok,Tiktok
   - RULE-SET,youtube,Youtube
   - RULE-SET,globalmedia,Media
+  - RULE-SET,steam,Steam
+  - RULE-SET,discord,Discord
+  - RULE-SET,instagram,Instagram
+  - RULE-SET,facebook,Facebook
   - RULE-SET,telegram,Telegram
+  - RULE-SET,twitter,Twitter
   - RULE-SET,google,Google
   - RULE-SET,cloudflare,Cloudflare
-  - RULE-SET,openai,Ai
+  - RULE-SET,bing,Bing
+  - RULE-SET,copilot,Copilot
   - RULE-SET,github,Github
+  - RULE-SET,onedrive,Onedrive
   - RULE-SET,microsoft,Microsoft
+  - RULE-SET,openai,Openai
   - RULE-SET,apple,Apple
   - RULE-SET,foreign,Foreign
 
