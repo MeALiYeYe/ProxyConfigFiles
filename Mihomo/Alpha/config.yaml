@@ -78,7 +78,7 @@ proxy-groups:
   - {name: Netflix, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png", <<: *Groupp}
   - {name: Spotify, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Spotify.png", <<: *Groupp}
   - {name: Tiktok, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_2.png", <<: *Groupp}
-  - {name: Youtube, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Youtube.png", <<: *Groupp}
+  - {name: Youtube, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png", <<: *Groupp}
   - {name: Media, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ForeignMedia.png", <<: *Groupp}
   - {name: Steam, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Steam.png", <<: *Groupp}
   - {name: Openai, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png", <<: *Groupp}
