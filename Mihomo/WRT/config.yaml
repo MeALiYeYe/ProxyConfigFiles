@@ -1,0 +1,219 @@
+proxies:
+  - {name: 直连, type: direct}
+  - {name: 禁止, type: reject}
+
+proxy-providers:
+  TKV: {type: http, interval: 43200, exclude-filter: '(?i)(佣金|套餐|官网|官方|售后|免翻|过期|剩余|到期|流量|更新|点外|重置|免流|优惠|超实惠|址|AFF|Days|Date)', health-check: {enable: true, url: "https://www.gstatic.com/generate_204", interval: 600, timeout: 2000}, path: ./proxies/Sub1.yaml, url: "https://agssyfuuawfasbsdsafss.ojbktv.com/subscribe/?sid=10244&uid=9806&token=cVlTOTVXRFdPcHVaWnhRZ1FHVWJCem1nZllCL1ZzdlM0K0N6VWJGQmFQOD0&app=auto", override: {udp: true, additional-prefix: *Sub1}}
+  SNTP: {type: http, interval: 43200, exclude-filter: '(?i)(佣金|套餐|官网|官方|售后|免翻|过期|剩余|到期|流量|更新|点外|重置|免流|优惠|超实惠|址|AFF|Days|Date)', health-check: {enable: true, url: "https://www.gstatic.com/generate_204", interval: 600, timeout: 2000}, path: ./proxies/Sub2.yaml, url: "https://sub1.sntp.dev/baseStr?token=dacb4929a09e471f53a529f2917d3c41&timestamp=117085", override: {udp: true, additional-prefix: *Sub2}}
+  baiduN: {type: http, interval: 43200, exclude-filter: '(?i)(佣金|套餐|官网|官方|售后|免翻|过期|剩余|到期|流量|更新|点外|重置|免流|优惠|超实惠|址|AFF|Days|Date)', health-check: {enable: true, url: "https://www.gstatic.com/generate_204", interval: 600, timeout: 2000}, path: ./proxies/BaiduNProxy.yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/BaiduProxy.yaml", health-check: {enable: true, url: "https://wifi.vivo.com.cn/generate_204", interval: 300, timeout: 2000}}
+
+proxy-groups:
+  - {name: ADBlock, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png", type: select, proxies: [禁止, 直连], url: "https://wifi.vivo.com.cn/generate_204", interval: 300, hidden: false}
+  - {name: Location, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png", type: select, proxies: [直连, 江苏, 北京, 广东], url: "https://wifi.vivo.com.cn/generate_204", interval: 300, hidden: false}
+  - {name: Domestic, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png", type: select, proxies: [直连, 江苏, 北京, 广东], url: "https://wifi.vivo.com.cn/generate_204", interval: 300, hidden: false}
+  - {name: Emby, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Netflix, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Spotify, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Spotify.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Tiktok, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_2.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Youtube, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Media, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ForeignMedia.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Steam, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Steam.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Openai, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Discord, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Discord.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Facebook, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Facebook.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Instagram, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Instagram.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Telegram, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Twitter, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Twitter.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Cloudflare, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Google, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Bing, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/bing.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Copilot, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Copilot.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Github, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Onedrive, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/OneDrive.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Microsoft, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Apple, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Foreign, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: Final, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png", type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: "https://www.gstatic.com/generate_204", interval: 300, hidden: false}
+  - {name: 江苏, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(1).png", include-all-providers: true, type: fallback, url: "https://wifi.vivo.com.cn/generate_204", tolerance: 50, interval: 300, timeout: 2000, max-failed-times: 3, hidden: true, filter: "南京|苏州"}
+  - {name: 北京, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(2).png", include-all-providers: true, type: fallback, url: "https://wifi.vivo.com.cn/generate_204", tolerance: 50, interval: 300, timeout: 2000, max-failed-times: 3, hidden: true, filter: "北京"}
+  - {name: 广东, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(4).png", include-all-providers: true, type: fallback, url: "https://wifi.vivo.com.cn/generate_204", tolerance: 50, interval: 300, timeout: 2000, max-failed-times: 3, hidden: true, filter: "广州"}
+#  - {name: 河北, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(5).png", include-all-providers: true, type: fallback, url: "https://www.gstatic.com/generate_204", tolerance: 50, interval: 300, timeout: 2000, max-failed-times: 3, hidden: true, filter: "保定"}
+  - {name: 香港, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png", include-all-providers: true, type: fallback, url: "https://www.gstatic.com/generate_204", tolerance: 50, interval: 300, timeout: 2000, max-failed-times: 3, hidden: true, filter: '(?i)(?:港|香港|🇭🇰|\bHK\b|Hong|HKG)'}  
+  - {name: 台湾, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Taiwan.png", include-all-providers: true, type: fallback, url: "https://www.gstatic.com/generate_204", tolerance: 50, interval: 300, timeout: 2000, max-failed-times: 3, hidden: true, filter: '(?i)(?:台|台湾|🇼🇸|🇨🇳|🇹🇼|\bTW\b|tai|TWN)'} 
+  - {name: 狮城, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png", include-all-providers: true, type: fallback, url: "https://www.gstatic.com/generate_204", tolerance: 50, interval: 300, timeout: 2000, max-failed-times: 3, hidden: true, filter: '(?i)(?:坡|新加坡|🇸🇬|\bSG\b|Singapore|SGP)'} 
+  - {name: 日本, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png", include-all-providers: true, type: fallback, url: "https://www.gstatic.com/generate_204", tolerance: 50, interval: 300, timeout: 2000, max-failed-times: 3, hidden: true, filter: '(?i)(?:日|日本|🇯🇵|\bJP\b|Japan|JPN)'}
+#  - {name: 韩国, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Korea.png", include-all-providers: true, type: fallback, url: "https://www.gstatic.com/generate_204", tolerance: 50, interval: 300, timeout: 2000, max-failed-times: 3, hidden: true, filter: FilterKR: '(?i)(?:韩|韩国|🇰🇷|\bKR\b|KOR|Korea)'}  
+  - {name: 美国, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png", include-all-providers: true, type: fallback, url: "https://www.gstatic.com/generate_204", tolerance: 50, interval: 300, timeout: 2000, max-failed-times: 3, hidden: true, filter: '(?i)(?:美|美国|🇺🇸|\bUS\b|USA|States)'}
+#  - {name: 俄国, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Russia.png", include-all-providers: true, type: fallback, url: "https://www.gstatic.com/generate_204", tolerance: 50, interval: 300, timeout: 2000, max-failed-times: 3, hidden: true, filter: '(?i)(?:俄罗斯|莫斯科|🇷🇺|RU|Russia|Moscow)'}
+#  - {name: 欧洲, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/European_Union.png", include-all-providers: true, type: fallback, url: "https://www.gstatic.com/generate_204", tolerance: 50, interval: 300, timeout: 2000, max-failed-times: 3, hidden: true, filter: '(?i)(?:🇧🇪|🇨🇿|🇩🇰|🇫🇮|🇫🇷|🇩🇪|🇮🇪|🇮🇹|🇱🇹|🇱🇺|🇳🇱|🇵🇱|🇸🇪|🇬🇧|CDG|FRA|AMS|MAD|BCN|FCO|MUC|BRU)'}  
+#  - {name: 其他, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/quanqiu(3).png", include-all-providers: true, type: fallback, url: "https://www.gstatic.com/generate_204", tolerance: 50, interval: 300, timeout: 2000, max-failed-times: 3, hidden: true, filter: '^(?!.*(香港|台湾|新加坡|日本|韩国|美国|🇭🇰|🇼🇸|🇨🇳|🇹🇼|🇸🇬|🇯🇵|🇰🇷|🇺🇸|\bHK\b|\bTW\b|\bSG\b|\bJP\b|\bKR\b|\bUS\b))'}
+  - {name: 低倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/liuliang(2).png", include-all-providers: true, type: fallback, url: "https://www.gstatic.com/generate_204", tolerance: 50, interval: 300, timeout: 2000, max-failed-times: 3, hidden: true, filter: '0\.\d+'}
+  - {name: 高倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/liuliang(3).png", include-all-providers: true, type: fallback, url: "https://www.gstatic.com/generate_204", tolerance: 50, interval: 300, timeout: 2000, max-failed-times: 3, hidden: true, filter: '(?!0\.)[1-9]\d*(?:\.\d+)'}
+
+rule-providers:
+  awavenue: {type: http, behavior: domain, interval: 86400, format: mrs, url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/refs/heads/main/Filters/AWAvenue-Ads-Rule-Clash.mrs", path: ./rules/awavenue.mrs}
+  mydirect: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Direct.yaml", path: ./rules/mydirect.yaml}
+  myreject: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject.yaml", path: ./rules/myreject.yaml}
+  myproxy: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Proxy.yaml", path: ./rules/myproxy.yaml}
+  blackreject: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Advertising/Advertising_Classical_No_Resolve.yaml", path: ./rules/blackreject.yaml}
+  emby: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Emby.yaml", path: ./rules/emby.yaml}
+  fakelocation: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rules/fakeLocation.yaml}
+  lan: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Lan/Lan_No_Resolve.yaml", path: ./rules/lan.yaml}
+  httpdns: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/BlockHttpDNS/BlockHttpDNS_No_Resolve.yaml", path: ./rules/httpdns.yaml}
+  netflix: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Netflix/Netflix_Classical_No_Resolve.yaml", path: ./rules/netflix.yaml}
+  spotify: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Spotify/Spotify_No_Resolve.yaml", path: ./rules/spotify.yaml}
+  tiktok: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/TikTok/TikTok_No_Resolve.yaml", path: ./rules/tiktok.yaml}
+  youtube: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/YouTube/YouTube_No_Resolve.yaml", path: ./rules/youtube.yaml}
+  globalmedia: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/GlobalMedia/GlobalMedia_Classical_No_Resolve.yaml", path: ./rules/globalMedia.yaml}
+  steam: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Steam/Steam_No_Resolve.yaml", path: ./rules/steam.yaml}
+  chinamax: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/ChinaMax/ChinaMax_Classical_No_Resolve.yaml", path: ./rules/chinaMax.yaml}
+  discord: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Discord/Discord_No_Resolve.yaml", path: ./rules/discord.yaml}
+  facebook: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Facebook/Facebook_No_Resolve.yaml", path: ./rules/facebook.yaml}
+  instagram: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Instagram/Instagram_No_Resolve.yaml", path: ./rules/instagram.yaml}
+  telegram: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Telegram/Telegram_No_Resolve.yaml", path: ./rules/telegram.yaml}
+  twitter: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Twitter/Twitter_No_Resolve.yaml", path: ./rules/twitter.yaml}
+  google: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Google/Google_No_Resolve.yaml", path: ./rules/google.yaml}
+  cloudflare: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Cloudflare/Cloudflare_No_Resolve.yaml", path: ./rules/cloudflare.yaml}
+  openai: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/OpenAI/OpenAI_No_Resolve.yaml", path: ./rules/openAi.yaml}
+  bing: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Bing/Bing_No_Resolve.yaml", path: ./rules/bing.yaml}
+  copilot: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Copilot/Copilot_No_Resolve.yaml", path: ./rules/copilot.yaml}
+  github: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/GitHub/GitHub_No_Resolve.yaml", path: ./rules/github.yaml}
+  onedrive: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/OneDrive/OneDrive_No_Resolve.yaml", path: ./rules/onedrive.yaml}
+  microsoft: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Microsoft/Microsoft_No_Resolve.yaml", path: ./rules/microsoft.yaml}
+  apple: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Apple/Apple_Classical_No_Resolve.yaml", path: ./rules/apple.yaml}
+  foreign: {type: http, behavior: classical, interval: 86400, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Global/Global_Classical_No_Resolve.yaml", path: ./rules/foreign.yaml}
+
+# 路由规则
+rules:
+  - RULE-SET,lan,DIRECT
+  - RULE-SET,httpdns,ADBlock
+  - RULE-SET,awavenue,ADBlock
+  - RULE-SET,blackreject,ADBlock
+  - RULE-SET,myreject,ADBlock
+  - RULE-SET,mydirect,DIRECT
+  - RULE-SET,myproxy,Foreign
+  - RULE-SET,fakelocation,Location
+  - RULE-SET,chinamax,Domestic
+  - RULE-SET,emby,Emby
+  - RULE-SET,netflix,Netflix
+  - RULE-SET,spotify,Spotify
+  - RULE-SET,tiktok,Tiktok
+  - RULE-SET,youtube,Youtube
+  - RULE-SET,globalmedia,Media
+  - RULE-SET,steam,Steam
+  - RULE-SET,discord,Discord
+  - RULE-SET,instagram,Instagram
+  - RULE-SET,facebook,Facebook
+  - RULE-SET,telegram,Telegram
+  - RULE-SET,twitter,Twitter
+  - RULE-SET,google,Google
+  - RULE-SET,cloudflare,Cloudflare
+  - RULE-SET,bing,Bing
+  - RULE-SET,copilot,Copilot
+  - RULE-SET,github,Github
+  - RULE-SET,onedrive,Onedrive
+  - RULE-SET,microsoft,Microsoft
+  - RULE-SET,openai,Openai
+  - RULE-SET,apple,Apple
+  - RULE-SET,foreign,Foreign
+  - MATCH,Final
+
+mixed-port: 7890
+socks-port: 7891
+redir-port: 7892
+tproxy-port: 1536
+mode: Rule
+log-level: warning
+ipv6: true
+udp: true
+disable-keep-alive: false
+keep-alive-interval: 15
+keep-alive-idle: 120
+allow-lan: true
+
+geodata-mode: true
+geodata-loader: memconservative
+geo-auto-update: true
+geo-update-interval: 168
+geox-url:
+  asn: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
+unified-delay: true
+tcp-concurrent: true
+find-process-mode: strict
+global-client-fingerprint: chrome
+
+lgbm-auto-update: true
+lgbm-update-interval: 72
+lgbm-url: "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model-large.bin"
+
+external-controller: 0.0.0.0:9999
+external-ui: /panel/Zash/ 
+external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip"
+secret: ""
+
+profile:
+  store-selected: true
+  store-fake-ip: true
+  smart-collector-size: 500
+
+sniffer:
+  enable: true
+  force-dns-mapping: true
+  parse-pure-ip: true
+  override-destination: false
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 5228-5230, 8443]
+    QUIC:
+      ports: []
+  force-domain:
+    - "+.v2ex.com"
+  skip-domain: ["+.local", "+.lan", "localhost", "Mijia Cloud", "miwifi.com"]
+
+tun:
+  enable: false
+  device: Mihomo
+  stack: mixed
+  dns-hijack:
+    - any:53
+    - tcp://any:53
+  udp-timeout: 300
+  auto-route: true
+  auto-detect-interface: true
+  strict-route: true
+
+dns:
+  enable: true
+  cache-algorithm: arc
+  listen: :1053
+  ipv6: true
+  prefer-h3: true
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.0/15
+  fake-ip-filter: ["RULE-SET:lan"]
+  nameserver-policy:
+    'RULE-SET:blackreject,httpdns': rcode://name_error
+    'RULE-SET:chinamax,apple,microsoft':
+      - 'https://dns.alidns.com/dns-query#DIRECT&h3=true'
+      - 'quic://dns.alidns.com#DIRECT'
+  direct-nameserver:
+    - system
+    - tls://223.5.5.5
+    - tls://223.6.6.6
+  proxy-server-nameserver:
+    - tls://223.5.5.5
+    - tls://223.6.6.6
+  nameserver:
+    - 'https://dns.google/dns-query#Google&h3=true'
+    - 'https://cloudflare-dns.com/dns-query#Cloudflare&h3=true'
+    
+hosts:
+  raw.githubusercontent.com: [185.199.108.133, 185.199.109.133, 185.199.110.133, 185.199.111.133, "2606:50c0:8000::154", "2606:50c0:8001::154", "2606:50c0:8002::154", "2606:50c0:8003::154"]
+  doh.pub: [119.28.28.28, 119.29.29.29, "2402:4e00::", "2402:4e00:1::"]
+  dns.alidns.com: [223.5.5.5, 223.6.6.6, "2400:3200::1", "2400:3200:baba::1"]
+  dns.google: [8.8.4.4, 8.8.8.8, "2001:4860:4860::8844", "2001:4860:4860::8888"]
+  cloudflarr-dns.com: [1.0.0.1, 1.1.1.1, "2606:4700:4700::1001", "2606:4700:4700::1111"]
+  dns.cloudflare.com: [1.0.0.1, 1.1.1.1, "2606:4700:4700::1001", "2606:4700:4700::1111"]
