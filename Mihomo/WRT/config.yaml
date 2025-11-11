@@ -132,7 +132,7 @@ keep-alive-idle: 120
 allow-lan: true
 
 geodata-mode: true
-geodata-loader: memconservative
+geodata-loader: standard
 geo-auto-update: true
 geo-update-interval: 168
 geox-url:
