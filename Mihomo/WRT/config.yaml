@@ -146,11 +146,6 @@ lgbm-auto-update: true
 lgbm-update-interval: 72
 lgbm-url: "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model-large.bin"
 
-external-controller: 0.0.0.0:9999
-external-ui: /panel/Zash/ 
-external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip"
-secret: ""
-
 profile:
   store-selected: true
   store-fake-ip: true
