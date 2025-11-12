@@ -162,6 +162,7 @@ rules:
     - chinaunicom.com
     - 189.cn
     - chinatelecom.com.cn
+    - 10099.com.cn
 
     # --- 支付类 ---
     - alipay.com
