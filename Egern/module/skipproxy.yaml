@@ -1,5 +1,5 @@
 name: Bypass Tunnel Proxy (CN Apps)
-desc: 直连国内银行、支付、运营商、政务与视频类应用，避免TUN/VIF检测
+description: 直连国内银行、支付、运营商、政务与视频类应用，避免TUN/VIF检测
 
 bypass_tunnel_proxy:
   - '*.icbc.com.cn'
@@ -16,6 +16,7 @@ bypass_tunnel_proxy:
   - '*.pingan.com.cn'
   - '*.psbc.com'
   - '*.psbc.com.cn'
+  - '*.10099.com.cn'
   - '*.10086.cn'
   - '*.chinamobile.com'
   - '*.10010.com'
@@ -41,6 +42,7 @@ bypass_tunnel_proxy:
   - '*.12306.cn'
 
 real_ip_domains:
+- '*.10099.com.cn'
 - '*.10086.cn'
 - '*.10010.cn'
 - '*.189.cn'
@@ -89,6 +91,7 @@ real_ip_domains:
 mitm:
   hostnames:
     excludes:
+    - '*.10099.com.cn'
     - '*.10086.cn'
     - '*.10010.cn'
     - '*.189.cn'
