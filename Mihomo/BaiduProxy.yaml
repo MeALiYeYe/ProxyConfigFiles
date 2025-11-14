@@ -5,13 +5,6 @@ wangka: &wangka
   Q-GUID: "5f1cb5b1440194056377de5d131646bd"
   Q-Token: "c70e612a5edf00cae16898fd2c81bb97532c96f52d2a65896999d1a4da95efa4abbba070c95be9c83fb694fed5c80320"
   User-Agent: "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 13; Redmi K50 5G Build/RKQ1.200826.002)"
-wangka2: &wangka2
-  type: http
-  port: 8090
-  headers:
-  Q-GUID: "5f1cb5b1440194056377de5d131646bd"
-  Q-Token: "c70e612a5edf00cae16898fd2c81bb97532c96f52d2a65896999d1a4da95efa4abbba070c95be9c83fb694fed5c80320"
-  User-Agent: "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 13; Redmi K50 5G Build/RKQ1.200826.002)"
 tingji: &tingji
   type: http
   port: 8091
@@ -40,9 +33,6 @@ proxies:
   - name: "苏州王卡"
     server: 140.207.55.29
     <<: *wangka
-  - name: "注意无网重拉订阅-动态认证https://t.me/+EoaiTFs3p2ozNzY1"
-    server: 157.255.5.92
-    <<: *wangka2
   - name: "南京彩信"
     type: http
     server: 180.101.50.249
@@ -71,6 +61,9 @@ proxies:
     type: http
     server: 10.0.0.200
     port: 80
+  - name: "测试王卡停机"
+    server: 157.148.57.45
+    <<: *tingji
   - name: "北京电信"
     server: 220.181.33.174
     <<: *baidu
@@ -113,6 +106,3 @@ proxies:
   - name: "南京移动"
     server: 36.155.169.188
     <<: *baidu
-  - name: "测试王卡停机"
-    server: 157.148.57.45
-    <<: *tingji
