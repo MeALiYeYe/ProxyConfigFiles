@@ -124,6 +124,7 @@ proxies:
   - name: CN-浙江BGP
     server: nb.xn--wlqw1swrj04ju56d.com
     port: 80
+    <<: *wo
   - name: CN-浙江BGP(443端口)
     server: nb.xn--wlqw1swrj04ju56d.com
     port: 443
