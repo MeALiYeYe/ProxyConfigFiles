@@ -164,3 +164,31 @@ proxies:
       X-T5-Auth: '683556433'
       Connection: Keep-Alive'
       User-Agent: okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)
+- vmess:
+    name: CN-浙江BGP
+    server: nb.xn--wlqw1swrj04ju56d.com
+    port: 80
+    user_id: 617d752a-e7bf-4c58-8a27-dcf6288b33ae
+    security: auto
+    legacy: false
+    tfo: false
+    udp_relay: true
+    transport:
+      ws:
+        path: /
+        headers:
+          Host: yunpanlive.chinaunicomvideo.cn
+- vmess:
+    name: CN-浙江BGP(443端口)
+    server: nb.xn--wlqw1swrj04ju56d.com
+    port: 443
+    user_id: 617d752a-e7bf-4c58-8a27-dcf6288b33ae
+    security: auto
+    legacy: false
+    tfo: false
+    udp_relay: true
+    transport:
+      ws:
+        path: /
+        headers:
+          Host: yunpanlive.chinaunicomvideo.cn
