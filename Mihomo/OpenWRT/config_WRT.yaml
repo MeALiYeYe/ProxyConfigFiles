@@ -95,12 +95,12 @@ proxy-groups:
   - name: Location
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png"
     type: select
-    proxies: [直连, 江苏, 北京, 广东]
+    proxies: [直连, 江苏, 北京, 广东, 浙江, 河北]
     hidden: false
   - name: Domestic
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png"
     type: select
-    proxies: [直连, 江苏, 北京, 广东]
+    proxies: [直连, 江苏, 北京, 广东, 浙江, 河北]
     hidden: false
   - name: Tiktok
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_2.png"
@@ -192,6 +192,26 @@ proxy-groups:
     prefer-asn: true
     hidden: true
     filter: "广州"
+  - name: 浙江
+    icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(3).png"
+    include-all-providers: true
+    type: smart
+    uselightgbm: true
+    collectdata: false
+    strategy: sticky-sessions
+    prefer-asn: true
+    hidden: true
+    filter: "浙江"
+  - name: 河北
+    icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(5).png"
+    include-all-providers: true
+    type: smart
+    uselightgbm: true
+    collectdata: false
+    strategy: sticky-sessions
+    prefer-asn: true
+    hidden: true
+    filter: "保定"
   - name: 香港
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png"
     include-all-providers: true
