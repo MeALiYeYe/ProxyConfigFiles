@@ -1,3 +1,15 @@
+liantong: &liantong
+  server: nb.xn--wlqw1swrj04ju56d.com
+  user_id: 617d752a-e7bf-4c58-8a27-dcf6288b33ae
+  security: auto
+  legacy: false
+  tfo: false
+  udp_relay: true
+  transport:
+    ws:
+      path: /
+      headers:
+        Host: yunpanlive.chinaunicomvideo.cn
 wangka: &wangka
   type: http
   port: 8091
@@ -31,6 +43,10 @@ baidu: &baidu
     User-Agent: "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002)
     baiduboxapp/11.0.5.12 (Baidu; P1 11)"
 proxies:
+  - name: "浙江http"
+    port: 80
+  - name: "浙江https"
+    port: 443  
   - name: "广州王卡"
     server: 157.148.54.212
     <<: *wangka
