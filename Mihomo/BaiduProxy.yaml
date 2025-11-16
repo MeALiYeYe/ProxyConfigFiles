@@ -1,4 +1,5 @@
 liantong: &liantong
+  type: vmess
   server: nb.xn--wlqw1swrj04ju56d.com
   user_id: 617d752a-e7bf-4c58-8a27-dcf6288b33ae
   security: auto
