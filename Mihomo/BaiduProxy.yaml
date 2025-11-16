@@ -12,6 +12,13 @@ tingji: &tingji
     Host: a.189.cn
     Q-GUID: "5f1cb5b1440194056377de5d131646bd"
     Q-Token: "c70e612a5edf00cae16898fd2c81bb97532c96f52d2a65896999d1a4da95efa4abbba070c95be9c83fb694fed5c80320"
+caixin: &caixin
+  type: http
+  port: 443
+  headers:
+    X-T5-Auth: 683556433
+    Host: 153.3.236.22:443
+    dialer-proxy: WAP  
 baidu: &baidu
   type: http
   port: 443
@@ -37,34 +44,14 @@ proxies:
     server: 140.207.55.29
     <<: *wangka
   - name: "南京彩信"
-    type: http
     server: 180.101.50.249
-    port: 443
-    headers:
-      X-T5-Auth: 683556433
-      Host: 153.3.236.22:443
-      dialer-proxy: WAP
   - name: "南京彩信"
-    type: http
     server: 180.101.50.208
-    port: 443
-    headers:
-      X-T5-Auth: 683556433
-      Host: 153.3.236.22:443
-      dialer-proxy: WAP
+    <<: *caixin
   - name: "广州彩信"
-    type: http
     server: 14.215.182.75
-    port: 443
-    headers:
-      X-T5-Auth: 683556433
-      Host: 153.3.236.22:443
-      dialer-proxy: WAP
-  - name: "WAP"
-    type: http
-    server: 10.0.0.200
-    port: 80
-  - name: "测试王卡停机"
+    <<: *caixin
+  - name: "王卡停机"
     server: 157.148.57.45
     <<: *tingji
   - name: "北京电信"
