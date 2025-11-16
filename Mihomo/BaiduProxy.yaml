@@ -30,7 +30,7 @@ caixin: &caixin
   headers:
     X-T5-Auth: 683556433
     Host: 153.3.236.22:443
-    dialer-proxy: WAP  
+    dialer-proxy: WAP
 baidu: &baidu
   type: http
   port: 443
@@ -45,8 +45,10 @@ baidu: &baidu
 proxies:
   - name: "浙江http"
     port: 80
+    <<: *liantong
   - name: "浙江https"
-    port: 443  
+    port: 443
+    <<: *liantong
   - name: "广州王卡"
     server: 157.148.54.212
     <<: *wangka
