@@ -42,7 +42,7 @@ Smartg: &Smartg {<<: *Uses, type: smart, policy-priority: "TKV:1.5;YTOO:.5:", us
 
 # 策略组引用组
 Groupp: &Groupp {type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: *ProxyTestUrl, interval: 300, hidden: false}
-Groupd: &Groupd {type: select, proxies: [直连, 江苏, 北京, 广东], url: *DirectTestUrl, interval: 300, hidden: false}
+Groupd: &Groupd {type: select, proxies: [直连, 江苏, 北京, 广东, 浙江, 河北], url: *DirectTestUrl, interval: 300, hidden: false}
 Groupa: &Groupa {type: select, proxies: [禁止, 直连], url: *DirectTestUrl, interval: 300, hidden: false}
 
 # 规则集类型
@@ -101,7 +101,8 @@ proxy-groups:
   - {name: 江苏, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(1).png", <<: *Smartg, filter: "南京|苏州"}
   - {name: 北京, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(2).png", <<: *Smartg, filter: "北京"}
   - {name: 广东, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(4).png", <<: *Smartg, filter: "广州"}
-#  - {name: 河北, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(5).png", <<: *Smartg, filter: "保定"}
+  - {name: 河北, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(5).png", <<: *Smartg, filter: "保定"}
+  - {name: 浙江, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(5).png", <<: *Smartg, filter: "浙江"}
   - {name: 香港, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png", <<: *Smartg, filter: *FilterHK}  
   - {name: 台湾, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Taiwan.png", <<: *Smartg, filter: *FilterTW} 
   - {name: 狮城, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png", <<: *Smartg, filter: *FilterSG} 
