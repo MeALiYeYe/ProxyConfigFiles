@@ -45,7 +45,8 @@ proxies:
     <<: *wangka
   - name: "南京彩信"
     server: 180.101.50.249
-  - name: "南京彩信"
+    <<: *caixin
+  - name: "南京彩信1"
     server: 180.101.50.208
     <<: *caixin
   - name: "广州彩信"
