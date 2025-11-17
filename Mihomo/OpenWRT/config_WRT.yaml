@@ -23,7 +23,7 @@ profile:
   store-selected: true
   store-fake-ip: true
 hosts:
-#  raw.githubusercontent.com: [185.199.108.133, 185.199.109.133, 185.199.110.133, 185.199.111.133, "2606:50c0:8000::154", "2606:50c0:8001::154", "2606:50c0:8002::154", "2606:50c0:8003::154"]
+  raw.githubusercontent.com: [185.199.108.133, 185.199.109.133, 185.199.110.133, 185.199.111.133, "2606:50c0:8000::154", "2606:50c0:8001::154", "2606:50c0:8002::154", "2606:50c0:8003::154"]
   doh.pub: [1.12.12.21, 120.53.53.53, "2402:4e00::", "2402:4e00:1::"]
   dns.alidns.com: [223.5.5.5, 223.6.6.6, "2400:3200::1", "2400:3200:baba::1"]
   dns.google: [8.8.4.4, 8.8.8.8, "2001:4860:4860::8844", "2001:4860:4860::8888"]
@@ -96,71 +96,99 @@ proxy-groups:
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png"
     type: select
     proxies: [直连, 江苏, 北京, 广东, 浙江, 河北]
+    url: "https://wifi.vivo.com.cn/generate_204"
+    interval: 300
     hidden: false
   - name: Domestic
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png"
     type: select
     proxies: [直连, 江苏, 北京, 广东, 浙江, 河北]
+    url: "https://wifi.vivo.com.cn/generate_204"
+    interval: 300
     hidden: false
   - name: Tiktok
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_2.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
     hidden: false
   - name: Youtube
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
     hidden: false
   - name: Media
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ForeignMedia.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
     hidden: false
   - name: Openai
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
     hidden: false
   - name: Telegram
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
     hidden: false
   - name: Cloudflare
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
     hidden: false
   - name: Google
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
     hidden: false
   - name: Github
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
     hidden: false
   - name: Microsoft
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
     hidden: false
   - name: Apple
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
     hidden: false
   - name: Foreign
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
     hidden: false
   - name: Final
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
     hidden: false
   - name: 江苏
     icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(1).png"
@@ -170,6 +198,8 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
+    url: "https://wifi.vivo.com.cn/generate_204"
+    interval: 300
     hidden: true
     filter: "南京|苏州"
   - name: 北京
@@ -180,6 +210,8 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
+    url: "https://wifi.vivo.com.cn/generate_204"
+    interval: 300
     hidden: true
     filter: "北京"
   - name: 广东
@@ -190,6 +222,8 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
+    url: "https://wifi.vivo.com.cn/generate_204"
+    interval: 300
     hidden: true
     filter: "广州"
   - name: 浙江
@@ -200,6 +234,8 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
+    url: "https://wifi.vivo.com.cn/generate_204"
+    interval: 300
     hidden: true
     filter: "浙江"
   - name: 河北
@@ -210,6 +246,8 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
+    url: "https://wifi.vivo.com.cn/generate_204"
+    interval: 300
     hidden: true
     filter: "保定"
   - name: 香港
@@ -220,6 +258,8 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
     hidden: true
     filter: '(?i)(?:港|香港|🇭🇰|\bHK\b|Hong|HKG)'
   - name: 台湾
@@ -230,6 +270,8 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
     hidden: true
     filter: '(?i)(?:台|台湾|🇼🇸|🇨🇳|🇹🇼|\bTW\b|tai|TWN)'
   - name: 狮城
@@ -240,6 +282,8 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
     hidden: true
     filter: '(?i)(?:坡|新加坡|🇸🇬|\bSG\b|Singapore|SGP)' 
   - name: 日本
@@ -250,6 +294,8 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
     hidden: true
     filter: '(?i)(?:日|日本|🇯🇵|\bJP\b|Japan|JPN)'
   - name: 美国
@@ -260,6 +306,8 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
     hidden: true
     filter: '(?i)(?:美|美国|🇺🇸|\bUS\b|USA|States)'
   - name: 低倍
@@ -270,6 +318,8 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
     hidden: true
     filter: '0\.\d+'
   - name: 高倍
@@ -280,6 +330,8 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
     hidden: true
     filter: '(?!0\.)[1-9]\d*(?:\.\d+)'
 rule-providers:
