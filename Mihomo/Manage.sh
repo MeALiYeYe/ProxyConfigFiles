@@ -33,7 +33,10 @@ CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/he
 
 # Geo 数据
 GEO_FILES=(
-    "ASN.mmdb,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
+    "asn.mmdb,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
+    "country.mmdb,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country.mmdb"
+    "geoip.dat,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
+    "geosite.dat,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
 )
 
 #------------------------------------------------
