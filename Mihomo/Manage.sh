@@ -25,7 +25,7 @@ MIHOMO_API_URL=$(curl -s https://api.github.com/repos/vernesong/mihomo/releases/
 
 MIHOMO_URL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-acf8e3b.gz"
 
-# **新增：Smart大模型下载链接**
+# Smart大模型下载链接
 MODEL_URL="https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model-large.bin"
 
 # mihomo远程配置链接
@@ -208,9 +208,6 @@ update_geo() {
     log_info "Geo 数据更新完成"
 }
 
-#------------------------------------------------
-# 更新模型文件
-#------------------------------------------------
 update_model() {
     log_info "更新 Smart 大模型..."
     cd "$MIHOMO_DIR"
