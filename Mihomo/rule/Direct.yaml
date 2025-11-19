@@ -2,19 +2,19 @@ payload:
 # gwmapp
   - DOMAIN,yys.163.com
   - DOMAIN,ifconfig.me
+  - DOMAIN,liangxin.xyz
+#  - DOMAIN-SUFFIX,*.cn
   - DOMAIN-SUFFIX,xianniu.cc
   - DOMAIN-SUFFIX,xianniu.com
   - DOMAIN-SUFFIX,nsloon.com
   - DOMAIN-SUFFIX,tkv.one
   - DOMAIN-SUFFIX,ojbktv.com
-  - DOMAIN,liangxin.xyz
   - DOMAIN-SUFFIX,gwm.com.cn
   - DOMAIN-SUFFIX,gwm.cn
   - DOMAIN-SUFFIX,gwmapp-h.com
   - DOMAIN-SUFFIX,gwmapp-w.com
   - DOMAIN-KEYWORD,gwm-mn
   - DOMAIN-KEYWORD,kahaoquan
-#  - DOMAIN-SUFFIX,*.cn
   - PROCESS-NAME,onmyoji.exe
   - PROCESS-NAME-REGEX,(?i)onmyoji
   - PROCESS-NAME-REGEX,(?i)jkchess
