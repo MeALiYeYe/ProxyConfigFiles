@@ -3,6 +3,7 @@ payload:
   - DOMAIN,yys.163.com
   - DOMAIN,ifconfig.me
   - DOMAIN-SUFFIX,xianniu.cc
+  - DOMAIN-SUFFIX,xianniu.com
   - DOMAIN-SUFFIX,nsloon.com
   - DOMAIN-SUFFIX,tkv.one
   - DOMAIN-SUFFIX,ojbktv.com
