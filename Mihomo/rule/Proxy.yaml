@@ -1,6 +1,6 @@
 payload:
-  - DOMAIN-SUFFIX,metacubex.one
-  - DOMAIN-SUFFIX,sntp.dev
-  - DOMAIN-SUFFIX,sntp.uk
-  - DOMAIN,board.zash.run.place
-  - DOMAIN-KEYWORD,xiaoyakankan
+  - 'board.zash.run.place'
+  - '+.metacubex.one'
+  - '+.sntp.dev'
+  - '+.sntp.uk'
+  - '.*xiaoyakankan.*'
