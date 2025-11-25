@@ -279,7 +279,6 @@ dns:
       - 'https://dns.alidns.com/dns-query#DIRECT&h3=true'
       - 'quic://dns.alidns.com#DIRECT'
   direct-nameserver:
-    - system
     - tls://223.5.5.5
     - tls://223.6.6.6
   proxy-server-nameserver:
