@@ -117,13 +117,14 @@ proxy-groups:
 
 rule-providers:
   awavenue: {<<: *dom, format: mrs, url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/refs/heads/main/Filters/AWAvenue-Ads-Rule-Clash.mrs", path: ./rules/awavenue.mrs}
-  mydirect: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Direct.yaml", path: ./rules/mydirect.yaml}
-  myreject: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject.yaml", path: ./rules/myreject.yaml}
-  myproxy: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Proxy.yaml", path: ./rules/myproxy.yaml}
-  blackreject: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Advertising/Advertising_Classical_No_Resolve.yaml", path: ./rules/blackreject.yaml}
-  emby: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Emby.yaml", path: ./rules/emby.yaml}
-#  fakelocation: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rules/fakeLocation.yaml}
+  mydirect: {<<: *dom, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Direct.yaml", path: ./rules/mydirect.yaml}
+  myrejectdomain: {<<: *dom, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject_domain.yaml", path: ./rules/myrejectdomain.yaml}
+  myrejectip: {<<: *ipc, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject_ip.yaml", path: ./rules/myrejectip.yaml}
+  myproxy: {<<: *dom, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Proxy.yaml", path: ./rules/myproxy.yaml}
+  emby: {<<: *dom, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Emby.yaml", path: ./rules/emby.yaml}
+  fakelocation: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rules/fakeLocation.yaml}
 #  lan: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Lan/Lan_No_Resolve.yaml", path: ./rules/lan.yaml}
+#  blackreject: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Advertising/Advertising_Classical_No_Resolve.yaml", path: ./rules/blackreject.yaml}
 #  httpdns: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/BlockHttpDNS/BlockHttpDNS_No_Resolve.yaml", path: ./rules/httpdns.yaml}
 #  netflix: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Netflix/Netflix_Classical_No_Resolve.yaml", path: ./rules/netflix.yaml}
 #  spotify: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Spotify/Spotify_No_Resolve.yaml", path: ./rules/spotify.yaml}
@@ -150,19 +151,14 @@ rule-providers:
 
 # 路由规则
 rules:
-  # FCM
-  #- AND,((NETWORK,TCP),(DST-PORT,5228-5230)),DIRECT
-  # NTP
-  #- AND,((NETWORK,UDP),(DST-PORT,123)),DIRECT
-  # DNS
-  #- OR,((DST-PORT,53),(DST-PORT,853),(DST-PORT,8853)),dns-out
   - RULE-SET,awavenue,REJECT
-  - RULE-SET,myreject,REJECT
+  - RULE-SET,myrejectdomain,REJECT
+  - RULE-SET,myrejectip,REJECT,no-resolve
   - RULE-SET,fakelocation,Location
   - RULE-SET,mydirect,DIRECT
   - RULE-SET,myproxy,Foreign
-  
   - RULE-SET,emby,Media
+  
   - GEOSITE,private,DIRECT 
   - GEOSITE,category-ads-all,REJECT
   - GEOSITE,category-httpdns-cn,REJECT
