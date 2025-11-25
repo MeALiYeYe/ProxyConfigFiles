@@ -344,28 +344,35 @@ rule-providers:
     path: ./rule_provider/awavenue.mrs
   mydirect:
     type: http
-    behavior: classical
+    behavior: domain
     interval: 86400
     format: yaml
     url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Direct.yaml"
     path: ./rule_provider/mydirect.yaml
-  myreject:
+  myrejectdomain:
     type: http
-    behavior: classical
+    behavior: domain
     interval: 86400
     format: yaml
-    url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject.yaml"
-    path: ./rule_provider/myreject.yaml
+    url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject_domain.yaml"
+    path: ./rule_provider/myrejectdomain.yaml
+  myrejectip:
+    type: http
+    behavior: ipcidr
+    interval: 86400
+    format: yaml
+    url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject_ip.yaml"
+    path: ./rule_provider/myrejectip.yaml
   myproxy:
     type: http
-    behavior: classical
+    behavior: domain
     interval: 86400
     format: yaml
     url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Proxy.yaml"
     path: ./rule_provider/myproxy.yaml
   emby:
     type: http
-    behavior: classical
+    behavior: domain
     interval: 86400
     format: yaml
     url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Emby.yaml"
@@ -379,7 +386,8 @@ rule-providers:
     path: ./rule_provider/fakelocation.yaml
 rules:
   - RULE-SET,awavenue,REJECT
-  - RULE-SET,myreject,REJECT
+  - RULE-SET,myrejectdomain,REJECT
+  - RULE-SET,myrejectip,REJECT,no-resolve
   - RULE-SET,fakelocation,Location
   - RULE-SET,mydirect,DIRECT
   - RULE-SET,myproxy,Foreign
