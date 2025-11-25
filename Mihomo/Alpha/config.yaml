@@ -272,10 +272,10 @@ dns:
   prefer-h3: true
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.0/15
-  fake-ip-filter: ["RULE-SET:lan"]
+  fake-ip-filter: ['GEOSITE:private,connectivity-check']
   nameserver-policy:
-    'RULE-SET:blackreject,httpdns': rcode://name_error
-    'RULE-SET:chinamax,apple,microsoft':
+    'GEOSITE:category-ads-all,category-httpdns-cn': rcode://name_error
+    'GEOSITE:cn,apple,microsoft':
       - 'https://dns.alidns.com/dns-query#DIRECT&h3=true'
       - 'quic://dns.alidns.com#DIRECT'
   direct-nameserver:
