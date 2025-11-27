@@ -1,0 +1,25 @@
+name: Sync Gist to Repo
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 每天同步一次
+  workflow_dispatch:        # 允许手动触发
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Fetch Gist
+        run: |
+          curl -sL https://gist.githubusercontent.com/MeALiYeYe/42151e8055f111208c92971fca6e25ce/raw/d57f81f4c75d39ee4f0aeab4c47314646a53d684/Egern.yaml -o Egern/Egern.yaml
+
+      - name: Commit & Push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Egern/Egern.yaml
+          git diff --cached --quiet || git commit -m "Sync Egern.yaml from Gist"
+          git push
