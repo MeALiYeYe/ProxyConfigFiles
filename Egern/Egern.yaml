@@ -446,28 +446,6 @@ policy_groups:
 rules:
 - and:
     match:
-    - not:
-        match:
-          dest_port:
-            match: 53,853,8853
-    - protocol:
-        match: quic
-    policy: REJECT
-    disabled: false
-- and:
-    match:
-    - not:
-        match:
-          rule_set:
-            match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaMax/ChinaMax_All_No_Resolve.list
-    - dest_port:
-        match: '443'
-    - protocol:
-        match: udp
-    policy: REJECT
-    disabled: false
-- and:
-    match:
     - user_agent:
         match: '*Telegram*'
     - or:
