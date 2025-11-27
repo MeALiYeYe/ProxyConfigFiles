@@ -2,7 +2,7 @@ name: Sync Multiple Gists to Repo
 
 on:
   schedule:
-    - cron: '33 19 * * *'
+    - cron: '40 19 * * *'
   workflow_dispatch:
 
 jobs:
@@ -17,9 +17,9 @@ jobs:
       - name: Sync Gist files
         run: |
           files=(
-            "https://gist.githubusercontent.com/MeALiYeYe/42151e8055f111208c92971fca6e25ce/raw/d57f81f4c75d39ee4f0aeab4c47314646a53d684/config.yaml Mihomo/Alpha/config.yaml"
-            "https://gist.githubusercontent.com/MeALiYeYe/42151e8055f111208c92971fca6e25ce/raw/d57f81f4c75d39ee4f0aeab4c47314646a53d684/Egern.yaml Egern/Egern.yaml"
-            "https://gist.githubusercontent.com/MeALiYeYe/42151e8055f111208c92971fca6e25ce/raw/d57f81f4c75d39ee4f0aeab4c47314646a53d684/Surge.conf Surge/Surge.conf"
+            "https://gist.githubusercontent.com/MeALiYeYe/42151e8055f111208c92971fca6e25ce/raw/config.yaml Mihomo/Alpha/config.yaml"
+            "https://gist.githubusercontent.com/MeALiYeYe/42151e8055f111208c92971fca6e25ce/raw/Egern.yaml Egern/Egern.yaml"
+            "https://gist.githubusercontent.com/MeALiYeYe/42151e8055f111208c92971fca6e25ce/raw/Surge.conf Surge/Surge.conf"
           )
 
           for file in "${files[@]}"; do
