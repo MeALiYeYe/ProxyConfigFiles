@@ -63,7 +63,7 @@ proxy-providers:
     interval: 43200
     health-check:
       enable: true
-      url: "https://www.gstatic.com/generate_204"
+      url: "https://www.v2ex.com/generate_204"
       interval: 600
       timeout: 2000
     path: ./proxy_provider/KTV.yaml
@@ -73,7 +73,7 @@ proxy-providers:
     interval: 43200
     health-check:
       enable: true
-      url: "https://www.gstatic.com/generate_204"
+      url: "https://www.v2ex.com/generate_204"
       interval: 600
       timeout: 2000
     path: ./proxy_provider/SNTP.yaml
@@ -83,7 +83,7 @@ proxy-providers:
     interval: 43200
     health-check:
       enable: true
-      url: "https://wifi.vivo.com.cn/generate_204"
+      url: "https://connectivitycheck.platform.hicloud.com/generate_204"
       interval: 600
       timeout: 2000
     path: ./proxy_provider/BaiduProxy.yaml
@@ -96,98 +96,98 @@ proxy-groups:
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png"
     type: select
     proxies: [直连, 江苏, 北京, 广东, 浙江, 河北]
-    url: "https://wifi.vivo.com.cn/generate_204"
+    url: "https://connectivitycheck.platform.hicloud.com/generate_204"
     interval: 300
     hidden: false
   - name: Domestic
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png"
     type: select
     proxies: [直连, 江苏, 北京, 广东, 浙江, 河北]
-    url: "https://wifi.vivo.com.cn/generate_204"
+    url: "https://connectivitycheck.platform.hicloud.com/generate_204"
     interval: 300
     hidden: false
   - name: Tiktok
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_2.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
-    url: "https://www.gstatic.com/generate_204"
+    url: "https://www.v2ex.com/generate_204"
     interval: 300
     hidden: false
   - name: Youtube
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
-    url: "https://www.gstatic.com/generate_204"
+    url: "https://www.v2ex.com/generate_204"
     interval: 300
     hidden: false
   - name: Media
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ForeignMedia.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
-    url: "https://www.gstatic.com/generate_204"
+    url: "https://www.v2ex.com/generate_204"
     interval: 300
     hidden: false
   - name: Openai
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
-    url: "https://www.gstatic.com/generate_204"
+    url: "https://www.v2ex.com/generate_204"
     interval: 300
     hidden: false
   - name: Telegram
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
-    url: "https://www.gstatic.com/generate_204"
+    url: "https://www.v2ex.com/generate_204"
     interval: 300
     hidden: false
   - name: Cloudflare
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
-    url: "https://www.gstatic.com/generate_204"
+    url: "https://www.v2ex.com/generate_204"
     interval: 300
     hidden: false
   - name: Google
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
-    url: "https://www.gstatic.com/generate_204"
+    url: "https://www.v2ex.com/generate_204"
     interval: 300
     hidden: false
   - name: Github
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
-    url: "https://www.gstatic.com/generate_204"
+    url: "https://www.v2ex.com/generate_204"
     interval: 300
     hidden: false
   - name: Microsoft
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
-    url: "https://www.gstatic.com/generate_204"
+    url: "https://www.v2ex.com/generate_204"
     interval: 300
     hidden: false
   - name: Apple
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
-    url: "https://www.gstatic.com/generate_204"
+    url: "https://www.v2ex.com/generate_204"
     interval: 300
     hidden: false
   - name: Foreign
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
-    url: "https://www.gstatic.com/generate_204"
+    url: "https://www.v2ex.com/generate_204"
     interval: 300
     hidden: false
   - name: Final
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png"
     type: select
     proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]
-    url: "https://www.gstatic.com/generate_204"
+    url: "https://www.v2ex.com/generate_204"
     interval: 300
     hidden: false
   - name: 江苏
@@ -198,7 +198,7 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
-    url: "https://wifi.vivo.com.cn/generate_204"
+    url: "https://connectivitycheck.platform.hicloud.com/generate_204"
     interval: 300
     hidden: true
     filter: "南京|苏州"
@@ -210,7 +210,7 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
-    url: "https://wifi.vivo.com.cn/generate_204"
+    url: "https://connectivitycheck.platform.hicloud.com/generate_204"
     interval: 300
     hidden: true
     filter: "北京"
@@ -222,7 +222,7 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
-    url: "https://wifi.vivo.com.cn/generate_204"
+    url: "https://connectivitycheck.platform.hicloud.com/generate_204"
     interval: 300
     hidden: true
     filter: "广州"
@@ -234,7 +234,7 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
-    url: "https://wifi.vivo.com.cn/generate_204"
+    url: "https://connectivitycheck.platform.hicloud.com/generate_204"
     interval: 300
     hidden: true
     filter: "浙江"
@@ -246,7 +246,7 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
-    url: "https://wifi.vivo.com.cn/generate_204"
+    url: "https://connectivitycheck.platform.hicloud.com/generate_204"
     interval: 300
     hidden: true
     filter: "保定"
@@ -258,7 +258,7 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
-    url: "https://www.gstatic.com/generate_204"
+    url: "https://www.v2ex.com/generate_204"
     interval: 300
     hidden: true
     filter: '(?i)(?:港|香港|🇭🇰|\bHK\b|Hong|HKG)'
@@ -270,7 +270,7 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
-    url: "https://www.gstatic.com/generate_204"
+    url: "https://www.v2ex.com/generate_204"
     interval: 300
     hidden: true
     filter: '(?i)(?:台|台湾|🇼🇸|🇨🇳|🇹🇼|\bTW\b|tai|TWN)'
@@ -282,7 +282,7 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
-    url: "https://www.gstatic.com/generate_204"
+    url: "https://www.v2ex.com/generate_204"
     interval: 300
     hidden: true
     filter: '(?i)(?:坡|新加坡|🇸🇬|\bSG\b|Singapore|SGP)' 
@@ -294,7 +294,7 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
-    url: "https://www.gstatic.com/generate_204"
+    url: "https://www.v2ex.com/generate_204"
     interval: 300
     hidden: true
     filter: '(?i)(?:日|日本|🇯🇵|\bJP\b|Japan|JPN)'
@@ -306,7 +306,7 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
-    url: "https://www.gstatic.com/generate_204"
+    url: "https://www.v2ex.com/generate_204"
     interval: 300
     hidden: true
     filter: '(?i)(?:美|美国|🇺🇸|\bUS\b|USA|States)'
@@ -318,7 +318,7 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
-    url: "https://www.gstatic.com/generate_204"
+    url: "https://www.v2ex.com/generate_204"
     interval: 300
     hidden: true
     filter: '0\.\d+'
@@ -330,7 +330,7 @@ proxy-groups:
     collectdata: false
     strategy: sticky-sessions
     prefer-asn: true
-    url: "https://www.gstatic.com/generate_204"
+    url: "https://www.v2ex.com/generate_204"
     interval: 300
     hidden: true
     filter: '(?!0\.)[1-9]\d*(?:\.\d+)'
