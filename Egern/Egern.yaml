@@ -446,6 +446,28 @@ policy_groups:
 rules:
 - and:
     match:
+    - not:
+        match:
+          dest_port:
+            match: 53,853,8853
+    - protocol:
+        match: quic
+    policy: REJECT
+    disabled: false
+- and:
+    match:
+    - not:
+        match:
+          rule_set:
+            match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaMax/ChinaMax_All_No_Resolve.list
+    - dest_port:
+        match: '443'
+    - protocol:
+        match: udp
+    policy: REJECT
+    disabled: false
+- and:
+    match:
     - user_agent:
         match: '*Telegram*'
     - or:
@@ -573,6 +595,8 @@ modules:
 - url: https://raw.githubusercontent.com/mist-whisper/Surge/master/Modules/YouTube_remove_ads.sgmodule
   enabled: true
 - url: https://raw.githubusercontent.com/githubdulong/Script/master/Surge/JD_Helper.sgmodule
+  enabled: true
+- url: https://raw.githubusercontent.com/Centralmatrix3/Scripts/refs/heads/master/Module/Redirect.sgmodule
   enabled: true
 - url: https://raw.githubusercontent.com/cc63/Surge/main/Module/Panel/QiYou/Moore/QiYou.sgmodule
   compat_arguments:
