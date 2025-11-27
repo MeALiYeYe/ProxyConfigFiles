@@ -3,4 +3,4 @@ payload:
   - '+.metacubex.one'
   - '+.sntp.dev'
   - '+.sntp.uk'
-  - '.*xiaoyakankan.*'
+  - '+.xiaoyakankan.com'
