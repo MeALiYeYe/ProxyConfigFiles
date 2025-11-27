@@ -49,6 +49,3 @@ payload:
   - '+.servers.xeton.dev'
   - '+.xmsl.org'
   - '+.cn2gias.uk'
-  - '.*emby.wtf'
-  - '.*jmsooo.*'
-  - '.*odysseyplus.*'
