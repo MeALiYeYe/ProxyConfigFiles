@@ -1,0 +1,80 @@
+#!name=China IPv6 DNS Selector
+#!desc=根据运营商+省份自动输出 IPv6 DNS（电信/联通/移动 全覆盖）
+#!author=ChatGPT
+
+[Arguments]
+isp = select, dx, lt, yd
+province = select, 
+  china, beijing, tianjin, shanghai, chongqing,
+  hebei, shanxi, inner_mongolia, liaoning, jilin, heilongjiang,
+  jiangsu, zhejiang, anhui, fujian, jiangxi, shandong,
+  henan, hubei, hunan, guangdong, guangxi, hainan,
+  sichuan, guizhou, yunnan, tibet, shaanxi, gansu, qinghai, ningxia, xinjiang, taiwan, hongkong, macau
+
+[Panel]
+China IPv6 DNS = script:ChinaIPv6DNS
+
+[Script]
+ChinaIPv6DNS = type=generic, argument=isp,province, script-path=inline
+
+script=javascript:
+
+const DNS = {
+  dx: {  // 电信
+    hebei: ["240e:4c:4008::1","240e:4c:4808::1"],
+    guangdong: ["240e:1f:1::1","240e:1f:1::33"],
+    shandong: ["240e:4e:800::66","240e:4e::66"],
+    sichuan: ["240e:56:4000:8000::69","240e:56:4000::218"],
+    hubei: ["240e:d:0:100::6"],
+    shaanxi: ["240e:f:a::6","240e:f:a00b::6"],
+    anhui: ["240e:46:4088::4088","240e:46:4888::4888"],
+    guizhou: ["240e:4a:4400:3::67","240e:4a:4400:3::167"],
+    tianjin: ["240e:45::6666","240e:45::8888"],
+    xinjiang: ["240e:51:c800:4::4","240e:51:c800:8::8"],
+    guangxi: ["240e:9:2000:100","240e:9::100"],
+    hunan: ["240e:50:5000::80","240e:50:c800::210"],
+    fujian: ["240e:14:e000::1","240e:14:6000::1"],
+    jiangsu: ["240e:5a::6666","240e:5b::6666"],
+    shanghai: ["240e:58:c000:1000:116:228:111:118","240e:58:c000:1600:180:168:255:18"],
+    yunnan: ["240e:52:4000::8888","240e:52:4800::8888"],
+    jilin: ["240e:211::6666","240e:212::6666"],
+    china: ["240e:4c:4008::1"]
+  },
+  lt: {  // 联通
+    china: ["2408:8899::8","2408:8888::8","2408:8000::8"],
+    anhui: ["2408:8000:c000::8888"],
+    chongqing: ["2408:8663::2","2408:8662::2"],
+    shanghai: ["2408:8026:480:112::6666"],
+    jiangxi: ["2408:8000:eeee::e","2408:8000:eeee::f"]
+  },
+  yd: {  // 移动
+    china: ["2409:8088::a","2409:8088::b"],
+    anhui: ["2409:8030:2000::1","2409:8030:2000::2"],
+    hainan: ["2409:805e:2000::6666","2409:805e:2000::8888"],
+    hebei: ["2409:8008:2000::1","2409:8008:2000:100::1"],
+    guangdong: ["2409:8057:2000:2::8","2409:8057:2000:6::8","2409:8057:2000::8","2409:8057:2060::10"],
+    beijing: ["2409:8000:2000:0:70::1","2409:8000:2000:0:170::1"],
+    jiangsu: ["2409:8020:2000::6","2409:8020:2000::8"],
+    guangxi: ["2409:805c:2000:3000::1000","2409:805c:2000:3001::1000"],
+    hubei: ["2409:804c:2000:1::1","2409:804c:2000:2::1"],
+    hunan: ["2409:8050:2000:1000::1","2409:8050:2000::1"],
+    gansu: ["2409:8074:20ff:1000::a","2409:8074:20ff:1000::b"],
+    liaoning: ["2409:8014:2000::1"],
+    zhejiang: ["2409:8028:2000::1111","2409:8028:2000::2222"],
+    sichuan: ["2409:8062:2000:1::1","2409:8062:2000:1::2"]
+  }
+};
+
+// Read arguments
+const isp = $argument.isp || "dx";
+let province = $argument.province || "china";
+province = province.toLowerCase();
+
+// Lookup
+let result =
+  DNS[isp][province] ||
+  DNS[isp]["china"] ||
+  [];
+
+// Output
+$done({ title: "IPv6 DNS", content: result.join("\n"), servers: result });
