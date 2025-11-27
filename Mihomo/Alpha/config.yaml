@@ -9,8 +9,8 @@ BaiduNUrl: &BaiduNUrl "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFi
 SubStoreUrl: &SubStoreUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
 
 # 连通性检测url
-ProxyTestUrl: &ProxyTestUrl "https://www.gstatic.com/generate_204"
-DirectTestUrl: &DirectTestUrl "https://wifi.vivo.com.cn/generate_204"
+ProxyTestUrl: &ProxyTestUrl "https://www.v2ex.com/generate_204"
+DirectTestUrl: &DirectTestUrl "https://connectivitycheck.platform.hicloud.com/generate_204"
 
 # 节点筛选正则
 FilterHK: &FilterHK '(?i)(?:港|香港|🇭🇰|\bHK\b|Hong|HKG)'
