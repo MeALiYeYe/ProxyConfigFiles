@@ -1,4 +1,4 @@
-BaiduNUrl: &BaiduNUrl "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/BaiduProxy.yaml"
+BaiduNUrl: &BaiduNUrl "http://192.168.3.1:3000/download/BaiduProxy?target=ClashMeta"
 SubStoreUrl: &SubStoreUrl "http://192.168.3.1:3000/download/collection/Sub?target=ClashMeta"
 
 ProxyTestUrl: &ProxyTestUrl "https://www.v2ex.com/generate_204"
