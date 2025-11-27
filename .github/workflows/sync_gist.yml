@@ -2,8 +2,8 @@ name: Sync Multiple Gists to Repo
 
 on:
   schedule:
-    - cron: '40 19 * * *'
-  workflow_dispatch:
+    - cron: '0 16 * * *'  # UTC 时间，每天新加坡时间 03:21
+  workflow_dispatch:      # 允许手动触发
 
 jobs:
   sync:
@@ -16,6 +16,7 @@ jobs:
 
       - name: Sync Gist files
         run: |
+          # 定义 Gist 列表：每行 "Gist Raw URL 目标路径"
           files=(
             "https://gist.githubusercontent.com/MeALiYeYe/42151e8055f111208c92971fca6e25ce/raw/config.yaml Mihomo/Alpha/config.yaml"
             "https://gist.githubusercontent.com/MeALiYeYe/42151e8055f111208c92971fca6e25ce/raw/Egern.yaml Egern/Egern.yaml"
@@ -25,8 +26,11 @@ jobs:
           for file in "${files[@]}"; do
             url=$(echo $file | awk '{print $1}')
             dest=$(echo $file | awk '{print $2}')
+            # 创建目标文件夹
             mkdir -p $(dirname "$dest")
+            # 下载最新 Gist 文件
             curl -sL "$url" -o "$dest"
+            # 添加到 Git
             git add "$dest"
           done
 
