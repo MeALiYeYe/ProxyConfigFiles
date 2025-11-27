@@ -2,7 +2,7 @@ name: Sync Multiple Gists to Repo
 
 on:
   schedule:
-    - cron: '0 16 * * *'  # UTC 时间，每天新加坡时间 03:21
+    - cron: '0 16 * * *'  # UTC 时间，每天北京时间 00:00
   workflow_dispatch:      # 允许手动触发
 
 jobs:
