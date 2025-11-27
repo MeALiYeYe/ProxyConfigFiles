@@ -2,7 +2,7 @@ name: Sync Gist to Repo
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # 每天同步一次
+    - cron: '21 3 * * *'  # 每天同步一次
   workflow_dispatch:        # 允许手动触发
 
 jobs:
