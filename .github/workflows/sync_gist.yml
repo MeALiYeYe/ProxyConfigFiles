@@ -14,7 +14,7 @@ jobs:
         with:
           persist-credentials: true
 
-      - name: Sync Gist files
+      - name: Sync Gist files with logs
         run: |
           # 定义 Gist 列表：每行 "Gist Raw URL 目标路径"
           files=(
@@ -26,11 +26,16 @@ jobs:
           for file in "${files[@]}"; do
             url=$(echo $file | awk '{print $1}')
             dest=$(echo $file | awk '{print $2}')
-            # 创建目标文件夹
             mkdir -p $(dirname "$dest")
-            # 下载最新 Gist 文件
+            
+            echo "Downloading $dest from $url..."
             curl -sL "$url" -o "$dest"
-            # 添加到 Git
+            
+            # 打印文件大小和最后修改时间
+            filesize=$(stat -c%s "$dest")
+            modtime=$(stat -c%y "$dest")
+            echo "Downloaded $dest | Size: $filesize bytes | Last Modified: $modtime"
+
             git add "$dest"
           done
 
@@ -38,5 +43,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git diff --cached --quiet || git commit -m "Sync multiple Gist files"
-          git push
+          if git diff --cached --quiet; then
+            echo "No changes detected. Nothing to commit."
+          else
+            git commit -m "Sync multiple Gist files"
+            git push
+            echo "Changes committed and pushed."
+          fi
