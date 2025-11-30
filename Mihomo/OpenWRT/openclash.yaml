@@ -95,7 +95,7 @@ rules:
   - GEOSITE,tiktok,Tiktok
   - GEOSITE,youtube,Youtube
   - GEOSITE,category-entertainment,Media
-  - GEOSITE,facebook.Facebook
+  - GEOSITE,facebook,Facebook
   - GEOSITE,telegram,Telegram
   - GEOSITE,twitter,Twitter
   - GEOSITE,google,Google
