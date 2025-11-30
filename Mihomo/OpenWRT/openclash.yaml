@@ -25,7 +25,7 @@ Fallb: &Fallb {<<: *Uses, type: fallback}
 Smartg: &Smartg {<<: *Uses, type: smart, uselightgbm: true, collectdata: false, strategy: sticky-sessions}
 Groupp: &Groupp {type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: *ProxyTestUrl, hidden: false}
 Groupd: &Groupd {type: select, proxies: [直连, 江苏, 北京, 广东, 河北, 浙江], url: *DirectTestUrl, hidden: false}
-Groupa: &Groupd {type: select, proxies: [禁止, 直连], url: *DirectTestUrl, hidden: false}
+Groupa: &Groupa {type: select, proxies: [禁止, 直连], url: *DirectTestUrl, hidden: false}
 
 rule-anchor:
   dom: &dom {type: http, behavior: domain, interval: 86400}
