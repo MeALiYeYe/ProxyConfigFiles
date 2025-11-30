@@ -109,7 +109,7 @@ rules:
   
   - GEOIP,private,DIRECT,no-resolve
   - GEOIP,netflix,Netflix
-  - GEOIP,facebook.Facebook
+  - GEOIP,facebook,Facebook
   - GEOIP,telegram,Telegram,no-resolve
   - GEOIP,twitter,Twitter
   - GEOIP,google,Google,no-resolve
