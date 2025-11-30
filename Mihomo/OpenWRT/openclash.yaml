@@ -42,11 +42,14 @@ proxy-providers:
 proxy-groups:
   - {name: Location, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png", <<: *Groupp}
   - {name: Domestic, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png", <<: *Groupp}
+  - {name: Netflix, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png", <<: *Groupp}
   - {name: Tiktok, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_2.png", <<: *Groupp}
   - {name: Youtube, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png", <<: *Groupp}
   - {name: Media, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ForeignMedia.png", <<: *Groupp}
   - {name: Openai, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png", <<: *Groupp}
+  - {name: Facebook, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Facebook.png", <<: *Groupp}
   - {name: Telegram, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png", <<: *Groupp}
+  - {name: Twitter, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Twitter.png", <<: *Groupp}
   - {name: Cloudflare, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png", <<: *Groupp}
   - {name: Google, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png", <<: *Groupp}
   - {name: Github, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png", <<: *Groupp}
@@ -84,13 +87,17 @@ rules:
   - RULE-SET,mydirect,DIRECT
   - RULE-SET,myproxy,Foreign
   - RULE-SET,emby,Media
+  
   - GEOSITE,private,DIRECT 
   - GEOSITE,category-ads-all,REJECT
   - GEOSITE,category-httpdns-cn,REJECT
-  - GEOSITE,youtube,Youtube
+  - GEOSITE,netflix,Netflix
   - GEOSITE,tiktok,Tiktok
+  - GEOSITE,youtube,Youtube
   - GEOSITE,category-entertainment,Media
+  - GEOSITE,facebook.Facebook
   - GEOSITE,telegram,Telegram
+  - GEOSITE,twitter,Twitter
   - GEOSITE,google,Google
   - GEOSITE,cloudflare,Cloudflare
   - GEOSITE,category-ai-chat-!cn,Openai
@@ -99,9 +106,14 @@ rules:
   - GEOSITE,microsoft,Microsoft
   - GEOSITE,geolocation-!cn,Foreign
   - GEOSITE,cn,Domestic
+  
   - GEOIP,private,DIRECT,no-resolve
+  - GEOIP,netflix,Netflix
+  - GEOIP,facebook.Facebook
   - GEOIP,telegram,Telegram,no-resolve
+  - GEOIP,twitter,Twitter
   - GEOIP,google,Google,no-resolve
   - GEOIP,cloudflare,Cloudflare,no-resolve
   - GEOIP,cn,Domestic,no-resolve
+  
   - MATCH,Final
