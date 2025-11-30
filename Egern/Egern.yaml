@@ -596,12 +596,12 @@ modules:
   enabled: true
 - url: https://raw.githubusercontent.com/githubdulong/Script/master/Surge/JD_Helper.sgmodule
   enabled: true
-- url: https://raw.githubusercontent.com/Centralmatrix3/Scripts/refs/heads/master/Module/Redirect.sgmodule
-  enabled: true
 - url: https://raw.githubusercontent.com/cc63/Surge/main/Module/Panel/QiYou/Moore/QiYou.sgmodule
   compat_arguments:
     省份拼音: hubei
   enabled: true
+- url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/module/Redirect.sgmodule
+  enable: true
 - url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/module/Weather.sgmodule
   compat_arguments:
     城市代码: '101200105'
