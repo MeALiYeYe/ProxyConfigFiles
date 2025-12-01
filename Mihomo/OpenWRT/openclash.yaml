@@ -1,7 +1,7 @@
 BaiduNUrl: &BaiduNUrl "http://192.168.3.1:3000/download/BaiduProxy?target=ClashMeta"
 SubStoreUrl: &SubStoreUrl "http://192.168.3.1:3000/download/collection/Sub?target=ClashMeta"
 
-ProxyTestUrl: &ProxyTestUrl "https://www.gstatic.com/generate_204"
+ProxyTestUrl: &ProxyTestUrl "https://www.v2ex.com/generate_204"
 DirectTestUrl: &DirectTestUrl "https://connectivitycheck.platform.hicloud.com/generate_204"
 
 FilterHK: &FilterHK '(?i)(?:港|香港|🇭🇰|\bHK\b|Hong|HKG)'
@@ -18,11 +18,11 @@ FilterLowMag: &FilterLowMag '0\.\d+'
 FilterHighMag: &FilterHighMag '(?!0\.)[1-9]\d*(?:\.\d+)'
 
 Proxyer: &Proxyer {type: http, interval: 43200, exclude-filter: *ExcludeFilter, health-check: {enable: true, url: *ProxyTestUrl, interval: 600, timeout: 2000}}
-#Uses: &Uses {include-all-providers: true, url: *ProxyTestUrl, tolerance: 50, interval: 300, timeout: 2000, max-failed-times: 3, hidden: true}
-#Auto: &Auto {<<: *Uses, type: url-test}
-#Loads: &Loads {<<: *Uses, type: load-balance, strategy: sticky-sessions}
-#Fallb: &Fallb {<<: *Uses, type: fallback}
-Smartg: &Smartg {include-all-providers: true, type: smart, uselightgbm: true, collectdata: false, strategy: sticky-sessions, url: *ProxyTestUrl, hidden: true}
+Uses: &Uses {type: select, include-all-providers: true, url: *ProxyTestUrl, tolerance: 50, interval: 300, timeout: 2000, max-failed-times: 3, hidden: true}
+Auto: &Auto {<<: *Uses, type: url-test}
+Loads: &Loads {<<: *Uses, type: load-balance, strategy: sticky-sessions}
+Fallb: &Fallb {<<: *Uses, type: fallback}
+Smartg: &Smartg {<<: *Uses, type: smart, uselightgbm: true, collectdata: false, strategy: sticky-sessions}
 Groupp: &Groupp {type: select, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], url: *ProxyTestUrl, hidden: false}
 Groupd: &Groupd {type: select, proxies: [直连, 江苏, 北京, 广东, 河北, 浙江], url: *DirectTestUrl, hidden: false}
 
@@ -36,19 +36,17 @@ proxies:
   - {name: 禁止, type: reject}
 
 proxy-providers:
-  Sub_Store: {<<: *Proxyer, path: ./proxy_provider/SubStore.yaml, url: *SubStoreUrl}
-  BaiduProxy: {<<: *Proxyer, path: ./proxy_provider/BaiduProxy.yaml, url: *BaiduNUrl}
+  Sub_Store: {<<: *Proxyer, path: ./proxies/Sub.yaml, url: *SubStoreUrl}
+  BaiduProxy: {<<: *Proxyer, path: ./proxy_provider/BaiduProxy.yaml, url: *BaiduNUrl, health-check: {enable: true, url: *DirectTestUrl, interval: 300, timeout: 2000}}
 
 proxy-groups:
   - {name: Location, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png", <<: *Groupd}
   - {name: Domestic, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png", <<: *Groupd}
-  - {name: Emby, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png", <<: *Groupp}
   - {name: Tiktok, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_2.png", <<: *Groupp}
   - {name: Youtube, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png", <<: *Groupp}
   - {name: Media, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ForeignMedia.png", <<: *Groupp}
   - {name: Openai, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png", <<: *Groupp}
   - {name: Telegram, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png", <<: *Groupp}
-  - {name: Social, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Star.png", <<: *Groupp}
   - {name: Cloudflare, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png", <<: *Groupp}
   - {name: Google, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png", <<: *Groupp}
   - {name: Github, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png", <<: *Groupp}
@@ -56,11 +54,11 @@ proxy-groups:
   - {name: Apple, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png", <<: *Groupp}
   - {name: Foreign, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png", <<: *Groupp}
   - {name: Final, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png", <<: *Groupp}
-  - {name: 江苏, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(1).png", <<: *Smartg, filter: "南京|苏州"}
-  - {name: 北京, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(2).png", <<: *Smartg, filter: "北京"}
-  - {name: 广东, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(4).png", <<: *Smartg, filter: "广州"}
-  - {name: 河北, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(5).png", <<: *Smartg, filter: "保定"}
-  - {name: 浙江, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(5).png", <<: *Smartg, filter: "浙江"}
+  - {name: 江苏, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(1).png", <<: *Smartg, filter: "南京|苏州", url: *DirectTestUrl}
+  - {name: 北京, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(2).png", <<: *Smartg, filter: "北京", url: *DirectTestUrl}
+  - {name: 广东, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(4).png", <<: *Smartg, filter: "广州", url: *DirectTestUrl}
+  - {name: 河北, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(5).png", <<: *Smartg, filter: "保定", url: *DirectTestUrl}
+  - {name: 浙江, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(5).png", <<: *Smartg, filter: "浙江", url: *DirectTestUrl}
   - {name: 香港, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png", <<: *Smartg, filter: *FilterHK}  
   - {name: 台湾, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Taiwan.png", <<: *Smartg, filter: *FilterTW} 
   - {name: 狮城, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png", <<: *Smartg, filter: *FilterSG} 
@@ -79,36 +77,31 @@ rule-providers:
   fakelocation: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rule_provider/fakelocation.yaml}
 
 rules:
-  - RULE-SET,awavenue,REJECT-DROP
+  - RULE-SET,awavenue,REJECT
   - RULE-SET,myrejectdomain,REJECT
   - RULE-SET,myrejectip,REJECT,no-resolve
   - RULE-SET,fakelocation,Location
   - RULE-SET,mydirect,DIRECT
   - RULE-SET,myproxy,Foreign
-  - RULE-SET,emby,Emby
-  
+  - RULE-SET,emby,Media
   - GEOSITE,private,DIRECT 
-  - GEOSITE,category-ads-all,REJECT-DROP
-  - GEOSITE,category-httpdns-cn,REJECT-DROP
-  - GEOSITE,tiktok,Tiktok
+  - GEOSITE,category-ads-all,REJECT
+  - GEOSITE,category-httpdns-cn,REJECT
   - GEOSITE,youtube,Youtube
+  - GEOSITE,tiktok,Tiktok
   - GEOSITE,category-entertainment,Media
   - GEOSITE,telegram,Telegram
-  - GEOSITE,category-social-media-!cn,Social
   - GEOSITE,google,Google
   - GEOSITE,cloudflare,Cloudflare
-  - GEOSITE,category-ai-!cn,Openai
+  - GEOSITE,category-ai-chat-!cn,Openai
   - GEOSITE,github,Github
   - GEOSITE,apple,Apple
   - GEOSITE,microsoft,Microsoft
   - GEOSITE,geolocation-!cn,Foreign
   - GEOSITE,cn,Domestic
-  
   - GEOIP,private,DIRECT,no-resolve
-  - GEOIP,apple,Apple,no-resolve
   - GEOIP,telegram,Telegram,no-resolve
   - GEOIP,google,Google,no-resolve
   - GEOIP,cloudflare,Cloudflare,no-resolve
   - GEOIP,cn,Domestic,no-resolve
-  
   - MATCH,Final
