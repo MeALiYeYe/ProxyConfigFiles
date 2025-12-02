@@ -1,7 +1,7 @@
 BaiduNUrl: &BaiduNUrl "http://192.168.3.1:3000/download/BaiduProxy?target=ClashMeta"
 SubStoreUrl: &SubStoreUrl "http://192.168.3.1:3000/download/collection/Sub?target=ClashMeta"
 
-ProxyTestUrl: &ProxyTestUrl "https://www.v2ex.com/generate_204"
+ProxyTestUrl: &ProxyTestUrl "https://www.gstatic.com/generate_204"
 DirectTestUrl: &DirectTestUrl "https://connectivitycheck.platform.hicloud.com/generate_204"
 
 FilterHK: &FilterHK '(?i)(?:港|香港|🇭🇰|\bHK\b|Hong|HKG)'
@@ -36,8 +36,8 @@ proxies:
   - {name: 禁止, type: reject}
 
 proxy-providers:
-  Sub_Store: {<<: *Proxyer, path: ./proxies/Sub.yaml, url: *SubStoreUrl}
-  BaiduProxy: {<<: *Proxyer, path: ./proxy_provider/BaiduProxy.yaml, url: *BaiduNUrl, health-check: {enable: true, url: *DirectTestUrl, interval: 300, timeout: 2000}}
+  Sub_Store: {<<: *Proxyer, path: ./proxy_provider/Sub.yaml, url: *SubStoreUrl}
+  BaiduProxy: {<<: *Proxyer, path: ./proxy_provider/BaiduProxy.yaml, url: *BaiduNUr}
 
 proxy-groups:
   - {name: Location, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png", <<: *Groupd}
