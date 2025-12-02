@@ -449,7 +449,7 @@ rules:
     - not:
         match:
           dest_port:
-            match: 53,853,8853,123
+            match: 53,853,8853
     - protocol:
         match: quic
     policy: REJECT
@@ -458,8 +458,10 @@ rules:
     match:
     - not:
         match:
-          dest_port:
-            match: 53,853,8853,80,443,123
+          rule_set:
+            match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaMax/ChinaMax_All_No_Resolve.list
+    - dest_port:
+        match: '443'
     - protocol:
         match: udp
     policy: REJECT
@@ -505,6 +507,15 @@ rules:
 - rule_set:
     match: https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/refs/heads/main/Filters/AWAvenue-Ads-Rule-Surge-RULE-SET.list
     policy: REJECT
+    disabled: false
+- rule_set:
+    name: ReDirect
+    match: https://raw.githubusercontent.com/MeALiYeYe/anti-ip-attribution/refs/heads/main/generated/surge.list
+    policy: ReDirect
+    disabled: false
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/China/China_All_No_Resolve.list
+    policy: Domestic
     disabled: false
 - rule_set:
     match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/TikTok/TikTok.list
@@ -556,15 +567,6 @@ rules:
     match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Proxy/Proxy_All_No_Resolve.list
     policy: Foreign
     disabled: false
-- rule_set:
-    name: ReDirect
-    match: https://raw.githubusercontent.com/MeALiYeYe/anti-ip-attribution/refs/heads/main/generated/surge.list
-    policy: ReDirect
-    disabled: false
-- rule_set:
-    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaMax/ChinaMax_All_No_Resolve.list
-    policy: Domestic
-    disabled: false
 - geoip:
     match: CN
     policy: Domestic
@@ -591,18 +593,15 @@ modules:
 - url: https://github.com/BiliUniverse/Enhanced/releases/latest/download/BiliBili.Enhanced.yaml
   enabled: true
 - url: https://raw.githubusercontent.com/mist-whisper/Surge/master/Modules/YouTube_remove_ads.sgmodule
-  compat_arguments:
-    隐藏上传按钮: 'true'
-    隐藏短视频按钮: 'true'
   enabled: true
 - url: https://raw.githubusercontent.com/githubdulong/Script/master/Surge/JD_Helper.sgmodule
-  enabled: true
-- url: https://raw.githubusercontent.com/Centralmatrix3/Scripts/refs/heads/master/Module/Redirect.sgmodule
   enabled: true
 - url: https://raw.githubusercontent.com/cc63/Surge/main/Module/Panel/QiYou/Moore/QiYou.sgmodule
   compat_arguments:
     省份拼音: hubei
   enabled: true
+- url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/module/Redirect.sgmodule
+  enable: true
 - url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/module/Weather.sgmodule
   compat_arguments:
     城市代码: '101200105'
