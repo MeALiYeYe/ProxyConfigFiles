@@ -1,9 +1,8 @@
 payload:
   - 'yys.163.com'
   - 'ifconfig.me'
-  - 'liangxin.xyz'
-  - 'kahaoquan.com'
-#  - '.cn'
+  - '+.liangxin.xyz'
+  - '+.kahaoquan.com'
   - '+.xianniu.cc'
   - '+.xianniu.com'
   - '+.nsloon.com'
