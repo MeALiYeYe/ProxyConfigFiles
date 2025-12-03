@@ -3,7 +3,7 @@ domain_suffix_set:
   - metric.huya.com
   - ylog.huya.com
   - e-ad-monitor.huya.com
-  - va.huya.com
+  - server.va.huya.com
   - p2p.huya.com
   - statwup.huya.com
   - e-stat.huya.com
