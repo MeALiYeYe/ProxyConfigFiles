@@ -1,4 +1,16 @@
 payload:
+  # 关闭虎牙直播的P2P上传之类的功能
+  - '+.metric.huya.com'
+  - '+.ylog.huya.com'
+  - '+.e-ad-monitor.huya.com'
+  - '+.p2p.huya.com'
+  - '+.statwup.huya.com'
+  - '+.e-stat.huya.com'
+  - '+.server.va.huya.com'
+  # 知乎伪装OpenAi的域名
+  - '+.sentry.io'
+  # 中国移动
+  - '+.xionguamaqui.com'
   # 百度、360
   - 'dumall.baidu.com'
   - 'haokan.baidu.com'
