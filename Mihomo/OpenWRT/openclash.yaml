@@ -37,7 +37,7 @@ proxies:
 
 proxy-providers:
   Sub_Store: {<<: *Proxyer, path: ./proxies/Sub.yaml, url: *SubStoreUrl}
-  BaiduProxy: {<<: *Proxyer, path: ./proxy_provider/BaiduProxy.yaml, url: *BaiduNUrl, health-check: {enable: true, url: *DirectTestUrl, interval: 300, timeout: 2000}}
+  BaiduProxy: {<<: *Proxyer, path: ./proxy_provider/BaiduProxy.yaml, url: *BaiduNUrl}
 
 proxy-groups:
   - {name: Location, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png", <<: *Groupd}
