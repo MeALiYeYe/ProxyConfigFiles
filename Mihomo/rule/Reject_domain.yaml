@@ -6,7 +6,7 @@ payload:
   - '+.p2p.huya.com'
   - '+.statwup.huya.com'
   - '+.e-stat.huya.com'
-  - '+.server.va.huya.com'
+  - '+.va.huya.com'
   # 知乎伪装OpenAi的域名
   - '+.sentry.io'
   # 中国移动
