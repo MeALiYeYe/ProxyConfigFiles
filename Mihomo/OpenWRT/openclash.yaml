@@ -36,7 +36,7 @@ proxies:
   - {name: 禁止, type: reject}
 
 proxy-providers:
-  Sub_Store: {<<: *Proxyer, path: ./proxies/Sub.yaml, url: *SubStoreUrl}
+  Sub_Store: {<<: *Proxyer, path: ./proxy_provider/Sub.yaml, url: *SubStoreUrl}
   BaiduProxy: {<<: *Proxyer, path: ./proxy_provider/BaiduProxy.yaml, url: *BaiduNUrl}
 
 proxy-groups:
