@@ -14,7 +14,7 @@ MIHOMO_DIR="$HOME/mihomo"
 BOOT_SCRIPT_DIR="$HOME/.termux/boot"
 
 # 本脚本链接
-SHELL_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Manage.sh"
+SHELL_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Mihogo/Manage.sh"
 
 # Mihomo 核心下载链接 & config
 MIHOMO_API_URL=$(curl -s https://api.github.com/repos/vernesong/mihomo/releases/tags/Prerelease-Alpha \
