@@ -1,8 +1,8 @@
 BaiduNUrl: &BaiduNUrl "http://192.168.3.1:3000/download/BaiduProxy?target=ClashMeta"
 SubStoreUrl: &SubStoreUrl "http://192.168.3.1:3000/download/collection/Sub?target=ClashMeta"
 
-ProxyTestUrl: &ProxyTestUrl "https://www.v2ex.com/generate_204"
-DirectTestUrl: &DirectTestUrl "https://connectivitycheck.platform.hicloud.com/generate_204"
+ProxyTestUrl: &ProxyTestUrl "https://www.gstatic.com/generate_204"
+DirectTestUrl: &DirectTestUrl "https://wifi.vivo.com.cn/generate_204"
 
 FilterHK: &FilterHK '(?i)(?:港|香港|🇭🇰|\bHK\b|Hong|HKG)'
 FilterTW: &FilterTW '(?i)(?:台|台湾|🇼🇸|🇨🇳|🇹🇼|\bTW\b|tai|TWN)'
