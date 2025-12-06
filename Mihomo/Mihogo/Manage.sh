@@ -121,7 +121,9 @@ deploy_mihomo() {
 
     # **新增：下载 Smart 大模型**
     log_info "下载 Smart 大模型..."
-    wget -q --show-progress -O Model.bin "$MODEL_URL" || log_error "下载 Smart 模型失败"
+    if ! wget --show-progress -O Model.bin "$MODEL_URL"; then
+        log_error "下载 Smart 模型失败"
+    fi
 
     download_assets
     log_info "Mihomo 部署完成"
