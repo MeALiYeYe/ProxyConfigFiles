@@ -139,6 +139,7 @@ rules:
   - GEOSITE,cloudflare,Cloudflare
   - GEOSITE,category-ai-chat-!cn,Ai
   - GEOSITE,github,Github
+  - GEOSITE,apple,Apple
   - GEOSITE,microsoft,Microsoft
   - GEOSITE,geolocation-!cn,Foreign
   - GEOSITE,cn,Domestic
