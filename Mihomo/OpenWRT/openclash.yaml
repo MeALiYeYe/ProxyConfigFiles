@@ -36,8 +36,8 @@ proxies:
   - {name: 禁止, type: reject}
 
 proxy-providers:
-  Sub_Store: {<<: *Proxyer, path: ./proxy_provider/SubStore.yaml, url: *SubStoreUrl}
-  BaiduProxy: {<<: *Proxyer, path: ./proxy_provider/BaiduProxy.yaml, url: *BaiduNUrl}
+  Sub_Store: {<<: *Proxyer, path: ./proxies/Sub.yaml, url: *SubStoreUrl}
+  BaiduProxy: {<<: *Proxyer, path: ./proxy_provider/BaiduProxy.yaml, url: *BaiduNUrl, health-check: {enable: true, url: *DirectTestUrl, interval: 300, timeout: 2000}}
 
 proxy-groups:
   - {name: Location, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png", <<: *Groupd}
@@ -77,16 +77,16 @@ rule-providers:
   fakelocation: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rule_provider/fakelocation.yaml}
 
 rules:
-  - RULE-SET,awavenue,REJECT-DROP
-  - RULE-SET,myrejectdomain,REJECT-DROP
-  - RULE-SET,myrejectip,REJECT-DROP,no-resolve
+  - RULE-SET,awavenue,REJECT
+  - RULE-SET,myrejectdomain,REJECT
+  - RULE-SET,myrejectip,REJECT,no-resolve
   - RULE-SET,fakelocation,Location
   - RULE-SET,mydirect,DIRECT
   - RULE-SET,myproxy,Foreign
   - RULE-SET,emby,Media
   - GEOSITE,private,DIRECT 
-  - GEOSITE,category-ads-all,REJECT-DROP
-  - GEOSITE,category-httpdns-cn,REJECT-DROP
+  - GEOSITE,category-ads-all,REJECT
+  - GEOSITE,category-httpdns-cn,REJECT
   - GEOSITE,youtube,Youtube
   - GEOSITE,tiktok,Tiktok
   - GEOSITE,category-entertainment,Media
