@@ -42,51 +42,51 @@ bypass_tunnel_proxy:
   - '*.12306.cn'
 
 real_ip_domains:
-- '*.10099.com.cn'
-- '*.10086.cn'
-- '*.10010.cn'
-- '*.189.cn'
-- '*.cmcc.com'
-- '*.chinatelecom.com'
-- '*.chinaunicom.cn'
-- '*.cmcc.net'
-- '*.alipay.com'
-- '*.alipay.net'
-- '*.alipayobjects.com'
-- '*.mapi.alipay.com'
-- '*.open.alipay.com'
-- '*.antgroup.com'
-- '*.aliyunpay.com'
-- '*.icbc.com.cn'
-- '*.icbc.com'
-- '*.abchina.com'
-- '*.bankofchina.com'
-- '*.boc.cn'
-- '*.ccb.com'
-- '*.ccb.com.cn'
-- '*.cmbchina.com'
-- '*.cmbchina.cn'
-- '*.psbc.com'
-- '*.psbc.com.cn'
-- '*.spdb.com.cn'
-- '*.bankcomm.com'
-- '*.pingan.com'
-- '*.pinganbank.com'
-- '*.unionpay.com'
-- '*.unionpaysecure.com'
-- '*.unionpayintl.com'
-- api.push.apple.com
-- gateway.push.apple.com
-- idmsa.apple.com
-- ocsp.apple.com
-- ocsp.digicert.com
-- crl3.digicert.com
-- ocsp.int-x3.letsencrypt.org
-- r3.o.lencr.org
-- pay.weixin.qq.com
-- wx.tenpay.com
-- mapi.weixin.qq.com
-- api.mch.weixin.qq.com
+  - '*.10099.com.cn'
+  - '*.10086.cn'
+  - '*.10010.cn'
+  - '*.189.cn'
+  - '*.cmcc.com'
+  - '*.chinatelecom.com'
+  - '*.chinaunicom.cn'
+  - '*.cmcc.net'
+  - '*.alipay.com'
+  - '*.alipay.net'
+  - '*.alipayobjects.com'
+  - '*.mapi.alipay.com'
+  - '*.open.alipay.com'
+  - '*.antgroup.com'
+  - '*.aliyunpay.com'
+  - '*.icbc.com.cn'
+  - '*.icbc.com'
+  - '*.abchina.com'
+  - '*.bankofchina.com'
+  - '*.boc.cn'
+  - '*.ccb.com'
+  - '*.ccb.com.cn'
+  - '*.cmbchina.com'
+  - '*.cmbchina.cn'
+  - '*.psbc.com'
+  - '*.psbc.com.cn'
+  - '*.spdb.com.cn'
+  - '*.bankcomm.com'
+  - '*.pingan.com'
+  - '*.pinganbank.com'
+  - '*.unionpay.com'
+  - '*.unionpaysecure.com'
+  - '*.unionpayintl.com'
+  - api.push.apple.com
+  - gateway.push.apple.com
+  - idmsa.apple.com
+  - ocsp.apple.com
+  - ocsp.digicert.com
+  - crl3.digicert.com
+  - ocsp.int-x3.letsencrypt.org
+  - r3.o.lencr.org
+  - pay.weixin.qq.com
+  - wx.tenpay.com
+  - mapi.weixin.qq.com
+  - api.mch.weixin.qq.com
 
 mitm:
   hostnames:
