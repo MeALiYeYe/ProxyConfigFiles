@@ -135,11 +135,26 @@ deploy_mihomo() {
 download_assets() {
     mkdir -p "$MIHOMO_DIR/rules" "$MIHOMO_DIR/geo"
     cd "$MIHOMO_DIR"
-    wget -q --show-progress -O config.yaml "$CONFIG_URL"
 
-    for item in "${GEO_FILES[@]}"; do
-        IFS=',' read -r dest src <<< "$item"
-        wget -q --show-progress -O "$dest" "$src" || { log_error "下载失败: $src"; return 1; }
+    # 下载 config.yaml
+    log_info "下载 config.yaml..."
+    if ! wget --show-progress -O config.yaml "$CONFIG_URL"; then
+        log_error "下载 config.yaml 失败"
+    fi
+
+    # 下载 GEO 数据
+    log_info "下载 GEO 数据..."
+    for item in $GEO_FILES; do
+        dest=$(echo "$item" | cut -d',' -f1)
+        src=$(echo "$item"  | cut -d',' -f2)
+
+        [ -z "$dest" ] && continue
+        [ -z "$src" ] && continue
+
+        log_info "下载 $src 到 $dest ..."
+        if ! wget --show-progress -O "$dest" "$src"; then
+            log_error "下载失败: $src"
+        fi
     done
 }
 
