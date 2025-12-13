@@ -29,7 +29,7 @@ MIHOMO_URL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alp
 MODEL_URL="https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model-large.bin"
 
 # mihomo远程配置链接
-CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Alpha/config.yaml"
+CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Alpha/mihomo.yaml"
 
 # Geo 数据
 GEO_FILES=(
