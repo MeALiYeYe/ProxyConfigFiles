@@ -1,5 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/bash
-set -e
+set -euo pipefail
 
 #------------------------------------------------
 # Termux 自身使用代理 (防止 GitHub API、wget 受限)
@@ -47,6 +47,29 @@ log_warn() { echo -e "\e[33m[WARN]\e[0m $1"; }
 log_error() { echo -e "\e[31m[ERROR]\e[0m $1"; exit 1; }
 
 #------------------------------------------------
+# 安全下载函数（核心稳定性保证）
+#------------------------------------------------
+safe_wget() {
+    local url="$1"
+    local out="$2"
+
+    log_info "下载: $url"
+    wget \
+        --continue \
+        --tries=5 \
+        --timeout=30 \
+        --retry-connrefused \
+        --waitretry=3 \
+        --show-progress \
+        -O "$out" \
+        "$url"
+
+    if [ ! -s "$out" ]; then
+        log_error "下载失败或文件为空: $url"
+    fi
+}
+
+#------------------------------------------------
 # 检查部署状态
 #------------------------------------------------
 is_deployed() {
@@ -85,10 +108,27 @@ deploy_substore() {
     log_info "部署 Sub-Store..."
     mkdir -p "$SUBSTORE_DIR"
     cd "$SUBSTORE_DIR"
-    wget -q --show-progress -O sub-store.bundle.js "https://github.com/sub-store-org/Sub-Store/releases/latest/download/sub-store.bundle.js"
-    wget -q --show-progress -O dist.zip "https://github.com/sub-store-org/Sub-Store-Front-End/releases/latest/download/dist.zip"
-    unzip -o dist.zip -d dist && rm -f dist.zip
-    log_info "Sub-Store 部署完成"
+
+    safe_wget "https://github.com/sub-store-org/Sub-Store/releases/latest/download/sub-store.bundle.js" "sub-store.bundle.js"
+    safe_wget "https://github.com/sub-store-org/Sub-Store-Front-End/releases/latest/download/dist.zip" "dist.zip"
+
+    unzip -o dist.zip -d dist
+    rm -f dist.zip
+}
+
+#------------------------------------------------
+# 下载配置与 GEO
+#------------------------------------------------
+download_assets() {
+    mkdir -p "$MIHOMO_DIR/geo"
+    cd "$MIHOMO_DIR"
+
+    safe_wget "$CONFIG_URL" "config.yaml"
+
+    for item in "${GEO_FILES[@]}"; do
+        IFS=',' read -r dest src <<< "$item"
+        safe_wget "$src" "$dest"
+    done
 }
 
 #------------------------------------------------
@@ -107,7 +147,8 @@ deploy_mihomo() {
         log_info "已从 GitHub API 获取 Mihomo 下载链接"
     fi
 
-    wget -q --show-progress -O mihomo.gz "$MIHOMO_API_URL" || log_error "下载 Mihomo 核心失败"
+    safe_wget "$MIHOMO_API_URL" "mihomo.gz"
+    gzip -t mihomo.gz || log_error "mihomo.gz 文件损坏"
     gunzip -f mihomo.gz
 
     if [ -f mihomo ]; then
@@ -121,41 +162,10 @@ deploy_mihomo() {
 
     # **新增：下载 Smart 大模型**
     log_info "下载 Smart 大模型..."
-    if ! wget --show-progress -O Model.bin "$MODEL_URL"; then
-        log_error "下载 Smart 模型失败"
-    fi
+    safe_wget "$MODEL_URL" "Model.bin"
 
     download_assets
     log_info "Mihomo 部署完成"
-}
-
-#------------------------------------------------
-# 下载配置、规则和 Geo 数据
-#------------------------------------------------
-download_assets() {
-    mkdir -p "$MIHOMO_DIR/rules" "$MIHOMO_DIR/geo"
-    cd "$MIHOMO_DIR"
-
-    # 下载 config.yaml
-    log_info "下载 config.yaml..."
-    if ! wget --show-progress -O config.yaml "$CONFIG_URL"; then
-        log_error "下载 config.yaml 失败"
-    fi
-
-    # 下载 GEO 数据
-    log_info "下载 GEO 数据..."
-    for item in $GEO_FILES; do
-        dest=$(echo "$item" | cut -d',' -f1)
-        src=$(echo "$item"  | cut -d',' -f2)
-
-        [ -z "$dest" ] && continue
-        [ -z "$src" ] && continue
-
-        log_info "下载 $src 到 $dest ..."
-        if ! wget --show-progress -O "$dest" "$src"; then
-            log_error "下载失败: $src"
-        fi
-    done
 }
 
 #------------------------------------------------
@@ -206,7 +216,7 @@ restart_mihomo() {
 update_self() {
     log_info "更新 Manage.sh..."
     cd "$HOME/bin"
-    wget -q --show-progress -O Manage.sh "$SHELL_URL" || log_error "下载失败: $SHELL_URL"
+    safe_wget "$SHELL_URL" "Manage.sh"
     chmod +x Manage.sh
     log_info "Manage.sh 已更新完成，请重新执行命令"
 }
@@ -220,7 +230,7 @@ update_geo() {
     cd "$MIHOMO_DIR"
     for item in "${GEO_FILES[@]}"; do
         IFS=',' read -r dest src <<< "$item"
-        wget -q --show-progress -O "$dest" "$src" || log_error "下载失败: $src"
+        safe_wget "$src" "$dest"
     done
     log_info "Geo 数据更新完成"
 }
@@ -228,14 +238,14 @@ update_geo() {
 update_model() {
     log_info "更新 Smart 大模型..."
     cd "$MIHOMO_DIR"
-    wget -q --show-progress -O Model.bin "$MODEL_URL" || log_error "下载 Smart 模型失败"
+    safe_wget "$MODEL_URL" "Model.bin"
     log_info "Smart 大模型更新完成"
 }
 
 update_config() {
     log_info "更新 config.yaml..."
     cd "$MIHOMO_DIR"
-    wget -q --show-progress -O config.yaml "$CONFIG_URL"
+    safe_wget "$CONFIG_URL" "config.yaml"
     log_info "config.yaml 更新完成"
 }
 
@@ -251,7 +261,7 @@ update_mihomo_core() {
         log_info "已从 GitHub API 获取 Mihomo 下载链接"
     fi
 
-    wget -q --show-progress -O mihomo.gz "$MIHOMO_API_URL"
+    safe_wget "$MIHOMO_API_URL" "mihomo.gz"
     gunzip -f mihomo.gz
     if [ -f mihomo ]; then
         chmod +x mihomo
