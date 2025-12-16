@@ -1,4 +1,6 @@
 payload:
+  # 知乎
+  - '+.zhihu-web-analytics.zhihu.com'
   # 关闭虎牙直播的P2P上传之类的功能
   - '+.metric.huya.com'
   - '+.ylog.huya.com'
