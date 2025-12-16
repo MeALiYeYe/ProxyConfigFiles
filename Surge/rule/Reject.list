@@ -1,5 +1,6 @@
 AND,((DOMAIN-KEYWORD,gvt),(DOMAIN-KEYWORD,beacons))
 DOMAIN,httpdns.bilivideo.com
+DOMAIN-SUFFIX,zhihu-web-analytics.zhihu.com
 # 关闭虎牙直播的P2P上传之类的功能
 DOMAIN-SUFFIX,metric.huya.com
 DOMAIN-SUFFIX,ylog.huya.com
