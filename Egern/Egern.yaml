@@ -6,6 +6,7 @@ http_port: 3080
 socks_port: 3090
 allow_external_connections: false
 vif_only: true
+block_quic: true
 hide_vpn_icon: false
 hijack_dns:
 - '*:53'
@@ -131,30 +132,6 @@ policy_groups:
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/sub(1).png
     hidden: false
 - select:
-    name: ReDirect
-    policies:
-    - DIRECT
-    - 江苏
-    - 广东
-    - 浙江
-    - 北京
-    - 河北
-    flatten: false
-    icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/China.png
-    hidden: false
-- select:
-    name: Domestic
-    policies:
-    - DIRECT
-    - 江苏
-    - 广东
-    - 浙江
-    - 北京
-    - 河北
-    flatten: false
-    icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/Domestic.png
-    hidden: false
-- select:
     name: Emby
     policies:
     - DIRECT
@@ -211,7 +188,7 @@ policy_groups:
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ForeignMedia.png
     hidden: false
 - select:
-    name: OpenAi
+    name: Ai
     policies:
     - DIRECT
     - 香港
@@ -321,6 +298,30 @@ policy_groups:
     - 高倍
     flatten: false
     icon: https://raw.githubusercontent.com/Centralmatrix3/Matrix-io/master/Gallery/Color/Global.png
+    hidden: false
+- select:
+    name: ReDirect
+    policies:
+    - DIRECT
+    - 江苏
+    - 广东
+    - 浙江
+    - 北京
+    - 河北
+    flatten: false
+    icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/China.png
+    hidden: false
+- select:
+    name: Domestic
+    policies:
+    - DIRECT
+    - 江苏
+    - 广东
+    - 浙江
+    - 北京
+    - 河北
+    flatten: false
+    icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/Domestic.png
     hidden: false
 - select:
     name: Final
@@ -509,15 +510,6 @@ rules:
     policy: REJECT
     disabled: false
 - rule_set:
-    name: ReDirect
-    match: https://raw.githubusercontent.com/MeALiYeYe/anti-ip-attribution/refs/heads/main/generated/surge.list
-    policy: ReDirect
-    disabled: false
-- rule_set:
-    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/China/China_All_No_Resolve.list
-    policy: Domestic
-    disabled: false
-- rule_set:
     match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/TikTok/TikTok.list
     policy: Tiktok
     disabled: false
@@ -535,8 +527,20 @@ rules:
     policy: Media
     disabled: false
 - rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Claude/Claude.list
+    policy: Ai
+    disabled: false
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Copilot/Copilot.list
+    policy: Ai
+    disabled: false
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Gemini/Gemini.list
+    policy: Ai
+    disabled: false
+- rule_set:
     match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/OpenAI/OpenAI.list
-    policy: OpenAi
+    policy: Ai
     disabled: false
 - rule_set:
     match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Google/Google.list
@@ -567,10 +571,19 @@ rules:
     match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Proxy/Proxy_All_No_Resolve.list
     policy: Foreign
     disabled: false
+- rule_set:
+    name: ReDirect
+    match: https://raw.githubusercontent.com/MeALiYeYe/anti-ip-attribution/refs/heads/main/generated/surge.list
+    policy: ReDirect
+    disabled: false
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/China/China_All_No_Resolve.list
+    policy: Domestic
+    disabled: false
 - geoip:
     match: CN
     policy: Domestic
-    no_resolve: true
+    no_resolve: false
     disabled: false
 - default:
     name: ''
@@ -601,7 +614,6 @@ modules:
     省份拼音: hubei
   enabled: true
 - url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/module/Redirect.sgmodule
-  enable: true
 - url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/module/Weather.sgmodule
   compat_arguments:
     城市代码: '101200105'
