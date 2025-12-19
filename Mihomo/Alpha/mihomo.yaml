@@ -3,7 +3,6 @@ Sub1: &Sub1 "守候"
 Sub1Url: &Sub1Url ""
 Sub2: &Sub2 "TKV"
 Sub2Url: &Sub2Url ""
-BaiduN: &BaiduN "百度直连"
 BaiduNUrl: &BaiduNUrl "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/BaiduProxy.yaml"
 SubStoreUrl: &SubStoreUrl "http://192.168.3.1:3000/download/collection/Sub?target=ClashMeta"
 
@@ -66,7 +65,7 @@ proxy-providers:
   Sub_Store: {<<: *Proxyer, path: ./proxy_provider/Sub.yaml, url: *SubStoreUrl}
 #  *Sub1: {<<: *Proxyer, path: ./proxy_provider/Sub1.yaml, url: *Sub1Url, override: {udp: true, additional-prefix: *Sub1}}
 #  *Sub2: {<<: *Proxyer, path: ./proxy_provider/Sub2.yaml, url: *Sub2Url, override: {udp: true, additional-prefix: *Sub2}}
-  *BaiduN: {<<: *Proxyer, path: ./proxy_provider/BaiduNProxy.yaml, health-check: {enable: true, url: *DirectTestUrl, interval: 60, timeout: 2000}}
+  BaiduN: {<<: *Proxyer, path: ./proxy_provider/BaiduNProxy.yaml, health-check: {enable: true, url: *DirectTestUrl, interval: 60, timeout: 2000}}
 
 # 策略组
 proxy-groups:
