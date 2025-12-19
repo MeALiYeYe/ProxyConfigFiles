@@ -62,10 +62,10 @@ proxies:
  
 # 外部订阅
 proxy-providers:
-  Sub_Store: {<<: *Proxyer, path: ./proxy_provider/Sub.yaml, url: *SubStoreUrl}
+  SubStore: {<<: *Proxyer, path: ./proxy_provider/Sub.yaml, url: *SubStoreUrl}
 #  *Sub1: {<<: *Proxyer, path: ./proxy_provider/Sub1.yaml, url: *Sub1Url, override: {udp: true, additional-prefix: *Sub1}}
 #  *Sub2: {<<: *Proxyer, path: ./proxy_provider/Sub2.yaml, url: *Sub2Url, override: {udp: true, additional-prefix: *Sub2}}
-  BaiduN: {<<: *Proxyer, path: ./proxy_provider/BaiduNProxy.yaml, health-check: {enable: true, url: *DirectTestUrl, interval: 60, timeout: 2000}}
+  BaiduProxy: {<<: *Proxyer, path: ./proxy_provider/BaiduProxy.yaml, url: BaiduNUrl, health-check: {enable: true, url: *DirectTestUrl, interval: 60, timeout: 2000}}
 
 # 策略组
 proxy-groups:
