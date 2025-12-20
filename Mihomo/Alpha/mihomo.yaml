@@ -1,12 +1,8 @@
 # 订阅名和订阅链接、图标
 Sub1: &Sub1 "守候"
-Sub1Icon: &Sub1Icon "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/Linkeless.png"
 Sub1Url: &Sub1Url ""
 Sub2: &Sub2 "TKV"
-Sub2Icon: &Sub2Icon "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/TKV(1).png"
 Sub2Url: &Sub2Url ""
-BaiduN: &BaiduN "百度直连"
-BaiduNIcon: &BaiduNIcon ""
 BaiduNUrl: &BaiduNUrl "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/BaiduProxy.yaml"
 SubStoreUrl: &SubStoreUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
 
@@ -68,7 +64,7 @@ proxy-providers:
   Sub_Store: {<<: *Proxyer, path: ./proxies/Sub.yaml, url: *SubStoreUrl}
 #  *Sub1: {<<: *Proxyer, path: ./proxies/Sub1.yaml, url: *Sub1Url, override: {udp: true, additional-prefix: *Sub1}}
 #  *Sub2: {<<: *Proxyer, path: ./proxies/Sub2.yaml, url: *Sub2Url, override: {udp: true, additional-prefix: *Sub2}}
-  *BaiduN: {<<: *Proxyer, path: ./proxies/BaiduNProxy.yaml, url: *BaiduNUrl, override: {udp: true},
+  BaiduProxy: {<<: *Proxyer, path: ./proxies/BaiduNProxy.yaml, url: *BaiduNUrl, override: {udp: true},
         health-check: {enable: true, url: *DirectTestUrl, interval: 60, timeout: 2000}}
 
 # 策略组
