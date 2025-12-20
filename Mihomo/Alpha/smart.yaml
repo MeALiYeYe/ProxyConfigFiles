@@ -84,18 +84,18 @@ proxy-groups:
   - {name: Foreign, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png", <<: *Groupp}
   - {name: Final, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png", <<: *Groupp}
   # 地区分组
-  - {name: 江苏, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(1).png", <<: *Smartd, filter: "南京|苏州"}
-  - {name: 北京, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(2).png", <<: *Smartd, filter: "北京"}
-  - {name: 广东, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(4).png", <<: *Smartd, filter: "广州"}
-  - {name: 河北, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(5).png", <<: *Smartd, filter: "保定"}
-  - {name: 浙江, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/Surge(5).png", <<: *Smartd, filter: "浙江"}
+  - {name: 江苏, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/zhuanyi.png", <<: *Smartd, filter: "南京|苏州"}
+  - {name: 北京, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/zhuanyi(1).png", <<: *Smartd, filter: "北京"}
+  - {name: 广东, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/zhuanyi(2).png", <<: *Smartd, filter: "广州"}
+  - {name: 河北, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/zhuanyi(3).png", <<: *Smartd, filter: "保定"}
+  - {name: 浙江, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/zhuanyi(4).png", <<: *Smartd, filter: "浙江"}
   - {name: 香港, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png", <<: *Smartp, filter: *FilterHK}  
   - {name: 台湾, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Taiwan.png", <<: *Smartp, filter: *FilterTW} 
   - {name: 狮城, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png", <<: *Smartp, filter: *FilterSG} 
   - {name: 日本, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png", <<: *Smartp, filter: *FilterJP} 
   - {name: 美国, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png", <<: *Smartp, filter: *FilterUS}
-  - {name: 低倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/liuliang(2).png", <<: *Smartp, filter: *FilterLowMag}
-  - {name: 高倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/liuliang(3).png", <<: *Smartp, filter: *FilterHighMag}
+  - {name: 低倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/liuliang(2).png", <<:  *Smartp, filter: *FilterLowMag}
+  - {name: 高倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/liuliang(3).png", <<: *Smartp, filter: *FilterHighMag}
 
 # 规则集
 rule-providers:
