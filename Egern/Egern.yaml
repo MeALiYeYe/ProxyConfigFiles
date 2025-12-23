@@ -399,7 +399,7 @@ policy_groups:
     filter: (?!0\.)[1-9]\d*(?:\.\d+)
     interval: 300
     timeout: 5
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/liuliang(5).png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/liuliang(3).png
     hidden: false
 - fallback:
     name: 江苏
@@ -408,7 +408,7 @@ policy_groups:
     flatten: true
     filter: 南京|苏州
     interval: 60
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/zhuanyi(1).png
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Round_Robin_1.png
     hidden: false
 - fallback:
     name: 广东
@@ -417,7 +417,7 @@ policy_groups:
     flatten: true
     filter: 广州
     interval: 60
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/zhuanyi(2).png
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Quantumult_X.png
     hidden: false
 - fallback:
     name: 北京
@@ -426,7 +426,7 @@ policy_groups:
     flatten: true
     filter: 北京
     interval: 60
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/zhuanyi(3).png
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Qure.png
     hidden: false
 - fallback:
     name: 河北
@@ -434,7 +434,7 @@ policy_groups:
     - BaidunProxy
     flatten: true
     filter: 保定
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/zhuanyi(4).png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/Loon(6).png
     hidden: false
 - fallback:
     name: 浙江
@@ -442,7 +442,7 @@ policy_groups:
     - BaidunProxy
     flatten: true
     filter: 浙江
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/zhuanyi.png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/Surge(13).png
     hidden: false
 rules:
 - and:
