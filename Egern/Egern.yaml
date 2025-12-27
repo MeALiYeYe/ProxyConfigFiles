@@ -34,7 +34,6 @@ dns:
     - https://dns.alidns.com/dns-query
     ForeignDNS:
     - https://dns.google/dns-query
-    - https://dns.cloudflare.com/dns-query
     - https://cloudflare-dns.com/dns-query
   forward:
   - proxy_rule_set:
@@ -305,7 +304,6 @@ policy_groups:
     - DIRECT
     - 江苏
     - 广东
-    - 浙江
     - 北京
     - 河北
     flatten: false
@@ -317,7 +315,6 @@ policy_groups:
     - DIRECT
     - 江苏
     - 广东
-    - 浙江
     - 北京
     - 河北
     flatten: false
@@ -435,14 +432,6 @@ policy_groups:
     flatten: true
     filter: 保定
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/zhuanyi(4).png
-    hidden: false
-- fallback:
-    name: 浙江
-    policies:
-    - BaidunProxy
-    flatten: true
-    filter: 浙江
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/zhuanyi.png
     hidden: false
 rules:
 - and:
