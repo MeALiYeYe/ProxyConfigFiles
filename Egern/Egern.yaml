@@ -583,7 +583,7 @@ rules:
 - geoip:
     match: CN
     policy: Domestic
-    no_resolve: true
+    no_resolve: false
     disabled: false
 - default:
     name: ''
