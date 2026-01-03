@@ -1,7 +1,5 @@
 payload:
   - 'board.zash.run.place'
   - '+.metacubex.one'
-  - '+.sntp.dev'
-  - '+.sntp.uk'
   - '+.xiaoyakankan.com'
-  - '+.tkv.one'
+  - '+.tkv.one
