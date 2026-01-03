@@ -12,3 +12,7 @@ payload:
   - '+.gwmapp-h.com'
   - '+.gwmapp-w.com'
   - '+.gwm-mn.beantechyun.com'
+  - '+.sntp.me'
+  - '+.sntp.dev'
+  - '+.sntp.net'
+  - '+.newsntp.net'
