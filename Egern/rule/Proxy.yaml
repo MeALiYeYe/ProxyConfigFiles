@@ -2,10 +2,8 @@ domain_set:
   - board.zash.run.place
 domain_suffix_set:
   - tkv.one
-  - sntp.dev
-  - sntp.uk
   - metacubex.one
   - xiaoyakankan.com
   - linkeless.com
   - linkeless.cc
-  - linkeless.net
+  - linkeless.ne
