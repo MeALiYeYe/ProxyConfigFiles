@@ -5,11 +5,12 @@ DOMAIN-SUFFIX,nsloon.com
 DOMAIN,liangxin.xyz
 DOMAIN-SUFFIX,tkv.one
 DOMAIN-SUFFIX,ojbktv.com
+DOMAIN-SUFFIX,sntp.dev
+DOMAIN-SUFFIX,sntp.uk
 # gwmapp
 DOMAIN-SUFFIX,gwm.com.cn
 DOMAIN-SUFFIX,gwm.cn
 DOMAIN-SUFFIX,gwmapp-h.com
 DOMAIN-SUFFIX,gwmapp-w.com
 DOMAIN-KEYWORD,gwm-mn
-DOMAIN-KEYWORD,kahaoquan
-DOMAIN-KEYWORD,sntp
+DOMAIN-KEYWORD,kahaoqua
