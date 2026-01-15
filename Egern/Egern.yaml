@@ -118,6 +118,13 @@ dns:
     - iosapps.itunes.apple.com.download.ks-cdn.com
 policy_groups:
 - external:
+    name: BaidunProxy
+    type: select
+    urls:
+    - https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/BaiduProxy.yaml
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
+    hidden: false
+- external:
     name: Proxies
     type: select
     urls:
@@ -293,9 +300,26 @@ policy_groups:
     icon: https://raw.githubusercontent.com/Centralmatrix3/Matrix-io/master/Gallery/Color/Global.png
     hidden: false
 - select:
+    name: ReDirect
+    policies:
+    - DIRECT
+    - 江苏
+    - 广东
+    - 浙江
+    - 北京
+    - 河北
+    flatten: false
+    icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/China.png
+    hidden: false
+- select:
     name: Domestic
     policies:
     - DIRECT
+    - 江苏
+    - 广东
+    - 浙江
+    - 北京
+    - 河北
     flatten: false
     icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/Domestic.png
     hidden: false
@@ -376,6 +400,49 @@ policy_groups:
     interval: 300
     timeout: 5
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/liuliang(5).png
+    hidden: false
+- fallback:
+    name: 江苏
+    policies:
+    - BaidunProxy
+    flatten: true
+    filter: 南京|苏州
+    interval: 60
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/zhuanyi(1).png
+    hidden: false
+- fallback:
+    name: 广东
+    policies:
+    - BaidunProxy
+    flatten: true
+    filter: 广州
+    interval: 60
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/zhuanyi(2).png
+    hidden: false
+- fallback:
+    name: 北京
+    policies:
+    - BaidunProxy
+    flatten: true
+    filter: 北京
+    interval: 60
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/zhuanyi(3).png
+    hidden: false
+- fallback:
+    name: 河北
+    policies:
+    - BaidunProxy
+    flatten: true
+    filter: 保定
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/zhuanyi(4).png
+    hidden: false
+- fallback:
+    name: 浙江
+    policies:
+    - BaidunProxy
+    flatten: true
+    filter: 浙江
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/zhuanyi.png
     hidden: false
 rules:
 - and:
@@ -503,6 +570,11 @@ rules:
 - rule_set:
     match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Proxy/Proxy_All_No_Resolve.list
     policy: Foreign
+    disabled: false
+- rule_set:
+    name: ReDirect
+    match: https://raw.githubusercontent.com/MeALiYeYe/anti-ip-attribution/refs/heads/main/generated/surge.list
+    policy: ReDirect
     disabled: false
 - rule_set:
     match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/China/China_All_No_Resolve.list
