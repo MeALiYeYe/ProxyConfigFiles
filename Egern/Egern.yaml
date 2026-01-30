@@ -118,6 +118,13 @@ dns:
     - iosapps.itunes.apple.com.download.ks-cdn.com
 policy_groups:
 - external:
+    name: BaiduProxy
+    type: select
+    urls:
+    - https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/BaiduProxy.yaml
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
+    hidden: false
+- external:
     name: Proxies
     type: select
     urls:
@@ -293,16 +300,24 @@ policy_groups:
     icon: https://raw.githubusercontent.com/Centralmatrix3/Matrix-io/master/Gallery/Color/Global.png
     hidden: false
 - select:
+    name: Location
+    policies:
+    - DIRECT
+    - 江苏
+    - 广东
+    - 北京
+    - 河北
+    flatten: false
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/jichang.png
+    hidden: false
+- select:
     name: Domestic
     policies:
     - DIRECT
-    - 香港
-    - 台湾
-    - 狮城
-    - 日本
-    - 美国
-    - 低倍
-    - 高倍
+    - 江苏
+    - 广东
+    - 北京
+    - 河北
     flatten: false
     icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/Domestic.png
     hidden: false
@@ -310,6 +325,10 @@ policy_groups:
     name: Final
     policies:
     - DIRECT
+    - 江苏
+    - 广东
+    - 北京
+    - 河北
     - 香港
     - 台湾
     - 狮城
@@ -319,6 +338,38 @@ policy_groups:
     - 高倍
     flatten: false
     icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/Final.png
+    hidden: false
+- fallback:
+    name: 江苏
+    policies:
+    - BaiduProxy
+    flatten: true
+    filter: 南京|苏州
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Available_1.png
+    hidden: false
+- fallback:
+    name: 广东
+    policies:
+    - BaiduProxy
+    flatten: true
+    filter: 广州
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/liuliang.png
+    hidden: false
+- fallback:
+    name: 北京
+    policies:
+    - BaiduProxy
+    flatten: true
+    filter: 北京
+    icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Available.png
+    hidden: false
+- fallback:
+    name: 河北
+    policies:
+    - BaiduProxy
+    flatten: true
+    filter: 保定
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/liuliang(3).png
     hidden: false
 - fallback:
     name: 香港
@@ -454,6 +505,10 @@ rules:
 - rule_set:
     match: https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/refs/heads/main/Filters/AWAvenue-Ads-Rule-Surge-RULE-SET.list
     policy: REJECT
+    disabled: false
+- rule_set:
+    match: https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/refs/heads/main/generated/surge.list
+    policy: DIRECT
     disabled: false
 - rule_set:
     match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/TikTok/TikTok.list
