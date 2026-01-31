@@ -7,3 +7,5 @@ domain_suffix_set:
   - linkeless.com
   - linkeless.cc
   - linkeless.ne
+domain_keyword_set:
+  - linkeless
