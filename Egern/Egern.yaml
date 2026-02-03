@@ -579,7 +579,32 @@ rules:
 - geoip:
     match: CN
     policy: Domestic
-    no_resolve: true
+    no_resolve: false
+    disabled: false
+- geoip:
+    match: HK
+    policy: 香港
+    no_resolve: false
+    disabled: false
+- geoip:
+    match: TW
+    policy: 台湾
+    no_resolve: false
+    disabled: false
+- geoip:
+    match: SG
+    policy: 狮城
+    no_resolve: false
+    disabled: false
+- geoip:
+    match: JP
+    policy: 日本
+    no_resolve: false
+    disabled: false
+- geoip:
+    match: US
+    policy: 美国
+    no_resolve: false
     disabled: false
 - default:
     name: ''
@@ -589,7 +614,6 @@ url_rewrites:
   location: $1.com
   status_code: 307
 mitm:
-  enabled: true
   ca_p12: egern.p12
   ca_passphrase: egern
 modules:
@@ -603,6 +627,10 @@ modules:
   enabled: true
 - url: https://raw.githubusercontent.com/mist-whisper/Surge/master/Modules/YouTube_remove_ads.sgmodule
   enabled: true
+- url: https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Module/kugou.sgmodule
+  enabled: true
+- url: https://raw.githubusercontent.com/Yuheng0101/X/main/Scripts/Kuwo/kuwo.sgmodule
+  enabled: true
 - url: https://raw.githubusercontent.com/githubdulong/Script/master/Surge/JD_Helper.sgmodule
   enabled: true
 - url: https://raw.githubusercontent.com/cc63/Surge/main/Module/Panel/QiYou/Moore/QiYou.sgmodule
@@ -610,6 +638,7 @@ modules:
     省份拼音: hubei
   enabled: true
 - url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/module/Redirect.sgmodule
+  enabled: true
 - url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/module/Weather.sgmodule
   compat_arguments:
     城市代码: '101200105'
