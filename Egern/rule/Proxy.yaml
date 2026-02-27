@@ -7,5 +7,6 @@ domain_suffix_set:
   - linkeless.com
   - linkeless.cc
   - linkeless.ne
+  - sntp.uk
 domain_keyword_set:
   - linkeless
