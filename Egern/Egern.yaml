@@ -508,7 +508,7 @@ rules:
     disabled: false
 - rule_set:
     match: https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/refs/heads/main/generated/surge.list
-    policy: DIRECT
+    policy: Location
     disabled: false
 - rule_set:
     match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/TikTok/TikTok.list
@@ -589,7 +589,6 @@ url_rewrites:
   location: $1.com
   status_code: 307
 mitm:
-  enabled: true
   ca_p12: egern.p12
   ca_passphrase: egern
 modules:
@@ -610,6 +609,7 @@ modules:
     省份拼音: hubei
   enabled: true
 - url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/module/Redirect.sgmodule
+  enabled: true
 - url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/module/Weather.sgmodule
   compat_arguments:
     城市代码: '101200105'
