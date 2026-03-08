@@ -81,7 +81,7 @@ proxies:
   - name: "[苏]彩信直连"
     server: 180.101.50.249
     <<: *caixin
-  - name: "[苏]彩信直连-备"
+  - name: "[苏]彩信直连-1"
     server: 180.101.50.208
     <<: *caixin
   - name: "[广]彩信直连"
