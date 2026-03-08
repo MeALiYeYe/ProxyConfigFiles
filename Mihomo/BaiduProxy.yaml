@@ -66,24 +66,24 @@ proxies:
   - name: "南京移动"
     server: 36.155.169.188
     <<: *baidu
-  - name: "[广州]王卡动态"
+  - name: "[广]王卡动态"
     server: 157.148.54.212
     <<: *wanka
-  - name: "[广州]王卡动态-1"
+  - name: "[广]王卡动态-1"
     server: 157.148.57.45
     <<: *wanka
-  - name: "[广州]王卡动态-2"
+  - name: "[广]王卡动态-2"
     server: 157.255.5.193
     <<: *wanka
-  - name: "[苏州]王卡动态"
+  - name: "[苏]王卡动态"
     server: 140.207.55.29
     <<: *wanka
-  - name: "[南京]彩信直连"
+  - name: "[苏]彩信直连"
     server: 180.101.50.249
     <<: *caixin
-  - name: "[南京]彩信直连-备"
+  - name: "[苏]彩信直连-备"
     server: 180.101.50.208
     <<: *caixin
-  - name: "[广州]彩信直连"
+  - name: "[广]彩信直连"
     server: 14.215.182.75
     <<: *caixin
