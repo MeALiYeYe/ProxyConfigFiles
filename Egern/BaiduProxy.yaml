@@ -164,3 +164,59 @@ proxies:
       X-T5-Auth: '683556433'
       Connection: Keep-Alive'
       User-Agent: okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)
+- http:
+    name: "[苏]彩信直连"
+    server: 180.101.50.249
+    port: 443
+    headers:
+        X-T5-Auth: 683556433
+        Host: 153.3.236.22:443
+        dialer-proxy: WAP
+- http:
+    name: "[苏]彩信直连-备"
+    server: 180.101.50.208
+    port: 443
+    headers:
+        X-T5-Auth: 683556433
+        Host: 153.3.236.22:443
+        dialer-proxy: WAP
+- http:
+    name: "[广]彩信直连"
+    server: 14.215.182.75
+    port: 443
+    headers:
+        X-T5-Auth: 683556433
+        Host: 153.3.236.22:443
+        dialer-proxy: WAP
+- http:
+    name: "[广]王卡动态"
+    server: 157.148.54.212
+    port: 8091
+    headers:
+        Q-GUID: "5f1cb5b1440194056377de5d131646bd"
+        Q-Token: "c70e612a5edf00cae16898fd2c81bb97532c96f52d2a65896999d1a4da95efa47cf095ed8edc921c5b1c9a60646596d3"
+        User-Agent: "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 13; Redmi K50 5G Build/RKQ1.200826.002)"
+- http:
+    name: "[广]王卡动态-1"
+    server: 157.148.57.45
+    port: 8091
+    headers:
+        Q-GUID: "5f1cb5b1440194056377de5d131646bd"
+        Q-Token: "c70e612a5edf00cae16898fd2c81bb97532c96f52d2a65896999d1a4da95efa47cf095ed8edc921c5b1c9a60646596d3"
+        User-Agent: "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 13; Redmi K50 5G Build/RKQ1.200826.002)"
+- http:
+    name: "[广]王卡动态-2"
+    server: 157.255.5.193
+    port: 8091
+    headers:
+        Q-GUID: "5f1cb5b1440194056377de5d131646bd"
+        Q-Token: "c70e612a5edf00cae16898fd2c81bb97532c96f52d2a65896999d1a4da95efa47cf095ed8edc921c5b1c9a60646596d3"
+        User-Agent: "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 13; Redmi K50 5G Build/RKQ1.200826.002)"
+- http:
+    name: "[苏]王卡动态"
+    server: 140.207.55.29
+    port: 8091
+    headers:
+        Q-GUID: "5f1cb5b1440194056377de5d131646bd"
+        Q-Token: "c70e612a5edf00cae16898fd2c81bb97532c96f52d2a65896999d1a4da95efa47cf095ed8edc921c5b1c9a60646596d3"
+        User-Agent: "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 13; Redmi K50 5G Build/RKQ1.200826.002)"
