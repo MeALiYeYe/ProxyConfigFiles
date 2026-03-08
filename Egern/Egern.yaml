@@ -31,11 +31,11 @@ dns:
     DomesticDNS:
     - https://doh.pub/dns-query
     - quic://dns.alidns.com
-    - https://dns.alidns.com/dns-query
+    - h3://dns.alidns.com/dns-query
     ForeignDNS:
-    - https://dns.google/dns-query
-    - https://dns.cloudflare.com/dns-query
-    - https://cloudflare-dns.com/dns-query
+    - h3://dns.google/dns-query
+    - h3://dns.cloudflare.com/dns-query
+    - h3://cloudflare-dns.com/dns-query
   forward:
   - proxy_rule_set:
       match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Apple/Apple_Domain.list
@@ -43,10 +43,10 @@ dns:
   - proxy_rule_set:
       match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Proxy/Proxy_Domain.list
       value: ForeignDNS
-      disabled: false
-  - wildcard:
+  - domain_wildcard:
       match: '*'
       value: DomesticDNS
+      disabled: false
   hosts:
     ip6-localhost:
     - ::1
@@ -129,7 +129,7 @@ policy_groups:
     type: select
     urls:
     - https://sub.store/download/collection/Sub?target=Egern
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/sub(1).png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/sub.png
     hidden: false
 - select:
     name: Emby
@@ -143,7 +143,7 @@ policy_groups:
     - 低倍
     - 高倍
     flatten: false
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/emby.png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/emby.png
     hidden: false
 - select:
     name: Tiktok
@@ -157,7 +157,7 @@ policy_groups:
     - 低倍
     - 高倍
     flatten: false
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/tiktok(1).png
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_2.png
     hidden: false
 - select:
     name: Youtube
@@ -171,7 +171,7 @@ policy_groups:
     - 低倍
     - 高倍
     flatten: false
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/youtube.png
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png
     hidden: false
 - select:
     name: Media
@@ -199,7 +199,7 @@ policy_groups:
     - 低倍
     - 高倍
     flatten: false
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/ChatGPT-green.png
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png
     hidden: false
 - select:
     name: Telegram
@@ -241,7 +241,7 @@ policy_groups:
     - 低倍
     - 高倍
     flatten: false
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/google(1).png
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png
     hidden: false
 - select:
     name: Github
@@ -283,7 +283,7 @@ policy_groups:
     - 低倍
     - 高倍
     flatten: false
-    icon: https://raw.githubusercontent.com/Centralmatrix3/Matrix-io/master/Gallery/Color/Apple-2.png
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png
     hidden: false
 - select:
     name: Foreign
@@ -307,6 +307,8 @@ policy_groups:
     - 广东
     - 北京
     - 河北
+    - 王卡
+    - 彩信
     flatten: false
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/jichang.png
     hidden: false
@@ -318,6 +320,8 @@ policy_groups:
     - 广东
     - 北京
     - 河北
+    - 王卡
+    - 彩信
     flatten: false
     icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/Domestic.png
     hidden: false
@@ -345,7 +349,7 @@ policy_groups:
     - BaiduProxy
     flatten: true
     filter: 南京|苏州
-    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Available_1.png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(1).png
     hidden: false
 - fallback:
     name: 广东
@@ -353,7 +357,7 @@ policy_groups:
     - BaiduProxy
     flatten: true
     filter: 广州
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/liuliang.png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(2).png
     hidden: false
 - fallback:
     name: 北京
@@ -361,7 +365,7 @@ policy_groups:
     - BaiduProxy
     flatten: true
     filter: 北京
-    icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Available.png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(4).png
     hidden: false
 - fallback:
     name: 河北
@@ -370,6 +374,22 @@ policy_groups:
     flatten: true
     filter: 保定
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/liuliang(3).png
+    hidden: false
+- fallback:
+    name: 彩信
+    policies:
+    - BaiduProxy
+    flatten: true
+    filter: 彩信
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(5).png
+    hidden: false
+- fallback:
+    name: 王卡
+    policies:
+    - BaiduProxy
+    flatten: true
+    filter: 王卡
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning.png
     hidden: false
 - fallback:
     name: 香港
@@ -419,7 +439,7 @@ policy_groups:
     filter: 美国|US|🇺🇸
     interval: 300
     timeout: 5
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/US(2).png
+    icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/US.png
     hidden: false
 - fallback:
     name: 低倍
@@ -429,7 +449,7 @@ policy_groups:
     filter: 0\.\d+
     interval: 300
     timeout: 5
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/liuliang(2).png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/liuliang(2).png
     hidden: false
 - fallback:
     name: 高倍
@@ -504,6 +524,10 @@ rules:
     disabled: false
 - rule_set:
     match: https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/refs/heads/main/Filters/AWAvenue-Ads-Rule-Surge-RULE-SET.list
+    policy: REJECT
+    disabled: false
+- rule_set:
+    match: https://raw.githubusercontent.com/217heidai/adblockfilters/main/rules/adblocksurge.list
     policy: REJECT
     disabled: false
 - rule_set:
