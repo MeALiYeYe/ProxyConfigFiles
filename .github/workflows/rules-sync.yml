@@ -1,47 +1,103 @@
-name: Sync Rules
+name: Sync Proxy Rules
 
 on:
   push:
     paths:
       - "Surge/rule/**"
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
   sync:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Convert rules
+      - name: Prepare directories
         run: |
-
           mkdir -p Mihomo/rule
           mkdir -p Egern/rule
           mkdir -p "Quantumult X/rule"
 
-          for file in surge/rule/*.list
+      - name: Process rules
+        run: |
+
+          for file in Surge/rule/*.list
           do
-            name=$(basename $file .list)     # Direct
-            filename=$(basename $file)       # Direct.list
+            name=$(basename $file .list)
+            filename=$(basename $file)
 
-            # Mihomo
-            echo "payload:" > Mihomo/rule/$name.yaml
-            sed 's/^/  - /' $file >> Mihomo/rule/$name.yaml
+            echo "Processing $filename"
 
-            # Egern
-            cp $file Egern/rule/$filename
+            # 去空行 + 去重复
+            tmp=$(mktemp)
+            sed '/^\s*$/d' $file | sort -u > $tmp
 
+            ################################
+            # Mihomo YAML
+            ################################
+
+            mihomo_out="Mihomo/rule/$name.yaml"
+
+            echo "payload:" > $mihomo_out
+            sed 's/^/  - /' $tmp >> $mihomo_out
+
+
+            ################################
             # Quantumult X
-            cp $file "Quantumult X/rule/$filename"
+            ################################
+
+            cp $tmp "Quantumult X/rule/$filename"
+
+
+            ################################
+            # Egern YAML
+            ################################
+
+            egern_out="Egern/rule/$name.yaml"
+
+            echo "domain_suffix_set:" > $egern_out
+            grep '^DOMAIN-SUFFIX,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
+
+            echo "" >> $egern_out
+            echo "domain_keyword_set:" >> $egern_out
+            grep '^DOMAIN-KEYWORD,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
+
+            echo "" >> $egern_out
+            echo "domain_set:" >> $egern_out
+            grep '^DOMAIN,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
+
+            echo "" >> $egern_out
+            echo "domain_regex_set:" >> $egern_out
+            grep '^DOMAIN-REGEX,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
+
+            echo "" >> $egern_out
+            echo "domain_wildcard_set:" >> $egern_out
+            grep '^DOMAIN-WILDCARD,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
+
+            echo "" >> $egern_out
+            echo "geoip_set:" >> $egern_out
+            grep '^GEOIP,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
+
+            echo "" >> $egern_out
+            echo "ip_cidr_set:" >> $egern_out
+            grep '^IP-CIDR,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
+
+            echo "" >> $egern_out
+            echo "ip_cidr6_set:" >> $egern_out
+            grep '^IP-CIDR6,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
+
+            echo "" >> $egern_out
+            echo "protocol_set:" >> $egern_out
+            grep '^PROTOCOL,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
 
           done
 
-      - name: Commit
+      - name: Commit changes
         run: |
           git config --global user.name github-actions
           git config --global user.email github-actions@github.com
           git add .
-          git commit -m "Auto sync rules"
+          git commit -m "Auto sync rules" || echo "No changes"
           git push
