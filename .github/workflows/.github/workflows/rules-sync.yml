@@ -1,0 +1,45 @@
+name: Sync Rules
+
+on:
+  push:
+    paths:
+      - "Surge/rule/**"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Convert rules
+        run: |
+
+          mkdir -p Mihomo/rule
+          mkdir -p Egern/rule
+          mkdir -p "Quantumult X/rule"
+
+          for file in Surge/rule/*
+          do
+            name=$(basename $file)
+
+            # Mihomo YAML
+            echo "payload:" > Mihomo/rule/$name.yaml
+            sed 's/^/  - /' $file >> Mihomo/rule/$name.yaml
+
+            # Egern
+            cp $file Egern/rule/$name
+
+            # Quantumult X
+            cp $file "Quantumult X/rule/$name"
+
+          done
+
+      - name: Commit
+        run: |
+          git config --global user.name github-actions
+          git config --global user.email github-actions@github.com
+          git add .
+          git commit -m "Auto sync rules"
+          git push
