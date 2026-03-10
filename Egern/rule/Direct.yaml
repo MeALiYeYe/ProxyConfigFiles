@@ -1,14 +1,36 @@
 domain_suffix_set:
+  - gwm.cn
+  - gwm.com.cn
   - gwmapp-h.com
   - gwmapp-w.com
-  - gwm.com.cn
-  - gwm.cn
+  - newsntp.net
+  - nsloon.com
   - ojbktv.com
-  - liangxin.xyz
   - qiyoujiage.com
+  - sntp.dev
+  - sntp.me
+  - sntp.net
+  - sntp.uk
+  - tkv.one
+  - xianniu.cc
+  - xianniu.com
+
 domain_keyword_set:
-  - kahaoquan
-  - sntp
   - gwm-mn
-  - gwmapp
+  - kahaoqua
+
 domain_set:
+  - ifconfig.me
+  - liangxin.xyz
+
+domain_regex_set:
+
+domain_wildcard_set:
+
+geoip_set:
+
+ip_cidr_set:
+
+ip_cidr6_set:
+
+protocol_set:

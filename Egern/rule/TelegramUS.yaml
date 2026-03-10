@@ -1,13 +1,8 @@
 domain_suffix_set:
-  - metacubex.one
-  - tkv.one
 
 domain_keyword_set:
-  - linkeless
-  - xiaoyakankan
 
 domain_set:
-  - board.zash.run.place
 
 domain_regex_set:
 
@@ -16,7 +11,10 @@ domain_wildcard_set:
 geoip_set:
 
 ip_cidr_set:
+  - 149.154.172.0/22
+  - 91.108.12.0/22
 
 ip_cidr6_set:
+  - 2001:b28:f23d::/48
 
 protocol_set:

@@ -1,16 +1,14 @@
-domain_set:
-  - emby.enjoyit.eu.org
-  - emby.lcloud.wiki
-  - notnetflix.cos.cat
-  - random.ouonet.org
 domain_suffix_set:
   - 123456.al
   - 285286.xyz
   - agahk1.jmsooo.com
   - agajp1.jmsooo.com
   - agasg1.jmsooo.com
+  - array2026.cc
+  - array2026.com
   - aws.jmsooo.com
   - cf1.jmsooo.com
+  - cn2gias.uk
   - cristiamo.xyz
   - emby.cjpc.cc
   - emby.cjpc.tv
@@ -49,9 +47,26 @@ domain_suffix_set:
   - pornemby.club
   - servers.xeton.dev
   - xmsl.org
-  - cn2gias.uk
+
 domain_keyword_set:
   - emby.wtf
   - jmsooo
   - odysseyplus
-  - emby
+
+domain_set:
+  - emby.enjoyit.eu.org
+  - emby.lcloud.wiki
+  - notnetflix.cos.cat
+  - random.ouonet.org
+
+domain_regex_set:
+
+domain_wildcard_set:
+
+geoip_set:
+
+ip_cidr_set:
+
+ip_cidr6_set:
+
+protocol_set:

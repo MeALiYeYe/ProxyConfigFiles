@@ -1,10 +1,6 @@
 payload:
-  - 'board.zash.run.place'
-  - '+.metacubex.one'
-  - '+.xiaoyakankan.com'
-  - '+.tkv.one
-  - '+.linkeless.com'
-  - '+.linkeless.me'
-  - '+.linkeless.cc'
-  - '+.linkeless.net'
-  - '+.sntp.uk'
+  - DOMAIN,board.zash.run.place
+  - DOMAIN-KEYWORD,linkeless
+  - DOMAIN-KEYWORD,xiaoyakankan
+  - DOMAIN-SUFFIX,metacubex.one
+  - DOMAIN-SUFFIX,tkv.one

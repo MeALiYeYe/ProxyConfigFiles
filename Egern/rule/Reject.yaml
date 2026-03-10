@@ -1,54 +1,65 @@
-no_resolve: true
 domain_suffix_set:
-  - zhihu-web-analytics.zhihu.com
-  - metric.huya.com
-  - ylog.huya.com
-  - e-ad-monitor.huya.com
-  - va.huya.com
-  - p2p.huya.com
-  - statwup.huya.com
-  - e-stat.huya.com
-  - sentry.io
-  - xionguamaqui.com
-  - duxiaoman.com
-  - dxmpay.com
   - 2345.com
-  - hao123.com
   - 360.cn
-  - so.com
-  - qifu.tech
-  - xjietiao.com
   - 360jie.com.cn
   - 360totalsecurity.com
+  - duxiaoman.com
+  - dxmpay.com
+  - e-ad-monitor.huya.com
+  - e-stat.huya.com
+  - hao123.com
+  - metric.huya.com
+  - p2p.huya.com
+  - qifu.tech
+  - sentry.io
+  - so.com
+  - statwup.huya.com
+  - va.huya.com
+  - xionguamaqui.com
+  - xjietiao.com
+  - ylog.huya.com
+  - zhihu-web-analytics.zhihu.com
+
+domain_keyword_set:
+
 domain_set:
+  - anquan.baidu.com
+  - baijiahao.baidu.com
   - dumall.baidu.com
-  - haokan.baidu.com
-  - yingxiao.baidu.com
   - e.baidu.com
+  - haokan.baidu.com
+  - httpdns.bilivideo.com
   - jiankang.baidu.com
   - news.baidu.com
-  - xueshu.baidu.com
-  - baijiahao.baidu.com
-  - anquan.baidu.com
   - wan.baidu.com
+  - xueshu.baidu.com
+  - yingxiao.baidu.com
+
 domain_regex_set:
-  - ^ad\..*|^ads\..*
+
+domain_wildcard_set:
+
+geoip_set:
+
 ip_cidr_set:
-  - 95.161.76.100/31
-  - 47.101.175.206/32
-  - 47.100.123.169/32
-  - 120.46.169.234/32
-  - 121.36.72.124/32
-  - 116.63.10.135/32
-  - 122.9.7.134/32
-  - 117.185.228.108/32
-  - 117.144.238.29/32
-  - 122.9.13.79/32
-  - 122.9.15.129/32
-  - 101.91.140.224/32
   - 101.91.140.124/32
-  - 114.116.215.110/32
-  - 116.63.10.31/32
+  - 101.91.140.224/32
   - 112.64.218.119/32
   - 112.65.200.117/32
+  - 114.116.215.110/32
+  - 116.63.10.135/32
+  - 116.63.10.31/32
+  - 117.144.238.29/32
+  - 117.185.228.108/32
+  - 120.46.169.234/32
+  - 121.36.72.124/32
+  - 122.9.13.79/32
+  - 122.9.15.129/32
+  - 122.9.7.134/32
+  - 47.100.123.169/32
+  - 47.101.175.206/32
+  - 95.161.76.100/31
+
 ip_cidr6_set:
+
+protocol_set:
