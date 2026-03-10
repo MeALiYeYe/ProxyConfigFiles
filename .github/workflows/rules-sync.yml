@@ -139,55 +139,46 @@ jobs:
           fi
 
           if grep -q '^DOMAIN-SUFFIX,' "$tmp"; then
-            echo "" >> "$egern_out"
             echo "domain_suffix_set:" >> "$egern_out"
             grep '^DOMAIN-SUFFIX,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
           fi
 
           if grep -q '^DOMAIN,' "$tmp"; then
-            echo "" >> "$egern_out"
             echo "domain_set:" >> "$egern_out"
             grep '^DOMAIN,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
           fi
 
           if grep -q '^DOMAIN-KEYWORD,' "$tmp"; then
-            echo "" >> "$egern_out"
             echo "domain_keyword_set:" >> "$egern_out"
             grep '^DOMAIN-KEYWORD,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
           fi
 
           if grep -q '^DOMAIN-WILDCARD,' "$tmp"; then
-            echo "" >> "$egern_out"
             echo "domain_wildcard_set:" >> "$egern_out"
             grep '^DOMAIN-WILDCARD,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
           fi
 
-           if grep -q '^DOMAIN-REGEX,' $tmp; then
-            echo "" >> $egern_out
+          if grep -q '^DOMAIN-REGEX,' $tmp; then
             echo "domain_regex_set:" >> $egern_out
             grep '^DOMAIN-REGEX,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
           fi
 
           if grep -q '^IP-CIDR,' "$tmp"; then
-            echo "" >> "$egern_out"
             echo "ip_cidr_set:" >> "$egern_out"
             grep '^IP-CIDR,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
           fi
 
           if grep -q '^IP-CIDR6,' "$tmp"; then
-            echo "" >> "$egern_out"
             echo "ip_cidr6_set:" >> "$egern_out"
             grep '^IP-CIDR6,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
           fi
 
           if grep -q '^GEOIP,' $tmp; then
-            echo "" >> $egern_out
             echo "geoip_set:" >> $egern_out
             grep '^GEOIP,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
           fi
 
           if grep -q '^PROTOCOL,' $tmp; then
-            echo "" >> $egern_out
             echo "protocol_set:" >> $egern_out
             grep '^PROTOCOL,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
           fi
