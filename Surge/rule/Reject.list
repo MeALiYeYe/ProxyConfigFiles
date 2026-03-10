@@ -1,4 +1,3 @@
-AND,((DOMAIN-KEYWORD,gvt),(DOMAIN-KEYWORD,beacons))
 DOMAIN,httpdns.bilivideo.com
 DOMAIN-SUFFIX,zhihu-web-analytics.zhihu.com
 # 关闭虎牙直播的P2P上传之类的功能
@@ -11,6 +10,7 @@ DOMAIN-SUFFIX,e-stat.huya.com
 DOMAIN-SUFFIX,va.huya.com
 # 知乎伪装OpenAi域名
 DOMAIN-SUFFIX,sentry.io
+DOMAIN-SUFFIX,zhihu-web-analytics.zhihu.com
 # 中国移动一直访问
 DOMAIN-SUFFIX,xionguamaqui.com
 # 百度
