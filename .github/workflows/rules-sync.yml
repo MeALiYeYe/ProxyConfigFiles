@@ -57,7 +57,12 @@ jobs:
 
           egern_out="Egern/rule/$name.yaml"
 
-          echo "no_resolve: true" > $egern_out
+          # 只有包含 IP-CIDR / IP-CIDR6 才加 no_resolve
+          if grep -qE '^IP-CIDR,|^IP-CIDR6,' $tmp; then
+            echo "no_resolve: true" > $egern_out
+          else
+            echo -n "" > $egern_out
+          fi
 
           # DOMAIN-SUFFIX
           if grep -q '^DOMAIN-SUFFIX,' $tmp; then
