@@ -1,5 +1,4 @@
 no_resolve: true
-
 domain_suffix_set:
   - 2345.com
   - 360.cn
@@ -21,7 +20,6 @@ domain_suffix_set:
   - xjietiao.com
   - ylog.huya.com
   - zhihu-web-analytics.zhihu.com
-
 domain_set:
   - anquan.baidu.com
   - baijiahao.baidu.com
@@ -34,7 +32,6 @@ domain_set:
   - wan.baidu.com
   - xueshu.baidu.com
   - yingxiao.baidu.com
-
 ip_cidr_set:
   - 101.91.140.124/32
   - 101.91.140.224/32

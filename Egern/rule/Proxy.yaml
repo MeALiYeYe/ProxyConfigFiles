@@ -1,11 +1,8 @@
-
 domain_suffix_set:
   - metacubex.one
   - tkv.one
-
 domain_set:
   - board.zash.run.place
-
 domain_keyword_set:
   - linkeless
   - xiaoyakankan

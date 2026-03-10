@@ -1,4 +1,3 @@
-
 domain_suffix_set:
   - gwm.cn
   - gwm.com.cn
@@ -15,11 +14,9 @@ domain_suffix_set:
   - tkv.one
   - xianniu.cc
   - xianniu.com
-
 domain_set:
   - ifconfig.me
   - liangxin.xyz
-
 domain_keyword_set:
   - gwm-mn
   - kahaoqua
