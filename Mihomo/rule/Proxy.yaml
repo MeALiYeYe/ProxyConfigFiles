@@ -1,6 +1,6 @@
 payload:
-  - DOMAIN,board.zash.run.place
-  - DOMAIN-KEYWORD,linkeless
-  - DOMAIN-KEYWORD,xiaoyakankan
-  - DOMAIN-SUFFIX,metacubex.one
-  - DOMAIN-SUFFIX,tkv.one
+  - 'DOMAIN,board.zash.run.place'
+  - 'DOMAIN-SUFFIX,metacubex.one'
+  - 'DOMAIN-SUFFIX,tkv.one'
+  - 'DOMAIN-KEYWORD,linkeless'
+  - 'DOMAIN-KEYWORD,xiaoyakankan'

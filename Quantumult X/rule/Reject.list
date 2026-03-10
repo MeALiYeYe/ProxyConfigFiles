@@ -1,7 +1,3 @@
-# Google错误监控和上报
-# 关闭虎牙直播的P2P上传之类的功能
-# 百度
-# 防止电报转圈
 DOMAIN,anquan.baidu.com
 DOMAIN,baijiahao.baidu.com
 DOMAIN,dumall.baidu.com

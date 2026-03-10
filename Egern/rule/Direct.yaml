@@ -16,10 +16,10 @@ domain_suffix_set:
   - xianniu.cc
   - xianniu.com
 
-domain_keyword_set:
-  - gwm-mn
-  - kahaoqua
-
 domain_set:
   - ifconfig.me
   - liangxin.xyz
+
+domain_keyword_set:
+  - gwm-mn
+  - kahaoqua
