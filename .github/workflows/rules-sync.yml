@@ -1,9 +1,9 @@
-name: Sync Proxy Rules
+name: Sync Rules
 
 on:
   push:
     paths:
-      - "Surge/rule/**"
+      - 'surge/rule/**'
   workflow_dispatch:
 
 jobs:
@@ -11,128 +11,221 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v4
 
-      - name: Prepare directories
-        run: |
-          mkdir -p Mihomo/rule
-          mkdir -p Egern/rule
-          mkdir -p "Quantumult X/rule"
+    - name: Generate rules
+      run: |
 
-      - name: Process rules
-        run: |
+        mkdir -p Mihomo/rule
+        mkdir -p Egern/rule
+        mkdir -p "Quantumult X/rule"
 
-          for file in Surge/rule/*.list
-          do
-            name=$(basename $file .list)
-            filename=$(basename $file)
+        total_rules=0
 
-            echo "Processing $filename"
+        for file in surge/rule/*.list; do
 
-            # 去空行 + 去重复
-            tmp=$(mktemp)
-            sed '/^\s*$/d' $file | sort -u > $tmp
+          name=$(basename "$file" .list)
+          tmp=$(mktemp)
 
-            ################################
-            # Mihomo YAML
-            ################################
+          echo "Processing $name"
 
-            mihomo_out="Mihomo/rule/$name.yaml"
+          ################################
+          # 清理规则
+          ################################
 
-            echo "payload:" > $mihomo_out
-            sed 's/^/  - /' $tmp >> $mihomo_out
+          sed '/^#/d;/^$/d' "$file" | sort -u > "$tmp"
+
+          ################################
+          # 自动排序规则
+          ################################
+
+          sorted=$(mktemp)
+
+          grep '^DOMAIN,' "$tmp" >> "$sorted" || true
+          grep '^DOMAIN-SUFFIX,' "$tmp" >> "$sorted" || true
+          grep '^DOMAIN-KEYWORD,' "$tmp" >> "$sorted" || true
+          grep '^DOMAIN-WILDCARD,' "$tmp" >> "$sorted" || true
+          grep '^IP-CIDR,' "$tmp" >> "$sorted" || true
+          grep '^IP-CIDR6,' "$tmp" >> "$sorted" || true
+          grep -Ev '^(DOMAIN|IP-CIDR)' "$tmp" >> "$sorted" || true
+
+          mv "$sorted" "$tmp"
+
+          ################################
+          # 统计规则
+          ################################
+
+          count=$(wc -l < "$tmp")
+          total_rules=$((total_rules + count))
+
+          echo "$name rules: $count"
+
+          ################################
+          # 判断规则类型
+          ################################
+
+          has_domain=$(grep -Ec '^(DOMAIN|DOMAIN-SUFFIX),' "$tmp" || true)
+          has_ip=$(grep -Ec '^(IP-CIDR|IP-CIDR6),' "$tmp" || true)
+          has_keyword=$(grep -Ec '^DOMAIN-KEYWORD,' "$tmp" || true)
+          has_wildcard=$(grep -Ec '^DOMAIN-WILDCARD,' "$tmp" || true)
+
+          has_other=$(grep -Ev '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD|DOMAIN-WILDCARD|IP-CIDR|IP-CIDR6),' "$tmp" | grep -c ',' || true)
+
+          if [ "$has_keyword" -gt 0 ] || [ "$has_wildcard" -gt 0 ]; then
+            rule_type="classical"
+
+          elif [ "$has_domain" -gt 0 ] && [ "$has_ip" -eq 0 ] && [ "$has_other" -eq 0 ]; then
+            rule_type="domain"
+
+          elif [ "$has_ip" -gt 0 ] && [ "$has_domain" -eq 0 ] && [ "$has_other" -eq 0 ]; then
+            rule_type="ipcidr"
+
+          else
+            rule_type="classical"
+          fi
+
+          echo "$name → $rule_type"
+
+          ################################
+          # Mihomo
+          ################################
+
+          mihomo_out="Mihomo/rule/$name.yaml"
+
+          echo "payload:" > "$mihomo_out"
+
+          if [ "$rule_type" = "domain" ]; then
+
+            while IFS=',' read -r type value extra; do
+              case "$type" in
+                DOMAIN-SUFFIX)
+                  echo "  - '+.$value'" >> "$mihomo_out"
+                  ;;
+                DOMAIN)
+                  echo "  - '$value'" >> "$mihomo_out"
+                  ;;
+              esac
+            done < "$tmp"
+
+          elif [ "$rule_type" = "ipcidr" ]; then
+
+            grep -E '^IP-CIDR,|^IP-CIDR6,' "$tmp" \
+            | cut -d',' -f2 \
+            | cut -d',' -f1 \
+            | sed "s/^/  - '/;s/$/'/" >> "$mihomo_out"
+
+          else
+
+            sed "s/^/  - '/;s/$/'/" "$tmp" >> "$mihomo_out"
+
+          fi
+
+          ################################
+          # Quantumult X
+          ################################
+
+          cp "$tmp" "Quantumult X/rule/$name.list"
+
+          ################################
+          # Egern
+          ################################
+
+          egern_out="Egern/rule/$name.yaml"
+          rm -f "$egern_out"
+
+          if grep -qE '^IP-CIDR,|^IP-CIDR6,|^IP-CIDR6,|^GEOIP,' "$tmp"; then
+            echo "no_resolve: true" >> "$egern_out"
+          fi
+
+          if grep -q '^DOMAIN-SUFFIX,' "$tmp"; then
+            echo "" >> "$egern_out"
+            echo "domain_suffix_set:" >> "$egern_out"
+            grep '^DOMAIN-SUFFIX,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
+          fi
+
+          if grep -q '^DOMAIN,' "$tmp"; then
+            echo "" >> "$egern_out"
+            echo "domain_set:" >> "$egern_out"
+            grep '^DOMAIN,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
+          fi
+
+          if grep -q '^DOMAIN-KEYWORD,' "$tmp"; then
+            echo "" >> "$egern_out"
+            echo "domain_keyword_set:" >> "$egern_out"
+            grep '^DOMAIN-KEYWORD,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
+          fi
+
+          if grep -q '^DOMAIN-WILDCARD,' "$tmp"; then
+            echo "" >> "$egern_out"
+            echo "domain_wildcard_set:" >> "$egern_out"
+            grep '^DOMAIN-WILDCARD,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
+          fi
+
+           if grep -q '^DOMAIN-REGEX,' $tmp; then
+            echo "" >> $egern_out
+            echo "domain_regex_set:" >> $egern_out
+            grep '^DOMAIN-REGEX,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
+          fi
+
+          if grep -q '^IP-CIDR,' "$tmp"; then
+            echo "" >> "$egern_out"
+            echo "ip_cidr_set:" >> "$egern_out"
+            grep '^IP-CIDR,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
+          fi
+
+          if grep -q '^IP-CIDR6,' "$tmp"; then
+            echo "" >> "$egern_out"
+            echo "ip_cidr6_set:" >> "$egern_out"
+            grep '^IP-CIDR6,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
+          fi
+
+          if grep -q '^GEOIP,' $tmp; then
+            echo "" >> $egern_out
+            echo "geoip_set:" >> $egern_out
+            grep '^GEOIP,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
+          fi
+
+          if grep -q '^PROTOCOL,' $tmp; then
+            echo "" >> $egern_out
+            echo "protocol_set:" >> $egern_out
+            grep '^PROTOCOL,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
+          fi
+
+        done
+
+        ################################
+        # 生成 README
+        ################################
+
+        echo "# Proxy Rules" > README.md
+        echo "" >> README.md
+
+        echo "## Rule Statistics" >> README.md
+        echo "" >> README.md
+
+        for file in surge/rule/*.list; do
+          name=$(basename "$file" .list)
+          count=$(grep -v '^#' "$file" | grep -v '^$' | wc -l)
+          echo "- **$name** : $count rules" >> README.md
+        done
+
+        echo "" >> README.md
+        echo "Total rules: $total_rules" >> README.md
 
 
-            ################################
-            # Quantumult X
-            ################################
+    - name: Commit
+      run: |
 
-            cp $tmp "Quantumult X/rule/$filename"
+        git config --global user.name "github-actions"
+        git config --global user.email "actions@github.com"
 
+        git add Mihomo/rule
+        git add Egern/rule
+        git add "Quantumult X/rule"
+        git add README.md
 
-            ################################
-            # Egern YAML
-            ################################
+        git diff --cached --quiet && echo "No changes" && exit 0
 
-            egern_out="Egern/rule/$name.yaml"
-
-            # 只有包含 IP-CIDR / IP-CIDR6 才加 no_resolve
-            if grep -qE '^IP-CIDR,|^IP-CIDR6,' $tmp; then
-              echo "no_resolve: true" > $egern_out
-            else
-              echo -n "" > $egern_out
-            fi
-
-            # DOMAIN-SUFFIX
-            if grep -q '^DOMAIN-SUFFIX,' $tmp; then
-              echo "" >> $egern_out
-              echo "domain_suffix_set:" >> $egern_out
-              grep '^DOMAIN-SUFFIX,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
-            fi
-
-            # DOMAIN-KEYWORD
-            if grep -q '^DOMAIN-KEYWORD,' $tmp; then
-              echo "" >> $egern_out
-              echo "domain_keyword_set:" >> $egern_out
-              grep '^DOMAIN-KEYWORD,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
-            fi
-
-            # DOMAIN
-            if grep -q '^DOMAIN,' $tmp; then
-              echo "" >> $egern_out
-              echo "domain_set:" >> $egern_out
-              grep '^DOMAIN,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
-            fi
-
-            # DOMAIN-REGEX
-            if grep -q '^DOMAIN-REGEX,' $tmp; then
-              echo "" >> $egern_out
-              echo "domain_regex_set:" >> $egern_out
-              grep '^DOMAIN-REGEX,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
-            fi
-
-            # DOMAIN-WILDCARD
-            if grep -q '^DOMAIN-WILDCARD,' $tmp; then
-              echo "" >> $egern_out
-              echo "domain_wildcard_set:" >> $egern_out
-              grep '^DOMAIN-WILDCARD,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
-            fi
-
-            # GEOIP
-            if grep -q '^GEOIP,' $tmp; then
-              echo "" >> $egern_out
-              echo "geoip_set:" >> $egern_out
-              grep '^GEOIP,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
-            fi
-
-            # IP-CIDR
-            if grep -q '^IP-CIDR,' $tmp; then
-              echo "" >> $egern_out
-              echo "ip_cidr_set:" >> $egern_out
-              grep '^IP-CIDR,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
-            fi
-
-            # IP-CIDR6
-            if grep -q '^IP-CIDR6,' $tmp; then
-              echo "" >> $egern_out
-              echo "ip_cidr6_set:" >> $egern_out
-              grep '^IP-CIDR6,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
-            fi
-
-            # PROTOCOL
-            if grep -q '^PROTOCOL,' $tmp; then
-              echo "" >> $egern_out
-              echo "protocol_set:" >> $egern_out
-              grep '^PROTOCOL,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
-            fi
-
-          done
-
-      - name: Commit changes
-        run: |
-          git config --global user.name github-actions
-          git config --global user.email github-actions@github.com
-          git add .
-          git commit -m "Auto sync rules" || echo "No changes"
-          git push
+        git commit -m "auto sync rules"
+        git push
