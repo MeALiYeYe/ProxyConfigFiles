@@ -21,19 +21,20 @@ jobs:
           mkdir -p Egern/rule
           mkdir -p "Quantumult X/rule"
 
-          for file in Surge/rule/*
+          for file in surge/rule/*.list
           do
-            name=$(basename $file)
+            name=$(basename $file .list)     # Direct
+            filename=$(basename $file)       # Direct.list
 
-            # Mihomo YAML
+            # Mihomo
             echo "payload:" > Mihomo/rule/$name.yaml
             sed 's/^/  - /' $file >> Mihomo/rule/$name.yaml
 
             # Egern
-            cp $file Egern/rule/$name
+            cp $file Egern/rule/$filename
 
             # Quantumult X
-            cp $file "Quantumult X/rule/$name"
+            cp $file "Quantumult X/rule/$filename"
 
           done
 
