@@ -1,3 +1,5 @@
+no_resolve: true
+
 domain_suffix_set:
   - 123456.al
   - 285286.xyz
@@ -58,15 +60,3 @@ domain_set:
   - emby.lcloud.wiki
   - notnetflix.cos.cat
   - random.ouonet.org
-
-domain_regex_set:
-
-domain_wildcard_set:
-
-geoip_set:
-
-ip_cidr_set:
-
-ip_cidr6_set:
-
-protocol_set:

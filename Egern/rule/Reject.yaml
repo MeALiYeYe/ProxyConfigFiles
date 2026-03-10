@@ -1,3 +1,5 @@
+no_resolve: true
+
 domain_suffix_set:
   - 2345.com
   - 360.cn
@@ -20,8 +22,6 @@ domain_suffix_set:
   - ylog.huya.com
   - zhihu-web-analytics.zhihu.com
 
-domain_keyword_set:
-
 domain_set:
   - anquan.baidu.com
   - baijiahao.baidu.com
@@ -34,12 +34,6 @@ domain_set:
   - wan.baidu.com
   - xueshu.baidu.com
   - yingxiao.baidu.com
-
-domain_regex_set:
-
-domain_wildcard_set:
-
-geoip_set:
 
 ip_cidr_set:
   - 101.91.140.124/32
@@ -59,7 +53,3 @@ ip_cidr_set:
   - 47.100.123.169/32
   - 47.101.175.206/32
   - 95.161.76.100/31
-
-ip_cidr6_set:
-
-protocol_set:

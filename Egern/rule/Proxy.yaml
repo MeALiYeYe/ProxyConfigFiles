@@ -1,3 +1,5 @@
+no_resolve: true
+
 domain_suffix_set:
   - metacubex.one
   - tkv.one
@@ -8,15 +10,3 @@ domain_keyword_set:
 
 domain_set:
   - board.zash.run.place
-
-domain_regex_set:
-
-domain_wildcard_set:
-
-geoip_set:
-
-ip_cidr_set:
-
-ip_cidr6_set:
-
-protocol_set:

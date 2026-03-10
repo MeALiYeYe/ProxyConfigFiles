@@ -1,3 +1,5 @@
+no_resolve: true
+
 domain_suffix_set:
   - gwm.cn
   - gwm.com.cn
@@ -22,15 +24,3 @@ domain_keyword_set:
 domain_set:
   - ifconfig.me
   - liangxin.xyz
-
-domain_regex_set:
-
-domain_wildcard_set:
-
-geoip_set:
-
-ip_cidr_set:
-
-ip_cidr6_set:
-
-protocol_set:

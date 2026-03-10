@@ -1,14 +1,4 @@
-domain_suffix_set:
-
-domain_keyword_set:
-
-domain_set:
-
-domain_regex_set:
-
-domain_wildcard_set:
-
-geoip_set:
+no_resolve: true
 
 ip_cidr_set:
   - 109.239.140.0/24
@@ -24,5 +14,3 @@ ip_cidr_set:
 ip_cidr6_set:
   - 2001:67c:4e8::/48
   - 2a0a:f280:203::/48
-
-protocol_set:
