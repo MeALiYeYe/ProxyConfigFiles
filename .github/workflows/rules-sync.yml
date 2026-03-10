@@ -110,14 +110,14 @@ jobs:
 
           elif [ "$rule_type" = "ipcidr" ]; then
 
-            grep -E '^IP-CIDR,|^IP-CIDR6,' "$tmp" \
+            grep -E '^(IP-CIDR|IP-CIDR6),' "$tmp" \
             | cut -d',' -f2 \
             | cut -d',' -f1 \
             | sed "s/^/  - '/;s/$/'/" >> "$mihomo_out"
 
           else
 
-            sed "s/^/  - '/;s/$/'/" "$tmp" >> "$mihomo_out"
+            sed 's/^/  - /' "$tmp" >> "$mihomo_out"
 
           fi
 
