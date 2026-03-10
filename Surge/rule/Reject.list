@@ -1,5 +1,7 @@
 DOMAIN,httpdns.bilivideo.com
 DOMAIN-SUFFIX,zhihu-web-analytics.zhihu.com
+# Google错误监控和上报
+DOMAIN-SUFFIX,sentry.io
 # 关闭虎牙直播的P2P上传之类的功能
 DOMAIN-SUFFIX,metric.huya.com
 DOMAIN-SUFFIX,ylog.huya.com
@@ -8,10 +10,6 @@ DOMAIN-SUFFIX,p2p.huya.com
 DOMAIN-SUFFIX,statwup.huya.com
 DOMAIN-SUFFIX,e-stat.huya.com
 DOMAIN-SUFFIX,va.huya.com
-# 知乎伪装OpenAi域名
-DOMAIN-SUFFIX,sentry.io
-DOMAIN-SUFFIX,zhihu-web-analytics.zhihu.com
-# 中国移动一直访问
 DOMAIN-SUFFIX,xionguamaqui.com
 # 百度
 DOMAIN,dumall.baidu.com
