@@ -1,8 +1,7 @@
 payload:
-  - # 中国移动一直访问
+  - # Google错误监控和上报
   - # 关闭虎牙直播的P2P上传之类的功能
   - # 百度
-  - # 知乎伪装OpenAi域名
   - # 防止电报转圈
   - DOMAIN,anquan.baidu.com
   - DOMAIN,baijiahao.baidu.com
