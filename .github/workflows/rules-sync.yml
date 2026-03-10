@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "Surge/rule/**"
+  workflow_dispatch: 
 
 jobs:
   sync:
