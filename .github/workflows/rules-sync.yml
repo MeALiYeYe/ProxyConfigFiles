@@ -3,7 +3,7 @@ name: Sync Rules
 on:
   push:
     paths:
-      - 'surge/rule/**'
+      - 'Surge/rule/**'
   workflow_dispatch:
 
 jobs:
@@ -12,7 +12,7 @@ jobs:
 
     steps:
     - name: Checkout
-     uses: actions/checkout@v5
+      uses: actions/checkout@v5
 
     - name: Generate rules
       run: |
@@ -23,7 +23,7 @@ jobs:
 
         total_rules=0
 
-        for file in surge/rule/*.list; do
+        for file in Surge/rule/*.list; do
 
           name=$(basename "$file" .list)
           tmp=$(mktemp)
@@ -204,7 +204,7 @@ jobs:
         echo "## Rule Statistics" >> README.md
         echo "" >> README.md
 
-        for file in surge/rule/*.list; do
+        for file in Surge/rule/*.list; do
           name=$(basename "$file" .list)
           count=$(grep -v '^#' "$file" | grep -v '^$' | wc -l)
           echo "- **$name** : $count rules" >> README.md
