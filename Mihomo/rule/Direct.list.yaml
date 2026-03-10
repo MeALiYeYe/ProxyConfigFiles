@@ -1,0 +1,23 @@
+payload:
+  - DOMAIN,ifconfig.me
+  - DOMAIN,liangxin.xyz
+  - 
+  - DOMAIN-SUFFIX,qiyoujiage.com
+  - DOMAIN-SUFFIX,nsloon.com
+  - DOMAIN-SUFFIX,tkv.one
+  - DOMAIN-SUFFIX,ojbktv.com
+  - DOMAIN-SUFFIX,sntp.dev
+  - DOMAIN-SUFFIX,sntp.uk
+  - DOMAIN-SUFFIX,sntp.me
+  - DOMAIN-SUFFIX,sntp.net
+  - DOMAIN-SUFFIX,newsntp.net
+  - DOMAIN-SUFFIX,xianniu.com
+  - DOMAIN-SUFFIX,xianniu.cc
+  - # gwmapp
+  - DOMAIN-SUFFIX,gwm.com.cn
+  - DOMAIN-SUFFIX,gwm.cn
+  - DOMAIN-SUFFIX,gwmapp-h.com
+  - DOMAIN-SUFFIX,gwmapp-w.com
+  - 
+  - DOMAIN-KEYWORD,gwm-mn
+  - DOMAIN-KEYWORD,kahaoqua
