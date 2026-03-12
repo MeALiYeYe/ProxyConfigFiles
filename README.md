@@ -2,7 +2,7 @@
 
 ## Rule Statistics
 
-- **Direct** : 13 rules
+- **Direct** : 16 rules
 - **Emby** : 55 rules
 - **Proxy** : 7 rules
 - **Reject** : 48 rules
@@ -10,4 +10,4 @@
 - **TelegramSG** : 5 rules
 - **TelegramUS** : 3 rules
 
-Total rules: 142
+Total rules: 145
