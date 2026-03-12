@@ -43,10 +43,10 @@ dns:
   - proxy_rule_set:
       match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Proxy/Proxy_Domain.list
       value: ForeignDNS
-      disabled: false
   - domain_wildcard:
       match: '*'
       value: DomesticDNS
+      disabled: false
   hosts:
     ip6-localhost:
     - ::1
@@ -307,6 +307,8 @@ policy_groups:
     - 广东
     - 北京
     - 河北
+    - 王卡
+    - 彩信
     flatten: false
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/jichang.png
     hidden: false
@@ -318,6 +320,8 @@ policy_groups:
     - 广东
     - 北京
     - 河北
+    - 王卡
+    - 彩信
     flatten: false
     icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/Domestic.png
     hidden: false
@@ -345,7 +349,7 @@ policy_groups:
     - BaiduProxy
     flatten: true
     filter: 南京|苏州
-    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Available_1.png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(1).png
     hidden: false
 - fallback:
     name: 广东
@@ -353,7 +357,7 @@ policy_groups:
     - BaiduProxy
     flatten: true
     filter: 广州
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/liuliang.png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(2).png
     hidden: false
 - fallback:
     name: 北京
@@ -361,7 +365,7 @@ policy_groups:
     - BaiduProxy
     flatten: true
     filter: 北京
-    icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Available.png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(4).png
     hidden: false
 - fallback:
     name: 河北
@@ -370,6 +374,22 @@ policy_groups:
     flatten: true
     filter: 保定
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/liuliang(3).png
+    hidden: false
+- fallback:
+    name: 彩信
+    policies:
+    - BaiduProxy
+    flatten: true
+    filter: 彩信
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(5).png
+    hidden: false
+- fallback:
+    name: 王卡
+    policies:
+    - BaiduProxy
+    flatten: true
+    filter: 王卡
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning.png
     hidden: false
 - fallback:
     name: 香港

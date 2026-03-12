@@ -1,3 +1,9 @@
+# 首选
+Sub1: &Sub1 "TKV"
+# 次选
+Sub2: &Sub2 "花云"
+# 备选
+Sub3: &Sub3 "守候"
 SubStoreUrl: &SubStoreUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
 BaiduUrl: &BaiduUrl "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/BaiduProxy.yaml"
 
@@ -18,10 +24,13 @@ FilterLowMag: &FilterLowMag '0\.\d+'
 FilterHighMag: &FilterHighMag '(?!0\.)[1-9]\d*(?:\.\d+)'
 
 Proxyer: &Proxyer {type: http, interval: 43200, exclude-filter: *ExcludeFilter, health-check: {enable: true, url: *ProxyTestUrl, interval: 600, timeout: 2000}}
-Smartp: &Smartp {type: smart, include-all-providers: true, url: *ProxyTestUrl, uselightgbm: true, collectdata: false, strategy: sticky-sessions, hidden: true}
-Smartd: &Smartd {type: smart, include-all-providers: true, Url: *DirectTestUrl, uselightgbm: true, collectdata: false, strategy: sticky-sessions, hidden: true}
-Groupp: &Groupp {type: select, url: *ProxyTestUrl, interval: 300, lazy: true, timeout: 5000, max-failed-times: 5, hidden: false, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]}
-Groupd: &Groupd {type: select, url: *DirectTestUrl, interval: 300, lazy: true, timeout: 5000, max-failed-times: 5, hidden: false, proxies: [直连, 江苏, 广东, 北京]}
+
+Smartp: &Smartp {type: smart, url: *ProxyTestUrl, uselightgbm: true, collectdata: false, strategy: sticky-sessions, hidden: true}
+Smartd: &Smartd {<<: *Smartp, use: [BaiduProxy], Url: *DirectTestUrl}
+
+Selectp: &Selectp {type: select, url: *ProxyTestUrl, interval: 300, lazy: true, timeout: 5000, max-failed-times: 5, hidden: false}
+Groupp: &Groupp {<<: *Selectp, proxies: [直连, 低倍, 高倍, 香港①, 香港②, 香港③, 台湾①, 台湾②, 台湾③, 狮城①, 狮城②, 狮城③, 日本①, 日本②, 日本③, 美国①, 美国②, 美国③]}
+Groupd: &Groupd {<<: *Selectp, url: *DirectTestUrl, proxies: [直连, 江苏, 广东, 北京]}
 
 rule-anchor:
   dom: &dom {type: http, behavior: domain, interval: 86400}
@@ -33,7 +42,9 @@ proxies:
   - {name: 禁止, type: reject}
 
 proxy-providers:
-  Sub_Store: {<<: *Proxyer, path: ./proxy_provider/SubStore.yaml, url: *SubStoreUrl, health-check: {enable: true, url: *ProxyTestUrl, interval: 600}}
+  *Sub1: {<<: *Proxyer, path: ./proxy_provider/Sub1yaml, url: *SubStoreUrl, filter: *Sub1, health-check: {enable: true, url: *ProxyTestUrl, interval: 600}}
+  *Sub2: {<<: *Proxyer, path: ./proxy_provider/Sub2.yaml, url: *SubStoreUrl, filter: *Sub2, health-check: {enable: true, url: *ProxyTestUrl, interval: 600}}
+  *Sub3: {<<: *Proxyer, path: ./proxy_provider/Sub3.yaml, url: *SubStoreUrl, filter: *Sub3, health-check: {enable: true, url: *ProxyTestUrl, interval: 600}}
   BaiduProxy: {<<: *Proxyer, path: ./proxy_provider/BaiduProxy.yaml, url: *BaiduUrl, health-check: {enable: true, url: *DirectTestUrl, interval: 600}}
 
 proxy-groups:
@@ -51,18 +62,35 @@ proxy-groups:
   - {name: Apple, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png", <<: *Groupp}
   - {name: Foreign, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png", <<: *Groupp}
   - {name: Final, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png", <<: *Groupp}
+
+  - {name: 香港①, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png", <<: *Smartp, use: [*Sub1], filter: *FilterHK}
+  - {name: 台湾①, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Taiwan.png", <<: *Smartp, use: [*Sub1], filter: *FilterTW}
+  - {name: 狮城①, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png", <<: *Smartp, use: [*Sub1], filter: *FilterSG} 
+  - {name: 日本①, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png", <<: *Smartp, use: [*Sub1], filter: *FilterJP} 
+  - {name: 美国①, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png", <<: *Smartp, use: [*Sub1], filter: *FilterUS}
+
+  - {name: 香港②, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png", <<: *Smartp, use: [*Sub2], filter: *FilterHK}
+  - {name: 台湾②, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Taiwan.png", <<: *Smartp, use: [*Sub2], filter: *FilterTW}
+  - {name: 狮城②, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png", <<: *Smartp, use: [*Sub2], filter: *FilterSG} 
+  - {name: 日本②, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png", <<: *Smartp, use: [*Sub2], filter: *FilterJP} 
+  - {name: 美国②, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png", <<: *Smartp, use: [*Sub2], filter: *FilterUS}
+
+  - {name: 香港③, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png", <<: *Smartp, use: [*Sub3], filter: *FilterHK}
+  - {name: 台湾③, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Taiwan.png", <<: *Smartp, use: [*Sub3], filter: *FilterTW}
+  - {name: 狮城③, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png", <<: *Smartp, use: [*Sub3], filter: *FilterSG} 
+  - {name: 日本③, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png", <<: *Smartp, use: [*Sub3], filter: *FilterJP} 
+  - {name: 美国③, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png", <<: *Smartp, use: [*Sub3], filter: *FilterUS}
+
+  - {name: 低倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/liuliang(2).png", <<: *Smartp, include-all-providers: true, filter: *FilterLowMag}
+  - {name: 高倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/liuliang(3).png", <<: *Smartp, include-all-providers: true, filter: *FilterHighMag}
+
   - {name: 江苏, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png", <<: *Smartd, filter: "南京|苏州"}
   - {name: 广东, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png", <<: *Smartd, filter: "广州"}
   - {name: 北京, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png", <<: *Smartd, filter: "北京|保定"}
-  - {name: 香港, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png", <<: *Smartp, filter: *FilterHK}
-  - {name: 台湾, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Taiwan.png", <<: *Smartp, filter: *FilterTW}
-  - {name: 狮城, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png", <<: *Smartp, filter: *FilterSG} 
-  - {name: 日本, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png", <<: *Smartp, filter: *FilterJP} 
-  - {name: 美国, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png", <<: *Smartp, filter: *FilterUS}
-  - {name: 低倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/liuliang(2).png", <<: *Smartp, filter: *FilterLowMag}
-  - {name: 高倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/liuliang(3).png", <<: *Smartp, filter: *FilterHighMag}
 
 rule-providers:
+  adblock: {<<: *dom, format: mrs, url: "https://raw.githubusercontent.com/217heidai/adblockfilters/main/rules/adblockmihomo.mrs", path: ./rule_provider/adblock.mrs}
+  emby: {<<: *dom, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Emby.yaml", path: ./rule_provider/emby.yaml}
   awavenue: {<<: *dom, format: mrs, url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/refs/heads/main/Filters/AWAvenue-Ads-Rule-Clash.mrs", path: ./rule_provider/awavenue.mrs}
   mydirect: {<<: *dom, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Direct.yaml", path: ./rule_provider/mydirect.yaml}
   myrejectdomain: {<<: *dom, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject_domain.yaml", path: ./rule_provider/myrejectdomain.yaml}
@@ -72,16 +100,17 @@ rule-providers:
   fakelocation: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rule_provider/fakelocation.yaml}
 
 rules:
-  - RULE-SET,awavenue,REJECT
-  - RULE-SET,myrejectdomain,REJECT
-  - RULE-SET,myrejectip,REJECT,no-resolve
+  - RULE-SET,adblock,REJECT-DROP
+  - RULE-SET,awavenue,REJECT-DROP
+  - RULE-SET,myrejectdomain,REJECT-DROP
+  - RULE-SET,myrejectip,REJECT-DROP,no-resolve
   - RULE-SET,mydirect,DIRECT
   - RULE-SET,myproxy,Foreign
   - RULE-SET,emby,Emby
   - RULE-SET,fakelocation,Location
   - GEOSITE,private,DIRECT 
-  - GEOSITE,category-ads-all,REJECT
-  - GEOSITE,category-httpdns-cn,REJECT
+  - GEOSITE,category-ads-all,REJECT-DROP
+  - GEOSITE,category-httpdns-cn,REJECT-DROP
   - GEOSITE,youtube,Youtube
   - GEOSITE,category-entertainment,Media
   - GEOSITE,telegram,Telegram
@@ -106,7 +135,7 @@ mixed-port: 7890
 socks-port: 7891
 redir-port: 7892
 tproxy-port: 1536
-mode: Rule
+mode: rule
 log-level: warning
 ipv6: true
 udp: true
@@ -185,6 +214,7 @@ dns:
   ipv6: true
   prefer-h3: true
   enhanced-mode: fake-ip
+  respect-rules: true
   fake-ip-range: 198.18.0.0/15
   fake-ip-filter: ["GEOSITE:private,connectivity-check", 'dns.google', '*.dns.google', 'cloudflare-dns.com', '*.cloudflare-dns.com']
   nameserver-policy:
@@ -204,7 +234,6 @@ dns:
   nameserver:
     - 'https://dns.alidns.com/dns-query#DIRECT&h3=true'
     - 'quic://dns.alidns.com#DIRECT'
-    - 'https://doh.pub/dns-query#DIRECT'
 
 # hosts
 hosts:
