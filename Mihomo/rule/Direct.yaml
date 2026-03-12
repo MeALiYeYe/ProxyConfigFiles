@@ -7,6 +7,7 @@ payload:
   - DOMAIN-SUFFIX,gwmapp-w.com
   - DOMAIN-SUFFIX,nsloon.com
   - DOMAIN-SUFFIX,qiyoujiage.com
+  - DOMAIN-SUFFIX,sntp.uk
   - DOMAIN-SUFFIX,xianniu.cc
   - DOMAIN-SUFFIX,xianniu.com
   - DOMAIN-KEYWORD,gwm-mn
