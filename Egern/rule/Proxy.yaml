@@ -1,10 +1,7 @@
 domain_suffix_set:
   - metacubex.one
-  - newsntp.net
   - ojbktv.com
-  - sntp.dev
-  - sntp.me
-  - sntp.net
+  - sntp.uk
   - tkv.one
 domain_set:
   - board.zash.run.place
