@@ -1,9 +1,11 @@
 SubStoreUrl: &SubStoreUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
 BaiduUrl: &BaiduUrl "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/BaiduProxy.yaml"
 
+# 延迟测试链接
 ProxyTestUrl: &ProxyTestUrl "https://www.gstatic.com/generate_204"
-DirectTestUrl: &DirectTestUrl "https://wifi.vivo.com.cn/generate_204"
+DirecTestUrl: &DirecTestUrl "https://wifi.vivo.com.cn/generate_204"
 
+# 过滤规则
 FilterHK: &FilterHK '(?i)(?:港|香港|🇭🇰|\bHK\b|Hong|HKG)'
 FilterTW: &FilterTW '(?i)(?:台|台湾|🇼🇸|🇨🇳|🇹🇼|\bTW\b|tai|TWN)'
 FilterSG: &FilterSG '(?i)(?:坡|新加坡|🇸🇬|\bSG\b|Singapore|SGP)'
@@ -12,30 +14,36 @@ FilterKR: &FilterKR '(?i)(?:韩|韩国|🇰🇷|\bKR\b|KOR|Korea)'
 FilterUS: &FilterUS '(?i)(?:美|美国|🇺🇸|\bUS\b|USA|States)'
 FilterRU: &FilterRU '(?i)(?:俄罗斯|莫斯科|🇷🇺|RU|Russia|Moscow)'
 FilterEU: &FilterEU '(?i)(?:🇧🇪|🇨🇿|🇩🇰|🇫🇮|🇫🇷|🇩🇪|🇮🇪|🇮🇹|🇱🇹|🇱🇺|🇳🇱|🇵🇱|🇸🇪|🇬🇧|CDG|FRA|AMS|MAD|BCN|FCO|MUC|BRU)'
-FilterOther: &FilterOther '^(?!.*(香港|台湾|新加坡|日本|韩国|美国|🇭🇰|🇼🇸|🇨🇳|🇹🇼|🇸🇬|🇯🇵|🇰🇷|🇺🇸|\bHK\b|\bTW\b|\bSG\b|\bJP\b|\bKR\b|\bUS\b))'
+FilterOther: &FilterOther '^(?!.*(香港|台湾|新加坡|日本|美国|🇭🇰|🇼🇸|🇨🇳|🇹🇼|🇸🇬|🇯🇵|🇺🇸|\bHK\b|\bTW\b|\bSG\b|\bJP\b|\bUS\b))'
 ExcludeFilter: &ExcludeFilter '(?i)(佣金|套餐|官网|官方|售后|免翻|过期|剩余|到期|流量|更新|点外|重置|免流|优惠|超实惠|址|AFF|Days|Date)'
 FilterLowMag: &FilterLowMag '0\.\d+'
 FilterHighMag: &FilterHighMag '(?!0\.)[1-9]\d*(?:\.\d+)'
 
-Proxyer: &Proxyer {type: http, interval: 43200, exclude-filter: *ExcludeFilter, health-check: {enable: true, url: *ProxyTestUrl, interval: 600, timeout: 2000}}
-Smartp: &Smartp {type: smart, include-all-providers: true, url: *ProxyTestUrl, uselightgbm: true, collectdata: false, strategy: sticky-sessions, hidden: true}
-Smartd: &Smartd {type: smart, include-all-providers: true, Url: *DirectTestUrl, uselightgbm: true, collectdata: false, strategy: sticky-sessions, hidden: true}
-Groupp: &Groupp {type: select, url: *ProxyTestUrl, interval: 300, lazy: true, timeout: 5000, max-failed-times: 5, hidden: false, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍]}
-Groupd: &Groupd {type: select, url: *DirectTestUrl, interval: 300, lazy: true, timeout: 5000, max-failed-times: 5, hidden: false, proxies: [直连, 江苏, 广东, 北京]}
+# 代理集和代理组
+Proxyer: &Proxyer {type: http, interval: 86400, exclude-filter: *ExcludeFilter, health-check: {enable: true, url: *ProxyTestUrl, interval: 600, timeout: 5000}}
+Smartp: &Smartp {type: smart, use: [SubStore], url: *ProxyTestUrl, policy-priority: "0.01:2.0;0.20:1.5;2.00:0.5", uselightgbm: true, collectdata: true, strategy: sticky-sessions, prefer-asn: true, hidden: true}
+Smartd: &Smartd {type: smart, use: [BaiduProxy], url: *DirecTestUrl, policy-priority: "电信:1.5;联通:0.5", uselightgbm: true, collectdata: true, strategy: sticky-sessions, prefer-asn: true, hidden: true}
+Selector: &Selector {type: select, interval: 600, url: *ProxyTestUrl, lazy: true, hidden: true}
+Groupp: &Groupp {<<: *Selector, url: *ProxyTestUrl, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 香城, 蓬莱, 蒲罗, 东瀛, 花旗, 其他, 低倍, 高倍], hidden: false}
+Groupd: &Groupd {<<: *Selector, url: *DirecTestUrl, proxies: [直连, 江苏, 广东, 北京, 河北, 王彩], hidden: false}
 
+# 规则集
 rule-anchor:
   dom: &dom {type: http, behavior: domain, interval: 86400}
   cla: &cla {type: http, behavior: classical, interval: 86400}
   ipc: &ipc {type: http, behavior: ipcidr, interval: 86400}
 
+# 代理节点
 proxies:
   - {name: 直连, type: direct}
   - {name: 禁止, type: reject}
 
+# 代理集
 proxy-providers:
-  Sub_Store: {<<: *Proxyer, path: ./proxy_provider/SubStore.yaml, url: *SubStoreUrl, health-check: {enable: true, url: *ProxyTestUrl, interval: 600}}
-  BaiduProxy: {<<: *Proxyer, path: ./proxy_provider/BaiduProxy.yaml, url: *BaiduUrl, health-check: {enable: true, url: *DirectTestUrl, interval: 600}}
+  SubStore: {<<: *Proxyer, path: ./proxies/SubStore.yaml, url: *SubStoreUrl}
+  BaiduProxy: {<<: *Proxyer, path: ./proxies/BaiduProxy.yaml, url: *BaiduUrl}
 
+# 代理组
 proxy-groups:
   - {name: Location, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png", <<: *Groupd}
   - {name: Domestic, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png", <<: *Groupd}
@@ -51,37 +59,49 @@ proxy-groups:
   - {name: Apple, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png", <<: *Groupp}
   - {name: Foreign, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png", <<: *Groupp}
   - {name: Final, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png", <<: *Groupp}
-  - {name: 江苏, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png", <<: *Smartd, filter: "南京|苏州"}
-  - {name: 广东, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png", <<: *Smartd, filter: "广州"}
-  - {name: 北京, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png", <<: *Smartd, filter: "北京|保定"}
+
   - {name: 香港, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png", <<: *Smartp, filter: *FilterHK}
   - {name: 台湾, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Taiwan.png", <<: *Smartp, filter: *FilterTW}
   - {name: 狮城, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png", <<: *Smartp, filter: *FilterSG} 
   - {name: 日本, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png", <<: *Smartp, filter: *FilterJP} 
   - {name: 美国, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png", <<: *Smartp, filter: *FilterUS}
+
+  - {name: 香城, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/HK.png", <<: *Smartp, filter: *FilterHK, dialer-proxy: 广东}
+  - {name: 蓬莱, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TW.png", <<: *Smartp, filter: *FilterTW, dialer-proxy: 广东}
+  - {name: 蒲罗, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/SG.png", <<: *Smartp, filter: *FilterSG, dialer-proxy: 广东} 
+  - {name: 东瀛, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/JP.png", <<: *Smartp, filter: *FilterJP, dialer-proxy: 江苏} 
+  - {name: 花旗, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png", <<: *Smartp, filter: *FilterUS, dialer-proxy: 江苏}
+
+  - {name: 其他, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Rocket.png", <<: *Smartp, filter: *FilterOther}
   - {name: 低倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/liuliang(2).png", <<: *Smartp, filter: *FilterLowMag}
   - {name: 高倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/liuliang(3).png", <<: *Smartp, filter: *FilterHighMag}
 
-rule-providers:
-  awavenue: {<<: *dom, format: mrs, url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/refs/heads/main/Filters/AWAvenue-Ads-Rule-Clash.mrs", path: ./rule_provider/awavenue.mrs}
-  mydirect: {<<: *dom, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Direct.yaml", path: ./rule_provider/mydirect.yaml}
-  myrejectdomain: {<<: *dom, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject_domain.yaml", path: ./rule_provider/myrejectdomain.yaml}
-  myrejectip: {<<: *ipc, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject_ip.yaml", path: ./rule_provider/myrejectip.yaml}
-  myproxy: {<<: *dom, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Proxy.yaml", path: ./rule_provider/myproxy.yaml}
-  emby: {<<: *dom, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Emby.yaml", path: ./rule_provider/emby.yaml}
-  fakelocation: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rule_provider/fakelocation.yaml}
+  - {name: 江苏, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/lightning(1).png", <<: *Smartd, filter: "南京|苏州"}
+  - {name: 广东, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/lightning(2).png", <<: *Smartd, filter: "广州"}
+  - {name: 北京, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/lightning(3).png", <<: *Smartd, filter: "北京"}
+  - {name: 河北, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/lightning(4).png", <<: *Smartd, filter: "保定"}
+  - {name: 王彩, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/lightning(5).png", <<: *Smartd, filter: "王卡|彩信"}
 
+# 规则集
+rule-providers:
+  awavenue: {<<: *dom, format: mrs, url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/refs/heads/main/Filters/AWAvenue-Ads-Rule-Clash.mrs", path: ./rules/awavenue.mrs}
+  mydirect: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Direct.yaml", path: ./rules/mydirect.yaml}
+  myreject: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Reject.yaml", path: ./rules/myreject.yaml}
+  myproxy: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Proxy.yaml", path: ./rules/myproxy.yaml}
+  emby: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/rule/Emby.yaml", path: ./rules/emby.yaml}
+  fakelocation: {<<: *cla, format: yaml, url: "https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/refs/heads/main/generated/rule-provider.yaml", path: ./rules/fakelocation.yaml}
+
+# 路由规则
 rules:
-  - RULE-SET,awavenue,REJECT
-  - RULE-SET,myrejectdomain,REJECT
-  - RULE-SET,myrejectip,REJECT,no-resolve
+  - RULE-SET,myreject,REJECT-DROP
   - RULE-SET,mydirect,DIRECT
   - RULE-SET,myproxy,Foreign
   - RULE-SET,emby,Emby
+  - RULE-SET,awavenue,REJECT-DROP
   - RULE-SET,fakelocation,Location
   - GEOSITE,private,DIRECT 
-  - GEOSITE,category-ads-all,REJECT
-  - GEOSITE,category-httpdns-cn,REJECT
+  - GEOSITE,category-ads-all,REJECT-DROP
+  - GEOSITE,category-httpdns-cn,REJECT-DROP
   - GEOSITE,youtube,Youtube
   - GEOSITE,category-entertainment,Media
   - GEOSITE,telegram,Telegram
@@ -106,7 +126,7 @@ mixed-port: 7890
 socks-port: 7891
 redir-port: 7892
 tproxy-port: 1536
-mode: Rule
+mode: rule
 log-level: warning
 ipv6: true
 udp: true
@@ -142,14 +162,14 @@ secret: ""
 profile:
   store-selected: true
   store-fake-ip: true
-  smart-collector-size: 500
+  smart-collector-size: 200
 
 # 域名嗅探
 sniffer:
   enable: true
   force-dns-mapping: true
   parse-pure-ip: true
-  override-destination: false
+  override-destination: true
   sniff:
     HTTP:
       ports: [80, 8080-8880]
@@ -157,7 +177,7 @@ sniffer:
     TLS:
       ports: [443, 5228-5230, 8443]
     QUIC:
-      ports: []
+      ports: [443, 8443]
   force-domain:
     - "+.v2ex.com"
   skip-domain: ["+.local", "+.lan", "localhost", "Mijia Cloud", "miwifi.com"]
@@ -185,16 +205,14 @@ dns:
   ipv6: true
   prefer-h3: true
   enhanced-mode: fake-ip
+  respect-rules: true
   fake-ip-range: 198.18.0.0/15
   fake-ip-filter: ["GEOSITE:private,connectivity-check", 'dns.google', '*.dns.google', 'cloudflare-dns.com', '*.cloudflare-dns.com']
   nameserver-policy:
     'GEOSITE:category-ads-all,category-httpdns-cn': rcode://name_error
     'GEOSITE:cn,apple,microsoft':
       - 'https://dns.alidns.com/dns-query#DIRECT&h3=true'
-      - 'https://doh.pub/dns-query#DIRECT'
-    'GEOSITE:geolocation-!cn':
-      - 'https://dns.google/dns-query#Google&h3=true'
-      - 'https://cloudflare-dns.com/dns-query#Cloudflare&h3=true'
+      - 'quic://dns.alidns.com#DIRECT'
   direct-nameserver:
     - tls://223.5.5.5
     - tls://223.6.6.6
@@ -202,9 +220,8 @@ dns:
     - tls://223.5.5.5
     - tls://223.6.6.6
   nameserver:
-    - 'https://dns.alidns.com/dns-query#DIRECT&h3=true'
-    - 'quic://dns.alidns.com#DIRECT'
-    - 'https://doh.pub/dns-query#DIRECT'
+    - 'https://dns.google/dns-query#Google&h3=true'
+    - 'https://cloudflare-dns.com/dns-query#Cloudflare&h3=true'
 
 # hosts
 hosts:
@@ -212,5 +229,5 @@ hosts:
   doh.pub: [1.12.12.21, 120.53.53.53, "2402:4e00::", "2402:4e00:1::"]
   dns.alidns.com: [223.5.5.5, 223.6.6.6, "2400:3200::1", "2400:3200:baba::1"]
   dns.google: [8.8.4.4, 8.8.8.8, "2001:4860:4860::8844", "2001:4860:4860::8888"]
-  cloudflarr-dns.com: [1.0.0.1, 1.1.1.1, "2606:4700:4700::1001", "2606:4700:4700::1111"]
+  cloudflare-dns.com: [1.0.0.1, 1.1.1.1, "2606:4700:4700::1001", "2606:4700:4700::1111"]
   dns.cloudflare.com: [1.0.0.1, 1.1.1.1, "2606:4700:4700::1001", "2606:4700:4700::1111"]
