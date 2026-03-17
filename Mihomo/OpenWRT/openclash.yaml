@@ -21,10 +21,11 @@ FilterHighMag: &FilterHighMag '(?!0\.)[1-9]\d*(?:\.\d+)'
 
 # 代理集和代理组
 Proxyer: &Proxyer {type: http, interval: 86400, exclude-filter: *ExcludeFilter, health-check: {enable: true, url: *ProxyTestUrl, interval: 600, timeout: 5000}}
-Smartp: &Smartp {type: smart, use: [SubStore], url: *ProxyTestUrl, policy-priority: "BGP:2.0;0.20:1.5;2.00:0.2", uselightgbm: true, collectdata: true, strategy: sticky-sessions, prefer-asn: true, hidden: true}
+Smartp: &Smartp {type: smart, use: [SubStore], url: *ProxyTestUrl, policy-priority: "0.01:2.0;0.20:1.5;2.00:0.5", uselightgbm: true, collectdata: true, strategy: sticky-sessions, prefer-asn: true, hidden: true}
 Smartd: &Smartd {type: smart, use: [BaiduProxy], url: *DirecTestUrl, policy-priority: "电信:1.5;联通:0.5", uselightgbm: true, collectdata: true, strategy: sticky-sessions, prefer-asn: true, hidden: true}
-Groupp: &Groupp {type: select, url: *ProxyTestUrl, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 低倍, 高倍], hidden: false}
-Groupd: &Groupd {type: select, url: *DirecTestUrl, proxies: [直连, 江苏, 广东, 北京], hidden: false}
+Selector: &Selector {type: select, interval: 600, url: *ProxyTestUrl, lazy: true, hidden: true}
+Groupp: &Groupp {<<: *Selector, url: *ProxyTestUrl, proxies: [直连, 香港, 台湾, 狮城, 日本, 美国, 香城, 蓬莱, 蒲罗, 东瀛, 花旗, 其他, 低倍, 高倍], hidden: false}
+Groupd: &Groupd {<<: *Selector, url: *DirecTestUrl, proxies: [直连, 江苏, 广东, 北京, 河北, 王彩], hidden: false}
 
 # 规则集
 rule-anchor:
@@ -32,8 +33,10 @@ rule-anchor:
   cla: &cla {type: http, behavior: classical, interval: 86400}
   ipc: &ipc {type: http, behavior: ipcidr, interval: 86400}
 
+# 代理节点
 proxies:
-  - {name: 直连, type: direct, udp: true}
+  - {name: 直连, type: direct}
+  - {name: 禁止, type: reject}
 
 # 代理集
 proxy-providers:
@@ -45,13 +48,11 @@ proxy-groups:
   - {name: Location, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png", <<: *Groupd}
   - {name: Domestic, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png", <<: *Groupd}
   - {name: Emby, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png", <<: *Groupp}
-  - {name: Netflix, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png", <<: *Groupp}
   - {name: Youtube, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png", <<: *Groupp}
   - {name: Media, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ForeignMedia.png", <<: *Groupp}
-  - {name: Ai, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png", <<: *Groupp}
+  - {name: Openai, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png", <<: *Groupp}
   - {name: Telegram, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png", <<: *Groupp}
   - {name: Cloudflare, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png", <<: *Groupp}
-  - {name: GoogleFCM, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google.png", <<: *Groupp}
   - {name: Google, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png", <<: *Groupp}
   - {name: Github, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png", <<: *Groupp}
   - {name: Microsoft, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png", <<: *Groupp}
@@ -59,19 +60,27 @@ proxy-groups:
   - {name: Foreign, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png", <<: *Groupp}
   - {name: Final, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png", <<: *Groupp}
 
-  - {name: 江苏, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/lightning(1).png", <<: *Smartd, filter: "南京|苏州"}
-  - {name: 广东, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/lightning(2).png", <<: *Smartd, filter: "广州"}
-  - {name: 北京, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/lightning(3).png", <<: *Smartd, filter: "北京|保定"}
-  - {name: 南方入口, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Star_1.png", type: select, proxies: [直连, 广东, 江苏], url: *DirecTestUrl, hidden: true}
-  - {name: 北方入口, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Star_2.png", type: select, proxies: [直连, 北京, 江苏], url: *DirecTestUrl, hidden: true}
+  - {name: 香港, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png", <<: *Smartp, filter: *FilterHK}
+  - {name: 台湾, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Taiwan.png", <<: *Smartp, filter: *FilterTW}
+  - {name: 狮城, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png", <<: *Smartp, filter: *FilterSG} 
+  - {name: 日本, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png", <<: *Smartp, filter: *FilterJP} 
+  - {name: 美国, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png", <<: *Smartp, filter: *FilterUS}
 
-  - {name: 香港, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png", <<: *Smartp, filter: *FilterHK, dialer-proxy:  南方入口}
-  - {name: 台湾, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Taiwan.png", <<: *Smartp, filter: *FilterTW, dialer-proxy: 南方入口}
-  - {name: 狮城, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png", <<: *Smartp, filter: *FilterSG, dialer-proxy: 南方入口} 
-  - {name: 日本, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png", <<: *Smartp, filter: *FilterJP, dialer-proxy:  北方入口 } 
-  - {name: 美国, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png", <<: *Smartp, filter: *FilterUS, dialer-proxy: 北方入口}
+  - {name: 香城, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/HK.png", <<: *Smartp, filter: *FilterHK, dialer-proxy: 广东}
+  - {name: 蓬莱, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TW.png", <<: *Smartp, filter: *FilterTW, dialer-proxy: 广东}
+  - {name: 蒲罗, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/SG.png", <<: *Smartp, filter: *FilterSG, dialer-proxy: 广东} 
+  - {name: 东瀛, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/JP.png", <<: *Smartp, filter: *FilterJP, dialer-proxy: 江苏} 
+  - {name: 花旗, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png", <<: *Smartp, filter: *FilterUS, dialer-proxy: 江苏}
+
+  - {name: 其他, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Rocket.png", <<: *Smartp, filter: *FilterOther}
   - {name: 低倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/liuliang(2).png", <<: *Smartp, filter: *FilterLowMag}
   - {name: 高倍, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/liuliang(3).png", <<: *Smartp, filter: *FilterHighMag}
+
+  - {name: 江苏, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/lightning(1).png", <<: *Smartd, filter: "南京|苏州"}
+  - {name: 广东, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/lightning(2).png", <<: *Smartd, filter: "广州"}
+  - {name: 北京, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/lightning(3).png", <<: *Smartd, filter: "北京"}
+  - {name: 河北, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/lightning(4).png", <<: *Smartd, filter: "保定"}
+  - {name: 王彩, icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/05icon/lightning(5).png", <<: *Smartd, filter: "王卡|彩信"}
 
 # 规则集
 rule-providers:
@@ -93,21 +102,18 @@ rules:
   - GEOSITE,private,DIRECT 
   - GEOSITE,category-ads-all,REJECT-DROP
   - GEOSITE,category-httpdns-cn,REJECT-DROP
-  - GEOSITE,netflix,Netflix
   - GEOSITE,youtube,Youtube
   - GEOSITE,category-entertainment,Media
   - GEOSITE,telegram,Telegram
-  - GEOSITE,googlefcm,GoogleFCM
   - GEOSITE,google,Google
   - GEOSITE,cloudflare,Cloudflare
-  - GEOSITE,category-ai-chat-!cn,Ai
+  - GEOSITE,category-ai-chat-!cn,Openai
   - GEOSITE,github,Github
   - GEOSITE,apple,Apple
   - GEOSITE,microsoft,Microsoft
   - GEOSITE,geolocation-!cn,Foreign
   - GEOSITE,cn,Domestic
   - GEOIP,private,DIRECT,no-resolve
-  - GEOIP,netflix,Netflix
   - GEOIP,telegram,Telegram,no-resolve
   - GEOIP,google,Google,no-resolve
   - GEOIP,cloudflare,Cloudflare,no-resolve
@@ -207,9 +213,6 @@ dns:
     'GEOSITE:cn,apple,microsoft':
       - 'https://dns.alidns.com/dns-query#DIRECT&h3=true'
       - 'quic://dns.alidns.com#DIRECT'
-  default-nameserver:
-    - tls://223.5.5.5
-    - tls://223.6.6.6    
   direct-nameserver:
     - tls://223.5.5.5
     - tls://223.6.6.6
