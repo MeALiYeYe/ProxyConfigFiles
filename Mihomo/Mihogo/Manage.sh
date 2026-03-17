@@ -23,7 +23,7 @@ MIHOMO_API_URL=$(curl -s https://api.github.com/repos/vernesong/mihomo/releases/
   | grep "\.gz" \
   | cut -d '"' -f 4)
 
-MIHOMO_URL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-acf8e3b.gz"
+MIHOMO_URL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-5a3c382.gz"
 
 # Smart大模型下载链接
 MODEL_URL="https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model-large.bin"
@@ -34,8 +34,8 @@ CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/he
 # Geo 数据
 GEO_FILES=(
     "asn.mmdb,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
-    "country.mmdb,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country.mmdb"
-    "geoip.dat,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
+    "country.mmdb,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country-lite.mmdb"
+    "geoip.dat,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat"
     "geosite.dat,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
 )
 
