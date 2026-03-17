@@ -173,21 +173,42 @@ deploy_mihomo() {
 #------------------------------------------------
 start_substore() {
     log_info "启动 Sub-Store..."
+
+    #------------------------
+    # 启动后端 (3000)
+    #------------------------
     cd "$SUBSTORE_DIR"
     if ! pgrep -f "sub-store.bundle.js" > /dev/null; then
-        nohup node sub-store.bundle.js >> "$SUBSTORE_DIR/substore.log" 2>&1 &
+        nohup env PORT=3000 node sub-store.bundle.js \
+            >> "$SUBSTORE_DIR/substore.log" 2>&1 &
+        log_info "后端已启动 (3000)"
     else
-        log_warn "Sub-Store 已在运行"
+        log_warn "Sub-Store 后端已在运行"
     fi
+
+    #------------------------
+    # 启动前端 (3001)
+    #------------------------
+    cd "$SUBSTORE_DIR/dist"
+
+    if ! pgrep -f "http.server 3001" > /dev/null; then
+        nohup python3 -m http.server 3001 \
+            >> "$SUBSTORE_DIR/frontend.log" 2>&1 &
+        log_info "前端已启动 (3001)"
+    else
+        log_warn "Sub-Store 前端已在运行"
+    fi
+
+    log_info "访问地址："
+    log_info "前端: http://127.0.0.1:3001"
+    log_info "后端: http://127.0.0.1:3000"
 }
 
 stop_substore() {
+    log_info "停止 Sub-Store..."
     pkill -f "sub-store.bundle.js" || true
-    log_info "Sub-Store 已停止"
-}
-restart_substore() {
-    stop_substore
-    start_substore
+    pkill -f "http.server 3001" || true
+    log_info "Sub-Store 已停止（前后端）"
 }
 
 start_mihomo() {
