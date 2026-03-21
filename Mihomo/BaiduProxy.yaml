@@ -26,7 +26,7 @@ caixin: &caixin
 proxies:
   - name: "WAP"
     type: http
-    serverr: 10.0.0.200
+    server: 10.0.0.200
     port: 80
   - name: "北京电信"
     server: 220.181.33.174
