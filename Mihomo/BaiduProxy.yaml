@@ -24,6 +24,10 @@ caixin: &caixin
     Host: 153.3.236.22:443
     dialer-proxy: WAP
 proxies:
+  - name: "WAP"
+    type: http
+    serverr: 10.0.0.200
+    port: 80
   - name: "北京电信"
     server: 220.181.33.174
     <<: *baidu
