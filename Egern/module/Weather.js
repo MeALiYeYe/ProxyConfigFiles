@@ -9,11 +9,13 @@ export default async function(ctx) {
     `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`
   );
   const geoData = await geo.json();
-
-  if (!geoData.results) {
+  
+  if (!geoData.results || geoData.results.length === 0) {
     return {
       type: "widget",
-      children: [{ type: "text", text: "城市错误" }]
+      children: [
+        { type: "text", text: "❌ 城市解析失败" }
+      ]
     };
   }
 
