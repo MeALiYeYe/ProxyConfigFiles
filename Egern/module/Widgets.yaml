@@ -21,7 +21,7 @@ scriptings:
     script_url: https://raw.githubusercontent.com/jnlaoshu/MySelf/master/Egern/Widget/NetworkInfo.js
 - generic:
     name: 今日天气
-    script_url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/module/Weather.js
+    script_url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/module/Weather.js
 
 widgets:
 - name: 今日油价
