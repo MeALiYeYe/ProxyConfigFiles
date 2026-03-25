@@ -5,11 +5,14 @@ env_schema:
     name: 📍 油价查询地区
     description: 直辖市输入拼音，其他省份输入省份/省会拼音
     default_value: sichuan/chengdu
-  WEATHER_CITY:
-    name: 📍 油价查询地区
+  WEATHER_CITYS:
+    name: 📍 天气定位城市
     description: 输入城市拼音
-    default_value: chengdu
-    
+    default_value: chengdu,wuhan
+  ROTATE_INTERVAL:
+    name: 🧭 城市轮播时间
+    description: "城市轮播间隔(单位: 分钟)"
+    default_value: 5
 
 dns: {}
 
