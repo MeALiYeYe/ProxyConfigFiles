@@ -5,14 +5,10 @@ env_schema:
     name: 📍 油价查询地区
     description: "直辖市输入拼音，其他省份输入省份/省会拼音"
     default_value: sichuan/chengdu
-  WEATHER_CITIES:
+  WEATHER_CITYID:
     name: 📍 天气定位城市
     description: "输入城市ID，城市ID代码列表如下"
-    default_value: 101020100,101280101,101270101
-  ROTATE_INTERVAL:
-    name: 🧭 城市轮播时间
-    description: "城市轮播间隔(单位: 分钟)"
-    default_value: 5
+    default_value: 101270101
 
 dns: {}
 
@@ -22,7 +18,7 @@ scriptings:
     script_url: https://raw.githubusercontent.com/jnlaoshu/MySelf/master/Egern/Widget/GasPrice.js
 - generic:
     name: 天气
-    script_url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/module/Weather.js
+    script_url: https://raw.githubusercontent.com/IBL3ND/module/refs/heads/main/weather.js
 
 widgets:
 - name: 全国油价
