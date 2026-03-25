@@ -5,7 +5,7 @@ env_schema:
     name: 📍 油价查询地区
     description: "直辖市输入拼音，其他省份输入省份/省会拼音"
     default_value: sichuan/chengdu
-  apiKey:
+  KEY:
     name: 🌅 APIKey
     description: "和风天气 API Key"
     default_value:
