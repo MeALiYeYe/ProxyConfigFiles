@@ -1,5 +1,5 @@
 name: Egern 桌面小组件
-description: 包含: 天气、汽油价格
+description: 天气、汽油价格
 env_schema:
   GAS_REGION:
     name: 📍 油价查询地区
