@@ -8,7 +8,7 @@ env_schema:
   WEATHER_CITIES:
     name: 📍 天气定位城市
     description: "输入城市ID，城市ID代码列表如下"
-    default_value: chengdu,wuhan
+    default_value: 101020100,101280101,101270101
   ROTATE_INTERVAL:
     name: 🧭 城市轮播时间
     description: "城市轮播间隔(单位: 分钟)"
