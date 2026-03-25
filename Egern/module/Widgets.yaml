@@ -1,10 +1,15 @@
 name: Egern 桌面小组件
-description: 天气、汽油价格
+description: 今日天气、汽油价格
 env_schema:
   GAS_REGION:
     name: 📍 油价查询地区
     description: 直辖市输入拼音，其他省份输入省份/省会拼音
     default_value: sichuan/chengdu
+  WEATHER_CITY:
+    name: 📍 油价查询地区
+    description: 输入城市拼音
+    default_value: chengdu
+    
 
 dns: {}
 
@@ -12,7 +17,12 @@ scriptings:
 - generic: 
     name: 全国油价
     script_url: https://raw.githubusercontent.com/jnlaoshu/MySelf/master/Egern/Widget/GasPrice.js
+- generic:
+    name: 天气
+    script_url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/module/Weather.js
 
 widgets:
 - name: 全国油价
   script_name: 全国油价
+- name: 🌦️ 今日天气
+  script_name: 天气
