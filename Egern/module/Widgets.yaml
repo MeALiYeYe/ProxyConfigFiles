@@ -5,6 +5,10 @@ env_schema:
     name: 📍 油价查询地区
     description: "直辖市输入拼音，其他省份输入省份/省会拼音"
     default_value: sichuan/chengdu
+  TQCITY:
+    name: 🌅 天气查询城市
+    description: 输入城市拼音
+    default_value: chengdu
 
 dns: {}
 
@@ -15,9 +19,14 @@ scriptings:
 - generic:
     name: 网络信息
     script_url: https://raw.githubusercontent.com/jnlaoshu/MySelf/master/Egern/Widget/NetworkInfo.js
+- generic:
+    name: 今日天气
+    script_url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/module/Weather.js
 
 widgets:
 - name: 今日油价
   script_name: 全国油价
 - name: 网络信息
   script_name: 网络信息
+- name: 天气信息
+  script_name: 今日天气
