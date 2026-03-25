@@ -1,5 +1,5 @@
 export default async function (ctx) {
-  const city = ctx.env.CITY || "Singapore";
+  const city = ctx.env.WEATHER_CITY || "Chengdu";
 
   try {
     // 🌍 1. 城市名 → 经纬度
