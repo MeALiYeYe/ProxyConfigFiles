@@ -14,16 +14,25 @@ env_schema:
     description: "和风天气 API Host"
     default_value:
   LOCATION:
-    name: 📲 Location
+    name: ⛳ Location
     description: "和风天气中文城市名"
     default_value: 成都
-
+  Cookie:
+    name: 📝 Cookie
+    description: "手机营业厅获取Cookie"
+    default_value: 
+  手机号:
+    name: 📞 手机号
+    default_value: 
 dns: {}
 
 scriptings:
 - generic: 
     name: 全国油价
     script_url: https://raw.githubusercontent.com/jnlaoshu/MySelf/master/Egern/Widget/GasPrice.js
+- generic: 
+    name: 电信余量
+    script_url: https://raw.githubusercontent.com/IBL3ND/module/refs/heads/main/CT_Widget.JS
 - generic:
     name: 网络信息
     script_url: https://raw.githubusercontent.com/jnlaoshu/MySelf/master/Egern/Widget/NetworkInfo.js
@@ -32,9 +41,11 @@ scriptings:
     script_url: https://raw.githubusercontent.com/IBL3ND/module/refs/heads/main/Weather_Widget.JS
 
 widgets:
-- name: 今日油价
+- name: 全国油价
   script_name: 全国油价
 - name: 网络信息
   script_name: 网络信息
-- name: 天气信息
+- name: 今日天气
   script_name: 今日天气
+- name: 电信余量
+  script_name: 电信余量
