@@ -19,6 +19,9 @@ domain_suffix_set:
   - api.ad.xiaomi.com
   - api.comm.miui.com
   - app-measurement.com
+  - content.hicloud.com
+  - content.miui.com
+  - content.vivo.com.cn
   - crashlytics.com
   - data.ads.oppomobile.com
   - data.mistat.xiaomi.com
@@ -26,6 +29,10 @@ domain_suffix_set:
   - dxmpay.com
   - e-ad-monitor.huya.com
   - e-stat.huya.com
+  - feed.hicloud.com
+  - feed.miui.com
+  - feed.oppomobile.com
+  - feed.vivo.com.cn
   - firebaselogging.googleapis.com
   - hao123.com
   - log.vivo.com.cn
@@ -36,6 +43,11 @@ domain_suffix_set:
   - p2p.huya.com
   - qifu.tech
   - rec.oppomobile.com
+  - rec.vivo.com.cn
+  - recommend.hicloud.com
+  - recommend.miui.com
+  - recommend.oppomobile.com
+  - recommend.vivo.com.cn
   - sentry.io
   - so.com
   - statistics.oppomobile.com
@@ -62,21 +74,6 @@ domain_keyword_set:
   - adserver
   - adservice
   - adsystem
-  - api.ad.intl.xiaomi.com
-  - api.comm.miui.com
-  - content.hicloud.com
-  - content.miui.com
-  - content.vivo.com.cn
-  - feed.hicloud.com
-  - feed.miui.com
-  - feed.oppomobile.com
-  - feed.vivo.com.cn
-  - rec.oppomobile.com
-  - rec.vivo.com.cn
-  - recommend.hicloud.com
-  - recommend.miui.com
-  - recommend.oppomobile.com
-  - recommend.vivo.com.cn
 ip_cidr_set:
   - 101.91.140.124/32
   - 101.91.140.224/32

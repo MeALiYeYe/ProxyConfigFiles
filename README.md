@@ -11,4 +11,4 @@
 - **TelegramUS** : 3 rules
 - **WebRTC** : 28 rules
 
-Total rules: 217
+Total rules: 214
