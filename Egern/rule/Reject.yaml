@@ -62,8 +62,21 @@ domain_keyword_set:
   - adserver
   - adservice
   - adsystem
-  - recmd
-  - recommend
+  - api.ad.intl.xiaomi.com
+  - api.comm.miui.com
+  - content.hicloud.com
+  - content.miui.com
+  - content.vivo.com.cn
+  - feed.hicloud.com
+  - feed.miui.com
+  - feed.oppomobile.com
+  - feed.vivo.com.cn
+  - rec.oppomobile.com
+  - rec.vivo.com.cn
+  - recommend.hicloud.com
+  - recommend.miui.com
+  - recommend.oppomobile.com
+  - recommend.vivo.com.cn
 ip_cidr_set:
   - 101.91.140.124/32
   - 101.91.140.224/32
