@@ -1,4 +1,4 @@
-SubStoreUrl: &SubStoreUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
+SubStoreUrl: &SubStoreUrl "http://127.0.0.1:8081/download/collection/Sub?target=ClashMeta"
 BaiduUrl: &BaiduUrl "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/BaiduProxy.yaml"
 
 # 延迟测试链接
