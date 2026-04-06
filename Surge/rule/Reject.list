@@ -42,38 +42,38 @@ DOMAIN-SUFFIX,data.mistat.xiaomi.com
 DOMAIN-SUFFIX,analytics.miui.com
 DOMAIN-SUFFIX,api.comm.miui.com
 DOMAIN-SUFFIX,api.ad.intl.xiaomi.com
-DOMAIN-KEYWORD,api.comm.miui.com
-DOMAIN-KEYWORD,feed.miui.com
-DOMAIN-KEYWORD,recommend.miui.com
-DOMAIN-KEYWORD,content.miui.com
-DOMAIN-KEYWORD,api.ad.intl.xiaomi.com
+DOMAIN-SUFFIX,api.comm.miui.com
+DOMAIN-SUFFIX,feed.miui.com
+DOMAIN-SUFFIX,recommend.miui.com
+DOMAIN-SUFFIX,content.miui.com
+DOMAIN-SUFFIX,api.ad.intl.xiaomi.com
 # OriginOS广告、埋点、推荐
 DOMAIN-SUFFIX,ad.vivo.com.cn
 DOMAIN-SUFFIX,ads.vivo.com.cn
 DOMAIN-SUFFIX,log.vivo.com.cn
 DOMAIN-SUFFIX,monitor.vivo.com.cn
 DOMAIN-SUFFIX,analytics.vivo.com.cn
-DOMAIN-KEYWORD,rec.vivo.com.cn
-DOMAIN-KEYWORD,recommend.vivo.com.cn
-DOMAIN-KEYWORD,content.vivo.com.cn
-DOMAIN-KEYWORD,feed.vivo.com.cn
+DOMAIN-SUFFIX,rec.vivo.com.cn
+DOMAIN-SUFFIX,recommend.vivo.com.cn
+DOMAIN-SUFFIX,content.vivo.com.cn
+DOMAIN-SUFFIX,feed.vivo.com.cn
 # ColorOS广告、埋点、推荐
 DOMAIN-SUFFIX,adsfs.oppomobile.com
 DOMAIN-SUFFIX,adx.ads.oppomobile.com
 DOMAIN-SUFFIX,data.ads.oppomobile.com
 DOMAIN-SUFFIX,statistics.oppomobile.com
 DOMAIN-SUFFIX,rec.oppomobile.com
-DOMAIN-KEYWORD,rec.oppomobile.com
-DOMAIN-KEYWORD,recommend.oppomobile.com
-DOMAIN-KEYWORD,feed.oppomobile.com
+DOMAIN-SUFFIX,rec.oppomobile.com
+DOMAIN-SUFFIX,recommend.oppomobile.com
+DOMAIN-SUFFIX,feed.oppomobile.com
 # HarmonyOS广告、埋点、推荐
 DOMAIN-SUFFIX,ads.huawei.com
 DOMAIN-SUFFIX,ads-drcn.platform.hicloud.com
 DOMAIN-SUFFIX,metrics.data.hicloud.com
 DOMAIN-SUFFIX,logservice.hicloud.com
-DOMAIN-KEYWORD,recommend.hicloud.com
-DOMAIN-KEYWORD,feed.hicloud.com
-DOMAIN-KEYWORD,content.hicloud.com
+DOMAIN-SUFFIX,recommend.hicloud.com
+DOMAIN-SUFFIX,feed.hicloud.com
+DOMAIN-SUFFIX,content.hicloud.com
 # Firebase、Google埋点
 DOMAIN-SUFFIX,app-measurement.com
 DOMAIN-SUFFIX,firebaselogging.googleapis.com
