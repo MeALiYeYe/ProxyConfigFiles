@@ -5,6 +5,7 @@ domain_suffix_set:
   - tkv.one
 domain_set:
   - board.zash.run.place
+  - liangxin.xyz
 domain_keyword_set:
   - linkeless
   - xiaoyakankan
