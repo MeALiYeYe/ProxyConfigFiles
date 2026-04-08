@@ -621,8 +621,8 @@ modules:
   enabled: true
 - url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/module/Widgets.yaml
   env:
-    GAS_REGION:
-    KEY:
-    API_HOST:
-    LOCATION:
+    GAS_REGION: hubei/wuhan
+    KEY: 3343827f543a465bac5b577ca90548e3
+    API_HOST: nf57rm9xcu.re.qweatherapi.com
+    LOCATION: 江夏
   enabled: true
