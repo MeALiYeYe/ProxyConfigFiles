@@ -251,7 +251,6 @@ rules:
   - RULE-SET,fakelocation,Location
   - GEOSITE,private,DIRECT
   - GEOSITE,category-ads-all,REJECT-DROP
-  - GEOSITE,category-httpdns-cn,REJECT-DROP
   - GEOSITE,youtube,Youtube
   - GEOSITE,category-entertainment,Media
   - GEOSITE,telegram,Telegram
@@ -276,8 +275,7 @@ mixed-port: 7890
 socks-port: 7891
 redir-port: 7892
 tproxy-port: 1536
-log-level: warning
-ipv6: true
+log-level: silent
 unified-delay: true
 tcp-concurrent: true
 disable-keep-alive: false
