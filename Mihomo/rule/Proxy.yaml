@@ -1,6 +1,7 @@
 payload:
   - DOMAIN,board.zash.run.place
   - DOMAIN,liangxin.xyz
+  - DOMAIN-SUFFIX,immortalwrt.org
   - DOMAIN-SUFFIX,metacubex.one
   - DOMAIN-SUFFIX,ojbktv.com
   - DOMAIN-SUFFIX,sntp.uk
