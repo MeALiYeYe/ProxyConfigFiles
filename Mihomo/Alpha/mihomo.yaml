@@ -1,4 +1,4 @@
-SubStoreUrl: &SubStoreUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
+SubStoreUrl: &SubStoreUrl "http://127.0.0.1:8081/download/collection/Sub?target=ClashMeta"
 BaiduUrl: &BaiduUrl "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/BaiduProxy.yaml"
 
 # 延迟测试链接
@@ -17,7 +17,7 @@ FilterEU: &FilterEU '(?i)(?:🇧🇪|🇨🇿|🇩🇰|🇫🇮|🇫🇷|🇩�
 FilterOther: &FilterOther '^(?!.*(香港|台湾|新加坡|日本|美国|🇭🇰|🇼🇸|🇨🇳|🇹🇼|🇸🇬|🇯🇵|🇺🇸|\bHK\b|\bTW\b|\bSG\b|\bJP\b|\bUS\b))'
 ExcludeFilter: &ExcludeFilter '(?i)(佣金|套餐|官网|官方|售后|免翻|过期|剩余|到期|流量|更新|点外|重置|免流|优惠|超实惠|址|AFF|Days|Date)'
 FilterLowMag: &FilterLowMag '(?<!\d)0\.\d+'
-FilterHighMag: &FilterHighMag '(?<![\d.])(?:[2-9]\d*\.\d+|1\.[1-9]\d*|(?:[xX×倍]\s*[2-9]\d*|[2-9]\d*\s*[xX×倍]))'
+FilterHighMag: &FilterHighMag '(?<![\d.])(?:[xX×倍]\s*)?(?:[2-9]\d*(?:\.\d+)?|1\.[1-9]\d*)(?:\s*[xX×倍])?'
 
 # 代理集和代理组
 Proxyer: &Proxyer
@@ -28,13 +28,7 @@ Proxyer: &Proxyer
     enable: true
     url: *ProxyTestUrl
     interval: 600
-  header: # 如遇订阅加载不出来请切换ua
-    User-Agent:  # 使用注释法由上到下 默认使用第一个
-      - "ClashMetaForAndroid/2.11.2.Meta"
-      - "clash-verge/v2.2.3"
-      - "ClashforWindows/0.19.23"
-      - "clash.meta"
-      - "mihomo"
+    timeout: 5000
 #  override: 
 #    dialer-proxy: Location
 
@@ -49,10 +43,10 @@ Smartp: &Smartp
     - "(?<![\\d.])0\\.\\d+(?!\\d):2"
     - "(?<![\\d.])1\\.\\d+(?!\\d):0.5"
     - "(?<![\\d.])[2-9]\\d*(?:\\.\\d+)?(?!\\d):0.2"
+    - "[xX×]4:0.1"
   uselightgbm: true
-  collectdata: true
+  collectdata: false
   strategy: sticky-sessions
-  prefer-asn: true
   lazy: true
   hidden: true
 
@@ -278,11 +272,10 @@ rules:
 #####################
 ########################## 全局通用配置 #########################
 mixed-port: 7890
+socks-port: 7891
 redir-port: 7892
 tproxy-port: 1536
-ipv6: true
-mode: Rule
-log-level: warning
+log-level: silent
 unified-delay: true
 tcp-concurrent: true
 disable-keep-alive: false
@@ -291,11 +284,10 @@ keep-alive-idle: 600
 allow-lan: true
 
 external-controller: 0.0.0.0:9090
-external-ui: "./webroot/Zash/"
+external-ui: ./panel/
 external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip"
 secret: ""
 skip-auth-prefixes:
-  - 10.0.0.1/24
   - 127.0.0.1/32
   - 192.168.3.0/24
 
@@ -311,7 +303,7 @@ geox-url:
 
 lgbm-auto-update: true
 lgbm-update-interval: 72
-lgbm-url: "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model-large.bin"
+lgbm-url: "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin"
 
 # 策略组选择和fake-ip缓存
 profile:
@@ -341,6 +333,16 @@ sniffer:
         - 8443
   force-domain:
     - "+.v2ex.com"
+    - "+.google.com"
+    - "+.gstatic.com"
+    - "+.youtube.com"
+    - "+.facebook.com"
+    - "+.twitter.com"
+    - "+.miui.com"
+    - "+.xiaomi.com"
+    - "+.vivo.com.cn"
+    - "+.oppomobile.com"
+    - "+.hicloud.com"
   skip-domain:
     - "+.local"
     - "+.lan"
@@ -368,9 +370,9 @@ dns:
   listen: :1053
   ipv6: true
   prefer-h3: true
-  respect-rules: false
   enhanced-mode: fake-ip
-  fake-ip-range: 198.18.0.0/16
+  respect-rules: false
+  fake-ip-range: 198.18.0.0/15
   fake-ip-filter: 
     - "GEOSITE:private,connectivity-check"
     - "+.lan"
@@ -379,17 +381,26 @@ dns:
     - "+.ntp.org"
     - "+.pool.ntp.org"
     - "time.*.com"
+    - '*.dns.google'
+    - 'cloudflare-dns.com'
+    - '*.cloudflare-dns.com'
   nameserver-policy:
     'GEOSITE:category-ads-all': rcode://name_error
-    'GEOSITE:geolocation-!cn':
-      - 'https://dns.google/dns-query#Google'
-      - 'https://cloudflare-dns.com/dns-query#Cloudflare'
+    'GEOSITE:cn,apple,microsoft':
+      - 'https://dns.alidns.com/dns-query'
+      - 'https://doh.pub/dns-query'
   default-nameserver:
-    - 223.5.5.5
-    - 223.6.6.6
-  nameserver:
+    - tls://223.5.5.5
+    - tls://223.6.6.6
+  direct-nameserver:
+    - tls://223.5.5.5
+    - tls://223.6.6.6
+  proxy-server-nameserver:
     - 'https://dns.alidns.com/dns-query'
     - 'https://doh.pub/dns-query'
+  nameserver:
+    - 'https://dns.google/dns-query#Google'
+    - 'https://cloudflare-dns.com/dns-query#Cloudflare'
 
 # hosts
 hosts:
