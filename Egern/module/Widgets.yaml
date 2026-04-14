@@ -19,10 +19,18 @@ env_schema:
     default_value: 成都
   Cookie:
     name: 📝 Cookie
-    description: "手机营业厅获取Cookie"
-    default_value: 
+    description: "电信手机营业厅获取Cookie"
+    default_value:
   手机号:
-    name: 📞 手机号
+    name: 📞 电信手机号
+    default_value:
+  broadnet_access:
+    name: 🥇 广电access
+    description: "请求头中的access值"
+    default_value:
+  broadnet_body:
+    name: 🥈 广电body
+    description: "请求的Body中data对应的长串加密字符串"
     default_value: 
 dns: {}
 
@@ -33,11 +41,14 @@ scriptings:
 - generic: 
     name: 电信余量
     script_url: https://raw.githubusercontent.com/IBL3ND/module/refs/heads/main/CT_Widget.JS
+- generic: 
+    name: 广电余量
+    script_url: https://raw.githubusercontent.com/IBL3ND/module/refs/heads/main/CBN_Widget.JS 
 - generic:
     name: 网络信息
     script_url: https://raw.githubusercontent.com/jnlaoshu/MySelf/master/Egern/Widget/NetworkInfo.js
 - generic:
-    name: 今日天气
+    name: 和风天气
     script_url: https://raw.githubusercontent.com/IBL3ND/module/refs/heads/main/Weather_Widget.JS
 
 widgets:
@@ -45,7 +56,9 @@ widgets:
   script_name: 全国油价
 - name: 网络信息
   script_name: 网络信息
-- name: 今日天气
-  script_name: 今日天气
+- name: 和风天气
+  script_name: 和风天气
 - name: 电信余量
   script_name: 电信余量
+- name: 广电余量
+  script_name: 广电余量
