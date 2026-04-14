@@ -4,11 +4,11 @@
 
 - **Direct** : 16 rules
 - **Emby** : 55 rules
-- **Proxy** : 10 rules
+- **Proxy** : 11 rules
 - **Reject** : 93 rules
 - **TelegramEU** : 11 rules
 - **TelegramSG** : 5 rules
 - **TelegramUS** : 3 rules
 - **WebRTC** : 28 rules
 
-Total rules: 217
+Total rules: 218
