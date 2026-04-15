@@ -29,13 +29,13 @@ dns:
   - 2400:3200:baba::1
   upstreams:
     DomesticDNS:
-    - quic://dns.alidns.com
-    - h3://dns.alidns.com/dns-query
     - https://doh.pub/dns-query
+    - quic://dns.alidns.com
+    - https://dns.alidns.com/dns-query
     ForeignDNS:
-    - h3://dns.google/dns-query
-    - h3://dns.cloudflare.com/dns-query
-    - h3://cloudflare-dns.com/dns-query
+    - https://dns.google/dns-query
+    - https://dns.cloudflare.com/dns-query
+    - https://cloudflare-dns.com/dns-query
   forward:
   - proxy_rule_set:
       match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Apple/Apple_Domain.list
@@ -44,7 +44,7 @@ dns:
       match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Proxy/Proxy_Domain.list
       value: ForeignDNS
       disabled: false
-  - domain_wildcard:
+  - wildcard:
       match: '*'
       value: DomesticDNS
   hosts:
@@ -129,7 +129,7 @@ policy_groups:
     type: select
     urls:
     - https://sub.store/download/collection/Sub?target=Egern
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/sub.png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/sub(1).png
     hidden: false
 - select:
     name: Emby
@@ -143,7 +143,7 @@ policy_groups:
     - 低倍
     - 高倍
     flatten: false
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/emby.png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/emby.png
     hidden: false
 - select:
     name: Tiktok
@@ -157,7 +157,7 @@ policy_groups:
     - 低倍
     - 高倍
     flatten: false
-    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_2.png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/tiktok(1).png
     hidden: false
 - select:
     name: Youtube
@@ -171,7 +171,7 @@ policy_groups:
     - 低倍
     - 高倍
     flatten: false
-    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/youtube.png
     hidden: false
 - select:
     name: Media
@@ -199,7 +199,7 @@ policy_groups:
     - 低倍
     - 高倍
     flatten: false
-    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/ChatGPT-green.png
     hidden: false
 - select:
     name: Telegram
@@ -241,7 +241,7 @@ policy_groups:
     - 低倍
     - 高倍
     flatten: false
-    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/google(1).png
     hidden: false
 - select:
     name: Github
@@ -283,7 +283,7 @@ policy_groups:
     - 低倍
     - 高倍
     flatten: false
-    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png
+    icon: https://raw.githubusercontent.com/Centralmatrix3/Matrix-io/master/Gallery/Color/Apple-2.png
     hidden: false
 - select:
     name: Foreign
@@ -346,7 +346,7 @@ policy_groups:
     flatten: true
     filter: 南京|苏州
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Available_1.png
-    hidden: true
+    hidden: false
 - fallback:
     name: 广东
     policies:
@@ -354,7 +354,7 @@ policy_groups:
     flatten: true
     filter: 广州
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/liuliang.png
-    hidden: true
+    hidden: false
 - fallback:
     name: 北京
     policies:
@@ -362,7 +362,7 @@ policy_groups:
     flatten: true
     filter: 北京
     icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Available.png
-    hidden: true
+    hidden: false
 - fallback:
     name: 河北
     policies:
@@ -370,57 +370,57 @@ policy_groups:
     flatten: true
     filter: 保定
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/liuliang(3).png
-    hidden: true
+    hidden: false
 - fallback:
     name: 香港
     policies:
     - Proxies
     flatten: true
-    filter: 香港|HK|🇭🇰|HKG
+    filter: 香港|HK|🇭🇰
     interval: 300
     timeout: 5
     icon: https://raw.githubusercontent.com/Centralmatrix3/Matrix-io/master/Gallery/Color/HK.png
-    hidden: true
+    hidden: false
 - fallback:
     name: 台湾
     policies:
     - Proxies
     flatten: true
-    filter: 台湾|TW|🇹🇼|🇼🇸|TWN
+    filter: 台湾|TW|🇹🇼|🇼🇸|🇨🇳
     interval: 300
     timeout: 5
     icon: https://raw.githubusercontent.com/Centralmatrix3/Matrix-io/master/Gallery/Color/TW.png
-    hidden: true
+    hidden: false
 - fallback:
     name: 狮城
     policies:
     - Proxies
     flatten: true
-    filter: 新加坡|SG|狮城|🇸🇬|SGP
+    filter: 新加坡|SG|狮城|🇸🇬
     interval: 300
     timeout: 5
     icon: https://raw.githubusercontent.com/Centralmatrix3/Matrix-io/master/Gallery/Color/SG.png
-    hidden: true
+    hidden: false
 - fallback:
     name: 日本
     policies:
     - Proxies
     flatten: true
-    filter: 日本|JP|🇯🇵|JPN
+    filter: 日本|JP|🇯🇵
     interval: 300
     timeout: 5
     icon: https://raw.githubusercontent.com/Centralmatrix3/Matrix-io/master/Gallery/Color/JP.png
-    hidden: true
+    hidden: false
 - fallback:
     name: 美国
     policies:
     - Proxies
     flatten: true
-    filter: 美国|US|🇺🇸|USA
+    filter: 美国|US|🇺🇸
     interval: 300
     timeout: 5
-    icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/US.png
-    hidden: true
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/US(2).png
+    hidden: false
 - fallback:
     name: 低倍
     policies:
@@ -429,8 +429,8 @@ policy_groups:
     filter: 0\.\d+
     interval: 300
     timeout: 5
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/liuliang(2).png
-    hidden: true
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/refs/heads/main/icon/liuliang(2).png
+    hidden: false
 - fallback:
     name: 高倍
     policies:
@@ -440,8 +440,30 @@ policy_groups:
     interval: 300
     timeout: 5
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/liuliang(5).png
-    hidden: true
+    hidden: false
 rules:
+- and:
+    match:
+    - not:
+        match:
+          dest_port:
+            match: 53,853,8853
+    - protocol:
+        match: quic
+    policy: REJECT
+    disabled: false
+- and:
+    match:
+    - not:
+        match:
+          rule_set:
+            match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaMax/ChinaMax_All_No_Resolve.list
+    - dest_port:
+        match: '443'
+    - protocol:
+        match: udp
+    policy: REJECT
+    disabled: false
 - and:
     match:
     - user_agent:
@@ -482,10 +504,6 @@ rules:
     disabled: false
 - rule_set:
     match: https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/refs/heads/main/Filters/AWAvenue-Ads-Rule-Surge-RULE-SET.list
-    policy: REJECT
-    disabled: false
-- rule_set:
-    match: https://raw.githubusercontent.com/217heidai/adblockfilters/main/rules/adblocksurge.list
     policy: REJECT
     disabled: false
 - rule_set:
@@ -563,31 +581,6 @@ rules:
     policy: Domestic
     no_resolve: true
     disabled: false
-- geoip:
-    match: HK
-    policy: 香港
-    no_resolve: true
-    disabled: false
-- geoip:
-    match: TW
-    policy: 台湾
-    no_resolve: true
-    disabled: false
-- geoip:
-    match: SG
-    policy: 狮城
-    no_resolve: true
-    disabled: false
-- geoip:
-    match: JP
-    policy: 日本
-    no_resolve: true
-    disabled: false
-- geoip:
-    match: US
-    policy: 美国
-    no_resolve: true
-    disabled: false
 - default:
     name: ''
     policy: Final
@@ -599,30 +592,32 @@ mitm:
   ca_p12: egern.p12
   ca_passphrase: egern
 modules:
-- url: https://raw.githubusercontent.com/QingRex/LoonKissSurge/refs/heads/main/Surge/Beta/%E5%B9%BF%E5%91%8A%E5%B9%B3%E5%8F%B0%E6%8B%A6%E6%88%AA%E5%99%A8.beta.sgmodule
-  enabled: true
-- url: https://raw.githubusercontent.com/QingRex/LoonKissSurge/refs/heads/main/Surge/Beta/HTTPDNS%E6%8B%A6%E6%88%AA%E5%99%A8.beta.sgmodule
-  enabled: true
-- url: https://raw.githubusercontent.com/QingRex/LoonKissSurge/refs/heads/main/Surge/Official/微信专项优化.official.sgmodule
-  compat_arguments:
-    Proxy: DIRECT
-  enabled: true
-- url: https://raw.githubusercontent.com/githubdulong/Script/master/Surge/JD_Helper.sgmodule
-  enabled: true
-- url: https://raw.githubusercontent.com/Maasea/sgmodule/refs/heads/master/YouTube.Enhance.sgmodule
-  enabled: true
-- url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/module/Redirect.sgmodule
-  enabled: true
-- url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/module/skipproxy.yaml
+- url: https://raw.githubusercontent.com/Script-Hub-Org/Script-Hub/refs/heads/main/modules/script-hub.beta.surge.sgmodule
   enabled: true
 - url: https://raw.githubusercontent.com/sub-store-org/Sub-Store/refs/heads/master/config/Egern.yaml
   enabled: true
-- url: https://raw.githubusercontent.com/Script-Hub-Org/Script-Hub/refs/heads/main/modules/script-hub.beta.surge.sgmodule
+- url: https://raw.githubusercontent.com/ddgksf2013/Modules/refs/heads/main/Adblock.sgmodule
   enabled: true
-- url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/module/Widgets.yaml
-  env:
-    GAS_REGION:
-    KEY:
-    API_HOST:
-    LOCATION:
+- url: https://github.com/BiliUniverse/Enhanced/releases/latest/download/BiliBili.Enhanced.yaml
+  enabled: true
+- url: https://raw.githubusercontent.com/mist-whisper/Surge/master/Modules/YouTube_remove_ads.sgmodule
+  enabled: true
+- url: https://raw.githubusercontent.com/githubdulong/Script/master/Surge/JD_Helper.sgmodule
+  enabled: true
+- url: https://raw.githubusercontent.com/cc63/Surge/main/Module/Panel/QiYou/Moore/QiYou.sgmodule
+  compat_arguments:
+    省份拼音: hubei
+  enabled: true
+- url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/module/Redirect.sgmodule
+  enabled: true
+- url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/module/Weather.sgmodule
+  compat_arguments:
+    城市代码: '101200105'
+  enabled: true
+- url: https://raw.githubusercontent.com/xream/scripts/main/surge/modules/network-info/net-lsp-x.sgmodule
+  enabled: true
+- url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/module/skipproxy.yaml
+  enabled: true
+- name: 跳过部分应用VPN检测
+  url: https://raw.githubusercontent.com/mieqq/mieqq/master/skip-proxy-lists.sgmodule
   enabled: true
