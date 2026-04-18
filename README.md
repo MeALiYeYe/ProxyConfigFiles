@@ -2,7 +2,7 @@
 
 ## Rule Statistics
 
-- **Direct** : 16 rules
+- **Direct** : 17 rules
 - **Emby** : 55 rules
 - **Proxy** : 11 rules
 - **Reject** : 93 rules
@@ -11,4 +11,4 @@
 - **TelegramUS** : 3 rules
 - **WebRTC** : 28 rules
 
-Total rules: 218
+Total rules: 219
