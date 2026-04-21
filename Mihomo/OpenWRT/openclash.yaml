@@ -15,7 +15,7 @@ FilterUS: &FilterUS '(?i)(?:美|美国|🇺🇸|\bUS\b|USA|States|America)'
 FilterRU: &FilterRU '(?i)(?:俄罗斯|莫斯科|🇷🇺|RU|Russia|Moscow)'
 FilterEU: &FilterEU '(?i)(?:🇧🇪|🇨🇿|🇩🇰|🇫🇮|🇫🇷|🇩🇪|🇮🇪|🇮🇹|🇱🇹|🇱🇺|🇳🇱|🇵🇱|🇸🇪|🇬🇧|CDG|FRA|AMS|MAD|BCN|FCO|MUC|BRU)'
 FilterOther: &FilterOther '^(?!.*(香港|台湾|新加坡|日本|美国|🇭🇰|🇼🇸|🇨🇳|🇹🇼|🇸🇬|🇯🇵|🇺🇸|\bHK\b|\bTW\b|\bSG\b|\bJP\b|\bUS\b))'
-ExcludeFilter: &ExcludeFilter '(?i)(佣金|套餐|官网|官方|售后|免翻|过期|剩余|到期|流量|更新|点外|重置|免流|优惠|超实惠|址|AFF|Days|Date)'
+ExcludeFilter: &ExcludeFilter '(?i)(?:佣金|套餐|官网|官方|网址|售后|免翻|过期|剩余|到期|流量|更新|点外|重置|免流|使用|教程|优惠|超实惠|址|AFF|Days|Date)'
 FilterLow: &FilterLow '(?<!\d)0\.\d+'
 FilterHigh: &FilterHigh '(?<![\d.])(?:[2-9]\d*\.\d+|1\.[1-9]\d*|(?:[xX×倍]\s*[2-9]\d*|[2-9]\d*\s*[xX×倍]))'
 
@@ -41,9 +41,9 @@ Smartp: &Smartp
     - '(?<![\d.])[2-9]\d*(?:\.\\d+)?(?!\d):0.2'
   uselightgbm: true
   collectdata: false
+  prefer-asn: true
   strategy: sticky-sessions
   max-failed-times: 3
-  prefer-asn: true
   url: *ProxyTest
   hidden: true
 
@@ -99,6 +99,9 @@ rule-anchor:
     behavior: ipcidr
     format: mrs
     interval: 86400
+#################################
+#############锚点结束#############
+#################################
 
 proxies:
   - name: 直连
@@ -115,8 +118,6 @@ proxy-providers:
     <<: *Proxyer
     path: ./proxies/BaiduProxy.yaml
     url: *BaiduUrl
-    health-check:
-      enable: false
 
 # 代理组
 proxy-groups:
@@ -128,7 +129,7 @@ proxy-groups:
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png"
   - name: Emby
     <<: *Groupp
-    icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png"
+    icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png" 
   - name: Youtube
     <<: *Groupp
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png"
@@ -235,11 +236,15 @@ rule-providers:
   private:
     <<: *dom
     path: ./rules/private.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geosite/private.mrs"
   private_ip:
     <<: *ipc
     path: ./rules/private_ip.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs"
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/private.mrs"
+  googlefcm:
+    <<: *dom
+    path: ./rules/googlefcm.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/googlefcm.mrs"
   ads-all:
     <<: *dom
     path: ./rules/ads-all.mrs
@@ -251,7 +256,7 @@ rule-providers:
   youtube:
     <<: *dom
     path: ./rules/youtube.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs"
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geosite/youtube.mrs"
   entertainment:
     <<: *dom
     path: ./rules/entertainment.mrs
@@ -259,27 +264,27 @@ rule-providers:
   telegram:
     <<: *dom
     path: ./rules/telegram.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs"
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geosite/telegram.mrs"
   telegram_ip:
     <<: *ipc
     path: ./rules/telegram_ip.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/telegram.mrs"
   google:
     <<: *dom
     path: ./rules/google.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs"
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geosite/google.mrs"
   google_ip:
     <<: *ipc
     path: ./rules/google_ip.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/google.mrs"
   cloudflare:
     <<: *dom
     path: ./rules/cloudflare.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cloudflare.mrs"
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geosite/cloudflare.mrs"
   cloudflare_ip:
     <<: *ipc
     path: ./rules/cloudflare_ip.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cloudflare.mrs"
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/cloudflare.mrs"
   ai-chat-!cn:
     <<: *dom
     path: ./rules/ai-chat-!cn.mrs
@@ -287,15 +292,19 @@ rule-providers:
   github:
     <<: *dom
     path: ./rules/github.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs"
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geosite/github.mrs"
   apple:
     <<: *dom
     path: ./rules/apple.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple.mrs"
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geosite/apple.mrs"
+  apple_ip:
+    <<: *ipc
+    path: ./rules/apple_ip.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/apple.mrs"
   microsoft:
     <<: *dom
     path: ./rules/microsoft.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs"
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geosite/microsoft.mrs"
   geolocation-!cn:
     <<: *dom
     path: ./rules/geolocation-!cn.mrs
@@ -303,31 +312,31 @@ rule-providers:
   cn:
     <<: *dom
     path: ./rules/cn.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geosite/cn.mrs"
   cn_ip:
     <<: *ipc
     path: ./rules/cn_ip.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"
-  
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/cn.mrs"
 
 # 路由规则
 rules:
-  # FCM
-  - DST-PORT,5228-5230,DIRECT
   # NTP
   - AND,((NETWORK,udp),(DST-PORT,123)),DIRECT
   # STUN
   - AND,((NETWORK,udp),(DST-PORT,3478-3479,5349,19302-19309)),REJECT-DROP
-  - RULE-SET,myreject,REJECT
-  - RULE-SET,mydirect,Domestic
-  - RULE-SET,myproxy,Foreign
-  - RULE-SET,emby,Emby
-  - RULE-SET,awavenue,REJECT-DROP
-  - RULE-SET,fakelocation,Location
+  # FCM
+  - DST-PORT,5228-5230,DIRECT
+  - RULE-SET,googlefcm,DIRECT
   - RULE-SET,private,DIRECT
   - RULE-SET,private_ip,DIRECT,no-resolve
   - RULE-SET,ads-all,REJECT-DROP
   - RULE-SET,httpdns-cn,REJECT-DROP
+  - RULE-SET,myreject,REJECT
+  - RULE-SET,mydirect,Domestic
+  - RULE-SET,myproxy,Foreign
+  - RULE-SET,awavenue,REJECT-DROP
+  - RULE-SET,fakelocation,Location
+  - RULE-SET,emby,Emby
   - RULE-SET,youtube,Youtube
   - RULE-SET,entertainment,Media
   - RULE-SET,telegram,Telegram
@@ -339,14 +348,15 @@ rules:
   - RULE-SET,ai-chat-!cn,Ai
   - RULE-SET,github,Github
   - RULE-SET,apple,Apple
+  - RULE-SET,apple_ip,Apple,no-resolve
   - RULE-SET,microsoft,Microsoft
-  - RULE-SET,geolocation-!cn,Foreign
   - RULE-SET,cn,Domestic
   - RULE-SET,cn_ip,Domestic,no-resolve
+  - RULE-SET,geolocation-!cn,Foreign
   - MATCH,Final
 
-#####################
-########################## 全局通用配置 #########################
+#######################################
+############# 全局通用配置 #############
 mixed-port: 7890
 redir-port: 7892
 tproxy-port: 1536
@@ -371,9 +381,6 @@ geodata-loader: standard
 geo-auto-update: true
 geo-update-interval: 168
 geox-url:
-#  geoip: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat"
-#  geosite: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
-#  mmdb: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country-lite.mmdb"
   asn: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
 
 lgbm-auto-update: true
@@ -445,19 +452,16 @@ dns:
     - "+.pool.ntp.org"
     - "time.*.com"
   nameserver-policy:
-    'RULE-SET:ads-all': rcode://name_error
+    'RULE-SET:ads-all,awavenue,myreject': rcode://name_error
     'RULE-SET:cn,apple,microsoft':
-      - https://dns.alidns.com/dns-query
-      - https://doh.pub/dns-query
-  default-nameserver:
+      - 'https://dns.alidns.com/dns-query#DIRECT'
+      - 'quic://dns.alidns.com#DIRECT'
+  direct-nameserver:
     - 223.5.5.5
     - 223.6.6.6
-  direct-nameserver:
+  proxy-server-nameserver:
     - tls://223.5.5.5
     - tls://223.6.6.6
-  proxy-server-nameserver:
-    - https://dns.alidns.com/dns-query
-    - https://doh.pub/dns-query
   nameserver:
     - 'https://dns.google/dns-query#Google'
     - 'https://cloudflare-dns.com/dns-query#Cloudflare'
