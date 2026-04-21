@@ -1,0 +1,14 @@
+name: Fix Telegram Bad IPs
+description: 将 Telegram 不良 IP 段映射到可用 IP
+
+hosts:
+  '91.108.56.*': 
+    - 91.108.56.147
+    - 91.108.56.135
+    - 91.108.56.130
+
+rules:
+  - ip_cidr:
+      match: 95.161.76.100/31
+      policy: REJECT
+      no_resolve: true
