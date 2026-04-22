@@ -31,14 +31,6 @@ MODEL_URL="https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/
 # mihomo远程配置链接
 CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/OpenWRT/openclash.yaml"
 
-# Geo 数据
-GEO_FILES=(
-    "asn.mmdb,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
-    "country.mmdb,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country-lite.mmdb"
-    "geoip.dat,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat"
-    "geosite.dat,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
-)
-
 #------------------------------------------------
 # 工具函数
 #------------------------------------------------
@@ -117,18 +109,13 @@ deploy_substore() {
 }
 
 #------------------------------------------------
-# 下载配置与 GEO
+# 下载配置与
 #------------------------------------------------
 download_assets() {
     mkdir -p "$MIHOMO_DIR/geo"
     cd "$MIHOMO_DIR"
 
     safe_wget "$CONFIG_URL" "config.yaml"
-
-    for item in "${GEO_FILES[@]}"; do
-        IFS=',' read -r dest src <<< "$item"
-        safe_wget "$src" "$dest"
-    done
 }
 
 #------------------------------------------------
@@ -245,17 +232,6 @@ update_self() {
 update_substore() { stop_substore; deploy_substore; start_substore; }
 update_mihomo() { stop_mihomo; deploy_mihomo; start_mihomo; }
 
-update_geo() {
-    log_info "更新 Geo 数据..."
-    mkdir -p "$MIHOMO_DIR/geo"
-    cd "$MIHOMO_DIR"
-    for item in "${GEO_FILES[@]}"; do
-        IFS=',' read -r dest src <<< "$item"
-        safe_wget "$src" "$dest"
-    done
-    log_info "Geo 数据更新完成"
-}
-
 update_model() {
     log_info "更新 Smart 大模型..."
     cd "$MIHOMO_DIR"
@@ -358,7 +334,6 @@ case "$1" in
     update_self) update_self ;;
     update_substore) update_substore ;;
     update_mihomo) update_mihomo ;;
-    update_geo) update_geo ;;
     update_config) update_config ;;
     update_model) update_model ;;
     update_mihomo_core) update_mihomo_core ;;
@@ -372,13 +347,12 @@ case "$1" in
         update_substore
         update_mihomo
         update_rules
-        update_geo
         update_model
         update_config
         update_mihomo_core
       ;;
     *)
-        echo "用法: $0 {deploy|deploy_substore|deploy_mihomo|start_substore|stop_substore|restart_substore|start_mihomo|stop_mihomo|restart_mihomo|update_self|update_substore|update_mihomo|update_mode|update_rules|update_geo|update_config|update_mihomo_core|log_substore|log_mihomo|start|stop|restart|update}"
+        echo "用法: $0 {deploy|deploy_substore|deploy_mihomo|start_substore|stop_substore|restart_substore|start_mihomo|stop_mihomo|restart_mihomo|update_self|update_substore|update_mihomo|update_mode|update_config|update_mihomo_core|log_substore|log_mihomo|start|stop|restart|update}"
         exit 1
         ;;
 esac
