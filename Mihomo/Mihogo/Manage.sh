@@ -136,8 +136,18 @@ deploy_substore() {
     safe_wget "https://github.com/sub-store-org/Sub-Store/releases/latest/download/sub-store.bundle.js" "sub-store.bundle.js"
     safe_wget "https://github.com/sub-store-org/Sub-Store-Front-End/releases/latest/download/dist.zip" "dist.zip"
 
-    unzip -o dist.zip -d dist
-    rm -f dist.zip
+    rm -rf dist tmp_dist
+    mkdir -p tmp_dist dist
+
+    unzip -o dist.zip -d tmp_dist
+
+    if [ -d "tmp_dist/dist" ]; then
+        mv tmp_dist/dist/* dist/
+    else
+        mv tmp_dist/* dist/
+    fi
+
+    rm -rf dist.zip tmp_dist
 
     # ⭐ 写入版本
     get_latest_version "$BACKEND_API" > "$BACKEND_VER_FILE"
@@ -164,7 +174,7 @@ start_substore() {
     fi
 
     if ! pgrep -f "serve .*3001" >/dev/null; then
-        setsid serve "$SUBSTORE_DIR/dist" -l 3001 > frontend.log 2>&1 &
+        setsid serve "$SUBSTORE_DIR/dist" -l 3001 -s > frontend.log 2>&1 &
         echo $! > frontend.pid
     fi
 
@@ -178,7 +188,7 @@ stop_substore() {
     [ -f "$SUBSTORE_DIR/frontend.pid" ] && kill $(cat "$SUBSTORE_DIR/frontend.pid") 2>/dev/null || true
 
     pkill -f sub-store.bundle.js || true
-    pkill -f "serve .*3001" || true
+    pkill -f "serve .*3001" || pkill -f "serve" || true
     log_info "Sub-Store 已停止（前后端）"
 }
 
@@ -284,8 +294,7 @@ update_substore() {
         safe_wget "https://github.com/sub-store-org/Sub-Store-Front-End/releases/latest/download/dist.zip" "dist.zip"
 
         rm -rf dist
-        mkdir -p dist
-
+        mkdir -p tmp_dist
         unzip -o dist.zip -d tmp_dist
 
         if [ -d "tmp_dist/dist" ]; then
@@ -299,6 +308,7 @@ update_substore() {
             rollback_frontend
         else
             echo "$LATEST_FRONTEND_VER" > "$FRONTEND_VER_FILE"
+            rm -rf dist.bak
         fi
 
         rm -rf dist.zip tmp_dist
