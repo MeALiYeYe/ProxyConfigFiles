@@ -18,4 +18,4 @@ fi
 export PATH="$HOME/bin:$PATH"
 
 # 开始部署
-Manage.sh deploy
+SubMi.sh deploy
