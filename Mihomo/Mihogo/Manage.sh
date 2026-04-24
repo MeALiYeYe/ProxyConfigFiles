@@ -412,7 +412,9 @@ bash "$HOME/bin/Manage.sh" start
 EOF
     chmod +x "$BOOT_SCRIPT_DIR/start-services.sh"
 
-    # 自动创建软链接，指向 Manage.sh
+    #------------------------------------------------
+    # Boot 软链接（给 Termux:Boot 用）
+    #------------------------------------------------
     LINK_PATH="$BOOT_SCRIPT_DIR/Manage.sh"
     if [ -L "$LINK_PATH" ] || [ -f "$LINK_PATH" ]; then
         rm -f "$LINK_PATH"
@@ -420,8 +422,19 @@ EOF
     ln -sf "$HOME/bin/Manage.sh" "$LINK_PATH"
     chmod +x "$LINK_PATH"
 
+    #------------------------------------------------
+    # 快捷命令 sm（给用户用）
+    #------------------------------------------------
+    SM_LINK="$HOME/bin/sm"
+    if [ -L "$SM_LINK" ] || [ -f "$SM_LINK" ]; then
+        rm -f "$SM_LINK"
+    fi
+    ln -sf "$HOME/bin/Manage.sh" "$SM_LINK"
+    chmod +x "$SM_LINK"
+
     log_info "已设置开机自启: $BOOT_SCRIPT_DIR/start-services.sh"
-    log_info "已创建软链接: $LINK_PATH -> $HOME/bin/Manage.sh"
+    log_info "已创建 Boot 链接: $LINK_PATH -> Manage.sh"
+    log_info "已创建快捷命令: sm -> Manage.sh"
 }
 
 #------------------------------------------------
