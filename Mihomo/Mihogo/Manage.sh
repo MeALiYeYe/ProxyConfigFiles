@@ -37,7 +37,7 @@ safe_wget() {
         wget --tries=5 --timeout=30 --retry-connrefused --waitretry=3 -qO- "$url"
     else
         log_info "下载: $url"
-        wget --continue --tries=5 --timeout=30 --retry-connrefused --waitretry=3 -O "$out" "$url"
+        wget --no-check-certificate --continue --tries=5 --timeout=30 --retry-connrefused --waitretry=3 -O "$out" "$url"
         [ -s "$out" ] || log_error "下载失败: $url"
     fi
 }
