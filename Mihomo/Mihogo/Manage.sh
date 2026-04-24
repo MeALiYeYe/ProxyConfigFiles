@@ -30,17 +30,21 @@ log_error() { echo -e "\e[31m[ERROR]\e[0m $1"; exit 1; }
 
 safe_wget() {
     local url="$1"
-    local out="$2"
+    local out="${2:-}"
 
-    log_info "下载: $url"
-    wget --continue --tries=5 --timeout=30 --retry-connrefused --waitretry=3 -O "$out" "$url"
-
-    [ -s "$out" ] || log_error "下载失败: $url"
+    if [ -z "$out" ]; then
+        # stdout模式，不输出日志
+        wget --tries=5 --timeout=30 --retry-connrefused --waitretry=3 -qO- "$url"
+    else
+        log_info "下载: $url"
+        wget --continue --tries=5 --timeout=30 --retry-connrefused --waitretry=3 -O "$out" "$url"
+        [ -s "$out" ] || log_error "下载失败: $url"
+    fi
 }
 
 # ⭐ 新增
 get_latest_version() {
-    curl -s "$1" | jq -r '.tag_name'
+    wget -qO- "$1" | jq -r '.tag_name'
 }
 
 check_port() {
@@ -51,7 +55,7 @@ check_port() {
 }
 
 get_mihomo_url() {
-    curl -s https://api.github.com/repos/vernesong/mihomo/releases/tags/Prerelease-Alpha \
+    wget -qO- https://api.github.com/repos/vernesong/mihomo/releases/tags/Prerelease-Alpha \
     | jq -r '.assets[] | select(.name | test("android-arm64.*alpha.*\\.gz")) | .browser_download_url' \
     | head -n 1
 }
@@ -109,7 +113,7 @@ mkdir -p "$HOME/bin"
 install_dependencies() {
     log_info "安装依赖..."
     pkg update -y
-    pkg install -y nodejs-lts wget unzip curl jq cronie termux-services lsof
+    pkg install -y nodejs-lts wget unzip jq cronie termux-services lsof
 
     mkdir -p "$PREFIX/var/service"
 
