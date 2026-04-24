@@ -256,9 +256,32 @@ restart_mihomo() {
 update_self() {
     log_info "更新 Manage.sh..."
     cd "$HOME/bin"
-    safe_wget "$SHELL_URL" "Manage.sh"
-    chmod +x Manage.sh
-    log_info "Manage.sh 已更新完成，请重新执行命令"
+
+    TMP_FILE="Manage.sh.new"
+    BACKUP_FILE="Manage.sh.bak"
+
+    # 1️⃣ 下载到临时文件
+    if safe_wget "$SHELL_URL" "$TMP_FILE"; then
+
+        # 2️⃣ 校验文件是否有效（非空 + 可执行）
+        if [ -s "$TMP_FILE" ]; then
+
+            # 3️⃣ 备份旧版本
+            [ -f Manage.sh ] && cp Manage.sh "$BACKUP_FILE"
+
+            # 4️⃣ 替换
+            mv "$TMP_FILE" Manage.sh
+            chmod +x Manage.sh
+
+            log_info "Manage.sh 已更新完成"
+
+        else
+            log_error "下载文件为空，更新失败"
+        fi
+
+    else
+        log_error "下载失败，更新终止"
+    fi
 }
 
 update_substore() {
