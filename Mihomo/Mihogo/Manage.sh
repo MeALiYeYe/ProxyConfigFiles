@@ -317,8 +317,6 @@ update_substore() {
     start_substore
 }
 
-update_mihomo() { stop_mihomo; deploy_mihomo; start_mihomo; }
-
 update_model() {
     log_info "更新模型..."
     cd "$MIHOMO_DIR"
@@ -418,7 +416,6 @@ case "${1:-}" in
     restart_mihomo) restart_mihomo ;;
     update_self) update_self ;;
     update_substore) update_substore ;;
-    update_mihomo) update_mihomo ;;
     update_config) update_config ;;
     update_model) update_model ;;
     update_mihomo_core) update_mihomo_core ;;
@@ -430,13 +427,12 @@ case "${1:-}" in
     update)
         update_self
         update_substore
-        update_mihomo
         update_model
         update_config
         update_mihomo_core
       ;;
     *)
-        echo "用法: $0 {deploy|deploy_substore|deploy_mihomo|start_substore|stop_substore|restart_substore|start_mihomo|stop_mihomo|restart_mihomo|update_self|update_substore|update_mihomo|update_model|update_config|update_mihomo_core|log_substore|log_mihomo|start|stop|restart|update}"
+        echo "用法: $0 {deploy|deploy_substore|deploy_mihomo|start_substore|stop_substore|restart_substore|start_mihomo|stop_mihomo|restart_mihomo|update_self|update_substore|update_model|update_config|update_mihomo_core|log_substore|log_mihomo|start|stop|restart|update}"
         exit 1
         ;;
 esac
