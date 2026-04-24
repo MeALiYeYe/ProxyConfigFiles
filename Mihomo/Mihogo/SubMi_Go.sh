@@ -5,7 +5,7 @@ pkg update -y && pkg install -y wget
 
 # 获取脚本
 mkdir -p "$HOME/bin"
-curl -sL https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/Mihogo/Manage.sh -o "$HOME/bin/Submi.sh"
+curl -sL https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/Mihogo/Manage.sh -o "$HOME/bin/SubMi.sh"
 chmod +x "$HOME/bin/Manage.sh"
 
 # 确保Bin目录存在
