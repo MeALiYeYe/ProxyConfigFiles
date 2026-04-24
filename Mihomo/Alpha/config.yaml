@@ -1,5 +1,8 @@
-SubStoreUrl: &SubStoreUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
-VpsUrl: &VpsUrl "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
+# 订阅名和订阅链接
+Sub1: &Sub1 ""
+Sub1Url: &Sub1Url ""
+Sub2: &Sub2 ""
+Sub1Ur2: &Sub1Ur2 ""
 BaiduUrl: &BaiduUrl "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/BaiduProxy.yaml"
 
 # 延迟测试链接
@@ -34,9 +37,7 @@ Proxyer: &Proxyer
 
 Smartp: &Smartp
   type: smart
-  use:
-    - SubStore
-    - Vps
+  include-all-providers: true
   policy-priority:
     - '(?<![\d.])0\.\d+(?!\d):2'
     - '(?<![\d.])1\.\d+(?!\d):0.5'
@@ -46,15 +47,6 @@ Smartp: &Smartp
   strategy: sticky-sessions
   max-failed-times: 3
   url: *ProxyTest
-  hidden: true
-
-Falld: &Falld
-  type: fallback
-  use: 
-    - BaiduProxy
-  interval: 3600
-  url: *DirecTest
-  lazy: true
   hidden: true
 
 Groupp: &Groupp
@@ -111,14 +103,18 @@ proxies:
 
 # 代理集
 proxy-providers:
-  SubStore:
+  *Sub1:
     <<: *Proxyer
-    path: ./proxies/SubStore.yaml
-    url: *SubStoreUrl
-  Vps:
+    path: ./proxies/SubS1.yaml
+    url: *Sub1Url
+    override:
+      additional-prefix: *Sub1
+  *Sub2:
     <<: *Proxyer
-    path: ./proxies/Vps.yaml
-    url: *VpsUrl
+    path: ./proxies/SubS2.yaml
+    url: *Sub2Url
+    override:
+      additional-prefix: *Sub2
   BaiduProxy:
     <<: *Proxyer
     path: ./proxies/BaiduProxy.yaml
@@ -170,16 +166,19 @@ proxy-groups:
     icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png"
 
   - name: 江苏
-    <<: *Falld
+    <<: *Smartp
     filter: '南京|苏州'
+    url: *DirectTest
     icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(1).png"
   - name: 广东
-    <<: *Falld
+    <<: *Smartp
     filter: '广州'
+    url: *DirectTest
     icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(2).png"
   - name: 北京
-    <<: *Falld
+    <<: *Smartp
     filter: '北京|保定'
+    url: *DirectTest
     icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(3).png"
 
   - name: 香港
