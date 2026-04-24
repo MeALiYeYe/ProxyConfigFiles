@@ -70,7 +70,12 @@ choose_model() {
     echo "1) 轻量模型（默认）"
     echo "2) 中等模型"
     echo "3) 最大模型（推荐高性能设备）"
-    read -rp "输入选项 [1-3] (默认1): " choice
+    if read -t 10 -rp "输入选项 [1-3] (默认1): " choice; then
+        echo ""
+    else
+        echo -e "\n超时未输入，使用默认选项 1"
+        choice=1
+    fi
 
     case "${choice:-1}" in
         1) model_file="Model.bin"; MODEL_NAME="轻量模型" ;;
