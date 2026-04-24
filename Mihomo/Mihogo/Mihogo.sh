@@ -5,8 +5,7 @@ pkg update -y && pkg install -y wget
 
 # 获取脚本
 mkdir -p "$HOME/bin"
-wget -qO "$HOME/bin/Manage.sh" \
-  https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Mihogo/Manage.sh
+curl -sL https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Mihogo/Manage.sh -o "$HOME/bin/Manage.sh"
 chmod +x "$HOME/bin/Manage.sh"
 
 # 确保Bin目录存在
