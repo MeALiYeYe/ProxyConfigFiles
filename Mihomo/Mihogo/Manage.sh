@@ -464,12 +464,3 @@ case "${1:-}" in
         exit 1
         ;;
 esac
-
-#------------------------------------------------
-# 确保 $HOME/bin 在 PATH 中
-#------------------------------------------------
-if [[ ":$PATH:" != *":$HOME/bin:"* ]]; then
-    echo 'export PATH="$HOME/bin:$PATH"' >> "$HOME/.bashrc"
-    export PATH="$HOME/bin:$PATH"
-    log_info "已将 \$HOME/bin 添加到 PATH"
-fi
