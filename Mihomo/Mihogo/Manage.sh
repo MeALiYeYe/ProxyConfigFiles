@@ -463,6 +463,48 @@ if [ "${1:-}" = "deploy" ]; then
     fi
 fi
 
+#------------------------------------------------
+# 交互菜单（无参数时触发）
+#------------------------------------------------
+if [ -z "${1:-}" ]; then
+    echo "=============================="
+    echo "   Manage.sh 管理菜单"
+    echo "=============================="
+    echo " 1) 部署全部 (deploy)"
+    echo " 2) 启动全部 (start)"
+    echo " 3) 停止全部 (stop)"
+    echo " 4) 重启全部 (restart)"
+    echo " 5) 更新全部 (update)"
+    echo "------------------------------"
+    echo " 6) 更新 Sub-Store"
+    echo " 7) 更新 Mihomo 配置"
+    echo " 8) 更新模型"
+    echo " 9) 更新 Mihomo 核心"
+    echo "------------------------------"
+    echo "10) 查看 Sub-Store 日志"
+    echo "11) 查看 Mihomo 日志"
+    echo " 0) 退出"
+    echo "=============================="
+
+    read -rp "请输入选项: " choice
+
+    case "$choice" in
+        1) set -- deploy ;;
+        2) set -- start ;;
+        3) set -- stop ;;
+        4) set -- restart ;;
+        5) set -- update ;;
+        6) set -- update_substore ;;
+        7) set -- update_config ;;
+        8) set -- update_model ;;
+        9) set -- update_mihomo_core ;;
+        10) set -- log_substore ;;
+        11) set -- log_mihomo ;;
+        0) exit 0 ;;
+        *) echo "无效选项"; exit 1 ;;
+    esac
+fi
+
 case "${1:-}" in
     deploy_substore) [ -d "$SUBSTORE_DIR" ] && log_warn "Sub-Store 已存在" || deploy_substore ;;
     deploy_mihomo) [ -d "$MIHOMO_DIR" ] && log_warn "Mihomo 已存在" || deploy_mihomo ;;
