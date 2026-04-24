@@ -13,6 +13,14 @@ SHELL_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/hea
 MIHOMO_URL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-1383218.gz"
 CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/OpenWRT/openclash.yaml"
 
+# ⭐ 新增：SubStore版本文件
+BACKEND_VER_FILE="$SUBSTORE_DIR/backend.version"
+FRONTEND_VER_FILE="$SUBSTORE_DIR/frontend.version"
+
+# ⭐ 新增：API
+BACKEND_API="https://api.github.com/repos/sub-store-org/Sub-Store/releases/latest"
+FRONTEND_API="https://api.github.com/repos/sub-store-org/Sub-Store-Front-End/releases/latest"
+
 #------------------------------------------------
 # 工具函数
 #------------------------------------------------
@@ -28,6 +36,11 @@ safe_wget() {
     wget --continue --tries=5 --timeout=30 --retry-connrefused --waitretry=3 -O "$out" "$url"
 
     [ -s "$out" ] || log_error "下载失败: $url"
+}
+
+# ⭐ 新增
+get_latest_version() {
+    curl -s "$1" | jq -r '.tag_name'
 }
 
 check_port() {
@@ -56,28 +69,29 @@ choose_model() {
     read -rp "输入选项 [1-3] (默认1): " choice
 
     case "${choice:-1}" in
-        1)
-            model_file="Model.bin"
-            MODEL_NAME="轻量模型"
-            ;;
-        2)
-            model_file="Model-middle.bin"
-            MODEL_NAME="中等模型"
-            ;;
-        3)
-            model_file="Model-large.bin"
-            MODEL_NAME="最大模型"
-            ;;
-        *)
-            log_warn "无效输入，使用默认轻量模型"
-            model_file="Model.bin"
-            MODEL_NAME="轻量模型"
-            ;;
+        1) model_file="Model.bin"; MODEL_NAME="轻量模型" ;;
+        2) model_file="Model-middle.bin"; MODEL_NAME="中等模型" ;;
+        3) model_file="Model-large.bin"; MODEL_NAME="最大模型" ;;
+        *) model_file="Model.bin"; MODEL_NAME="轻量模型" ;;
     esac
 
     MODEL_URL="${base_url}/${model_file}"
-
     log_info "已选择: $MODEL_NAME"
+}
+
+#------------------------------------------------
+# ⭐ 新增：回滚
+#------------------------------------------------
+rollback_backend() {
+    [ -f "$SUBSTORE_DIR/sub-store.bundle.js.bak" ] && \
+        mv "$SUBSTORE_DIR/sub-store.bundle.js.bak" "$SUBSTORE_DIR/sub-store.bundle.js"
+}
+
+rollback_frontend() {
+    [ -d "$SUBSTORE_DIR/dist.bak" ] && {
+        rm -rf "$SUBSTORE_DIR/dist"
+        mv "$SUBSTORE_DIR/dist.bak" "$SUBSTORE_DIR/dist"
+    }
 }
 
 #------------------------------------------------
@@ -100,10 +114,8 @@ install_dependencies() {
     mkdir -p "$PREFIX/var/service"
 
     if command -v sv-enable >/dev/null 2>&1; then
-        sv-enable crond 2>/dev/null || log_warn "无法启用 crond 服务，可能 termux-services 未正确初始化"
+        sv-enable crond 2>/dev/null || log_warn "无法启用 crond 服务"
         sv up crond 2>/dev/null || log_warn "无法启动 crond 服务"
-    else
-        log_warn "sv-enable 命令不存在，跳过 crond 启动"
     fi
 
     log_info "依赖安装完成"
@@ -122,6 +134,12 @@ deploy_substore() {
 
     unzip -o dist.zip -d dist
     rm -f dist.zip
+
+    # ⭐ 写入版本
+    get_latest_version "$BACKEND_API" > "$BACKEND_VER_FILE"
+    get_latest_version "$FRONTEND_API" > "$FRONTEND_VER_FILE"
+
+    log_info "Sub-Store 部署完成（已记录版本）"
 }
 
 start_substore() {
@@ -224,7 +242,67 @@ update_self() {
     log_info "Manage.sh 已更新完成，请重新执行命令"
 }
 
-update_substore() { stop_substore; deploy_substore; start_substore; }
+update_substore() {
+    log_info "检查 Sub-Store 更新..."
+
+    mkdir -p "$SUBSTORE_DIR"
+    cd "$SUBSTORE_DIR"
+
+    # 后端
+    LATEST_BACKEND_VER=$(get_latest_version "$BACKEND_API")
+    LOCAL_BACKEND_VER=$(cat "$BACKEND_VER_FILE" 2>/dev/null || true)
+
+    if [ "$LATEST_BACKEND_VER" = "$LOCAL_BACKEND_VER" ] && [ -n "$LATEST_BACKEND_VER" ]; then
+        log_info "后端已是最新版本"
+    else
+        log_info "更新后端 → $LATEST_BACKEND_VER"
+        mv sub-store.bundle.js sub-store.bundle.js.bak 2>/dev/null || true
+
+        if safe_wget "https://github.com/sub-store-org/Sub-Store/releases/latest/download/sub-store.bundle.js" "sub-store.bundle.js"; then
+            echo "$LATEST_BACKEND_VER" > "$BACKEND_VER_FILE"
+        else
+            log_warn "后端更新失败，回滚"
+            rollback_backend
+        fi
+    fi
+
+    # 前端
+    LATEST_FRONTEND_VER=$(get_latest_version "$FRONTEND_API")
+    LOCAL_FRONTEND_VER=$(cat "$FRONTEND_VER_FILE" 2>/dev/null || true)
+
+    if [ "$LATEST_FRONTEND_VER" = "$LOCAL_FRONTEND_VER" ] && [ -n "$LATEST_FRONTEND_VER" ]; then
+        log_info "前端已是最新版本"
+    else
+        log_info "更新前端 → $LATEST_FRONTEND_VER"
+
+        mv dist dist.bak 2>/dev/null || true
+
+        safe_wget "https://github.com/sub-store-org/Sub-Store-Front-End/releases/latest/download/dist.zip" "dist.zip"
+
+        rm -rf dist
+        mkdir -p dist
+
+        unzip -o dist.zip -d tmp_dist
+
+        if [ -d "tmp_dist/dist" ]; then
+            mv tmp_dist/dist/* dist/
+        else
+            mv tmp_dist/* dist/
+        fi
+
+        if [ $? -ne 0 ]; then
+            log_warn "前端更新失败，回滚"
+            rollback_frontend
+        else
+            echo "$LATEST_FRONTEND_VER" > "$FRONTEND_VER_FILE"
+        fi
+
+        rm -rf dist.zip tmp_dist
+    fi
+
+    start_substore
+}
+
 update_mihomo() { stop_mihomo; deploy_mihomo; start_mihomo; }
 
 update_model() {
