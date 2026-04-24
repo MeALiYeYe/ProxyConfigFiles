@@ -403,9 +403,11 @@ view_mihomo_log() { tail -f "$MIHOMO_DIR/mihomo.log"; }
 # 依赖 Termux:Boot 插件
 #------------------------------------------------
 setup_boot() {
-    mkdir -p "$BOOT_SCRIPT_DIR"
+    mkdir -p "$BOOT_SCRIPT_DIR" "$HOME/bin"
 
-    # 写入启动脚本
+    #------------------------------------------------
+    # 写入启动脚本（Termux:Boot）
+    #------------------------------------------------
     cat > "$BOOT_SCRIPT_DIR/start-services.sh" <<'EOF'
 #!/data/data/com.termux/files/usr/bin/bash
 bash "$HOME/bin/Manage.sh" start
@@ -413,28 +415,33 @@ EOF
     chmod +x "$BOOT_SCRIPT_DIR/start-services.sh"
 
     #------------------------------------------------
-    # Boot 软链接（给 Termux:Boot 用）
+    # Boot 软链接（无需 rm，直接覆盖）
     #------------------------------------------------
     LINK_PATH="$BOOT_SCRIPT_DIR/Manage.sh"
-    if [ -L "$LINK_PATH" ] || [ -f "$LINK_PATH" ]; then
-        rm -f "$LINK_PATH"
-    fi
     ln -sf "$HOME/bin/Manage.sh" "$LINK_PATH"
-    chmod +x "$LINK_PATH"
 
     #------------------------------------------------
-    # 快捷命令 sm（给用户用）
+    # 快捷命令 sm
     #------------------------------------------------
     SM_LINK="$HOME/bin/sm"
-    if [ -L "$SM_LINK" ] || [ -f "$SM_LINK" ]; then
-        rm -f "$SM_LINK"
-    fi
     ln -sf "$HOME/bin/Manage.sh" "$SM_LINK"
-    chmod +x "$SM_LINK"
 
-    log_info "已设置开机自启: $BOOT_SCRIPT_DIR/start-services.sh"
-    log_info "已创建 Boot 链接: $LINK_PATH -> Manage.sh"
-    log_info "已创建快捷命令: sm -> Manage.sh"
+    #------------------------------------------------
+    # PATH 防重复写入（关键）
+    #------------------------------------------------
+    if ! grep -q 'export PATH="$HOME/bin:$PATH"' "$HOME/.bashrc"; then
+        echo 'export PATH="$HOME/bin:$PATH"' >> "$HOME/.bashrc"
+        log_info "已写入 PATH 到 .bashrc"
+    fi
+
+    # 当前会话立即生效（不重复添加）
+    case ":$PATH:" in
+        *":$HOME/bin:"*) ;;
+        *) export PATH="$HOME/bin:$PATH" ;;
+    esac
+
+    log_info "开机自启已设置"
+    log_info "快捷命令: sm 已可用"
 }
 
 #------------------------------------------------
