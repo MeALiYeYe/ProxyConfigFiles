@@ -396,7 +396,7 @@ setup_boot() {
     mkdir -p "$BOOT_SCRIPT_DIR"
 
     # 写入启动脚本
-    cat > "$BOOT_SCRIPT_DIR/start-services.sh" << EOF
+    cat > "$BOOT_SCRIPT_DIR/start-services.sh" <<'EOF'
 #!/data/data/com.termux/files/usr/bin/bash
 bash "$HOME/bin/Manage.sh" start
 EOF
