@@ -391,7 +391,7 @@ EOF
 #------------------------------------------------
 # 主逻辑
 #------------------------------------------------
-if [ "$1" = "deploy" ]; then
+if [ "${1:-}" = "deploy" ]; then
     if is_deployed; then
         log_warn "系统已部署过，如需重新部署请先删除 $SUBSTORE_DIR 和 $MIHOMO_DIR"
         exit 0
@@ -407,7 +407,7 @@ if [ "$1" = "deploy" ]; then
     fi
 fi
 
-case "$1" in
+case "${1:-}" in
     deploy_substore) [ -d "$SUBSTORE_DIR" ] && log_warn "Sub-Store 已存在" || deploy_substore ;;
     deploy_mihomo) [ -d "$MIHOMO_DIR" ] && log_warn "Mihomo 已存在" || deploy_mihomo ;;
     start_substore) start_substore ;;
@@ -436,7 +436,7 @@ case "$1" in
         update_mihomo_core
       ;;
     *)
-        echo "用法: $0 {deploy|deploy_substore|deploy_mihomo|start_substore|stop_substore|restart_substore|start_mihomo|stop_mihomo|restart_mihomo|update_self|update_substore|update_mihomo|update_mode|update_config|update_mihomo_core|log_substore|log_mihomo|start|stop|restart|update}"
+        echo "用法: $0 {deploy|deploy_substore|deploy_mihomo|start_substore|stop_substore|restart_substore|start_mihomo|stop_mihomo|restart_mihomo|update_self|update_substore|update_mihomo|update_model|update_config|update_mihomo_core|log_substore|log_mihomo|start|stop|restart|update}"
         exit 1
         ;;
 esac
