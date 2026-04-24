@@ -10,7 +10,7 @@ BOOT_SCRIPT_DIR="$HOME/.termux/boot"
 
 SHELL_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Mihogo/Manage.sh"
 
-MIHOMO_URL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-5a3c382.gz"
+MIHOMO_URL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-1383218.gz"
 CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/OpenWRT/openclash.yaml"
 
 #------------------------------------------------
