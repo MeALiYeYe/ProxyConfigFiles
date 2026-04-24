@@ -2,33 +2,15 @@
 set -euo pipefail
 
 #------------------------------------------------
-# Termux 自身使用代理 (防止 GitHub API、wget 受限)
-#------------------------------------------------
-# export all_proxy="socks5://127.0.0.1:7890"
-
-#------------------------------------------------
 # 目录配置
 #------------------------------------------------
 SUBSTORE_DIR="$HOME/substore"
 MIHOMO_DIR="$HOME/mihomo"
 BOOT_SCRIPT_DIR="$HOME/.termux/boot"
 
-# 本脚本链接
 SHELL_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Mihogo/Manage.sh"
 
-# Mihomo 核心下载链接 & config
-MIHOMO_API_URL=$(curl -s https://api.github.com/repos/vernesong/mihomo/releases/tags/Prerelease-Alpha \
-  | grep "browser_download_url" \
-  | grep "android-arm64-v8-alpha-smart" \
-  | grep "\.gz" \
-  | cut -d '"' -f 4)
-
 MIHOMO_URL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-5a3c382.gz"
-
-# Smart大模型下载链接
-MODEL_URL="https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model-large.bin"
-
-# mihomo远程配置链接
 CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/OpenWRT/openclash.yaml"
 
 #------------------------------------------------
@@ -38,37 +20,73 @@ log_info() { echo -e "\e[32m[INFO]\e[0m $1"; }
 log_warn() { echo -e "\e[33m[WARN]\e[0m $1"; }
 log_error() { echo -e "\e[31m[ERROR]\e[0m $1"; exit 1; }
 
-#------------------------------------------------
-# 安全下载函数（核心稳定性保证）
-#------------------------------------------------
 safe_wget() {
     local url="$1"
     local out="$2"
 
     log_info "下载: $url"
-    wget \
-        --continue \
-        --tries=5 \
-        --timeout=30 \
-        --retry-connrefused \
-        --waitretry=3 \
-        --show-progress \
-        -O "$out" \
-        "$url"
+    wget --continue --tries=5 --timeout=30 --retry-connrefused --waitretry=3 -O "$out" "$url"
 
-    if [ ! -s "$out" ]; then
-        log_error "下载失败或文件为空: $url"
+    [ -s "$out" ] || log_error "下载失败: $url"
+}
+
+check_port() {
+    local port=$1
+    if command -v lsof >/dev/null && lsof -i:$port >/dev/null 2>&1; then
+        log_error "端口 $port 已被占用"
     fi
 }
 
+get_mihomo_url() {
+    curl -s https://api.github.com/repos/vernesong/mihomo/releases/tags/Prerelease-Alpha \
+    | jq -r '.assets[] | select(.name | test("android-arm64.*alpha.*\\.gz")) | .browser_download_url' \
+    | head -n 1
+}
+
 #------------------------------------------------
-# 检查部署状态
+# 模型选择
+#------------------------------------------------
+choose_model() {
+    local base_url="https://github.com/vernesong/mihomo/releases/download/LightGBM-Model"
+
+    echo "请选择 Mihomo Smart 模型："
+    echo "1) 轻量模型（默认）"
+    echo "2) 中等模型"
+    echo "3) 最大模型（推荐高性能设备）"
+    read -rp "输入选项 [1-3] (默认1): " choice
+
+    case "${choice:-1}" in
+        1)
+            model_file="Model.bin"
+            MODEL_NAME="轻量模型"
+            ;;
+        2)
+            model_file="Model-middle.bin"
+            MODEL_NAME="中等模型"
+            ;;
+        3)
+            model_file="Model-large.bin"
+            MODEL_NAME="最大模型"
+            ;;
+        *)
+            log_warn "无效输入，使用默认轻量模型"
+            model_file="Model.bin"
+            MODEL_NAME="轻量模型"
+            ;;
+    esac
+
+    MODEL_URL="${base_url}/${model_file}"
+
+    log_info "已选择: $MODEL_NAME"
+}
+
+#------------------------------------------------
+# 检查部署
 #------------------------------------------------
 is_deployed() {
     [[ -d "$SUBSTORE_DIR" && -d "$MIHOMO_DIR" && -f "$MIHOMO_DIR/mihomo" ]]
 }
 
-# 确保 $HOME/bin 存在
 mkdir -p "$HOME/bin"
 
 #------------------------------------------------
@@ -76,13 +94,11 @@ mkdir -p "$HOME/bin"
 #------------------------------------------------
 install_dependencies() {
     log_info "安装依赖..."
-    pkg up -y
-    pkg i -y nodejs-lts wget unzip curl jq cronie termux-services
+    pkg update -y
+    pkg install -y nodejs-lts wget unzip curl jq cronie termux-services lsof
 
-    # 确保服务目录存在
     mkdir -p "$PREFIX/var/service"
 
-    # 尝试启用 crond
     if command -v sv-enable >/dev/null 2>&1; then
         sv-enable crond 2>/dev/null || log_warn "无法启用 crond 服务，可能 termux-services 未正确初始化"
         sv up crond 2>/dev/null || log_warn "无法启动 crond 服务"
@@ -94,7 +110,7 @@ install_dependencies() {
 }
 
 #------------------------------------------------
-# 部署 Sub-Store
+# Sub-Store
 #------------------------------------------------
 deploy_substore() {
     log_info "部署 Sub-Store..."
@@ -108,109 +124,88 @@ deploy_substore() {
     rm -f dist.zip
 }
 
-#------------------------------------------------
-# 下载配置与
-#------------------------------------------------
-download_assets() {
-    mkdir -p "$MIHOMO_DIR/geo"
-    cd "$MIHOMO_DIR"
-
-    safe_wget "$CONFIG_URL" "config.yaml"
-}
-
-#------------------------------------------------
-# 部署 Mihomo
-#------------------------------------------------
-deploy_mihomo() {
-    log_info "部署 Mihomo..."
-    mkdir -p "$MIHOMO_DIR"
-    cd "$MIHOMO_DIR"
-
-    # 如果 API 没有取到结果，就使用固定链接
-    if [ -z "$MIHOMO_API_URL" ]; then
-        MIHOMO_API_URL="$MIHOMO_URL"
-        log_warn "未能从 GitHub API 获取 Mihomo 下载链接，已切换到固定备用链接"
-    else
-        log_info "已从 GitHub API 获取 Mihomo 下载链接"
-    fi
-
-    safe_wget "$MIHOMO_API_URL" "mihomo.gz"
-    gzip -t mihomo.gz || log_error "mihomo.gz 文件损坏"
-    gunzip -f mihomo.gz
-
-    if [ -f mihomo ]; then
-        chmod +x mihomo
-    elif ls mihomo-* 1> /dev/null 2>&1; then
-        mv mihomo-* mihomo
-        chmod +x mihomo
-    else
-        log_error "Mihomo 核心文件不存在，部署失败"
-    fi
-
-    # **新增：下载 Smart 大模型**
-    log_info "下载 Smart 大模型..."
-    safe_wget "$MODEL_URL" "Model.bin"
-
-    download_assets
-    log_info "Mihomo 部署完成"
-}
-
-#------------------------------------------------
-# 服务管理
-#------------------------------------------------
 start_substore() {
     log_info "启动 Sub-Store..."
 
-    #------------------------
-    # 启动后端 (3000)
-    #------------------------
+    check_port 3000
+    check_port 3001
+
     cd "$SUBSTORE_DIR"
-    if ! pgrep -f "sub-store.bundle.js" > /dev/null; then
-        nohup env PORT=3000 node sub-store.bundle.js \
-            >> "$SUBSTORE_DIR/substore.log" 2>&1 &
-        log_info "后端已启动 (3000)"
-    else
-        log_warn "Sub-Store 后端已在运行"
+
+    if ! pgrep -f "node .*sub-store.bundle.js" >/dev/null; then
+        setsid env PORT=3000 node sub-store.bundle.js > substore.log 2>&1 &
+        echo $! > substore.pid
     fi
 
-    #------------------------
-    # 启动前端 (3001)
-    #------------------------
-    cd "$SUBSTORE_DIR/dist"
-
-    if ! pgrep -f "http.server 3001" > /dev/null; then
-        nohup python3 -m http.server 3001 \
-            >> "$SUBSTORE_DIR/frontend.log" 2>&1 &
-        log_info "前端已启动 (3001)"
-    else
-        log_warn "Sub-Store 前端已在运行"
+    if ! command -v serve >/dev/null; then
+        npm i -g serve
     fi
 
-    log_info "访问地址："
+    if ! pgrep -f "serve .*3001" >/dev/null; then
+        setsid serve "$SUBSTORE_DIR/dist" -l 3001 > frontend.log 2>&1 &
+        echo $! > frontend.pid
+    fi
+
     log_info "前端: http://127.0.0.1:3001"
     log_info "后端: http://127.0.0.1:3000"
 }
 
 stop_substore() {
     log_info "停止 Sub-Store..."
-    pkill -f "sub-store.bundle.js" || true
-    pkill -f "http.server 3001" || true
+    [ -f "$SUBSTORE_DIR/substore.pid" ] && kill $(cat "$SUBSTORE_DIR/substore.pid") 2>/dev/null || true
+    [ -f "$SUBSTORE_DIR/frontend.pid" ] && kill $(cat "$SUBSTORE_DIR/frontend.pid") 2>/dev/null || true
+
+    pkill -f sub-store.bundle.js || true
+    pkill -f "serve .*3001" || true
     log_info "Sub-Store 已停止（前后端）"
+}
+
+restart_substore() {
+    stop_substore
+    start_substore
+}
+
+#------------------------------------------------
+# Mihomo
+#------------------------------------------------
+deploy_mihomo() {
+    log_info "部署 Mihomo..."
+    mkdir -p "$MIHOMO_DIR"
+    cd "$MIHOMO_DIR"
+
+    MIHOMO_API_URL=$(get_mihomo_url || true)
+
+    if [ -z "${MIHOMO_API_URL:-}" ]; then
+        MIHOMO_API_URL="$MIHOMO_URL"
+        log_warn "使用备用 Mihomo 下载链接"
+    fi
+
+    safe_wget "$MIHOMO_API_URL" "mihomo.gz"
+    gzip -t mihomo.gz || log_error "核心损坏"
+    gunzip -f mihomo.gz
+
+    chmod +x mihomo
+
+    # ⭐ 模型选择
+    choose_model
+    safe_wget "$MODEL_URL" "Model.bin"
+
+    safe_wget "$CONFIG_URL" "config.yaml"
 }
 
 start_mihomo() {
     log_info "启动 Mihomo..."
     cd "$MIHOMO_DIR"
-    if ! pgrep -f "mihomo" > /dev/null; then
-        nohup ./mihomo -d . >> "$MIHOMO_DIR/mihomo.log" 2>&1 &
-    else
-        log_warn "Mihomo 已在运行"
+
+    if ! pgrep -f "$MIHOMO_DIR/mihomo" >/dev/null; then
+        setsid ./mihomo -d . > mihomo.log 2>&1 &
+        echo $! > mihomo.pid
     fi
 }
 
 stop_mihomo() {
-    pkill -f "mihomo" || true
-    log_info "Mihomo 已停止"
+    [ -f "$MIHOMO_DIR/mihomo.pid" ] && kill $(cat "$MIHOMO_DIR/mihomo.pid") 2>/dev/null || true
+    pkill -f "$MIHOMO_DIR/mihomo" || true
 }
 
 restart_mihomo() {
@@ -219,7 +214,7 @@ restart_mihomo() {
 }
 
 #------------------------------------------------
-# 更新功能
+# 更新
 #------------------------------------------------
 update_self() {
     log_info "更新 Manage.sh..."
@@ -233,10 +228,13 @@ update_substore() { stop_substore; deploy_substore; start_substore; }
 update_mihomo() { stop_mihomo; deploy_mihomo; start_mihomo; }
 
 update_model() {
-    log_info "更新 Smart 大模型..."
+    log_info "更新模型..."
     cd "$MIHOMO_DIR"
+
+    choose_model
     safe_wget "$MODEL_URL" "Model.bin"
-    log_info "Smart 大模型更新完成"
+
+    log_info "模型更新完成"
 }
 
 update_config() {
@@ -250,13 +248,8 @@ update_mihomo_core() {
     log_info "更新 Mihomo 核心..."
     cd "$MIHOMO_DIR"
 
-    # 如果 API 没有取到结果，就使用固定链接
-    if [ -z "$MIHOMO_API_URL" ]; then
-        MIHOMO_URL="$MIHOMO_URL"
-        log_warn "未能从 GitHub API 获取 Mihomo 下载链接，已切换到固定备用链接"
-    else
-        log_info "已从 GitHub API 获取 Mihomo 下载链接"
-    fi
+    MIHOMO_API_URL=$(get_mihomo_url || true)
+    [ -z "${MIHOMO_API_URL:-}" ] && MIHOMO_API_URL="$MIHOMO_URL"
 
     safe_wget "$MIHOMO_API_URL" "mihomo.gz"
     gunzip -f mihomo.gz
@@ -272,7 +265,7 @@ update_mihomo_core() {
 }
 
 #------------------------------------------------
-# 日志查看
+# 日志
 #------------------------------------------------
 view_substore_log() { tail -f "$SUBSTORE_DIR/substore.log"; }
 view_mihomo_log() { tail -f "$MIHOMO_DIR/mihomo.log"; }
@@ -346,7 +339,6 @@ case "$1" in
         update_self
         update_substore
         update_mihomo
-        update_rules
         update_model
         update_config
         update_mihomo_core
