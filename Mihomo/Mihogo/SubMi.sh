@@ -8,7 +8,7 @@ SUBSTORE_DIR="$HOME/substore"
 MIHOMO_DIR="$HOME/mihomo"
 BOOT_SCRIPT_DIR="$HOME/.termux/boot"
 
-SHELL_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/Mihogo/Submi.sh"
+SHELL_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/Mihogo/SubMi.sh"
 
 MIHOMO_URL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-1383218.gz"
 CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/OpenWRT/openclash.yaml"
@@ -254,11 +254,11 @@ restart_mihomo() {
 # 更新
 #------------------------------------------------
 update_self() {
-    log_info "更新 Submi.sh..."
+    log_info "更新 SubMi.sh..."
     cd "$HOME/bin"
 
-    TMP_FILE="Submi.sh.new"
-    BACKUP_FILE="Submi.sh.bak"
+    TMP_FILE="SubMi.sh.new"
+    BACKUP_FILE="SubMi.sh.bak"
 
     # 1️⃣ 下载到临时文件
     if safe_wget "$SHELL_URL" "$TMP_FILE"; then
@@ -277,13 +277,13 @@ update_self() {
             fi
 
             # 3️⃣ 备份旧版本
-            [ -f Submi.sh ] && cp Submi.sh "$BACKUP_FILE"
+            [ -f SubMi.sh ] && cp SubMi.sh "$BACKUP_FILE"
 
             # 4️⃣ 替换
-            mv "$TMP_FILE" Submi.sh
-            chmod +x Submi.sh
+            mv "$TMP_FILE" SubMi.sh
+            chmod +x SubMi.sh
 
-            log_info "Submi.sh 已更新完成"
+            log_info "SubMi.sh 已更新完成"
 
         else
             log_error "下载文件为空，更新失败"
@@ -410,21 +410,21 @@ setup_boot() {
     #------------------------------------------------
     cat > "$BOOT_SCRIPT_DIR/start-services.sh" <<'EOF'
 #!/data/data/com.termux/files/usr/bin/bash
-bash "$HOME/bin/Submi.sh" start
+bash "$HOME/bin/SubMi.sh" start
 EOF
     chmod +x "$BOOT_SCRIPT_DIR/start-services.sh"
 
     #------------------------------------------------
     # Boot 软链接（无需 rm，直接覆盖）
     #------------------------------------------------
-    LINK_PATH="$BOOT_SCRIPT_DIR/Submi.sh"
-    ln -sf "$HOME/bin/Submi.sh" "$LINK_PATH"
+    LINK_PATH="$BOOT_SCRIPT_DIR/SubMi.sh"
+    ln -sf "$HOME/bin/SubMi.sh" "$LINK_PATH"
 
     #------------------------------------------------
     # 快捷命令 sm
     #------------------------------------------------
     SM_LINK="$HOME/bin/sm"
-    ln -sf "$HOME/bin/Submi.sh" "$SM_LINK"
+    ln -sf "$HOME/bin/SubMi.sh" "$SM_LINK"
 
     #------------------------------------------------
     # PATH 防重复写入（关键）
@@ -468,7 +468,7 @@ fi
 #------------------------------------------------
 if [ -z "${1:-}" ]; then
     echo "=============================="
-    echo "   Submi.sh 管理菜单"
+    echo "   SubMi.sh 管理菜单"
     echo "=============================="
     echo " 1) 部署全部 (deploy)"
     echo " 2) 启动全部 (start)"
