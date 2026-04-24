@@ -263,8 +263,18 @@ update_self() {
     # 1️⃣ 下载到临时文件
     if safe_wget "$SHELL_URL" "$TMP_FILE"; then
 
-        # 2️⃣ 校验文件是否有效（非空 + 可执行）
+        # 2️⃣ 校验文件是否有效（非空）
         if [ -s "$TMP_FILE" ]; then
+
+            # ⭐ 新增：必须是脚本（检查 shebang）
+            if ! head -n 1 "$TMP_FILE" | grep -q "^#!"; then
+                log_error "下载内容异常（不是脚本，可能是HTML），已取消更新"
+            fi
+
+            # ⭐ 新增：防止HTML错误页
+            if grep -qi "<html" "$TMP_FILE"; then
+                log_error "下载内容包含HTML，更新中止"
+            fi
 
             # 3️⃣ 备份旧版本
             [ -f Manage.sh ] && cp Manage.sh "$BACKUP_FILE"
