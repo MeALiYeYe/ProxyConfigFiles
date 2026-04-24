@@ -3,7 +3,8 @@ set -e
 
 # 获取脚本
 mkdir -p "$HOME/bin"
-curl -sL https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Mihogo/Manage.sh -o "$HOME/bin/Manage.sh"
+wget -qO "$HOME/bin/Manage.sh" \
+  https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Mihomo/Mihogo/Manage.sh
 chmod +x "$HOME/bin/Manage.sh"
 
 # 确保Bin目录存在
