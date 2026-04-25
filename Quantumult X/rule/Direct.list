@@ -16,3 +16,4 @@ DOMAIN-SUFFIX,xianniu.cc
 DOMAIN-SUFFIX,xianniu.com
 DOMAIN-KEYWORD,gwm-mn
 DOMAIN-KEYWORD,kahaoqua
+IP-CIDR,156.231.115.1/24,no-resolve

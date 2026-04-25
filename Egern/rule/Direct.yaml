@@ -1,3 +1,4 @@
+no_resolve: true
 domain_suffix_set:
   - eu.cc
   - gwm.cn
@@ -19,3 +20,5 @@ domain_set:
 domain_keyword_set:
   - gwm-mn
   - kahaoqua
+ip_cidr_set:
+  - 156.231.115.1/24
