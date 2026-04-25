@@ -1,6 +1,7 @@
 payload:
   - DOMAIN,ifconfig.me
   - DOMAIN,subcdn.rtx.al
+  - DOMAIN-SUFFIX,eu.cc
   - DOMAIN-SUFFIX,gwm.cn
   - DOMAIN-SUFFIX,gwm.com.cn
   - DOMAIN-SUFFIX,gwmapp-h.com
