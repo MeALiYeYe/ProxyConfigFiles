@@ -17,4 +17,6 @@ payload:
   - DOMAIN-SUFFIX,xianniu.com
   - DOMAIN-KEYWORD,gwm-mn
   - DOMAIN-KEYWORD,kahaoqua
+  - IP-CIDR,156.224.76.1/24,no-resolve
   - IP-CIDR,156.231.115.1/24,no-resolve
+  - IP-CIDR6,2401:b60:5:3c62:c3c3:8dfd:f6b9:1/112,no-resolve
