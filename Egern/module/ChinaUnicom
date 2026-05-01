@@ -1,0 +1,20 @@
+name: 联通余量
+description: 中国联通话费流量小组件
+
+env_schema:
+  Cookie:
+    name: 📝 Cookie
+    description: "联通手机营业厅获取Cookie"
+    default_value:
+  手机号:
+    name: 📞 联通手机号
+    default_value:
+
+scriptings:
+- generic: 
+    name: 电信余量
+    script_url: https://raw.githubusercontent.com/IBL3ND/module/refs/heads/main/Unicom_Widget.JS
+
+widgets:
+- name: 联通余量
+  script_name: 联通余量
