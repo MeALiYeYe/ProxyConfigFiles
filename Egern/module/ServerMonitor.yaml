@@ -1,0 +1,108 @@
+name: 服务器监控
+description: 服务器监控小组件
+
+env_schema:
+  SSH_SERVER_1_NAME:
+    name: 🏷️ [节点1] 显示名称
+    default_value: "Oracle"
+  SSH_SERVER_1_HOST:
+    name: 🌐 [节点1] IP/域名
+    default_value: ""
+  SSH_SERVER_1_PORT:
+    name: 🔌 [节点1] 端口
+    default_value: "22"
+  SSH_SERVER_1_USER:
+    name: 👤 [节点1] 用户名
+    default_value: "root"
+  SSH_SERVER_1_PWD:
+    name: 🔐 [节点1] 密码
+    default_value: ""
+  SSH_SERVER_1_KEY:
+    name: 🔑 [节点1] 私钥
+    default_value: ""
+
+  SSH_SERVER_2_NAME:
+    name: 🏷️ [节点2] 显示名称 (留空停用)
+    default_value: ""
+  SSH_SERVER_2_HOST:
+    name: 🌐 [节点2] IP/域名
+    default_value: ""
+  SSH_SERVER_2_PORT:
+    name: 🔌 [节点2] 端口
+    default_value: "22"
+  SSH_SERVER_2_USER:
+    name: 👤 [节点2] 用户名
+    default_value: "root"
+  SSH_SERVER_2_PWD:
+    name: 🔐 [节点2] 密码
+    default_value: ""
+  SSH_SERVER_2_KEY:
+    name: 🔑 [节点2] 私钥
+    default_value: ""
+
+  SSH_SERVER_3_NAME:
+    name: 🏷️ [节点3] 显示名称 (留空停用)
+    default_value: ""
+  SSH_SERVER_3_HOST:
+    name: 🌐 [节点3] IP/域名
+    default_value: ""
+  SSH_SERVER_3_PORT:
+    name: 🔌 [节点3] 端口
+    default_value: "22"
+  SSH_SERVER_3_USER:
+    name: 👤 [节点3] 用户名
+    default_value: "root"
+  SSH_SERVER_3_PWD:
+    name: 🔐 [节点3] 密码
+    default_value: ""
+  SSH_SERVER_3_KEY:
+    name: 🔑 [节点3] 私钥
+    default_value: ""
+
+  SSH_SERVER_4_NAME:
+    name: 🏷️ [节点4] 显示名称 (留空停用)
+    default_value: ""
+  SSH_SERVER_4_HOST:
+    name: 🌐 [节点4] IP/域名
+    default_value: ""
+  SSH_SERVER_4_PORT:
+    name: 🔌 [节点4] 端口
+    default_value: "22"
+  SSH_SERVER_4_USER:
+    name: 👤 [节点4] 用户名
+    default_value: "root"
+  SSH_SERVER_4_PWD:
+    name: 🔐 [节点4] 密码
+    default_value: ""
+  SSH_SERVER_4_KEY:
+    name: 🔑 [节点4] 私钥
+    default_value: ""
+
+  SSH_SERVER_5_NAME:
+    name: 🏷️ [节点5] 显示名称 (留空停用)
+    default_value: ""
+  SSH_SERVER_5_HOST:
+    name: 🌐 [节点5] IP/域名
+    default_value: ""
+  SSH_SERVER_5_PORT:
+    name: 🔌 [节点5] 端口
+    default_value: "22"
+  SSH_SERVER_5_USER:
+    name: 👤 [节点5] 用户名
+    default_value: "root"
+  SSH_SERVER_5_PWD:
+    name: 🔐 [节点5] 密码
+    default_value: ""
+  SSH_SERVER_5_KEY:
+    name: 🔑 [节点5] 私钥
+    default_value: ""
+    
+scriptings:
+- generic:
+    name: 服务器监控
+    script_url: https://raw.githubusercontent.com/jnlaoshu/MySelf/master/Egern/Widget/ServerMonitor.js
+    timeout: 10
+
+widgets:
+- name: 服务器监控
+  script_name: 服务器监控
