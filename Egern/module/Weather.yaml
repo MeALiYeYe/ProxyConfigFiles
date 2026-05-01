@@ -1,0 +1,25 @@
+name: 和风天气
+description: 和风天气小组件
+
+env_schema:
+  KEY:
+    name: 🌅 APIKey
+    description: "和风天气 API Key"
+    default_value:
+  API_HOST:
+    name: 🎐 APIHost
+    description: "和风天气 API Host"
+    default_value:
+  LOCATION:
+    name: ⛳ Location
+    description: "和风天气中文城市名"
+    default_value: 成都
+    
+scriptings:
+- generic:
+    name: 和风天气
+    script_url: https://raw.githubusercontent.com/IBL3ND/module/refs/heads/main/Weather_Widget.JS
+
+widgets:
+- name: 和风天气
+  script_name: 和风天气
