@@ -1,0 +1,20 @@
+name: 电信余量
+description: 中国电信话费流量小组件
+
+env_schema:
+  Cookie:
+    name: 📝 Cookie
+    description: "电信手机营业厅获取Cookie"
+    default_value:
+  手机号:
+    name: 📞 电信手机号
+    default_value:
+
+scriptings:
+- generic: 
+    name: 电信余量
+    script_url: https://raw.githubusercontent.com/IBL3ND/module/refs/heads/main/CT_Widget.JS
+
+widgets:
+- name: 电信余量
+  script_name: 电信余量
