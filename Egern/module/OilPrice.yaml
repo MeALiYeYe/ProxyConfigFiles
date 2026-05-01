@@ -1,0 +1,17 @@
+name: 全国油价
+description: 全国油价小组件
+
+env_schema:
+  GAS_REGION:
+    name: 📍 油价查询地区
+    description: "直辖市输入拼音，其他省份输入省份/省会拼音"
+    default_value: sichuan/chengdu
+    
+scriptings:
+- generic: 
+    name: 全国油价
+    script_url: https://raw.githubusercontent.com/jnlaoshu/MySelf/master/Egern/Widget/GasPrice.js
+
+widgets:
+- name: 全国油价
+  script_name: 全国油价
