@@ -1,6 +1,7 @@
 no_resolve: true
 domain_suffix_set:
   - eu.cc
+  - gwm-mn.beantechyun.com
   - gwm.cn
   - gwm.com.cn
   - gwmapp-h.com
@@ -16,10 +17,8 @@ domain_suffix_set:
   - xianniu.com
 domain_set:
   - ifconfig.me
+  - kahaoquan.com
   - subcdn.rtx.al
-domain_keyword_set:
-  - gwm-mn
-  - kahaoqua
 ip_cidr_set:
   - 156.224.76.1/24
   - 156.231.115.1/24
