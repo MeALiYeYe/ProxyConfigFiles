@@ -40,15 +40,14 @@ log_info() { echo -e "\e[32m[INFO]\e[0m $1"; }
 log_warn() { echo -e "\e[33m[WARN]\e[0m $1"; }
 log_error() { echo -e "\e[31m[ERROR]\e[0m $1"; exit 1; }
 
+# 通用下载函数
 safe_wget() {
     local url="$1"
     local out="${2:-}"
 
     local cdn_url=""
 
-    #------------------------------------------------
     # 生成加速 URL
-    #------------------------------------------------
     if echo "$url" | grep -q "raw.githubusercontent.com"; then
         # raw → jsDelivr
         cdn_url=$(echo "$url" | sed -E \
@@ -59,9 +58,7 @@ safe_wget() {
         cdn_url="https://ghproxy.com/$url"
     fi
 
-    #------------------------------------------------
     # 下载函数
-    #------------------------------------------------
     download() {
         local u="$1"
 
@@ -78,9 +75,7 @@ safe_wget() {
         fi
     }
 
-    #------------------------------------------------
-    # 1️⃣ 主源
-    #------------------------------------------------
+    # 主源
     if download "$url"; then
         if [ -n "$out" ] && grep -qi "<html" "$out"; then
             log_warn "主源返回 HTML，尝试加速源..."
@@ -91,9 +86,7 @@ safe_wget() {
         log_warn "主源失败，尝试加速源..."
     fi
 
-    #------------------------------------------------
-    # 2️⃣ CDN / Proxy
-    #------------------------------------------------
+    # CDN / Proxy
     if [ -n "$cdn_url" ]; then
         if download "$cdn_url"; then
             if [ -n "$out" ] && grep -qi "<html" "$out"; then
@@ -106,16 +99,44 @@ safe_wget() {
         fi
     fi
 
-    #------------------------------------------------
-    # 3️⃣ 最终失败
-    #------------------------------------------------
+    # 最终失败
     log_error "下载失败: $url"
 }
 
+# 获取版本号
 get_latest_version() {
     wget -qO- "$1" | jq -r '.tag_name'
 }
 
+# 获取 mihomo 配置文件中的控制端口
+get_controller_url() {
+    local cfg="$MIHOMO_DIR/config.yaml"
+
+    [ -f "$cfg" ] || return 1
+
+    # 提取 external-controller
+    local line
+    line=$(grep -E '^external-controller:' "$cfg" | head -n1 | awk '{print $2}')
+
+    [ -z "$line" ] && return 1
+
+    # 分离 ip 和 port
+    local ip port
+    ip=$(echo "$line" | cut -d: -f1)
+    port=$(echo "$line" | cut -d: -f2)
+
+    # 默认端口
+    port=${port:-9090}
+
+    # 处理 0.0.0.0
+    if [ "$ip" = "0.0.0.0" ] || [ -z "$ip" ]; then
+        ip="127.0.0.1"
+    fi
+
+    echo "http://$ip:$port"
+}
+
+# 检查端口是否被占用
 check_port() {
     local port=$1
     if command -v lsof >/dev/null && lsof -i:$port >/dev/null 2>&1; then
@@ -123,6 +144,19 @@ check_port() {
     fi
 }
 
+# 等待端口可用
+wait_port() {
+    local port=$1
+    for i in {1..10}; do
+        if nc -z 127.0.0.1 "$port" 2>/dev/null; then
+            return 0
+        fi
+        sleep 1
+    done
+    return 1
+}
+
+# 获取 Smart Mihomo 核心文件
 get_mihomo_url() {
     wget -qO- https://api.github.com/repos/vernesong/mihomo/releases/tags/Prerelease-Alpha \
     | jq -r '.assets[] | select(.name | test("android-arm64.*alpha.*\\.gz")) | .browser_download_url' \
@@ -214,7 +248,7 @@ choose_model() {
 }
 
 #------------------------------------------------
-# 回滚
+# Sub-Store 回滚
 #------------------------------------------------
 rollback_backend() {
     [ -f "$SUBSTORE_DIR/sub-store.bundle.js.bak" ] && \
@@ -391,10 +425,10 @@ update_self() {
     TMP_FILE="SubMi.sh.new"
     BACKUP_FILE="SubMi.sh.bak"
 
-    # 1️⃣ 下载到临时文件
+    # 下载到临时文件
     if safe_wget "$SHELL_URL" "$TMP_FILE"; then
 
-        # 2️⃣ 校验文件是否有效（非空）
+        # 校验文件是否有效（非空）
         if [ -s "$TMP_FILE" ]; then
 
             # 必须是脚本（检查 shebang）
@@ -407,10 +441,10 @@ update_self() {
                 log_error "下载内容包含HTML，更新中止"
             fi
 
-            # 3️⃣ 备份旧版本
+            # 备份旧版本
             [ -f SubMi.sh ] && cp SubMi.sh "$BACKUP_FILE"
 
-            # 4️⃣ 替换
+            # 替换
             mv "$TMP_FILE" SubMi.sh
             chmod +x SubMi.sh
 
