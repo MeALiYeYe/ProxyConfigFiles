@@ -44,17 +44,31 @@ safe_wget() {
     local url="$1"
     local out="${2:-}"
 
-    # 仅 raw 使用 CDN
     local cdn_url=""
+
+    #------------------------------------------------
+    # 生成加速 URL
+    #------------------------------------------------
     if echo "$url" | grep -q "raw.githubusercontent.com"; then
-        cdn_url=$(echo "$url" | sed -E 's#https://raw.githubusercontent.com/([^/]+)/([^/]+)/([^/]+)/(.*)#https://cdn.jsdelivr.net/gh/\1/\2@\3/\4#')
+        # raw → jsDelivr
+        cdn_url=$(echo "$url" | sed -E \
+            's#https://raw.githubusercontent.com/([^/]+)/([^/]+)/([^/]+)/(.*)#https://cdn.jsdelivr.net/gh/\1/\2@\3/\4#')
+
+    elif echo "$url" | grep -q "github.com/.*/releases/download"; then
+        # release → ghproxy
+        cdn_url="https://ghproxy.com/$url"
     fi
 
+    #------------------------------------------------
+    # 下载函数
+    #------------------------------------------------
     download() {
         local u="$1"
+
         if [ -z "$out" ]; then
             wget --header="User-Agent: Mozilla/5.0" \
-                 --tries=3 --timeout=20 -qO- "$u"
+                 --tries=3 --timeout=20 \
+                 -qO- "$u"
         else
             log_info "下载: $u"
             wget --header="User-Agent: Mozilla/5.0" \
@@ -64,28 +78,37 @@ safe_wget() {
         fi
     }
 
-    # 主源
+    #------------------------------------------------
+    # 1️⃣ 主源
+    #------------------------------------------------
     if download "$url"; then
         if [ -n "$out" ] && grep -qi "<html" "$out"; then
-            log_warn "主源返回 HTML，尝试 CDN..."
+            log_warn "主源返回 HTML，尝试加速源..."
         else
             return 0
         fi
     else
-        log_warn "主源失败，尝试 CDN..."
+        log_warn "主源失败，尝试加速源..."
     fi
 
-    # CDN
+    #------------------------------------------------
+    # 2️⃣ CDN / Proxy
+    #------------------------------------------------
     if [ -n "$cdn_url" ]; then
         if download "$cdn_url"; then
             if [ -n "$out" ] && grep -qi "<html" "$out"; then
-                log_warn "CDN 返回 HTML"
+                log_warn "加速源返回 HTML"
             else
                 return 0
             fi
+        else
+            log_warn "加速源下载失败"
         fi
     fi
 
+    #------------------------------------------------
+    # 3️⃣ 最终失败
+    #------------------------------------------------
     log_error "下载失败: $url"
 }
 
