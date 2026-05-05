@@ -1,5 +1,6 @@
 DOMAIN,ifconfig.me
 DOMAIN,subcdn.rtx.al
+DOMAIN,kahaoquan.com
 
 DOMAIN-SUFFIX,eu.cc
 DOMAIN-SUFFIX,qiyoujiage.com
@@ -15,9 +16,7 @@ DOMAIN-SUFFIX,gwm.cn
 DOMAIN-SUFFIX,gwmapp-h.com
 DOMAIN-SUFFIX,gwmapp-w.com
 DOMAIN-SUFFIX,haval.com.cn
-
-DOMAIN-KEYWORD,gwm-mn
-DOMAIN-KEYWORD,kahaoqua
+DOMAIN-SUFFIX,gwm-mn.beantechyun.com
 
 IP-CIDR,156.231.115.1/24,no-resolve
 IP-CIDR,156.224.76.1/24,no-resolve
