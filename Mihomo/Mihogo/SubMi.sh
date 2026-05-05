@@ -44,14 +44,49 @@ safe_wget() {
     local url="$1"
     local out="${2:-}"
 
-    if [ -z "$out" ]; then
-        # stdout模式，不输出日志
-        wget --tries=5 --timeout=30 --retry-connrefused --waitretry=3 -qO- "$url"
-    else
-        log_info "下载: $url"
-        wget --no-check-certificate --continue --tries=5 --timeout=30 --retry-connrefused --waitretry=3 -O "$out" "$url"
-        [ -s "$out" ] || log_error "下载失败: $url"
+    # 生成 jsDelivr 备用 URL
+    local cdn_url=""
+    if echo "$url" | grep -q "raw.githubusercontent.com"; then
+        cdn_url=$(echo "$url" | sed -E 's#https://raw.githubusercontent.com/([^/]+)/([^/]+)/([^/]+)/(.*)#https://cdn.jsdelivr.net/gh/\1/\2@\3/\4#')
+    elif echo "$url" | grep -q "github.com/.*/releases/download"; then
+        cdn_url=$(echo "$url" | sed -E 's#https://github.com/([^/]+)/([^/]+)/releases/download/(.*)#https://cdn.jsdelivr.net/gh/\1/\2@\3#')
     fi
+
+    download() {
+        local u="$1"
+        if [ -z "$out" ]; then
+            wget --header="User-Agent: Mozilla/5.0" \
+                 --tries=3 --timeout=20 -qO- "$u"
+        else
+            log_info "下载: $u"
+            wget --header="User-Agent: Mozilla/5.0" \
+                 --no-check-certificate \
+                 --tries=3 --timeout=20 \
+                 -O "$out" "$u"
+        fi
+    }
+
+    # 1️⃣ 主源
+    if download "$url"; then
+        if [ -z "$out" ] || ! grep -qi "<html" "$out"; then
+            return 0
+        fi
+        log_warn "主源返回 HTML，尝试 CDN..."
+    else
+        log_warn "主源失败，尝试 CDN..."
+    fi
+
+    # 2️⃣ CDN 备用
+    if [ -n "$cdn_url" ]; then
+        if download "$cdn_url"; then
+            if [ -z "$out" ] || ! grep -qi "<html" "$out"; then
+                return 0
+            fi
+        fi
+    fi
+
+    # 3️⃣ 最终失败
+    log_error "下载失败: $url"
 }
 
 get_latest_version() {
