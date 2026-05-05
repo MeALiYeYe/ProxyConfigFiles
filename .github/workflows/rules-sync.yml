@@ -78,18 +78,18 @@ jobs:
           grep -E '^(DOMAIN|DOMAIN-SUFFIX),' "$tmp" | while IFS=',' read -r type value extra; do
             case "$type" in
               DOMAIN-SUFFIX)
-                echo "  - '+.$value'" >> "$mihomo_domain_out"
+                echo "  - +.$value" >> "$mihomo_domain_out"
                 ;;
               DOMAIN)
-                echo "  - '$value'" >> "$mihomo_domain_out"
+                echo "  - $value" >> "$mihomo_domain_out"
                 ;;
             esac
           done
 
           # IP-CIDR / IP-CIDR6
-          grep -E '^(IP-CIDR|IP-CIDR6),' "$tmp" \
+           grep -E '^(IP-CIDR|IP-CIDR6),' "$tmp" \
           | cut -d',' -f2 \
-          | sed "s/^/  - '/;s/$/'/" >> "$mihomo_ip_out"
+          | sed 's/^/  - /' >> "$mihomo_ip_out"
 
           # 删除空文件
           if [ $(wc -l < "$mihomo_domain_out") -le 1 ]; then
