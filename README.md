@@ -10,5 +10,6 @@
 - **TelegramSG** : 5 rules (domain: 0 / ip: 5)
 - **TelegramUS** : 3 rules (domain: 0 / ip: 3)
 - **WebRTC** : 28 rules (domain: 28 / ip: 0)
+- **anti-ip-attribution** : 233 rules (domain: 103 / ip: 116)
 
-Total rules: 224
+Total rules: 457
