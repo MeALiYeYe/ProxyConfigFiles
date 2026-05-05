@@ -19,8 +19,8 @@ CONFIG_URL_FILE="$MIHOMO_DIR/config.url"
 # Geox地址
 GEO_FILES=(
     "asn.mmdb,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
-    "country.mmdb,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country-lite.mmdb"
-    "geoip.dat,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat"
+    "country.mmdb,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country.mmdb"
+    "geoip.dat,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
     "geosite.dat,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
 )
 
