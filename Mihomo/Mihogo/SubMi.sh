@@ -14,6 +14,8 @@ SHELL_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mih
 MIHOMO_URL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-1383218.gz"
 # mihomo配置文件地址
 CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/OpenWRT/openclash.yaml"
+# mihomo配置文件地址记录
+CONFIG_URL_FILE="$MIHOMO_DIR/config.url"
 # Geox地址
 GEO_FILES=(
     "asn.mmdb,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
@@ -73,34 +75,55 @@ get_mihomo_url() {
 # 配置文件选择
 #------------------------------------------------
 choose_config() {
+    # 读取历史URL（如果没有则用默认）
+    if [ -f "$CONFIG_URL_FILE" ]; then
+        LAST_URL=$(cat "$CONFIG_URL_FILE")
+    else
+        LAST_URL="$CONFIG_URL"
+    fi
+
+    echo "当前配置URL: $LAST_URL"
     echo "请选择配置文件来源："
     echo "1) 使用默认配置"
     echo "2) 自定义配置 URL"
+    echo "3) 保持当前配置（推荐）"
 
-    if read -t 15 -rp "输入选项 [1-2] (默认1): " cfg_choice; then
+    if read -t 15 -rp "输入选项 [1-3] (默认3): " cfg_choice; then
         echo ""
     else
-        echo -e "\n超时未输入，使用默认配置"
-        cfg_choice=1
+        echo -e "\n超时未输入，保持当前配置"
+        cfg_choice=3
     fi
 
-    case "${cfg_choice:-1}" in
+    case "${cfg_choice:-3}" in
+        1)
+            FINAL_CONFIG_URL="$CONFIG_URL"
+            ;;
         2)
             read -rp "请输入配置文件 URL: " CUSTOM_CONFIG_URL
 
             if [ -z "$CUSTOM_CONFIG_URL" ]; then
-                log_warn "URL 为空，使用默认配置"
-                FINAL_CONFIG_URL="$CONFIG_URL"
+                log_warn "URL 为空，保持当前配置"
+                FINAL_CONFIG_URL="$LAST_URL"
             else
                 FINAL_CONFIG_URL="$CUSTOM_CONFIG_URL"
             fi
             ;;
+        3)
+            FINAL_CONFIG_URL="$LAST_URL"
+            ;;
         *)
-            FINAL_CONFIG_URL="$CONFIG_URL"
+            log_warn "无效输入，保持当前配置"
+            FINAL_CONFIG_URL="$LAST_URL"
             ;;
     esac
 
-    log_info "配置文件地址: $FINAL_CONFIG_URL"
+    # 保存（只有在非空时才写入）
+    if [ -n "$FINAL_CONFIG_URL" ]; then
+        echo "$FINAL_CONFIG_URL" > "$CONFIG_URL_FILE"
+    fi
+
+    log_info "使用配置文件: $FINAL_CONFIG_URL"
 }
 
 #------------------------------------------------
