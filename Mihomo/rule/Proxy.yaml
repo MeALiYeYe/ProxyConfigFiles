@@ -1,14 +1,13 @@
 payload:
-  - DOMAIN,board.zash.run.place
-  - DOMAIN,liangxin.xyz
-  - DOMAIN,wiki.repcz.link
-  - DOMAIN-SUFFIX,immortalwrt.org
-  - DOMAIN-SUFFIX,metacubex.one
-  - DOMAIN-SUFFIX,nya.fish
-  - DOMAIN-SUFFIX,ojbktv.com
-  - DOMAIN-SUFFIX,skybridge.cc
-  - DOMAIN-SUFFIX,sntp.uk
-  - DOMAIN-SUFFIX,tkv.one
-  - DOMAIN-SUFFIX,tnlhblnt20251207.space
-  - DOMAIN-KEYWORD,linkeless
-  - DOMAIN-KEYWORD,xiaoyakankan
+  - 'board.zash.run.place'
+  - 'liangxin.xyz'
+  - 'wiki.repcz.link'
+  - '+.immortalwrt.org'
+  - '+.metacubex.one'
+  - '+.nya.fish'
+  - '+.ojbktv.com'
+  - '+.skybridge.cc'
+  - '+.sntp.uk'
+  - '+.tkv.one'
+  - '+.tnlhblnt20251207.space'
+  - '+.xiaoyakankan.com'

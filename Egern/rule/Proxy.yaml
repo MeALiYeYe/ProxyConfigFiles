@@ -7,10 +7,8 @@ domain_suffix_set:
   - sntp.uk
   - tkv.one
   - tnlhblnt20251207.space
+  - xiaoyakankan.com
 domain_set:
   - board.zash.run.place
   - liangxin.xyz
   - wiki.repcz.link
-domain_keyword_set:
-  - linkeless
-  - xiaoyakankan
