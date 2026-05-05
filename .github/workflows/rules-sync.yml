@@ -53,72 +53,51 @@ jobs:
           mv "$sorted" "$tmp"
 
           ################################
-          # 统计规则
+          # 统计
           ################################
 
           count=$(wc -l < "$tmp")
           total_rules=$((total_rules + count))
 
-          echo "$name rules: $count"
+          domain_count=$(grep -Ec '^(DOMAIN|DOMAIN-SUFFIX),' "$tmp" || true)
+          ip_count=$(grep -Ec '^(IP-CIDR|IP-CIDR6),' "$tmp" || true)
+
+          echo "$name total: $count (domain: $domain_count / ip: $ip_count)"
 
           ################################
-          # 判断规则类型
+          # Mihomo（拆分 domain + ip）
           ################################
 
-          has_domain=$(grep -Ec '^(DOMAIN|DOMAIN-SUFFIX),' "$tmp" || true)
-          has_ip=$(grep -Ec '^(IP-CIDR|IP-CIDR6),' "$tmp" || true)
-          has_keyword=$(grep -Ec '^DOMAIN-KEYWORD,' "$tmp" || true)
-          has_wildcard=$(grep -Ec '^DOMAIN-WILDCARD,' "$tmp" || true)
+          mihomo_domain_out="Mihomo/rule/$name.yaml"
+          mihomo_ip_out="Mihomo/rule/${name}_ip.yaml"
 
-          has_other=$(grep -Ev '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD|DOMAIN-WILDCARD|IP-CIDR|IP-CIDR6),' "$tmp" | grep -c ',' || true)
+          echo "payload:" > "$mihomo_domain_out"
+          echo "payload:" > "$mihomo_ip_out"
 
-          if [ "$has_keyword" -gt 0 ] || [ "$has_wildcard" -gt 0 ]; then
-            rule_type="classical"
+          # DOMAIN / DOMAIN-SUFFIX
+          grep -E '^(DOMAIN|DOMAIN-SUFFIX),' "$tmp" | while IFS=',' read -r type value extra; do
+            case "$type" in
+              DOMAIN-SUFFIX)
+                echo "  - '+.$value'" >> "$mihomo_domain_out"
+                ;;
+              DOMAIN)
+                echo "  - '$value'" >> "$mihomo_domain_out"
+                ;;
+            esac
+          done
 
-          elif [ "$has_domain" -gt 0 ] && [ "$has_ip" -eq 0 ] && [ "$has_other" -eq 0 ]; then
-            rule_type="domain"
+          # IP-CIDR / IP-CIDR6
+          grep -E '^(IP-CIDR|IP-CIDR6),' "$tmp" \
+          | cut -d',' -f2 \
+          | sed "s/^/  - '/;s/$/'/" >> "$mihomo_ip_out"
 
-          elif [ "$has_ip" -gt 0 ] && [ "$has_domain" -eq 0 ] && [ "$has_other" -eq 0 ]; then
-            rule_type="ipcidr"
-
-          else
-            rule_type="classical"
+          # 删除空文件
+          if [ $(wc -l < "$mihomo_domain_out") -le 1 ]; then
+            rm -f "$mihomo_domain_out"
           fi
 
-          echo "$name → $rule_type"
-
-          ################################
-          # Mihomo
-          ################################
-
-          mihomo_out="Mihomo/rule/$name.yaml"
-
-          echo "payload:" > "$mihomo_out"
-
-          if [ "$rule_type" = "domain" ]; then
-
-            while IFS=',' read -r type value extra; do
-              case "$type" in
-                DOMAIN-SUFFIX)
-                  echo "  - '+.$value'" >> "$mihomo_out"
-                  ;;
-                DOMAIN)
-                  echo "  - '$value'" >> "$mihomo_out"
-                  ;;
-              esac
-            done < "$tmp"
-
-          elif [ "$rule_type" = "ipcidr" ]; then
-
-            grep -E '^(IP-CIDR|IP-CIDR6),' "$tmp" \
-            | cut -d',' -f2 \
-            | cut -d',' -f1 \
-            | sed "s/^/  - '/;s/$/'/" >> "$mihomo_out"
-
-          else
-
-            sed 's/^/  - /' "$tmp" >> "$mihomo_out"
-
+          if [ $(wc -l < "$mihomo_ip_out") -le 1 ]; then
+            rm -f "$mihomo_ip_out"
           fi
 
           ################################
@@ -134,7 +113,7 @@ jobs:
           egern_out="Egern/rule/$name.yaml"
           rm -f "$egern_out"
 
-          if grep -qE '^IP-CIDR,|^IP-CIDR6,|^IP-CIDR6,|^GEOIP,' "$tmp"; then
+          if grep -qE '^IP-CIDR,|^IP-CIDR6,|^GEOIP,' "$tmp"; then
             echo "no_resolve: true" >> "$egern_out"
           fi
 
@@ -158,9 +137,9 @@ jobs:
             grep '^DOMAIN-WILDCARD,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
           fi
 
-          if grep -q '^DOMAIN-REGEX,' $tmp; then
-            echo "domain_regex_set:" >> $egern_out
-            grep '^DOMAIN-REGEX,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
+          if grep -q '^DOMAIN-REGEX,' "$tmp"; then
+            echo "domain_regex_set:" >> "$egern_out"
+            grep '^DOMAIN-REGEX,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
           fi
 
           if grep -q '^IP-CIDR,' "$tmp"; then
@@ -173,14 +152,14 @@ jobs:
             grep '^IP-CIDR6,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
           fi
 
-          if grep -q '^GEOIP,' $tmp; then
-            echo "geoip_set:" >> $egern_out
-            grep '^GEOIP,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
+          if grep -q '^GEOIP,' "$tmp"; then
+            echo "geoip_set:" >> "$egern_out"
+            grep '^GEOIP,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
           fi
 
-          if grep -q '^PROTOCOL,' $tmp; then
-            echo "protocol_set:" >> $egern_out
-            grep '^PROTOCOL,' $tmp | cut -d',' -f2 | cut -d',' -f1 | sed 's/^/  - /' >> $egern_out
+          if grep -q '^PROTOCOL,' "$tmp"; then
+            echo "protocol_set:" >> "$egern_out"
+            grep '^PROTOCOL,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
           fi
 
         done
@@ -197,8 +176,12 @@ jobs:
 
         for file in Surge/rule/*.list; do
           name=$(basename "$file" .list)
+
           count=$(grep -v '^#' "$file" | grep -v '^$' | wc -l)
-          echo "- **$name** : $count rules" >> README.md
+          domain_count=$(grep -Ec '^(DOMAIN|DOMAIN-SUFFIX),' "$file" || true)
+          ip_count=$(grep -Ec '^(IP-CIDR|IP-CIDR6),' "$file" || true)
+
+          echo "- **$name** : $count rules (domain: $domain_count / ip: $ip_count)" >> README.md
         done
 
         echo "" >> README.md
