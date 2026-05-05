@@ -70,21 +70,56 @@ jobs:
 
           sed '/^#/d;/^$/d' "$file" | sort -u > "$tmp"
 
-          ################################
-          # 自动排序
-          ################################
+         ################################
+        # 自动排序
+        ################################
 
-          sorted=$(mktemp)
+        sorted=$(mktemp)
 
-          grep '^DOMAIN,' "$tmp" >> "$sorted" || true
-          grep '^DOMAIN-SUFFIX,' "$tmp" >> "$sorted" || true
-          grep '^DOMAIN-KEYWORD,' "$tmp" >> "$sorted" || true
-          grep '^DOMAIN-WILDCARD,' "$tmp" >> "$sorted" || true
-          grep '^IP-CIDR,' "$tmp" >> "$sorted" || true
-          grep '^IP-CIDR6,' "$tmp" >> "$sorted" || true
-          grep -Ev '^(DOMAIN|IP-CIDR)' "$tmp" >> "$sorted" || true
+        # DOMAIN（可选：字典排序）
+        grep '^DOMAIN,' "$tmp" | sort -u >> "$sorted" || true
 
-          mv "$sorted" "$tmp"
+        # DOMAIN-SUFFIX
+        grep '^DOMAIN-SUFFIX,' "$tmp" | sort -u >> "$sorted" || true
+
+        # DOMAIN-KEYWORD
+        grep '^DOMAIN-KEYWORD,' "$tmp" | sort -u >> "$sorted" || true
+
+        # DOMAIN-WILDCARD
+        grep '^DOMAIN-WILDCARD,' "$tmp" | sort -u >> "$sorted" || true
+
+        ################################
+        # IP 排序
+        ################################
+
+        ipv4_tmp=$(mktemp)
+        ipv6_tmp=$(mktemp)
+
+        # IPv4
+        grep '^IP-CIDR,' "$tmp" | cut -d',' -f2 > "$ipv4_tmp" || true
+
+        if [ -s "$ipv4_tmp" ]; then
+          sort -t . -k1,1n -k2,2n -k3,3n -k4,4n "$ipv4_tmp" \
+          | sed 's/^/IP-CIDR,/' >> "$sorted"
+        fi
+
+        # IPv6
+        grep '^IP-CIDR6,' "$tmp" | cut -d',' -f2 > "$ipv6_tmp" || true
+
+        if [ -s "$ipv6_tmp" ]; then
+          sort -V "$ipv6_tmp" \
+          | sed 's/^/IP-CIDR6,/' >> "$sorted"
+        fi
+
+        rm -f "$ipv4_tmp" "$ipv6_tmp"
+
+################################
+# 其他规则
+################################
+
+grep -Ev '^(DOMAIN|IP-CIDR)' "$tmp" >> "$sorted" || true
+
+mv "$sorted" "$tmp"
 
           ################################
           # 统计
