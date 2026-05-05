@@ -70,56 +70,56 @@ jobs:
 
           sed '/^#/d;/^$/d' "$file" | sort -u > "$tmp"
 
-         ################################
-        # 自动排序
-        ################################
+          ################################
+          # 自动排序
+          ################################
 
-        sorted=$(mktemp)
+          sorted=$(mktemp)
 
-        # DOMAIN（可选：字典排序）
-        grep '^DOMAIN,' "$tmp" | sort -u >> "$sorted" || true
+          # DOMAIN
+          grep '^DOMAIN,' "$tmp" | sort -u >> "$sorted" || true
 
-        # DOMAIN-SUFFIX
-        grep '^DOMAIN-SUFFIX,' "$tmp" | sort -u >> "$sorted" || true
+          # DOMAIN-SUFFIX
+          grep '^DOMAIN-SUFFIX,' "$tmp" | sort -u >> "$sorted" || true
 
-        # DOMAIN-KEYWORD
-        grep '^DOMAIN-KEYWORD,' "$tmp" | sort -u >> "$sorted" || true
+          # DOMAIN-KEYWORD
+          grep '^DOMAIN-KEYWORD,' "$tmp" | sort -u >> "$sorted" || true
 
-        # DOMAIN-WILDCARD
-        grep '^DOMAIN-WILDCARD,' "$tmp" | sort -u >> "$sorted" || true
+          # DOMAIN-WILDCARD
+          grep '^DOMAIN-WILDCARD,' "$tmp" | sort -u >> "$sorted" || true
 
-        ################################
-        # IP 排序
-        ################################
+          ################################
+          # IP 排序
+          ################################
 
-        ipv4_tmp=$(mktemp)
-        ipv6_tmp=$(mktemp)
+          ipv4_tmp=$(mktemp)
+          ipv6_tmp=$(mktemp)
 
-        # IPv4
-        grep '^IP-CIDR,' "$tmp" | cut -d',' -f2 > "$ipv4_tmp" || true
+          # IPv4
+          grep '^IP-CIDR,' "$tmp" | cut -d',' -f2 > "$ipv4_tmp" || true
 
-        if [ -s "$ipv4_tmp" ]; then
-          sort -t . -k1,1n -k2,2n -k3,3n -k4,4n "$ipv4_tmp" \
-          | sed 's/^/IP-CIDR,/' >> "$sorted"
-        fi
+          if [ -s "$ipv4_tmp" ]; then
+            sort -t . -k1,1n -k2,2n -k3,3n -k4,4n "$ipv4_tmp" \
+            | sed 's/^/IP-CIDR,/' >> "$sorted"
+          fi
 
-        # IPv6
-        grep '^IP-CIDR6,' "$tmp" | cut -d',' -f2 > "$ipv6_tmp" || true
+          # IPv6
+          grep '^IP-CIDR6,' "$tmp" | cut -d',' -f2 > "$ipv6_tmp" || true
 
-        if [ -s "$ipv6_tmp" ]; then
-          sort -V "$ipv6_tmp" \
-          | sed 's/^/IP-CIDR6,/' >> "$sorted"
-        fi
+          if [ -s "$ipv6_tmp" ]; then
+            sort -V "$ipv6_tmp" \
+            | sed 's/^/IP-CIDR6,/' >> "$sorted"
+          fi
 
-        rm -f "$ipv4_tmp" "$ipv6_tmp"
+          rm -f "$ipv4_tmp" "$ipv6_tmp"
 
-################################
-# 其他规则
-################################
+          ################################
+          # 其他规则
+          ################################
 
-grep -Ev '^(DOMAIN|IP-CIDR)' "$tmp" >> "$sorted" || true
+          grep -Ev '^(DOMAIN|IP-CIDR)' "$tmp" >> "$sorted" || true
 
-mv "$sorted" "$tmp"
+          mv "$sorted" "$tmp"
 
           ################################
           # 统计
@@ -155,7 +155,7 @@ mv "$sorted" "$tmp"
             esac
           done
 
-          # IP-CIDR / IP-CIDR6
+          # IP
           grep -E '^(IP-CIDR|IP-CIDR6),' "$tmp" \
           | cut -d',' -f2 \
           | sed 's/^/  - /' >> "$mihomo_ip_out"
