@@ -70,6 +70,40 @@ get_mihomo_url() {
 }
 
 #------------------------------------------------
+# 配置文件选择
+#------------------------------------------------
+choose_config() {
+    echo "请选择配置文件来源："
+    echo "1) 使用默认配置"
+    echo "2) 自定义配置 URL"
+
+    if read -t 15 -rp "输入选项 [1-2] (默认1): " cfg_choice; then
+        echo ""
+    else
+        echo -e "\n超时未输入，使用默认配置"
+        cfg_choice=1
+    fi
+
+    case "${cfg_choice:-1}" in
+        2)
+            read -rp "请输入配置文件 URL: " CUSTOM_CONFIG_URL
+
+            if [ -z "$CUSTOM_CONFIG_URL" ]; then
+                log_warn "URL 为空，使用默认配置"
+                FINAL_CONFIG_URL="$CONFIG_URL"
+            else
+                FINAL_CONFIG_URL="$CUSTOM_CONFIG_URL"
+            fi
+            ;;
+        *)
+            FINAL_CONFIG_URL="$CONFIG_URL"
+            ;;
+    esac
+
+    log_info "配置文件地址: $FINAL_CONFIG_URL"
+}
+
+#------------------------------------------------
 # 模型选择
 #------------------------------------------------
 choose_model() {
@@ -236,7 +270,8 @@ deploy_mihomo() {
     choose_model
     safe_wget "$MODEL_URL" "Model.bin"
 
-    safe_wget "$CONFIG_URL" "config.yaml"
+    choose_config
+    safe_wget "$FINAL_CONFIG_URL" "config.yaml"
 
     for item in "${GEO_FILES[@]}"; do
         IFS=',' read -r dest src <<< "$item"
@@ -372,17 +407,20 @@ update_substore() {
 update_model() {
     log_info "更新模型..."
     cd "$MIHOMO_DIR"
-
+    
     choose_model
     safe_wget "$MODEL_URL" "Model.bin"
-
+    
     log_info "模型更新完成"
 }
 
 update_config() {
     log_info "更新 config.yaml..."
     cd "$MIHOMO_DIR"
-    safe_wget "$CONFIG_URL" "config.yaml"
+    
+    choose_config
+    safe_wget "$FINAL_CONFIG_URL" "config.yaml"
+    
     log_info "config.yaml 更新完成"
 }
 
@@ -390,10 +428,12 @@ update_geo() {
     log_info "更新 Geo 数据..."
     mkdir -p "$MIHOMO_DIR/geo"
     cd "$MIHOMO_DIR"
+
     for item in "${GEO_FILES[@]}"; do
         IFS=',' read -r dest src <<< "$item"
         safe_wget "$src" "$dest"
     done
+
     log_info "Geo 数据更新完成" }
 
 update_mihomo_core() {
@@ -405,6 +445,7 @@ update_mihomo_core() {
 
     safe_wget "$MIHOMO_API_URL" "mihomo.gz"
     gunzip -f mihomo.gz
+
     if [ -f mihomo ]; then
         chmod +x mihomo
     elif ls mihomo-* 1> /dev/null 2>&1; then
@@ -413,6 +454,7 @@ update_mihomo_core() {
     else
         log_error "Mihomo 核心文件不存在，更新失败"
     fi
+
     log_info "Mihomo 核心更新完成"
 }
 
@@ -472,8 +514,10 @@ uninstall_mihomo() {
 
 uninstall_all() {
     log_info "卸载全部服务..."
+    
     uninstall_substore
     uninstall_mihomo
+    
     log_info "✅ 全部卸载完成"
 }
 
