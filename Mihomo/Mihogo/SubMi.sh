@@ -120,6 +120,7 @@ choose_config() {
 
     # 保存（只有在非空时才写入）
     if [ -n "$FINAL_CONFIG_URL" ]; then
+        mkdir -p "$MIHOMO_DIR"
         echo "$FINAL_CONFIG_URL" > "$CONFIG_URL_FILE"
     fi
 
@@ -457,7 +458,8 @@ update_geo() {
         safe_wget "$src" "$dest"
     done
 
-    log_info "Geo 数据更新完成" }
+    log_info "Geo 数据更新完成"
+}
 
 update_mihomo_core() {
     log_info "更新 Mihomo 核心..."
@@ -467,6 +469,7 @@ update_mihomo_core() {
     [ -z "${MIHOMO_API_URL:-}" ] && MIHOMO_API_URL="$MIHOMO_URL"
 
     safe_wget "$MIHOMO_API_URL" "mihomo.gz"
+    rm -f mihomo
     gunzip -f mihomo.gz
 
     if [ -f mihomo ]; then
