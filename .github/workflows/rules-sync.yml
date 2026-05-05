@@ -5,6 +5,8 @@ on:
     paths:
       - 'Surge/rule/**'
   workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'   # 每6小时同步一次
 
 jobs:
   sync:
@@ -14,6 +16,38 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v5
 
+    ################################
+    # 多规则源同步（仅变化时更新）
+    ################################
+    - name: Sync external rules
+      run: |
+
+        mkdir -p Surge/rule
+
+        declare -A RULES=(
+          ["anti-ip-attribution"]="https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/main/generated/surge.list"
+        )
+
+        for name in "${!RULES[@]}"; do
+          url="${RULES[$name]}"
+          target="Surge/rule/$name.list"
+
+          echo "Fetching $name..."
+
+          curl -L --retry 3 --connect-timeout 10 "$url" -o "$target.new"
+
+          if [ -f "$target" ] && cmp -s "$target" "$target.new"; then
+            echo "No change: $name"
+            rm "$target.new"
+          else
+            mv "$target.new" "$target"
+            echo "Updated: $name"
+          fi
+        done
+
+    ################################
+    # 规则生成
+    ################################
     - name: Generate rules
       run: |
 
@@ -37,7 +71,7 @@ jobs:
           sed '/^#/d;/^$/d' "$file" | sort -u > "$tmp"
 
           ################################
-          # 自动排序规则
+          # 自动排序
           ################################
 
           sorted=$(mktemp)
@@ -65,7 +99,7 @@ jobs:
           echo "$name total: $count (domain: $domain_count / ip: $ip_count)"
 
           ################################
-          # Mihomo（拆分 domain + ip）
+          # Mihomo（拆分 domain + ip，无引号）
           ################################
 
           mihomo_domain_out="Mihomo/rule/$name.yaml"
@@ -87,7 +121,7 @@ jobs:
           done
 
           # IP-CIDR / IP-CIDR6
-           grep -E '^(IP-CIDR|IP-CIDR6),' "$tmp" \
+          grep -E '^(IP-CIDR|IP-CIDR6),' "$tmp" \
           | cut -d',' -f2 \
           | sed 's/^/  - /' >> "$mihomo_ip_out"
 
@@ -165,12 +199,11 @@ jobs:
         done
 
         ################################
-        # 生成 README
+        # README
         ################################
 
         echo "# Proxy Rules" > README.md
         echo "" >> README.md
-
         echo "## Rule Statistics" >> README.md
         echo "" >> README.md
 
@@ -187,13 +220,16 @@ jobs:
         echo "" >> README.md
         echo "Total rules: $total_rules" >> README.md
 
-
+    ################################
+    # 提交
+    ################################
     - name: Commit
       run: |
 
         git config --global user.name "github-actions"
         git config --global user.email "actions@github.com"
 
+        git add Surge/rule
         git add Mihomo/rule
         git add Egern/rule
         git add "Quantumult X/rule"
