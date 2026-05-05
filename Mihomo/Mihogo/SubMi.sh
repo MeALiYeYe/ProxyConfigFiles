@@ -44,12 +44,10 @@ safe_wget() {
     local url="$1"
     local out="${2:-}"
 
-    # 生成 jsDelivr 备用 URL
+    # 仅 raw 使用 CDN
     local cdn_url=""
     if echo "$url" | grep -q "raw.githubusercontent.com"; then
         cdn_url=$(echo "$url" | sed -E 's#https://raw.githubusercontent.com/([^/]+)/([^/]+)/([^/]+)/(.*)#https://cdn.jsdelivr.net/gh/\1/\2@\3/\4#')
-    elif echo "$url" | grep -q "github.com/.*/releases/download"; then
-        cdn_url=$(echo "$url" | sed -E 's#https://github.com/([^/]+)/([^/]+)/releases/download/(.*)#https://cdn.jsdelivr.net/gh/\1/\2@\3#')
     fi
 
     download() {
@@ -66,26 +64,28 @@ safe_wget() {
         fi
     }
 
-    # 1️⃣ 主源
+    # 主源
     if download "$url"; then
-        if [ -z "$out" ] || ! grep -qi "<html" "$out"; then
+        if [ -n "$out" ] && grep -qi "<html" "$out"; then
+            log_warn "主源返回 HTML，尝试 CDN..."
+        else
             return 0
         fi
-        log_warn "主源返回 HTML，尝试 CDN..."
     else
         log_warn "主源失败，尝试 CDN..."
     fi
 
-    # 2️⃣ CDN 备用
+    # CDN
     if [ -n "$cdn_url" ]; then
         if download "$cdn_url"; then
-            if [ -z "$out" ] || ! grep -qi "<html" "$out"; then
+            if [ -n "$out" ] && grep -qi "<html" "$out"; then
+                log_warn "CDN 返回 HTML"
+            else
                 return 0
             fi
         fi
     fi
 
-    # 3️⃣ 最终失败
     log_error "下载失败: $url"
 }
 
