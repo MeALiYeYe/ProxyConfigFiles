@@ -8,16 +8,26 @@ SUBSTORE_DIR="$HOME/substore"
 MIHOMO_DIR="$HOME/mihomo"
 BOOT_SCRIPT_DIR="$HOME/.termux/boot"
 
+# 此脚本地址
 SHELL_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/Mihogo/SubMi.sh"
-
+# mihomo核心地址
 MIHOMO_URL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-1383218.gz"
+# mihomo配置文件地址
 CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/OpenWRT/openclash.yaml"
+# Geox地址
+GEO_FILES=(
+    "asn.mmdb,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
+    "country.mmdb,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country-lite.mmdb"
+    "geoip.dat,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat"
+    "geosite.dat,https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+)
 
-# ⭐ 新增：SubStore版本文件
+# SubStore地址和版本文件
+SUBSTORE_BACKEND_URL="https://github.com/sub-store-org/Sub-Store/releases/latest/download/sub-store.bundle.js"
+SUBSTORE_FRONTEND_URL="https://github.com/sub-store-org/Sub-Store-Front-End/releases/latest/download/dist.zip"
 BACKEND_VER_FILE="$SUBSTORE_DIR/backend.version"
 FRONTEND_VER_FILE="$SUBSTORE_DIR/frontend.version"
-
-# ⭐ 新增：API
+# SubStoreAPI
 BACKEND_API="https://api.github.com/repos/sub-store-org/Sub-Store/releases/latest"
 FRONTEND_API="https://api.github.com/repos/sub-store-org/Sub-Store-Front-End/releases/latest"
 
@@ -42,7 +52,6 @@ safe_wget() {
     fi
 }
 
-# ⭐ 新增
 get_latest_version() {
     wget -qO- "$1" | jq -r '.tag_name'
 }
@@ -89,7 +98,7 @@ choose_model() {
 }
 
 #------------------------------------------------
-# ⭐ 新增：回滚
+# 回滚
 #------------------------------------------------
 rollback_backend() {
     [ -f "$SUBSTORE_DIR/sub-store.bundle.js.bak" ] && \
@@ -138,8 +147,8 @@ deploy_substore() {
     mkdir -p "$SUBSTORE_DIR"
     cd "$SUBSTORE_DIR"
 
-    safe_wget "https://github.com/sub-store-org/Sub-Store/releases/latest/download/sub-store.bundle.js" "sub-store.bundle.js"
-    safe_wget "https://github.com/sub-store-org/Sub-Store-Front-End/releases/latest/download/dist.zip" "dist.zip"
+    safe_wget "$SUBSTORE_BACKEND_URL" "sub-store.bundle.js"
+    safe_wget "$SUBSTORE_FRONTEND_URL" "dist.zip"
 
     rm -rf dist tmp_dist
     mkdir -p tmp_dist dist
@@ -154,7 +163,7 @@ deploy_substore() {
 
     rm -rf dist.zip tmp_dist
 
-    # ⭐ 写入版本
+    # 写入版本
     get_latest_version "$BACKEND_API" > "$BACKEND_VER_FILE"
     get_latest_version "$FRONTEND_API" > "$FRONTEND_VER_FILE"
 
@@ -223,11 +232,16 @@ deploy_mihomo() {
 
     chmod +x mihomo
 
-    # ⭐ 模型选择
+    # 模型选择
     choose_model
     safe_wget "$MODEL_URL" "Model.bin"
 
     safe_wget "$CONFIG_URL" "config.yaml"
+
+    for item in "${GEO_FILES[@]}"; do
+        IFS=',' read -r dest src <<< "$item"
+        safe_wget "$src" "$dest"
+    done
 }
 
 start_mihomo() {
@@ -266,12 +280,12 @@ update_self() {
         # 2️⃣ 校验文件是否有效（非空）
         if [ -s "$TMP_FILE" ]; then
 
-            # ⭐ 新增：必须是脚本（检查 shebang）
+            # 必须是脚本（检查 shebang）
             if ! head -n 1 "$TMP_FILE" | grep -q "^#!"; then
                 log_error "下载内容异常（不是脚本，可能是HTML），已取消更新"
             fi
 
-            # ⭐ 新增：防止HTML错误页
+            # 防止HTML错误页
             if grep -qi "<html" "$TMP_FILE"; then
                 log_error "下载内容包含HTML，更新中止"
             fi
@@ -371,6 +385,16 @@ update_config() {
     safe_wget "$CONFIG_URL" "config.yaml"
     log_info "config.yaml 更新完成"
 }
+
+update_geo() {
+    log_info "更新 Geo 数据..."
+    mkdir -p "$MIHOMO_DIR/geo"
+    cd "$MIHOMO_DIR"
+    for item in "${GEO_FILES[@]}"; do
+        IFS=',' read -r dest src <<< "$item"
+        safe_wget "$src" "$dest"
+    done
+    log_info "Geo 数据更新完成" }
 
 update_mihomo_core() {
     log_info "更新 Mihomo 核心..."
@@ -559,14 +583,15 @@ if [ -z "${1:-}" ]; then
     echo " 7) 更新 Mihomo 配置"
     echo " 8) 更新模型"
     echo " 9) 更新 Mihomo 核心"
+    echo " 10) 更新 Geo 数据文件"
     echo "------------------------------"
-    echo "10) 查看 Sub-Store 日志"
-    echo "11) 查看 Mihomo 日志"
+    echo "11) 查看 Sub-Store 日志"
+    echo "12) 查看 Mihomo 日志"
     echo "------------------------------"
-    echo "12) 卸载 Sub-Store（清理端口）"
-    echo "13) 卸载 Mihomo"
-    echo "14) 卸载全部服务"
-    echo "15) 卸载 SubMi.sh 脚本"
+    echo "13) 卸载 Sub-Store（清理端口）"
+    echo "14) 卸载 Mihomo"
+    echo "15) 卸载全部服务"
+    echo "16) 卸载 SubMi.sh 脚本"
     echo "------------------------------"
     echo " 0) 退出"
     echo "=============================="
@@ -583,12 +608,12 @@ if [ -z "${1:-}" ]; then
         7) set -- update_config ;;
         8) set -- update_model ;;
         9) set -- update_mihomo_core ;;
-        10) set -- log_substore ;;
-        11) set -- log_mihomo ;;
-        12) set -- uninstall_substore ;;
-        13) set -- uninstall_mihomo ;;
-        14) set -- uninstall_all ;;
-        15) set -- uninstall_script ;;
+        11) set -- log_substore ;;
+        12) set -- log_mihomo ;;
+        13) set -- uninstall_substore ;;
+        14) set -- uninstall_mihomo ;;
+        15) set -- uninstall_all ;;
+        16) set -- uninstall_script ;;
         0) exit 0 ;;
         *) echo "无效选项"; exit 1 ;;
     esac
@@ -607,6 +632,7 @@ case "${1:-}" in
     update_substore) update_substore ;;
     update_config) update_config ;;
     update_model) update_model ;;
+    update_geo) update_geo ;;
     update_mihomo_core) update_mihomo_core ;;
     uninstall_substore) uninstall_substore ;;
     uninstall_mihomo) uninstall_mihomo ;;
@@ -621,11 +647,12 @@ case "${1:-}" in
         update_self
         update_substore
         update_model
+        update_geo
         update_config
         update_mihomo_core
       ;;
     *)
-        echo "用法: $0 {deploy|deploy_substore|deploy_mihomo|start_substore|stop_substore|restart_substore|start_mihomo|stop_mihomo|restart_mihomo|update_self|update_substore|update_model|update_config|update_mihomo_core|uninstall_substore|uninstall_mihomo|uninstall_all|uninstall_script|log_substore|log_mihomo|start|stop|restart|update}"
+        echo "用法: $0 {deploy|deploy_substore|deploy_mihomo|start_substore|stop_substore|restart_substore|start_mihomo|stop_mihomo|restart_mihomo|update_self|update_substore|update_model|update_geo|update_config|update_mihomo_core|uninstall_substore|uninstall_mihomo|uninstall_all|uninstall_script|log_substore|log_mihomo|start|stop|restart|update}"
         exit 1
         ;;
 esac
