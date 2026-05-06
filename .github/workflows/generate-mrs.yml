@@ -29,7 +29,7 @@ jobs:
         chmod +x mihomo
 
     ################################
-    # YAML → MRS（自动识别类型）
+    # YAML → MRS
     ################################
     - name: Convert to MRS
       run: |
@@ -46,7 +46,6 @@ jobs:
         }
 
         for file in Mihomo/rule/*.yaml; do
-
           [ -f "$file" ] || continue
 
           name=$(basename "$file" .yaml)
@@ -57,21 +56,18 @@ jobs:
           echo "[MRS] $name → $behavior"
 
           ./mihomo convert-ruleset $behavior yaml "$file" "$output"
-
         done
 
     ################################
-    # 生成 providers.yaml
+    # providers.yaml（无 heredoc）
     ################################
     - name: Generate providers
       run: |
 
         providers_file="Mihomo/providers.yaml"
-
         echo "rule-providers:" > "$providers_file"
 
         for file in Mihomo/rule/*.mrs; do
-
           [ -f "$file" ] || continue
 
           name=$(basename "$file" .mrs)
@@ -82,21 +78,18 @@ jobs:
             behavior="domain"
           fi
 
-          cat >> "$providers_file" <<EOF
-  $name:
-    type: http
-    behavior: $behavior
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/${GITHUB_REPOSITORY}@main/Mihomo/rule/$name.mrs
-    path: ./ruleset/$name.mrs
-    interval: 86400
-
-EOF
+          printf "  %s:\n" "$name" >> "$providers_file"
+          printf "    type: http\n" >> "$providers_file"
+          printf "    behavior: %s\n" "$behavior" >> "$providers_file"
+          printf "    format: mrs\n" >> "$providers_file"
+          printf "    url: https://cdn.jsdelivr.net/gh/%s@main/Mihomo/rule/%s.mrs\n" "$GITHUB_REPOSITORY" "$name" >> "$providers_file"
+          printf "    path: ./ruleset/%s.mrs\n" "$name" >> "$providers_file"
+          printf "    interval: 86400\n\n" >> "$providers_file"
 
         done
 
     ################################
-    # 生成统计 HTML
+    # stats（无 heredoc）
     ################################
     - name: Generate stats
       run: |
@@ -119,51 +112,36 @@ EOF
           if [ $first -eq 0 ]; then echo "," >> "$json_tmp"; fi
           first=0
 
-          echo "\"$name\": {\"total\": $total, \"domain\": $domain, \"ip\": $ip}" >> "$json_tmp"
+          printf "\"%s\": {\"total\": %s, \"domain\": %s, \"ip\": %s}" \
+          "$name" "$total" "$domain" "$ip" >> "$json_tmp"
         done
 
         echo "}" >> "$json_tmp"
 
-        cat > docs/index.html <<EOF
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Proxy Rules Stats</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-
-<h1>Proxy Rules Statistics</h1>
-<p>Last updated: $(date)</p>
-
-<canvas id="chart"></canvas>
-
-<script>
-const data = $(cat "$json_tmp");
-const labels = Object.keys(data);
-const totals = labels.map(k => data[k].total);
-
-new Chart(document.getElementById('chart'), {
-  type: 'bar',
-  data: {
-    labels: labels,
-    datasets: [{
-      label: 'Total Rules',
-      data: totals
-    }]
-  }
-});
-</script>
-
-</body>
-</html>
-EOF
+        {
+          echo "<!DOCTYPE html>"
+          echo "<html><head><meta charset=\"UTF-8\">"
+          echo "<title>Proxy Rules Stats</title>"
+          echo "<script src=\"https://cdn.jsdelivr.net/npm/chart.js\"></script>"
+          echo "</head><body>"
+          echo "<h1>Proxy Rules Statistics</h1>"
+          echo "<p>Last updated: $(date)</p>"
+          echo "<canvas id=\"chart\"></canvas>"
+          echo "<script>"
+          echo "const data = $(cat "$json_tmp");"
+          echo "const labels = Object.keys(data);"
+          echo "const totals = labels.map(k => data[k].total);"
+          echo "new Chart(document.getElementById('chart'), {"
+          echo "type: 'bar',"
+          echo "data: { labels: labels, datasets: [{ label: 'Total', data: totals }] }"
+          echo "});"
+          echo "</script></body></html>"
+        } > docs/index.html
 
         rm -f "$json_tmp"
 
     ################################
-    # 提交
+    # commit
     ################################
     - name: Commit
       run: |
