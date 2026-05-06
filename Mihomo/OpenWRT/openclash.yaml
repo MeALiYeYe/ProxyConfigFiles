@@ -223,25 +223,50 @@ rule-providers:
     path: ./rules/awavenue.mrs
     url: "https://cdn.jsdelivr.net/gh/TG-Twilight/AWAvenue-Ads-Rule@main/Filters/AWAvenue-Ads-Rule-Clash.mrs"
   mydirect:
-    <<: *cla
+    <<: *dom
+    format: yaml
     path: ./rules/mydirect.yaml
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct.yaml"
+  mydirect_ip:
+    <<: *ipc
+    format: yaml
+    path: ./rules/mydirect_ip.yaml
+    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct_ip.yaml"
   myreject:
-    <<: *cla
+    <<: *dom
+    format: yaml
     path: ./rules/myreject.yaml
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject.yaml"
+  myreject_ip:
+    <<: *ipc
+    format: yaml
+    path: ./rules/myreject_ip.yaml
+    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject_ip.yaml"
   myproxy:
-    <<: *cla
+    <<: *dom
+    format: yaml
     path: ./rules/myproxy.yaml
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy.yaml"
+  myproxy_ip:
+    <<: *ipc
+    format: yaml
+    path: ./rules/myproxy_ip.yaml
+    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy_ip.yaml"
   emby:
-    <<: *cla
+    <<: *dom
+    format: yaml
     path: ./rules/emby.yaml
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Emby.yaml"
-  fakelocation:
-    <<: *cla
-    path: ./rules/fakelocation.yaml
-    url: "https://cdn.jsdelivr.net/gh/SunsetMkt/anti-ip-attribution@main/generated/rule-provider.yaml"
+  anti-ip-attribution:
+    <<: *dom
+    format: yaml
+    path: ./rules/anti-ip-attribution.yaml
+    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/anti-ip-attribution.yaml"
+  anti-ip-attribution_ip:
+    <<: *ipc
+    format: yaml
+    path: ./rules/anti-ip-attribution_ip.yaml
+    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/anti-ip-attribution_ip.yaml"
   
   private:
     <<: *dom
@@ -344,9 +369,13 @@ rules:
 - RULE-SET,awavenue,REJECT-DROP
 - RULE-SET,httpdns-cn,REJECT-DROP
 - RULE-SET,myreject,REJECT-DROP
+- RULE-SET,myreject_ip,REJECT-DROP,no-resolve
 - RULE-SET,mydirect,Domestic
+- RULE-SET,mydirect_ip,Domestic,no-resolve
 - RULE-SET,myproxy,Foreign
-- RULE-SET,fakelocation,Location
+- RULE-SET,myproxy_ip,Foreign,no-resolve
+- RULE-SET,anti-ip-attribution,Location
+- RULE-SET,anti-ip-attribution_ip,Location,no-resolve
 - RULE-SET,emby,Emby
 - RULE-SET,youtube,Youtube
 - RULE-SET,entertainment,Media
