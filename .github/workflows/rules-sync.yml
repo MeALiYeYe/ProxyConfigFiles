@@ -106,29 +106,32 @@ jobs:
           grep '^IP-CIDR,' "$tmp" | cut -d',' -f2 > "$ipv4_tmp" || true
           grep '^IP-CIDR6,' "$tmp" | cut -d',' -f2 > "$ipv6_tmp" || true
 
-          # 生成 Python 脚本（核心）
+          ################################
+          # 生成 Python 脚本（无 heredoc）
+          ################################
+
           py_script=$(mktemp)
 
-          cat > "$py_script" << 'PYCODE'
-          import sys, ipaddress
-
-          mode = sys.argv[1]
-          file = sys.argv[2]
-
-          with open(file) as f:
-              nets = [ipaddress.ip_network(line.strip(), strict=False) for line in f if line.strip()]
-
-          collapsed = sorted(ipaddress.collapse_addresses(nets))
-
-          if mode == "ipv4":
-              for net in collapsed:
-                  if net.version == 4:
-                      print(f"IP-CIDR,{net}")
-          elif mode == "ipv6":
-              for net in collapsed:
-                  if net.version == 6:
-                      print(f"IP-CIDR6,{net}")
-          PYCODE
+          printf '%s\n' \
+          'import sys, ipaddress' \
+          '' \
+          'mode = sys.argv[1]' \
+          'file = sys.argv[2]' \
+          '' \
+          'with open(file) as f:' \
+          '    nets = [ipaddress.ip_network(line.strip(), strict=False) for line in f if line.strip()]' \
+          '' \
+          'collapsed = sorted(ipaddress.collapse_addresses(nets))' \
+          '' \
+          'if mode == "ipv4":' \
+          '    for net in collapsed:' \
+          '        if net.version == 4:' \
+          '            print(f"IP-CIDR,{net}")' \
+          'elif mode == "ipv6":' \
+          '    for net in collapsed:' \
+          '        if net.version == 6:' \
+          '            print(f"IP-CIDR6,{net}")' \
+          > "$py_script"
 
           # IPv4 合并
           if [ -s "$ipv4_tmp" ]; then
