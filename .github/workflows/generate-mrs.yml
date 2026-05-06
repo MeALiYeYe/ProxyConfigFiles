@@ -1,27 +1,25 @@
-name: Generate MRS
-description: 将mihomo/rule下的yaml规则生成mrs规则
+name: Generate MRS + Stats
 
 on:
   push:
     paths:
-      - 'Mihomo/rule/**/*.yaml'
+      - 'Mihomo/rule/**.yaml'
+      - 'Surge/rule/**'
   workflow_dispatch:
 
 jobs:
-  mrs:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v5
+    - uses: actions/checkout@v5
 
     ################################
-    # 下载 Mihomo（稳定版）
+    # 下载 Mihomo
     ################################
     - name: Download Mihomo
       run: |
         set -e
-
         MIHOMO_VERSION=v1.19.24
 
         curl -L -o mihomo.gz \
@@ -31,12 +29,21 @@ jobs:
         chmod +x mihomo
 
     ################################
-    # 转换 YAML → MRS
+    # YAML → MRS（自动识别类型）
     ################################
     - name: Convert to MRS
       run: |
 
-        set -e
+        detect_behavior() {
+          file="$1"
+          first=$(grep -v '^payload:' "$file" | sed 's/^- //' | head -n 1)
+
+          if echo "$first" | grep -q '/'; then
+            echo "ipcidr"
+          else
+            echo "domain"
+          fi
+        }
 
         for file in Mihomo/rule/*.yaml; do
 
@@ -45,11 +52,115 @@ jobs:
           name=$(basename "$file" .yaml)
           output="Mihomo/rule/$name.mrs"
 
-          echo "Converting $file → $output"
+          behavior=$(detect_behavior "$file")
 
-          ./mihomo convert-ruleset yaml "$file" "$output"
+          echo "[MRS] $name → $behavior"
+
+          ./mihomo convert-ruleset $behavior yaml "$file" "$output"
 
         done
+
+    ################################
+    # 生成 providers.yaml
+    ################################
+    - name: Generate providers
+      run: |
+
+        providers_file="Mihomo/providers.yaml"
+
+        echo "rule-providers:" > "$providers_file"
+
+        for file in Mihomo/rule/*.mrs; do
+
+          [ -f "$file" ] || continue
+
+          name=$(basename "$file" .mrs)
+
+          if grep -q '/' "Mihomo/rule/$name.yaml"; then
+            behavior="ipcidr"
+          else
+            behavior="domain"
+          fi
+
+          cat >> "$providers_file" <<EOF
+  $name:
+    type: http
+    behavior: $behavior
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/${GITHUB_REPOSITORY}@main/Mihomo/rule/$name.mrs
+    path: ./ruleset/$name.mrs
+    interval: 86400
+
+EOF
+
+        done
+
+    ################################
+    # 生成统计 HTML
+    ################################
+    - name: Generate stats
+      run: |
+
+        mkdir -p docs
+        json_tmp=$(mktemp)
+
+        echo "{" > "$json_tmp"
+        first=1
+
+        for file in Surge/rule/*.list; do
+          [ -f "$file" ] || continue
+
+          name=$(basename "$file" .list)
+
+          total=$(grep -v '^#' "$file" | grep -v '^$' | wc -l)
+          domain=$(grep -Ec '^(DOMAIN|DOMAIN-SUFFIX),' "$file" || true)
+          ip=$(grep -Ec '^(IP-CIDR|IP-CIDR6),' "$file" || true)
+
+          if [ $first -eq 0 ]; then echo "," >> "$json_tmp"; fi
+          first=0
+
+          echo "\"$name\": {\"total\": $total, \"domain\": $domain, \"ip\": $ip}" >> "$json_tmp"
+        done
+
+        echo "}" >> "$json_tmp"
+
+        cat > docs/index.html <<EOF
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Proxy Rules Stats</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<h1>Proxy Rules Statistics</h1>
+<p>Last updated: $(date)</p>
+
+<canvas id="chart"></canvas>
+
+<script>
+const data = $(cat "$json_tmp");
+const labels = Object.keys(data);
+const totals = labels.map(k => data[k].total);
+
+new Chart(document.getElementById('chart'), {
+  type: 'bar',
+  data: {
+    labels: labels,
+    datasets: [{
+      label: 'Total Rules',
+      data: totals
+    }]
+  }
+});
+</script>
+
+</body>
+</html>
+EOF
+
+        rm -f "$json_tmp"
 
     ################################
     # 提交
@@ -61,8 +172,10 @@ jobs:
         git config --global user.email "actions@github.com"
 
         git add Mihomo/rule/*.mrs
+        git add Mihomo/providers.yaml
+        git add docs/index.html
 
         git diff --cached --quiet && echo "No changes" && exit 0
 
-        git commit -m "auto generate mrs"
+        git commit -m "auto: mrs + providers + stats"
         git push
