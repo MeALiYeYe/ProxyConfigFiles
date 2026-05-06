@@ -1,0 +1,63 @@
+name: Sync External Rules
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'   # 每6小时
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Sync rules
+      run: |
+
+        set -e
+
+        mkdir -p Surge/rule
+
+        declare -A RULES=(
+          ["anti-ip-attribution"]="https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/main/generated/surge.list"
+        )
+
+        changed=0
+
+        for name in "${!RULES[@]}"; do
+          url="${RULES[$name]}"
+          target="Surge/rule/$name.list"
+
+          echo "Fetching $name..."
+
+          curl -L --retry 3 --connect-timeout 10 "$url" -o "$target.new"
+
+          if [ -f "$target" ] && cmp -s "$target" "$target.new"; then
+            echo "No change: $name"
+            rm "$target.new"
+          else
+            mv "$target.new" "$target"
+            echo "Updated: $name"
+            changed=1
+          fi
+        done
+
+        if [ "$changed" -eq 0 ]; then
+          echo "No updates"
+          exit 0
+        fi
+
+    - name: Commit changes
+      run: |
+
+        git config --global user.name "github-actions"
+        git config --global user.email "actions@github.com"
+
+        git add Surge/rule
+
+        git diff --cached --quiet && echo "No changes" && exit 0
+
+        git commit -m "sync external rules"
+        git push
