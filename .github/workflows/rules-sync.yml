@@ -5,8 +5,6 @@ on:
     paths:
       - 'Surge/rule/**'
   workflow_dispatch:
-  schedule:
-    - cron: '0 */6 * * *'   # 每6小时同步一次
 
 jobs:
   sync:
@@ -15,35 +13,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v5
-
-    ################################
-    # 多规则源同步（仅变化时更新）
-    ################################
-    - name: Sync external rules
-      run: |
-
-        mkdir -p Surge/rule
-
-        declare -A RULES=(
-          ["anti-ip-attribution"]="https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/main/generated/surge.list"
-        )
-
-        for name in "${!RULES[@]}"; do
-          url="${RULES[$name]}"
-          target="Surge/rule/$name.list"
-
-          echo "Fetching $name..."
-
-          curl -L --retry 3 --connect-timeout 10 "$url" -o "$target.new"
-
-          if [ -f "$target" ] && cmp -s "$target" "$target.new"; then
-            echo "No change: $name"
-            rm "$target.new"
-          else
-            mv "$target.new" "$target"
-            echo "Updated: $name"
-          fi
-        done
 
     ################################
     # 规则生成
