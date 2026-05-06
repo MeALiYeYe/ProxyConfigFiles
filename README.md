@@ -12,4 +12,4 @@
 - **WebRTC** : 28 rules (domain: 28 / ip: 0)
 - **anti-ip-attribution** : 233 rules (domain: 103 / ip: 116)
 
-Total rules: 457
+Total rules: 433
