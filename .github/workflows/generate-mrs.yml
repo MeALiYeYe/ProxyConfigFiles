@@ -1,0 +1,68 @@
+name: Generate MRS
+description: 将mihomo/rule下的yaml规则生成mrs规则
+
+on:
+  push:
+    paths:
+      - 'Mihomo/rule/**/*.yaml'
+  workflow_dispatch:
+
+jobs:
+  mrs:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    ################################
+    # 下载 Mihomo（稳定版）
+    ################################
+    - name: Download Mihomo
+      run: |
+        set -e
+
+        MIHOMO_VERSION=v1.19.24
+
+        curl -L -o mihomo.gz \
+        https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_VERSION}/mihomo-linux-amd64-${MIHOMO_VERSION}.gz
+
+        gunzip mihomo.gz
+        chmod +x mihomo
+
+    ################################
+    # 转换 YAML → MRS
+    ################################
+    - name: Convert to MRS
+      run: |
+
+        set -e
+
+        for file in Mihomo/rule/*.yaml; do
+
+          [ -f "$file" ] || continue
+
+          name=$(basename "$file" .yaml)
+          output="Mihomo/rule/$name.mrs"
+
+          echo "Converting $file → $output"
+
+          ./mihomo convert-ruleset yaml "$file" "$output"
+
+        done
+
+    ################################
+    # 提交
+    ################################
+    - name: Commit
+      run: |
+
+        git config --global user.name "github-actions"
+        git config --global user.email "actions@github.com"
+
+        git add Mihomo/rule/*.mrs
+
+        git diff --cached --quiet && echo "No changes" && exit 0
+
+        git commit -m "auto generate mrs"
+        git push
