@@ -106,10 +106,7 @@ jobs:
           grep '^IP-CIDR,' "$tmp" | cut -d',' -f2 > "$ipv4_tmp" || true
           grep '^IP-CIDR6,' "$tmp" | cut -d',' -f2 > "$ipv6_tmp" || true
 
-          ################################
           # 生成 Python 脚本（无 heredoc）
-          ################################
-
           py_script=$(mktemp)
 
           printf '%s\n' \
