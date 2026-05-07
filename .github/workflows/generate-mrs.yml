@@ -12,148 +12,216 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v5
+      - uses: actions/checkout@v5
 
-    ################################
-    # 下载 Mihomo
-    ################################
-    - name: Download Mihomo
-      run: |
-        set -e
-        MIHOMO_VERSION=v1.19.24
+      ################################
+      # 下载 Mihomo
+      ################################
+      - name: Download Mihomo
+        run: |
+          set -e
 
-        curl -L -o mihomo.gz \
-        https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_VERSION}/mihomo-linux-amd64-${MIHOMO_VERSION}.gz
+          MIHOMO_VERSION=v1.19.24
 
-        gunzip mihomo.gz
-        chmod +x mihomo
+          curl -L -o mihomo.gz \
+          https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_VERSION}/mihomo-linux-amd64-${MIHOMO_VERSION}.gz
 
-    ################################
-    # YAML → MRS
-    ################################
-    - name: Convert to MRS
-      run: |
+          gunzip mihomo.gz
+          chmod +x mihomo
 
-        detect_behavior() {
-          file="$1"
-          first=$(grep -v '^payload:' "$file" | sed 's/^- //' | head -n 1)
+      ################################
+      # YAML → MRS
+      ################################
+      - name: Convert to MRS
+        run: |
 
-          if echo "$first" | grep -q '/'; then
-            echo "ipcidr"
-          else
-            echo "domain"
-          fi
-        }
+          detect_behavior() {
+            file="$1"
 
-        for file in Mihomo/rule/*.yaml; do
-          [ -f "$file" ] || continue
+            first=$(grep -v '^payload:' "$file" \
+              | sed 's/^- //' \
+              | head -n 1)
 
-          name=$(basename "$file" .yaml)
-          output="Mihomo/rule/$name.mrs"
+            if echo "$first" | grep -q '/'; then
+              echo "ipcidr"
+            else
+              echo "domain"
+            fi
+          }
 
-          behavior=$(detect_behavior "$file")
+          find Mihomo/rule -type f -name '*.yaml' | while read -r file; do
 
-          echo "[MRS] $name → $behavior"
+            rel_path="${file#Mihomo/rule/}"
+            name="${rel_path%.yaml}"
 
-          ./mihomo convert-ruleset $behavior yaml "$file" "$output"
-        done
+            output="Mihomo/rule/$name.mrs"
 
-    ################################
-    # providers.yaml（无 heredoc）
-    ################################
-    - name: Generate providers
-      run: |
+            mkdir -p "$(dirname "$output")"
 
-        providers_file="Mihomo/providers.yaml"
-        echo "rule-providers:" > "$providers_file"
+            behavior=$(detect_behavior "$file")
 
-        for file in Mihomo/rule/*.mrs; do
-          [ -f "$file" ] || continue
+            echo "[MRS] $name → $behavior"
 
-          name=$(basename "$file" .mrs)
+            ./mihomo convert-ruleset \
+              "$behavior" \
+              yaml \
+              "$file" \
+              "$output"
 
-          if grep -q '/' "Mihomo/rule/$name.yaml"; then
-            behavior="ipcidr"
-          else
-            behavior="domain"
-          fi
+          done
 
-          printf "  %s:\n" "$name" >> "$providers_file"
-          printf "    type: http\n" >> "$providers_file"
-          printf "    behavior: %s\n" "$behavior" >> "$providers_file"
-          printf "    format: mrs\n" >> "$providers_file"
-          printf "    url: https://cdn.jsdelivr.net/gh/%s@main/Mihomo/rule/%s.mrs\n" "$GITHUB_REPOSITORY" "$name" >> "$providers_file"
-          printf "    path: ./ruleset/%s.mrs\n" "$name" >> "$providers_file"
-          printf "    interval: 86400\n\n" >> "$providers_file"
+      ################################
+      # providers.yaml
+      ################################
+      - name: Generate providers
+        run: |
 
-        done
+          providers_file="Mihomo/providers.yaml"
 
-    ################################
-    # stats（无 heredoc）
-    ################################
-    - name: Generate stats
-      run: |
+          echo "rule-providers:" > "$providers_file"
 
-        mkdir -p docs
-        json_tmp=$(mktemp)
+          find Mihomo/rule -type f -name '*.mrs' | while read -r file; do
 
-        echo "{" > "$json_tmp"
-        first=1
+            rel_path="${file#Mihomo/rule/}"
+            name="${rel_path%.mrs}"
 
-        for file in Surge/rule/*.list; do
-          [ -f "$file" ] || continue
+            yaml_file="Mihomo/rule/$name.yaml"
 
-          name=$(basename "$file" .list)
+            if grep -q '/' "$yaml_file"; then
+              behavior="ipcidr"
+            else
+              behavior="domain"
+            fi
 
-          total=$(grep -v '^#' "$file" | grep -v '^$' | wc -l)
-          domain=$(grep -Ec '^(DOMAIN|DOMAIN-SUFFIX),' "$file" || true)
-          ip=$(grep -Ec '^(IP-CIDR|IP-CIDR6),' "$file" || true)
+            printf "  %s:\n" "$name" >> "$providers_file"
+            printf "    type: http\n" >> "$providers_file"
+            printf "    behavior: %s\n" "$behavior" >> "$providers_file"
+            printf "    format: mrs\n" >> "$providers_file"
 
-          if [ $first -eq 0 ]; then echo "," >> "$json_tmp"; fi
-          first=0
+            printf \
+            "    url: https://cdn.jsdelivr.net/gh/%s@main/Mihomo/rule/%s.mrs\n" \
+            "$GITHUB_REPOSITORY" \
+            "$name" \
+            >> "$providers_file"
 
-          printf "\"%s\": {\"total\": %s, \"domain\": %s, \"ip\": %s}" \
-          "$name" "$total" "$domain" "$ip" >> "$json_tmp"
-        done
+            printf "    path: ./ruleset/%s.mrs\n" "$name" >> "$providers_file"
 
-        echo "}" >> "$json_tmp"
+            printf "    interval: 86400\n\n" >> "$providers_file"
 
-        {
-          echo "<!DOCTYPE html>"
-          echo "<html><head><meta charset=\"UTF-8\">"
-          echo "<title>Proxy Rules Stats</title>"
-          echo "<script src=\"https://cdn.jsdelivr.net/npm/chart.js\"></script>"
-          echo "</head><body>"
-          echo "<h1>Proxy Rules Statistics</h1>"
-          echo "<p>Last updated: $(date)</p>"
-          echo "<canvas id=\"chart\"></canvas>"
-          echo "<script>"
-          echo "const data = $(cat "$json_tmp");"
-          echo "const labels = Object.keys(data);"
-          echo "const totals = labels.map(k => data[k].total);"
-          echo "new Chart(document.getElementById('chart'), {"
-          echo "type: 'bar',"
-          echo "data: { labels: labels, datasets: [{ label: 'Total', data: totals }] }"
-          echo "});"
-          echo "</script></body></html>"
-        } > docs/index.html
+          done
 
-        rm -f "$json_tmp"
+      ################################
+      # stats
+      ################################
+      - name: Generate stats
+        run: |
 
-    ################################
-    # commit
-    ################################
-    - name: Commit
-      run: |
+          mkdir -p docs
 
-        git config --global user.name "github-actions"
-        git config --global user.email "actions@github.com"
+          json_tmp=$(mktemp)
 
-        git add Mihomo/rule/*.mrs
-        git add Mihomo/providers.yaml
-        git add docs/index.html
+          echo "{" > "$json_tmp"
 
-        git diff --cached --quiet && echo "No changes" && exit 0
+          first=1
 
-        git commit -m "auto: mrs + providers + stats"
-        git push
+          find Surge/rule -type f -name '*.list' | while read -r file; do
+
+            rel_path="${file#Surge/rule/}"
+            name="${rel_path%.list}"
+
+            total=$(grep -v '^#' "$file" | grep -v '^$' | wc -l)
+
+            domain=$(grep -Ec '^(DOMAIN|DOMAIN-SUFFIX),' "$file" || true)
+
+            ip=$(grep -Ec '^(IP-CIDR|IP-CIDR6),' "$file" || true)
+
+            if [ $first -eq 0 ]; then
+              echo "," >> "$json_tmp"
+            fi
+
+            first=0
+
+            printf \
+            "\"%s\": {\"total\": %s, \"domain\": %s, \"ip\": %s}" \
+            "$name" \
+            "$total" \
+            "$domain" \
+            "$ip" \
+            >> "$json_tmp"
+
+          done
+
+          echo "}" >> "$json_tmp"
+
+          {
+            echo "<!DOCTYPE html>"
+            echo "<html>"
+            echo "<head>"
+            echo "<meta charset=\"UTF-8\">"
+            echo "<title>Proxy Rules Stats</title>"
+            echo "<script src=\"https://cdn.jsdelivr.net/npm/chart.js\"></script>"
+            echo "</head>"
+
+            echo "<body>"
+
+            echo "<h1>Proxy Rules Statistics</h1>"
+
+            echo "<p>Last updated: $(date)</p>"
+
+            echo "<canvas id=\"chart\"></canvas>"
+
+            echo "<script>"
+
+            echo "const data = $(cat "$json_tmp");"
+
+            echo "const labels = Object.keys(data);"
+
+            echo "const totals = labels.map(k => data[k].total);"
+
+            echo "new Chart(document.getElementById('chart'), {"
+
+            echo "type: 'bar',"
+
+            echo "data: {"
+
+            echo "labels: labels,"
+
+            echo "datasets: [{"
+
+            echo "label: 'Total',"
+
+            echo "data: totals"
+
+            echo "}]"
+
+            echo "}"
+
+            echo "});"
+
+            echo "</script>"
+
+            echo "</body>"
+            echo "</html>"
+
+          } > docs/index.html
+
+          rm -f "$json_tmp"
+
+      ################################
+      # commit
+      ################################
+      - name: Commit
+        run: |
+
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+
+          git add Mihomo/rule
+          git add Mihomo/providers.yaml
+          git add docs/index.html
+
+          git diff --cached --quiet && echo "No changes" && exit 0
+
+          git commit -m "auto: mrs + providers + stats"
+
+          git push
