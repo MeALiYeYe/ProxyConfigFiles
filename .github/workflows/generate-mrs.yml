@@ -20,7 +20,6 @@ jobs:
       - name: Download Mihomo
         run: |
           set -e
-
           MIHOMO_VERSION=v1.19.24
 
           curl -L -o mihomo.gz \
@@ -37,10 +36,7 @@ jobs:
 
           detect_behavior() {
             file="$1"
-
-            first=$(grep -v '^payload:' "$file" \
-              | sed 's/^- //' \
-              | head -n 1)
+            first=$(grep -v '^payload:' "$file" | sed 's/^- //' | head -n 1)
 
             if echo "$first" | grep -q '/'; then
               echo "ipcidr"
@@ -49,11 +45,10 @@ jobs:
             fi
           }
 
-          find Mihomo/rule -type f -name '*.yaml' | while read -r file; do
+          find Mihomo/rule -type f -name '*.yaml' | sort | while read -r file; do
 
             rel_path="${file#Mihomo/rule/}"
             name="${rel_path%.yaml}"
-
             output="Mihomo/rule/$name.mrs"
 
             mkdir -p "$(dirname "$output")"
@@ -62,11 +57,7 @@ jobs:
 
             echo "[MRS] $name → $behavior"
 
-            ./mihomo convert-ruleset \
-              "$behavior" \
-              yaml \
-              "$file" \
-              "$output"
+            ./mihomo convert-ruleset "$behavior" yaml "$file" "$output"
 
           done
 
@@ -76,25 +67,25 @@ jobs:
       - name: Generate providers
         run: |
 
-          providers_file="Mihomo/rule-providers.yaml"
+          get_behavior_by_name() {
+            name="$1"
+            if echo "$name" | grep -qE '_ip$'; then
+              echo "ipcidr"
+            else
+              echo "domain"
+            fi
+          }
 
+          providers_file="Mihomo/rule-providers.yaml"
           echo "rule-providers:" > "$providers_file"
 
-          find Mihomo/rule -type f -name '*.mrs' | while read -r file; do
+          find Mihomo/rule -type f -name '*.mrs' | sort | while read -r file; do
 
             rel_path="${file#Mihomo/rule/}"
             name="${rel_path%.mrs}"
             base_name=$(basename "$name")
 
-            yaml_file="Mihomo/rule/$name.yaml"
-
-            first=$(grep -v '^payload:' "$yaml_file" | sed 's/^- //' | head -n 1)
-
-            if echo "$first" | grep -q '/'; then
-              behavior="ipcidr"
-            else
-              behavior="domain"
-            fi
+            behavior=$(get_behavior_by_name "$base_name")
 
             printf "  %s:\n" "$base_name" >> "$providers_file"
             printf "    type: http\n" >> "$providers_file"
@@ -103,109 +94,125 @@ jobs:
 
             printf \
             "    url: https://cdn.jsdelivr.net/gh/%s@main/Mihomo/rule/%s.mrs\n" \
-            "$GITHUB_REPOSITORY" \
-            "$name" \
-            >> "$providers_file"
+            "$GITHUB_REPOSITORY" "$name" >> "$providers_file"
 
             printf "    path: ./ruleset/%s.mrs\n" "$base_name" >> "$providers_file"
-
             printf "    interval: 86400\n\n" >> "$providers_file"
 
           done
+
       ################################
-      # stats
+      # stats + 页面
       ################################
       - name: Generate stats
         run: |
 
           mkdir -p docs
-
           json_tmp=$(mktemp)
 
           echo "{" > "$json_tmp"
 
-          first=1
+          first_group=1
 
-          find Surge/rule -type f -name '*.list' | while read -r file; do
+          find Surge/rule -type f -name '*.list' | sort | while read -r file; do
 
             rel_path="${file#Surge/rule/}"
-            name="${rel_path%.list}"
+            group=$(dirname "$rel_path")
+            name=$(basename "$file" .list)
+
+            [ "$group" = "." ] && group="root"
 
             total=$(grep -v '^#' "$file" | grep -v '^$' | wc -l)
-
             domain=$(grep -Ec '^(DOMAIN|DOMAIN-SUFFIX),' "$file" || true)
-
             ip=$(grep -Ec '^(IP-CIDR|IP-CIDR6),' "$file" || true)
 
-            if [ $first -eq 0 ]; then
+            if ! grep -q "\"$group\"" "$json_tmp"; then
+              [ $first_group -eq 0 ] && echo "," >> "$json_tmp"
+              first_group=0
+              printf "\"%s\": {" "$group" >> "$json_tmp"
+              first_in_group=1
+            else
+              echo "," >> "$json_tmp"
+              first_in_group=0
+            fi
+
+            if [ $first_in_group -eq 0 ]; then
               echo "," >> "$json_tmp"
             fi
 
-            first=0
-
-            printf \
-            "\"%s\": {\"total\": %s, \"domain\": %s, \"ip\": %s}" \
-            "$name" \
-            "$total" \
-            "$domain" \
-            "$ip" \
-            >> "$json_tmp"
+            printf "\"%s\": {\"total\": %s, \"domain\": %s, \"ip\": %s}" \
+              "$name" "$total" "$domain" "$ip" >> "$json_tmp"
 
           done
 
           echo "}" >> "$json_tmp"
 
+          ################################
+          # HTML
+          ################################
+
           {
             echo "<!DOCTYPE html>"
-            echo "<html>"
-            echo "<head>"
-            echo "<meta charset=\"UTF-8\">"
+            echo "<html><head><meta charset=\"UTF-8\">"
             echo "<title>Proxy Rules Stats</title>"
             echo "<script src=\"https://cdn.jsdelivr.net/npm/chart.js\"></script>"
-            echo "</head>"
-
-            echo "<body>"
+            echo "</head><body>"
 
             echo "<h1>Proxy Rules Statistics</h1>"
-
             echo "<p>Last updated: $(date)</p>"
-
             echo "<canvas id=\"chart\"></canvas>"
 
             echo "<script>"
-
             echo "const data = $(cat "$json_tmp");"
+            echo "const groups = Object.keys(data);"
+            echo "const datasets = [];"
 
-            echo "const labels = Object.keys(data);"
-
-            echo "const totals = labels.map(k => data[k].total);"
-
-            echo "new Chart(document.getElementById('chart'), {"
-
-            echo "type: 'bar',"
-
-            echo "data: {"
-
-            echo "labels: labels,"
-
-            echo "datasets: [{"
-
-            echo "label: 'Total',"
-
-            echo "data: totals"
-
-            echo "}]"
-
-            echo "}"
-
+            echo "groups.forEach(group => {"
+            echo "  const items = data[group];"
+            echo "  const labels = Object.keys(items);"
+            echo "  datasets.push({"
+            echo "    label: group,"
+            echo "    data: labels.map(k => items[k].total)"
+            echo "  });"
             echo "});"
 
-            echo "</script>"
+            echo "new Chart(document.getElementById('chart'), {"
+            echo "  type: 'bar',"
+            echo "  data: {"
+            echo "    labels: Object.keys(data[groups[0]] || {}),"
+            echo "    datasets: datasets"
+            echo "  }"
+            echo "});"
 
-            echo "</body>"
-            echo "</html>"
-
+            echo "</script></body></html>"
           } > docs/index.html
+
+          ################################
+          # README + badge
+          ################################
+
+          total=$(find Surge/rule -type f -name '*.list' -exec cat {} + \
+            | grep -v '^#' | grep -v '^$' | wc -l)
+
+          echo "# Proxy Rules" > README.md
+          echo "" >> README.md
+          echo "![rules-$total](https://img.shields.io/badge/rules-$total-blue)" >> README.md
+          echo "" >> README.md
+          echo "## 📊 Rule Statistics" >> README.md
+          echo "" >> README.md
+
+          find Surge/rule -type f -name '*.list' | sort | while read -r file; do
+
+            rel_path="${file#Surge/rule/}"
+            name="${rel_path%.list}"
+
+            total=$(grep -v '^#' "$file" | grep -v '^$' | wc -l)
+            domain=$(grep -Ec '^(DOMAIN|DOMAIN-SUFFIX),' "$file" || true)
+            ip=$(grep -Ec '^(IP-CIDR|IP-CIDR6),' "$file" || true)
+
+            echo "- **$name** : $total (domain: $domain / ip: $ip)" >> README.md
+
+          done
 
           rm -f "$json_tmp"
 
@@ -218,12 +225,11 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
 
-          git add Mihomo/rule
-          git add Mihomo/providers.yaml
+          git add Mihomo
           git add docs/index.html
+          git add README.md
 
           git diff --cached --quiet && echo "No changes" && exit 0
 
           git commit -m "auto: mrs + providers + stats"
-
           git push
