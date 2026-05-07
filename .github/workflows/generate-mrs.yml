@@ -71,12 +71,12 @@ jobs:
           done
 
       ################################
-      # providers.yaml
+      # rule-providers.yaml
       ################################
       - name: Generate providers
         run: |
 
-          providers_file="Mihomo/providers.yaml"
+          providers_file="Mihomo/rule-providers.yaml"
 
           echo "rule-providers:" > "$providers_file"
 
@@ -84,16 +84,19 @@ jobs:
 
             rel_path="${file#Mihomo/rule/}"
             name="${rel_path%.mrs}"
+            base_name=$(basename "$name")
 
             yaml_file="Mihomo/rule/$name.yaml"
 
-            if grep -q '/' "$yaml_file"; then
+            first=$(grep -v '^payload:' "$yaml_file" | sed 's/^- //' | head -n 1)
+
+            if echo "$first" | grep -q '/'; then
               behavior="ipcidr"
             else
               behavior="domain"
             fi
 
-            printf "  %s:\n" "$name" >> "$providers_file"
+            printf "  %s:\n" "$base_name" >> "$providers_file"
             printf "    type: http\n" >> "$providers_file"
             printf "    behavior: %s\n" "$behavior" >> "$providers_file"
             printf "    format: mrs\n" >> "$providers_file"
@@ -104,12 +107,11 @@ jobs:
             "$name" \
             >> "$providers_file"
 
-            printf "    path: ./ruleset/%s.mrs\n" "$name" >> "$providers_file"
+            printf "    path: ./ruleset/%s.mrs\n" "$base_name" >> "$providers_file"
 
             printf "    interval: 86400\n\n" >> "$providers_file"
 
           done
-
       ################################
       # stats
       ################################
