@@ -1,18 +1,37 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8">
+<html>
+<head>
+<meta charset="UTF-8">
 <title>Proxy Rules Stats</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head><body>
+</head>
+<body>
 <h1>Proxy Rules Statistics</h1>
-<p>Last updated: Thu May  7 06:10:14 UTC 2026</p>
+<p>Last updated: Thu May  7 06:27:28 UTC 2026</p>
 <canvas id="chart"></canvas>
 <script>
 const data = {
-};
+"Telegram/TelegramSG": {"total": 5, "domain": 0, "ip": 5},
+"Telegram/TelegramUS": {"total": 3, "domain": 0, "ip": 3},
+"Telegram/TelegramEU": {"total": 11, "domain": 0, "ip": 11},
+"Proxy/Proxy": {"total": 12, "domain": 12, "ip": 0},
+"Direct/Direct": {"total": 21, "domain": 18, "ip": 3},
+"anti-ip-attribution/anti-ip-attribution": {"total": 233, "domain": 103, "ip": 116},
+"WebRTC/WebRTC": {"total": 28, "domain": 28, "ip": 0},
+"Emby/Emby": {"total": 55, "domain": 52, "ip": 0},
+"Reject/Reject": {"total": 93, "domain": 72, "ip": 18}};
 const labels = Object.keys(data);
 const totals = labels.map(k => data[k].total);
 new Chart(document.getElementById('chart'), {
 type: 'bar',
-data: { labels: labels, datasets: [{ label: 'Total', data: totals }] }
+data: {
+labels: labels,
+datasets: [{
+label: 'Total',
+data: totals
+}]
+}
 });
-</script></body></html>
+</script>
+</body>
+</html>
