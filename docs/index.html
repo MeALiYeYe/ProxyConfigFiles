@@ -4,15 +4,10 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head><body>
 <h1>Proxy Rules Statistics</h1>
-<p>Last updated: Thu May  7 06:08:20 UTC 2026</p>
+<p>Last updated: Thu May  7 06:09:50 UTC 2026</p>
 <canvas id="chart"></canvas>
 <script>
 const data = {
-"Reject": {"total": 93, "domain": 72, "ip": 18},
-"TelegramEU": {"total": 11, "domain": 0, "ip": 11},
-"TelegramSG": {"total": 5, "domain": 0, "ip": 5},
-"TelegramUS": {"total": 3, "domain": 0, "ip": 3},
-"WebRTC": {"total": 28, "domain": 28, "ip": 0},
 "anti-ip-attribution": {"total": 233, "domain": 103, "ip": 116}};
 const labels = Object.keys(data);
 const totals = labels.map(k => data[k].total);
