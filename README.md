@@ -3,8 +3,8 @@
 ## Rule Statistics
 
 - **Telegram/TelegramSG** : 5 rules (domain: 0 / ip: 5)
+- **Telegram/TelegramUS** : 3 rules (domain: 0 / ip: 3)
 - **Telegram/TelegramEU** : 11 rules (domain: 0 / ip: 11)
-- **TelegramUS** : 3 rules (domain: 0 / ip: 3)
 - **Proxy/Proxy** : 12 rules (domain: 12 / ip: 0)
 - **Direct/Direct** : 21 rules (domain: 18 / ip: 3)
 - **Emby/Emby** : 55 rules (domain: 52 / ip: 0)
