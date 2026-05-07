@@ -445,19 +445,19 @@ rules:
     policy: REJECT
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/rule/Reject.yaml
+    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/rule/Reject/Reject.yaml
     policy: REJECT
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/rule/Direct.yaml
+    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/rule/Direct/Direct.yaml
     policy: DIRECT
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/rule/Proxy.yaml
+    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/rule/Proxy/Proxy.yaml
     policy: Foreign
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/rule/Emby.yaml
+    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/rule/Emby/Emby.yaml
     policy: Emby
     disabled: false
 - rule_set:
@@ -579,7 +579,7 @@ mitm:
   ca_p12: egern.p12
   ca_passphrase: egern
 modules:
-- url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/module/ChinaBroadnet
+- url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/module/ChinaBroadnet.yaml
   env:
     broadnet_access:
     broadnet_body:
