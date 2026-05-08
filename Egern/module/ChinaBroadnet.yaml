@@ -1,5 +1,6 @@
 name: Egern 广电余量
 description: 中国广电流量话费小组件
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/ChinaBroadcastNetwork.png
 
 env_schema:
   broadnet_access:
