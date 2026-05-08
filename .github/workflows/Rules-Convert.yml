@@ -151,8 +151,18 @@ jobs:
       ################################
       - name: Build MRS
         run: |
-          curl -L -o mihomo.gz \
-          https://github.com/MetaCubeX/mihomo/releases/latest/download/mihomo-linux-amd64.gz
+          set -e
+
+          MIHOMO_VERSION=v1.19.24
+
+          url="https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_VERSION}/mihomo-linux-amd64-${MIHOMO_VERSION}.gz"
+
+          echo "Downloading Mihomo: $url"
+
+          curl -L --retry 3 --fail -o mihomo.gz "$url"
+
+          # 校验文件（关键！防止再踩坑）
+          file mihomo.gz | grep -q gzip || (echo "Invalid download"; exit 1)
 
           gunzip mihomo.gz
           chmod +x mihomo
