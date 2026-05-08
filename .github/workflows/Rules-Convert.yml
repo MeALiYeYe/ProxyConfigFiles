@@ -1,4 +1,4 @@
-name: Rules Pipeline (Production)
+name: Rules-Convert
 
 on:
   workflow_dispatch:
