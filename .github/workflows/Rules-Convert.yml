@@ -1,0 +1,243 @@
+name: Rules-Convert
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+  push:
+    paths:
+      - 'Surge/rule/**'
+
+jobs:
+
+  ################################
+  # 1️⃣ 同步外部规则
+  ################################
+  sync-external:
+    runs-on: ubuntu-latest
+
+    outputs:
+      changed: ${{ steps.sync.outputs.changed }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Sync rules
+        id: sync
+        run: |
+          set -e
+
+          mkdir -p Surge/rule
+
+          declare -A RULES=(
+            ["FakeLocation"]="https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/main/generated/surge.list"
+          )
+
+          changed=0
+
+          for name in "${!RULES[@]}"; do
+
+            url="${RULES[$name]}"
+            dir="Surge/rule/$name"
+            target="$dir/$name.list"
+
+            mkdir -p "$dir"
+
+            tmp=$(mktemp)
+
+            curl -L --retry 3 --connect-timeout 10 "$url" -o "$tmp"
+
+            if [ -f "$target" ] && cmp -s "$target" "$tmp"; then
+              rm -f "$tmp"
+            else
+              mv "$tmp" "$target"
+              echo "Updated: $target"
+              changed=1
+            fi
+
+          done
+
+          echo "changed=$changed" >> $GITHUB_OUTPUT
+
+      - name: Commit
+        if: steps.sync.outputs.changed == '1'
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+
+          git add Surge/rule
+          git commit -m "sync external rules"
+          git push
+
+
+  ################################
+  # 2️⃣ 规则生成
+  ################################
+  generate:
+    needs: sync-external
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Generate rules
+        run: |
+          set -e
+
+          mkdir -p Mihomo/rule
+          mkdir -p Egern/rule
+          mkdir -p "Quantumult X/rule"
+
+          total_rules=0
+
+          find Surge/rule -type f -name '*.list' | while read -r file; do
+
+            rel_path="${file#Surge/rule/}"
+            name="${rel_path%.list}"
+
+            tmp=$(mktemp)
+
+            sed '/^#/d;/^$/d' "$file" | sort -u > "$tmp"
+
+            sorted=$(mktemp)
+
+            grep '^DOMAIN,' "$tmp" | sort -u >> "$sorted" || true
+            grep '^DOMAIN-SUFFIX,' "$tmp" | sort -u >> "$sorted" || true
+            grep '^DOMAIN-KEYWORD,' "$tmp" | sort -u >> "$sorted" || true
+            grep '^DOMAIN-WILDCARD,' "$tmp" | sort -u >> "$sorted" || true
+
+            ipv4_tmp=$(mktemp)
+            ipv6_tmp=$(mktemp)
+
+            grep '^IP-CIDR,' "$tmp" | cut -d',' -f2 > "$ipv4_tmp" || true
+            grep '^IP-CIDR6,' "$tmp" | cut -d',' -f2 > "$ipv6_tmp" || true
+
+            py_script=$(mktemp)
+
+            printf '%s\n' \
+            'import sys, ipaddress' \
+            'mode = sys.argv[1]' \
+            'file = sys.argv[2]' \
+            'with open(file) as f:' \
+            ' nets=[ipaddress.ip_network(line.strip(),strict=False) for line in f if line.strip()]' \
+            'collapsed=sorted(ipaddress.collapse_addresses(nets))' \
+            'for net in collapsed:' \
+            ' if (mode=="ipv4" and net.version==4): print(f"IP-CIDR,{net}")' \
+            ' if (mode=="ipv6" and net.version==6): print(f"IP-CIDR6,{net}")' \
+            > "$py_script"
+
+            [ -s "$ipv4_tmp" ] && python3 "$py_script" ipv4 "$ipv4_tmp" >> "$sorted"
+            [ -s "$ipv6_tmp" ] && python3 "$py_script" ipv6 "$ipv6_tmp" >> "$sorted"
+
+            rm -f "$ipv4_tmp" "$ipv6_tmp" "$py_script"
+
+            grep -Ev '^(DOMAIN|IP-CIDR)' "$tmp" >> "$sorted" || true
+
+            mv "$sorted" "$tmp"
+
+            ################################
+            # Mihomo
+            ################################
+            domain_out="Mihomo/rule/$name.yaml"
+            ip_out="Mihomo/rule/${name}_ip.yaml"
+
+            mkdir -p "$(dirname "$domain_out")"
+            mkdir -p "$(dirname "$ip_out")"
+
+            echo "payload:" > "$domain_out"
+            echo "payload:" > "$ip_out"
+
+            grep -E '^(DOMAIN|DOMAIN-SUFFIX),' "$tmp" | while IFS=',' read -r t v _; do
+              [ "$t" = "DOMAIN-SUFFIX" ] && echo "  - +.$v" >> "$domain_out"
+              [ "$t" = "DOMAIN" ] && echo "  - $v" >> "$domain_out"
+            done
+
+            grep -E '^(IP-CIDR|IP-CIDR6),' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$ip_out"
+
+            ################################
+            # Quantumult X
+            ################################
+            qx="Quantumult X/rule/$name.list"
+            mkdir -p "$(dirname "$qx")"
+            cp "$tmp" "$qx"
+
+            ################################
+            # Egern
+            ################################
+            egern="Egern/rule/$name.yaml"
+            mkdir -p "$(dirname "$egern")"
+            rm -f "$egern"
+
+            grep -q '^DOMAIN-SUFFIX,' "$tmp" && {
+              echo "domain_suffix_set:" >> "$egern"
+              grep '^DOMAIN-SUFFIX,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern"
+            }
+
+          done
+
+      - name: Commit
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+
+          git add .
+          git diff --cached --quiet && exit 0
+          git commit -m "generate rules"
+          git push
+
+
+  ################################
+  # 3️⃣ MRS + Providers + Stats
+  ################################
+  mrs:
+    needs: generate
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Download Mihomo
+        run: |
+          curl -L -o mihomo.gz \
+          https://github.com/MetaCubeX/mihomo/releases/latest/download/mihomo-linux-amd64.gz
+          gunzip mihomo.gz
+          chmod +x mihomo
+
+      - name: Convert MRS
+        run: |
+          find Mihomo/rule -name '*.yaml' | while read f; do
+            name="${f%.yaml}"
+            ./mihomo convert-ruleset domain yaml "$f" "$name.mrs" || true
+          done
+
+      - name: Providers
+        run: |
+          echo "rule-providers:" > Mihomo/rule-providers.yaml
+          find Mihomo/rule -name '*.mrs' | while read f; do
+            n=$(basename "$f" .mrs)
+            cat >> Mihomo/rule-providers.yaml <<EOF
+  $n:
+    type: http
+    behavior: domain
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/${GITHUB_REPOSITORY}@main/$f
+    path: ./ruleset/$n.mrs
+    interval: 86400
+
+EOF
+          done
+
+      - name: Stats
+        run: |
+          mkdir -p docs
+          echo "<h1>Rules Stats</h1>" > docs/index.html
+
+      - name: Commit
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+
+          git add .
+          git diff --cached --quiet && exit 0
+          git commit -m "mrs + stats"
+          git push
