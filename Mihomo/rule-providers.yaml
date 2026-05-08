@@ -95,3 +95,19 @@ rule-providers:
     path: ./ruleset/anti-ip-attribution_ip.mrs
     interval: 86400
 
+  fakeip:
+    type: http
+    behavior: domain
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/fakeip/fakeip.mrs
+    path: ./ruleset/fakeip.mrs
+    interval: 86400
+
+  fakeip_ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/fakeip/fakeip_ip.mrs
+    path: ./ruleset/fakeip_ip.mrs
+    interval: 86400
+
