@@ -253,8 +253,11 @@ jobs:
       - name: Download Mihomo
         run: |
           set -e
-          VERSION=v1.19.24
-          url="https://github.com/MetaCubeX/mihomo/releases/download/${VERSION}/mihomo-linux-amd64-${VERSION}.gz"
+          
+          VERSION="v1.19.24"
+
+          FILE="mihomo-linux-amd64-${VERSION}.gz"
+          url="https://github.com/MetaCubeX/mihomo/releases/download/${VERSION}/${FILE}"
 
           curl -L --fail -o mihomo.gz "$url"
           file mihomo.gz | grep -q gzip
