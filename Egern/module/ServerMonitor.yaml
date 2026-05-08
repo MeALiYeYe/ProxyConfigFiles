@@ -1,5 +1,6 @@
 name: 服务器监控
 description: 服务器监控小组件
+icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/color/Server.png
 
 env_schema:
   SSH_SERVER_1_NAME:
