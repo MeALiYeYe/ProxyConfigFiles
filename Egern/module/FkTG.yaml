@@ -1,5 +1,6 @@
 name: Fix Telegram Bad IPs
 description: 将 Telegram 不良 IP 段映射到可用 IP
+icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/color/Telegram_X.png
 
 dns:
   hosts:
