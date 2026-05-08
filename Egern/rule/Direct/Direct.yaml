@@ -1,3 +1,4 @@
+no_resolve: true
 domain_suffix_set:
   - eu.cc
   - gwm-mn.beantechyun.com
@@ -14,3 +15,12 @@ domain_suffix_set:
   - sntp.net
   - xianniu.cc
   - xianniu.com
+domain_set:
+  - ifconfig.me
+  - kahaoquan.com
+  - subcdn.rtx.al
+ip_cidr_set:
+  - 156.224.76.0/24
+  - 156.231.115.0/24
+ip_cidr6_set:
+  - 2401:b60:5:3c62:c3c3:8dfd:f6b9:0/112

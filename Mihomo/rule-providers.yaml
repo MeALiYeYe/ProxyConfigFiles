@@ -1,4 +1,36 @@
 rule-providers:
+  Direct:
+    type: http
+    behavior: domain
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct/Direct.mrs
+    path: ./ruleset/Direct.mrs
+    interval: 86400
+
+  Direct_ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct/Direct_ip.mrs
+    path: ./ruleset/Direct_ip.mrs
+    interval: 86400
+
+  Emby:
+    type: http
+    behavior: domain
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Emby/Emby.mrs
+    path: ./ruleset/Emby.mrs
+    interval: 86400
+
+  Emby_ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Emby/Emby_ip.mrs
+    path: ./ruleset/Emby_ip.mrs
+    interval: 86400
+
   FakeLocation:
     type: http
     behavior: domain
@@ -9,74 +41,10 @@ rule-providers:
 
   FakeLocation_ip:
     type: http
-    behavior: domain
+    behavior: ipcidr
     format: mrs
     url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/FakeLocation/FakeLocation_ip.mrs
     path: ./ruleset/FakeLocation_ip.mrs
-    interval: 86400
-
-  TelegramSG_ip:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Telegram/TelegramSG_ip.mrs
-    path: ./ruleset/TelegramSG_ip.mrs
-    interval: 86400
-
-  TelegramEU_ip:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Telegram/TelegramEU_ip.mrs
-    path: ./ruleset/TelegramEU_ip.mrs
-    interval: 86400
-
-  TelegramEU:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Telegram/TelegramEU.mrs
-    path: ./ruleset/TelegramEU.mrs
-    interval: 86400
-
-  TelegramUS_ip:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Telegram/TelegramUS_ip.mrs
-    path: ./ruleset/TelegramUS_ip.mrs
-    interval: 86400
-
-  TelegramUS:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Telegram/TelegramUS.mrs
-    path: ./ruleset/TelegramUS.mrs
-    interval: 86400
-
-  TelegramSG:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Telegram/TelegramSG.mrs
-    path: ./ruleset/TelegramSG.mrs
-    interval: 86400
-
-  fakeip:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/fakeip/fakeip.mrs
-    path: ./ruleset/fakeip.mrs
-    interval: 86400
-
-  fakeip_ip:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/fakeip/fakeip_ip.mrs
-    path: ./ruleset/fakeip_ip.mrs
     interval: 86400
 
   Proxy:
@@ -89,74 +57,10 @@ rule-providers:
 
   Proxy_ip:
     type: http
-    behavior: domain
+    behavior: ipcidr
     format: mrs
     url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy/Proxy_ip.mrs
     path: ./ruleset/Proxy_ip.mrs
-    interval: 86400
-
-  Direct_ip:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct/Direct_ip.mrs
-    path: ./ruleset/Direct_ip.mrs
-    interval: 86400
-
-  Direct:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct/Direct.mrs
-    path: ./ruleset/Direct.mrs
-    interval: 86400
-
-  anti-ip-attribution:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/anti-ip-attribution/anti-ip-attribution.mrs
-    path: ./ruleset/anti-ip-attribution.mrs
-    interval: 86400
-
-  anti-ip-attribution_ip:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/anti-ip-attribution/anti-ip-attribution_ip.mrs
-    path: ./ruleset/anti-ip-attribution_ip.mrs
-    interval: 86400
-
-  WebRTC:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/WebRTC/WebRTC.mrs
-    path: ./ruleset/WebRTC.mrs
-    interval: 86400
-
-  WebRTC_ip:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/WebRTC/WebRTC_ip.mrs
-    path: ./ruleset/WebRTC_ip.mrs
-    interval: 86400
-
-  Emby_ip:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Emby/Emby_ip.mrs
-    path: ./ruleset/Emby_ip.mrs
-    interval: 86400
-
-  Emby:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Emby/Emby.mrs
-    path: ./ruleset/Emby.mrs
     interval: 86400
 
   Reject:
@@ -169,9 +73,89 @@ rule-providers:
 
   Reject_ip:
     type: http
-    behavior: domain
+    behavior: ipcidr
     format: mrs
     url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject/Reject_ip.mrs
     path: ./ruleset/Reject_ip.mrs
+    interval: 86400
+
+  TelegramEU:
+    type: http
+    behavior: domain
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Telegram/TelegramEU.mrs
+    path: ./ruleset/TelegramEU.mrs
+    interval: 86400
+
+  TelegramEU_ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Telegram/TelegramEU_ip.mrs
+    path: ./ruleset/TelegramEU_ip.mrs
+    interval: 86400
+
+  TelegramSG:
+    type: http
+    behavior: domain
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Telegram/TelegramSG.mrs
+    path: ./ruleset/TelegramSG.mrs
+    interval: 86400
+
+  TelegramSG_ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Telegram/TelegramSG_ip.mrs
+    path: ./ruleset/TelegramSG_ip.mrs
+    interval: 86400
+
+  TelegramUS:
+    type: http
+    behavior: domain
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Telegram/TelegramUS.mrs
+    path: ./ruleset/TelegramUS.mrs
+    interval: 86400
+
+  TelegramUS_ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Telegram/TelegramUS_ip.mrs
+    path: ./ruleset/TelegramUS_ip.mrs
+    interval: 86400
+
+  WebRTC:
+    type: http
+    behavior: domain
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/WebRTC/WebRTC.mrs
+    path: ./ruleset/WebRTC.mrs
+    interval: 86400
+
+  WebRTC_ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/WebRTC/WebRTC_ip.mrs
+    path: ./ruleset/WebRTC_ip.mrs
+    interval: 86400
+
+  anti-ip-attribution:
+    type: http
+    behavior: domain
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/anti-ip-attribution/anti-ip-attribution.mrs
+    path: ./ruleset/anti-ip-attribution.mrs
+    interval: 86400
+
+  anti-ip-attribution_ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/anti-ip-attribution/anti-ip-attribution_ip.mrs
+    path: ./ruleset/anti-ip-attribution_ip.mrs
     interval: 86400
 
