@@ -253,17 +253,37 @@ jobs:
       - name: Download Mihomo
         run: |
           set -e
-          
-          VERSION="v1.19.24"
 
+          VERSION="v1.19.24"
           FILE="mihomo-linux-amd64-${VERSION}.gz"
           URL="https://github.com/MetaCubeX/mihomo/releases/download/${VERSION}/${FILE}"
 
-          curl -L --fail -o mihomo.gz "$URL"
-          file mihomo.gz | grep -q gzip
+          # 如果已存在且可执行，则跳过
+          if [ -x "./mihomo" ]; then
+            echo "Mihomo already exists, skip download"
+            ./mihomo -v || true
+            exit 0
+          fi
 
-          gunzip mihomo.gz
+          echo "Downloading Mihomo..."
+
+          # 清理异常残留（关键）
+          rm -f mihomo mihomo.gz
+
+          curl -L --fail --retry 3 --connect-timeout 10 -o mihomo.gz "$URL"
+
+          # 校验 gzip（防止下载到 HTML）
+          if ! file mihomo.gz | grep -q gzip; then
+            echo "Download failed (not gzip)"
+            cat mihomo.gz
+            exit 1
+          fi
+
+          gunzip -f mihomo.gz
           chmod +x mihomo
+
+          echo "Mihomo ready:"
+          ./mihomo -v || true
 
       ################################
       # 4️⃣ YAML → MRS
