@@ -1,5 +1,6 @@
 name: 电信余量
 description: 中国电信话费流量小组件
+icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/mini/China_Telecom.png
 
 env_schema:
   Cookie:
