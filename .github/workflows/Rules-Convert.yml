@@ -13,20 +13,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-
-################################
-# 1️⃣ Sync 外部规则
-################################
-  sync:
+  build:
     runs-on: ubuntu-latest
-    outputs:
-      changed: ${{ steps.sync.outputs.changed }}
 
     steps:
       - uses: actions/checkout@v5
 
+      ################################
+      # 1️⃣ Sync 外部规则
+      ################################
       - name: Sync external rules
-        id: sync
         run: |
           set -e
 
@@ -35,8 +31,6 @@ jobs:
           declare -A RULES=(
             ["FakeLocation"]="https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/main/generated/surge.list"
           )
-
-          changed=0
 
           for name in "${!RULES[@]}"; do
             url="${RULES[$name]}"
@@ -53,32 +47,12 @@ jobs:
             else
               mv "$tmp" "$target"
               echo "Updated: $target"
-              changed=1
             fi
           done
 
-          echo "changed=$changed" >> $GITHUB_OUTPUT
-
-      - name: Commit
-        if: steps.sync.outputs.changed == '1'
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "actions@github.com"
-
-          git add Surge/rule
-          git commit -m "sync external rules"
-          git push
-
-################################
-# 2️⃣ 规则生成（核心）
-################################
-  generate:
-    needs: sync
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v5
-
+      ################################
+      # 2️⃣ 规则生成
+      ################################
       - name: Generate rules
         run: |
           set -e
@@ -95,7 +69,6 @@ jobs:
             name="${rel%.list}"
 
             tmp=$(mktemp)
-
             sed '/^#/d;/^$/d' "$file" | sort -u > "$tmp"
 
             sorted=$(mktemp)
@@ -155,7 +128,7 @@ jobs:
             cp "$tmp" "$qx"
 
             ################################
-            # Egern（简化稳定版）
+            # Egern
             ################################
             eg="Egern/rule/$name.yaml"
             mkdir -p "$(dirname "$eg")"
@@ -173,45 +146,23 @@ jobs:
 
           echo "Total rules: $total_rules"
 
-      - name: Commit
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "actions@github.com"
-
-          git add Mihomo/rule
-          git add Egern/rule
-          git add Quantumult\ X/rule
-
-          git diff --cached --quiet && exit 0
-
-          git commit -m "generate rules"
-          git push
-
-################################
-# 3️⃣ MRS + Providers + Stats
-################################
-  mrs:
-    needs: generate
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Download Mihomo
+      ################################
+      # 3️⃣ MRS + Providers
+      ################################
+      - name: Build MRS
         run: |
           curl -L -o mihomo.gz \
           https://github.com/MetaCubeX/mihomo/releases/latest/download/mihomo-linux-amd64.gz
+
           gunzip mihomo.gz
           chmod +x mihomo
 
-      - name: Convert MRS
-        run: |
           find Mihomo/rule -name '*.yaml' | while read -r f; do
             out="${f%.yaml}.mrs"
             ./mihomo convert-ruleset domain yaml "$f" "$out" || true
           done
 
-      - name: Generate Providers
+      - name: Providers
         run: |
           file="Mihomo/rule-providers.yaml"
           echo "rule-providers:" > "$file"
@@ -229,22 +180,29 @@ jobs:
 
           done < <(find Mihomo/rule -name '*.mrs')
 
-      - name: Generate Stats Page
+      ################################
+      # 4️⃣ Stats
+      ################################
+      - name: Stats
         run: |
           mkdir -p docs
 
           echo "<h1>Proxy Rules Stats</h1>" > docs/index.html
           echo "<p>Updated: $(date)</p>" >> docs/index.html
 
-      - name: Commit
+      ################################
+      # 5️⃣ 单次提交（核心）
+      ################################
+      - name: Commit all changes
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
 
-          git add Mihomo
-          git add docs
+          git add .
 
           git diff --cached --quiet && exit 0
 
-          git commit -m "mrs + providers + stats"
+          git commit -m "auto: full pipeline update"
+
+          git pull --rebase origin main
           git push
