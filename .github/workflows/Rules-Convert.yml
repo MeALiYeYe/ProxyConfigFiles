@@ -257,9 +257,9 @@ jobs:
           VERSION="v1.19.24"
 
           FILE="mihomo-linux-amd64-${VERSION}.gz"
-          url="https://github.com/MetaCubeX/mihomo/releases/download/${VERSION}/${FILE}"
+          URL="https://github.com/MetaCubeX/mihomo/releases/download/${VERSION}/${FILE}"
 
-          curl -L --fail -o mihomo.gz "$url"
+          curl -L --fail -o mihomo.gz "$URL"
           file mihomo.gz | grep -q gzip
 
           gunzip mihomo.gz
