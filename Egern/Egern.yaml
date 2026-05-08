@@ -1,6 +1,3 @@
-auto_update:
-  url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/Egern.yaml
-  interval: 86400
 ipv6: true
 http_port: 3080
 socks_port: 3090
@@ -12,8 +9,8 @@ hijack_dns:
 - '*:53'
 - '*:853'
 - '*:8853'
-geoip_db_url: https://raw.githubusercontent.com/Loyalsoldier/geoip/release/Country-without-asn.mmdb
-asn_db_url: https://raw.githubusercontent.com/Loyalsoldier/geoip/release/Country-asn.mmdb
+geoip_db_url: https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country.mmdb
+asn_db_url: https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb
 proxy_latency_test_url: https://www.gstatic.com/generate_204
 direct_latency_test_url: https://wifi.vivo.com.cn/generate_204
 compat_route: true
@@ -31,22 +28,34 @@ dns:
     DomesticDNS:
     - quic://dns.alidns.com
     - h3://dns.alidns.com/dns-query
-    - https://doh.pub/dns-query
     ForeignDNS:
     - h3://dns.google/dns-query
-    - h3://dns.cloudflare.com/dns-query
     - h3://cloudflare-dns.com/dns-query
   forward:
   - proxy_rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Apple/Apple_Domain.list
-      value: DomesticDNS
+      match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Surge/rule/Reject.list
+      value: REJECT
+      disabled: false
   - proxy_rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Proxy/Proxy_Domain.list
-      value: ForeignDNS
+      match: https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Surge.list
+      value: REJECT
+      disabled: false
+  - proxy_rule_set:
+      match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Surge/rule/Direct.list
+      value: DomesticDNS
+      disabled: false
+  - proxy_rule_set:
+      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Apple/Apple_Domain.list
+      value: DomesticDNS
+      disabled: false
+  - proxy_rule_set:
+      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/China/China_Domain.list
+      value: DomesticDNS
       disabled: false
   - domain_wildcard:
       match: '*'
-      value: DomesticDNS
+      value: ForeignDNS
+      disabled: false
   hosts:
     ip6-localhost:
     - ::1
@@ -116,21 +125,27 @@ dns:
     - 2606:50c0:8003::154
     iosapps.itunes.apple.com:
     - iosapps.itunes.apple.com.download.ks-cdn.com
+  proxy_nameservers:
+  - tls://2400:3200:baba::1
+  - tls://2400:3200::1
+  - tls://223.5.5.5
+  - tls://223.6.6.6
 policy_groups:
 - external:
     name: BaiduProxy
     type: select
     urls:
-    - https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/BaiduProxy.yaml
-    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
-    hidden: false
+    - https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/BaiduProxy.yaml
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/jichang.png
+    hidden: true
 - external:
     name: Proxies
     type: select
     urls:
+    - https://sub.store/download/VPS?target=Egern
     - https://sub.store/download/collection/Sub?target=Egern
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/sub.png
-    hidden: false
+    hidden: true
 - select:
     name: Emby
     policies:
@@ -144,20 +159,6 @@ policy_groups:
     - 高倍
     flatten: false
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/emby.png
-    hidden: false
-- select:
-    name: Tiktok
-    policies:
-    - DIRECT
-    - 香港
-    - 台湾
-    - 狮城
-    - 日本
-    - 美国
-    - 低倍
-    - 高倍
-    flatten: false
-    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_2.png
     hidden: false
 - select:
     name: Youtube
@@ -213,7 +214,7 @@ policy_groups:
     - 低倍
     - 高倍
     flatten: false
-    icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/Telegram_X.png
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram_X.png
     hidden: false
 - select:
     name: Cloudflare
@@ -227,7 +228,7 @@ policy_groups:
     - 低倍
     - 高倍
     flatten: false
-    icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/Cloudflare.png
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png
     hidden: false
 - select:
     name: Google
@@ -269,7 +270,7 @@ policy_groups:
     - 低倍
     - 高倍
     flatten: false
-    icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/Microsoft.png
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png
     hidden: false
 - select:
     name: Apple
@@ -308,7 +309,8 @@ policy_groups:
     - 北京
     - 河北
     flatten: false
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/jichang.png
+    latency_test_url: https://www.baidu.com
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png
     hidden: false
 - select:
     name: Domestic
@@ -319,7 +321,7 @@ policy_groups:
     - 北京
     - 河北
     flatten: false
-    icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/Domestic.png
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png
     hidden: false
 - select:
     name: Final
@@ -337,108 +339,94 @@ policy_groups:
     - 低倍
     - 高倍
     flatten: false
-    icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/Final.png
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png
     hidden: false
-- fallback:
+- smart:
     name: 江苏
     policies:
     - BaiduProxy
     flatten: true
-    filter: 南京|苏州
+    filter: (?i)(?:南京|苏州)
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Available_1.png
     hidden: true
-- fallback:
+- smart:
     name: 广东
     policies:
     - BaiduProxy
     flatten: true
-    filter: 广州
+    filter: (?i)(?:广州)
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/liuliang.png
     hidden: true
-- fallback:
+- smart:
     name: 北京
     policies:
     - BaiduProxy
     flatten: true
-    filter: 北京
+    filter: (?i)(?:北京)
     icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Available.png
     hidden: true
-- fallback:
+- smart:
     name: 河北
     policies:
     - BaiduProxy
     flatten: true
-    filter: 保定
+    filter: (?i)(?:保定)
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/liuliang(3).png
     hidden: true
-- fallback:
+- smart:
     name: 香港
     policies:
     - Proxies
     flatten: true
-    filter: 香港|HK|🇭🇰|HKG
-    interval: 300
-    timeout: 5
+    filter: (?i)(?:\bHK\b|HKG|Hong\s?Kong|🇭🇰|香港)
     icon: https://raw.githubusercontent.com/Centralmatrix3/Matrix-io/master/Gallery/Color/HK.png
     hidden: true
-- fallback:
+- smart:
     name: 台湾
     policies:
     - Proxies
     flatten: true
-    filter: 台湾|TW|🇹🇼|🇼🇸|TWN
-    interval: 300
-    timeout: 5
+    filter: (?i)(?:\bTW\b|TWN|🇹🇼|Taiwan|🇼🇸|台湾)
     icon: https://raw.githubusercontent.com/Centralmatrix3/Matrix-io/master/Gallery/Color/TW.png
     hidden: true
-- fallback:
+- smart:
     name: 狮城
     policies:
     - Proxies
     flatten: true
-    filter: 新加坡|SG|狮城|🇸🇬|SGP
-    interval: 300
-    timeout: 5
+    filter: (?i)(?:\bSG\b|SGP|Singapore|🇸🇬|新加坡|狮城)
     icon: https://raw.githubusercontent.com/Centralmatrix3/Matrix-io/master/Gallery/Color/SG.png
     hidden: true
-- fallback:
+- smart:
     name: 日本
     policies:
     - Proxies
     flatten: true
-    filter: 日本|JP|🇯🇵|JPN
-    interval: 300
-    timeout: 5
+    filter: (?i)(?:\bJP\b|JPN|Japan|🇯🇵|日本)
     icon: https://raw.githubusercontent.com/Centralmatrix3/Matrix-io/master/Gallery/Color/JP.png
     hidden: true
-- fallback:
+- smart:
     name: 美国
     policies:
     - Proxies
     flatten: true
-    filter: 美国|US|🇺🇸|USA
-    interval: 300
-    timeout: 5
+    filter: (?i)(?:\bUS\b|USA|States|America|🇺🇸|美国)
     icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/US.png
     hidden: true
-- fallback:
+- smart:
     name: 低倍
     policies:
     - Proxies
     flatten: true
     filter: 0\.\d+
-    interval: 300
-    timeout: 5
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/liuliang(2).png
     hidden: true
-- fallback:
+- smart:
     name: 高倍
     policies:
     - Proxies
     flatten: true
     filter: (?!0\.)[1-9]\d*(?:\.\d+)
-    interval: 300
-    timeout: 5
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/liuliang(5).png
     hidden: true
 rules:
@@ -457,56 +445,48 @@ rules:
     policy: REJECT
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/rule/Reject.yaml
+    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/rule/Reject/Reject.yaml
     policy: REJECT
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/rule/Direct.yaml
+    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/rule/Direct/Direct.yaml
     policy: DIRECT
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/rule/Proxy.yaml
+    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/rule/Proxy/Proxy.yaml
     policy: Foreign
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/rule/Emby.yaml
+    match: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/rule/Emby/Emby.yaml
     policy: Emby
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Lan/Lan.list
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Lan/Lan.list
     policy: DIRECT
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/BlockHttpDNS/BlockHttpDNS.list
+    match: https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Surge.list
+    policy: REJECT-DROP
+    disabled: false
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/BlockHttpDNS/BlockHttpDNS.list
     policy: REJECT
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/refs/heads/main/Filters/AWAvenue-Ads-Rule-Surge-RULE-SET.list
-    policy: REJECT
-    disabled: false
-- rule_set:
-    match: https://raw.githubusercontent.com/217heidai/adblockfilters/main/rules/adblocksurge.list
-    policy: REJECT
-    disabled: false
-- rule_set:
-    match: https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/refs/heads/main/generated/surge.list
+    match: https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/main/generated/surge.list
     policy: Location
-    disabled: false
-- rule_set:
-    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/TikTok/TikTok.list
-    policy: Tiktok
     disabled: false
 - rule_set:
     match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/YouTube/YouTube.list
     policy: Youtube
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Telegram/Telegram.list
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Telegram/Telegram.list
     policy: Telegram
     disabled: false
 - rule_set:
     name: ''
-    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/GlobalMedia/GlobalMedia_All_No_Resolve.list
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/GlobalMedia/GlobalMedia_All_No_Resolve.list
     policy: Media
     disabled: false
 - rule_set:
@@ -522,15 +502,15 @@ rules:
     policy: Ai
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/OpenAI/OpenAI.list
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/OpenAI/OpenAI.list
     policy: Ai
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Google/Google.list
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Google/Google.list
     policy: Google
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Cloudflare/Cloudflare.list
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Cloudflare/Cloudflare.list
     policy: Cloudflare
     disabled: false
 - rule_set:
@@ -542,7 +522,7 @@ rules:
     policy: Microsoft
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Apple/Apple_All_No_Resolve.list
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Apple/Apple_All_No_Resolve.list
     policy: Apple
     update_interval: 86400
     disabled: false
@@ -551,11 +531,11 @@ rules:
     policy: Foreign
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Proxy/Proxy_All_No_Resolve.list
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Proxy/Proxy_All_No_Resolve.list
     policy: Foreign
     disabled: false
 - rule_set:
-    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/China/China_All_No_Resolve.list
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/China/China_All_No_Resolve.list
     policy: Domestic
     disabled: false
 - geoip:
@@ -599,30 +579,48 @@ mitm:
   ca_p12: egern.p12
   ca_passphrase: egern
 modules:
-- url: https://raw.githubusercontent.com/QingRex/LoonKissSurge/refs/heads/main/Surge/Beta/%E5%B9%BF%E5%91%8A%E5%B9%B3%E5%8F%B0%E6%8B%A6%E6%88%AA%E5%99%A8.beta.sgmodule
-  enabled: true
-- url: https://raw.githubusercontent.com/QingRex/LoonKissSurge/refs/heads/main/Surge/Beta/HTTPDNS%E6%8B%A6%E6%88%AA%E5%99%A8.beta.sgmodule
-  enabled: true
-- url: https://raw.githubusercontent.com/QingRex/LoonKissSurge/refs/heads/main/Surge/Official/微信专项优化.official.sgmodule
-  compat_arguments:
-    Proxy: DIRECT
-  enabled: true
-- url: https://raw.githubusercontent.com/githubdulong/Script/master/Surge/JD_Helper.sgmodule
-  enabled: true
-- url: https://raw.githubusercontent.com/Maasea/sgmodule/refs/heads/master/YouTube.Enhance.sgmodule
-  enabled: true
-- url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Surge/module/Redirect.sgmodule
-  enabled: true
-- url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/module/skipproxy.yaml
-  enabled: true
-- url: https://raw.githubusercontent.com/sub-store-org/Sub-Store/refs/heads/master/config/Egern.yaml
-  enabled: true
-- url: https://raw.githubusercontent.com/Script-Hub-Org/Script-Hub/refs/heads/main/modules/script-hub.beta.surge.sgmodule
-  enabled: true
-- url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/refs/heads/main/Egern/module/Widgets.yaml
+- url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/module/ChinaBroadnet.yaml
   env:
-    GAS_REGION:
+    broadnet_access:
+    broadnet_body:
+  enabled: true
+- url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/module/Weather.yaml
+  env:
     KEY:
     API_HOST:
     LOCATION:
+  enabled: true
+- url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/module/OilPrice.yaml
+  env:
+    GAS_REGION:
+  enabled: true
+- url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/module/ServerMonitor.yaml
+  env:
+    SSH_SERVER_1_NAME:
+    SSH_SERVER_1_HOST:
+    SSH_SERVER_1_PORT:
+    SSH_SERVER_1_USER:
+    SSH_SERVER_1_PWD:
+  enabled: true
+- url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/module/NetworkInfo.yaml
+  enabled: true
+- url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/module/FkTG.yaml
+  enabled: true
+- url: https://raw.githubusercontent.com/githubdulong/Script/master/Surge/JD_Helper.sgmodule
+  enabled: true
+- url: https://raw.githubusercontent.com/jnlaoshu/MySelf/main/Egern/Module/MusicAdBlock.yaml
+  enabled: true
+- url: https://raw.githubusercontent.com/jnlaoshu/MySelf/main/Egern/Module/VideoAdBlock.yaml
+  enabled: true
+- url: https://raw.githubusercontent.com/jnlaoshu/MySelf/main/Egern/Module/EcommerceAdBlock.yaml
+  enabled: true
+- url: https://raw.githubusercontent.com/Aioneas/Surge/main/Module/youtube.aioneas.hide-shorts.sgmodule
+  enabled: true
+- url: https://raw.githubusercontent.com/Maasea/sgmodule/master/YouTube.Enhance.sgmodule
+  enabled: true
+- url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Surge/module/Redirect.sgmodule
+  enabled: true
+- url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/module/skipproxy.yaml
+  enabled: true
+- url: https://raw.githubusercontent.com/sub-store-org/Sub-Store/master/config/Egern.yaml
   enabled: true
