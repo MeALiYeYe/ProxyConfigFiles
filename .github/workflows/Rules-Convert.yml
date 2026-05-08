@@ -7,6 +7,7 @@ on:
   push:
     paths:
       - 'Surge/rule/**'
+      - 'Mihomo/rule/**.yaml'
 
 concurrency:
   group: rules-pipeline
@@ -20,9 +21,9 @@ jobs:
       - uses: actions/checkout@v5
 
       ################################
-      # 1️⃣ Sync 外部规则
+      # 1️⃣ Sync External Rules
       ################################
-      - name: Sync external rules
+      - name: Sync rules
         run: |
           set -e
 
@@ -32,26 +33,42 @@ jobs:
             ["FakeLocation"]="https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/main/generated/surge.list"
           )
 
+          changed=0
+
           for name in "${!RULES[@]}"; do
+
             url="${RULES[$name]}"
             dir="Surge/rule/$name"
             target="$dir/$name.list"
 
             mkdir -p "$dir"
 
+            echo "Fetching $name..."
             tmp=$(mktemp)
-            curl -L --retry 3 --connect-timeout 10 "$url" -o "$tmp"
+
+            curl -L \
+              --retry 3 \
+              --connect-timeout 10 \
+              "$url" \
+              -o "$tmp"
 
             if [ -f "$target" ] && cmp -s "$target" "$tmp"; then
+              echo "No change: $name"
               rm -f "$tmp"
             else
               mv "$tmp" "$target"
               echo "Updated: $target"
+              changed=1
             fi
+
           done
 
+          if [ "$changed" -eq 0 ]; then
+            echo "No updates"
+          fi
+
       ################################
-      # 2️⃣ 规则生成
+      # 2️⃣ Generate Rules
       ################################
       - name: Generate rules
         run: |
@@ -59,160 +76,276 @@ jobs:
 
           mkdir -p Mihomo/rule
           mkdir -p Egern/rule
-          mkdir -p Quantumult\ X/rule
+          mkdir -p "Quantumult X/rule"
 
           total_rules=0
 
           while read -r file; do
 
-            rel="${file#Surge/rule/}"
-            name="${rel%.list}"
+            rel_path="${file#Surge/rule/}"
+            name="${rel_path%.list}"
 
             tmp=$(mktemp)
+
+            echo "Processing $name"
+
             sed '/^#/d;/^$/d' "$file" | sort -u > "$tmp"
 
             sorted=$(mktemp)
 
-            grep '^DOMAIN,' "$tmp" >> "$sorted" || true
-            grep '^DOMAIN-SUFFIX,' "$tmp" >> "$sorted" || true
-            grep '^DOMAIN-KEYWORD,' "$tmp" >> "$sorted" || true
-            grep '^DOMAIN-WILDCARD,' "$tmp" >> "$sorted" || true
+            grep '^DOMAIN,' "$tmp" | sort -u >> "$sorted" || true
+            grep '^DOMAIN-SUFFIX,' "$tmp" | sort -u >> "$sorted" || true
+            grep '^DOMAIN-KEYWORD,' "$tmp" | sort -u >> "$sorted" || true
+            grep '^DOMAIN-WILDCARD,' "$tmp" | sort -u >> "$sorted" || true
 
-            ipv4=$(mktemp)
-            ipv6=$(mktemp)
+            ipv4_tmp=$(mktemp)
+            ipv6_tmp=$(mktemp)
 
-            grep '^IP-CIDR,' "$tmp" | cut -d',' -f2 > "$ipv4" || true
-            grep '^IP-CIDR6,' "$tmp" | cut -d',' -f2 > "$ipv6" || true
+            grep '^IP-CIDR,' "$tmp" | cut -d',' -f2 > "$ipv4_tmp" || true
+            grep '^IP-CIDR6,' "$tmp" | cut -d',' -f2 > "$ipv6_tmp" || true
 
-            py=$(mktemp)
+            py_script=$(mktemp)
 
             printf '%s\n' \
             'import sys, ipaddress' \
-            'mode=sys.argv[1];file=sys.argv[2]' \
-            'nets=[ipaddress.ip_network(l.strip(),strict=False) for l in open(file) if l.strip()]' \
-            'for n in sorted(ipaddress.collapse_addresses(nets)):' \
-            ' print(("IP-CIDR," if mode=="v4" else "IP-CIDR6,")+str(n))' \
-            > "$py"
+            '' \
+            'mode = sys.argv[1]' \
+            'file = sys.argv[2]' \
+            '' \
+            'with open(file) as f:' \
+            '    nets = [ipaddress.ip_network(line.strip(), strict=False) for line in f if line.strip()]' \
+            '' \
+            'collapsed = sorted(ipaddress.collapse_addresses(nets))' \
+            '' \
+            'if mode == "ipv4":' \
+            '    for net in collapsed:' \
+            '        if net.version == 4:' \
+            '            print(f"IP-CIDR,{net}")' \
+            'elif mode == "ipv6":' \
+            '    for net in collapsed:' \
+            '        if net.version == 6:' \
+            '            print(f"IP-CIDR6,{net}")' \
+            > "$py_script"
 
-            [ -s "$ipv4" ] && python3 "$py" v4 "$ipv4" >> "$sorted"
-            [ -s "$ipv6" ] && python3 "$py" v6 "$ipv6" >> "$sorted"
+            if [ -s "$ipv4_tmp" ]; then
+              python3 "$py_script" ipv4 "$ipv4_tmp" >> "$sorted"
+            fi
+
+            if [ -s "$ipv6_tmp" ]; then
+              python3 "$py_script" ipv6 "$ipv6_tmp" >> "$sorted"
+            fi
+
+            rm -f "$ipv4_tmp" "$ipv6_tmp" "$py_script"
 
             grep -Ev '^(DOMAIN|IP-CIDR)' "$tmp" >> "$sorted" || true
 
             mv "$sorted" "$tmp"
 
+            count=$(wc -l < "$tmp")
+            total_rules=$((total_rules + count))
+
+            domain_count=$(grep -Ec '^(DOMAIN|DOMAIN-SUFFIX),' "$tmp" || true)
+            ip_count=$(grep -Ec '^(IP-CIDR|IP-CIDR6),' "$tmp" || true)
+
+            echo "$name total: $count (domain: $domain_count / ip: $ip_count)"
+
             ################################
             # Mihomo
             ################################
-            d_out="Mihomo/rule/$name.yaml"
-            i_out="Mihomo/rule/${name}_ip.yaml"
 
-            mkdir -p "$(dirname "$d_out")"
+            mihomo_domain_out="Mihomo/rule/$name.yaml"
+            mihomo_ip_out="Mihomo/rule/${name}_ip.yaml"
 
-            echo "payload:" > "$d_out"
-            echo "payload:" > "$i_out"
+            mkdir -p "$(dirname "$mihomo_domain_out")"
+            mkdir -p "$(dirname "$mihomo_ip_out")"
 
-            while IFS=',' read -r t v _; do
-              [ "$t" = "DOMAIN" ] && echo "  - $v" >> "$d_out"
-              [ "$t" = "DOMAIN-SUFFIX" ] && echo "  - +.$v" >> "$d_out"
-            done < <(grep -E '^(DOMAIN|DOMAIN-SUFFIX),' "$tmp")
+            echo "payload:" > "$mihomo_domain_out"
+            echo "payload:" > "$mihomo_ip_out"
+
+            grep -E '^(DOMAIN|DOMAIN-SUFFIX),' "$tmp" | while IFS=',' read -r type value extra; do
+              case "$type" in
+                DOMAIN-SUFFIX)
+                  echo "  - +.$value" >> "$mihomo_domain_out"
+                  ;;
+                DOMAIN)
+                  echo "  - $value" >> "$mihomo_domain_out"
+                  ;;
+              esac
+            done
 
             grep -E '^(IP-CIDR|IP-CIDR6),' "$tmp" \
-              | cut -d',' -f2 | sed 's/^/  - /' >> "$i_out"
+            | cut -d',' -f2 \
+            | sed 's/^/  - /' >> "$mihomo_ip_out"
+
+            if [ $(wc -l < "$mihomo_domain_out") -le 1 ]; then rm -f "$mihomo_domain_out"; fi
+            if [ $(wc -l < "$mihomo_ip_out") -le 1 ]; then rm -f "$mihomo_ip_out"; fi
 
             ################################
             # Quantumult X
             ################################
-            qx="Quantumult X/rule/$name.list"
-            mkdir -p "$(dirname "$qx")"
-            cp "$tmp" "$qx"
+
+            qx_out="Quantumult X/rule/$name.list"
+            mkdir -p "$(dirname "$qx_out")"
+            cp "$tmp" "$qx_out"
 
             ################################
             # Egern
             ################################
-            eg="Egern/rule/$name.yaml"
-            mkdir -p "$(dirname "$eg")"
-            rm -f "$eg"
 
-            if grep -q '^DOMAIN-SUFFIX,' "$tmp"; then
-              echo "domain_suffix_set:" >> "$eg"
-              grep '^DOMAIN-SUFFIX,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$eg"
+            egern_out="Egern/rule/$name.yaml"
+            mkdir -p "$(dirname "$egern_out")"
+            rm -f "$egern_out"
+
+            if grep -qE '^IP-CIDR,|^IP-CIDR6,|^GEOIP,' "$tmp"; then
+              echo "no_resolve: true" >> "$egern_out"
             fi
 
-            count=$(wc -l < "$tmp")
-            total_rules=$((total_rules + count))
+            if grep -q '^DOMAIN-SUFFIX,' "$tmp"; then
+              echo "domain_suffix_set:" >> "$egern_out"
+              grep '^DOMAIN-SUFFIX,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
+            fi
 
-          done < <(find Surge/rule -name '*.list')
+            if grep -q '^DOMAIN,' "$tmp"; then
+              echo "domain_set:" >> "$egern_out"
+              grep '^DOMAIN,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
+            fi
 
-          echo "Total rules: $total_rules"
+            if grep -q '^DOMAIN-KEYWORD,' "$tmp"; then
+              echo "domain_keyword_set:" >> "$egern_out"
+              grep '^DOMAIN-KEYWORD,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
+            fi
+
+            if grep -q '^DOMAIN-WILDCARD,' "$tmp"; then
+              echo "domain_wildcard_set:" >> "$egern_out"
+              grep '^DOMAIN-WILDCARD,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
+            fi
+
+            if grep -q '^DOMAIN-REGEX,' "$tmp"; then
+              echo "domain_regex_set:" >> "$egern_out"
+              grep '^DOMAIN-REGEX,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
+            fi
+
+            if grep -q '^IP-CIDR,' "$tmp"; then
+              echo "ip_cidr_set:" >> "$egern_out"
+              grep '^IP-CIDR,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
+            fi
+
+            if grep -q '^IP-CIDR6,' "$tmp"; then
+              echo "ip_cidr6_set:" >> "$egern_out"
+              grep '^IP-CIDR6,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
+            fi
+
+            if grep -q '^GEOIP,' "$tmp"; then
+              echo "geoip_set:" >> "$egern_out"
+              grep '^GEOIP,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
+            fi
+
+            if grep -q '^PROTOCOL,' "$tmp"; then
+              echo "protocol_set:" >> "$egern_out"
+              grep '^PROTOCOL,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
+            fi
+
+          done < <(find Surge/rule -type f -name '*.list')
 
       ################################
-      # 3️⃣ MRS + Providers
+      # 3️⃣ Download Mihomo
       ################################
-      - name: Build MRS
+      - name: Download Mihomo
         run: |
           set -e
+          VERSION=v1.19.24
+          url="https://github.com/MetaCubeX/mihomo/releases/download/${VERSION}/mihomo-linux-amd64-${VERSION}.gz"
 
-          MIHOMO_VERSION=v1.19.24
-
-          url="https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_VERSION}/mihomo-linux-amd64-${MIHOMO_VERSION}.gz"
-
-          echo "Downloading Mihomo: $url"
-
-          curl -L --retry 3 --fail -o mihomo.gz "$url"
-
-          # 校验文件（关键！防止再踩坑）
-          file mihomo.gz | grep -q gzip || (echo "Invalid download"; exit 1)
+          curl -L --fail -o mihomo.gz "$url"
+          file mihomo.gz | grep -q gzip
 
           gunzip mihomo.gz
           chmod +x mihomo
 
-          find Mihomo/rule -name '*.yaml' | while read -r f; do
-            out="${f%.yaml}.mrs"
-            ./mihomo convert-ruleset domain yaml "$f" "$out" || true
+      ################################
+      # 4️⃣ YAML → MRS
+      ################################
+      - name: Convert to MRS
+        run: |
+          detect_behavior() {
+            file="$1"
+            first=$(grep -v '^payload:' "$file" | sed 's/^- //' | head -n 1)
+
+            if echo "$first" | grep -q '/'; then
+              echo "ipcidr"
+            else
+              echo "domain"
+            fi
+          }
+
+          find Mihomo/rule -type f -name '*.yaml' | sort | while read -r file; do
+
+            rel_path="${file#Mihomo/rule/}"
+            name="${rel_path%.yaml}"
+            output="Mihomo/rule/$name.mrs"
+
+            mkdir -p "$(dirname "$output")"
+
+            behavior=$(detect_behavior "$file")
+
+            echo "[MRS] $name → $behavior"
+
+            ./mihomo convert-ruleset "$behavior" yaml "$file" "$output"
+
           done
 
-      - name: Providers
+      ################################
+      # 5️⃣ Providers
+      ################################
+      - name: Generate providers
         run: |
-          file="Mihomo/rule-providers.yaml"
-          echo "rule-providers:" > "$file"
+          get_behavior_by_name() {
+            name="$1"
+            if echo "$name" | grep -qE '_ip$'; then
+              echo "ipcidr"
+            else
+              echo "domain"
+            fi
+          }
 
-          while read -r f; do
-            n=$(basename "$f" .mrs)
+          providers_file="Mihomo/rule-providers.yaml"
+          echo "rule-providers:" > "$providers_file"
 
-            printf "  %s:\n" "$n" >> "$file"
-            printf "    type: http\n" >> "$file"
-            printf "    behavior: domain\n" >> "$file"
-            printf "    format: mrs\n" >> "$file"
-            printf "    url: https://cdn.jsdelivr.net/gh/%s@main/%s\n" "$GITHUB_REPOSITORY" "$f" >> "$file"
-            printf "    path: ./ruleset/%s.mrs\n" "$n" >> "$file"
-            printf "    interval: 86400\n\n" >> "$file"
+          find Mihomo/rule -type f -name '*.mrs' | sort | while read -r file; do
 
-          done < <(find Mihomo/rule -name '*.mrs')
+            rel_path="${file#Mihomo/rule/}"
+            name="${rel_path%.mrs}"
+            base_name=$(basename "$name")
+
+            behavior=$(get_behavior_by_name "$base_name")
+
+            printf "  %s:\n" "$base_name" >> "$providers_file"
+            printf "    type: http\n" >> "$providers_file"
+            printf "    behavior: %s\n" "$behavior" >> "$providers_file"
+            printf "    format: mrs\n" >> "$providers_file"
+
+            printf \
+            "    url: https://cdn.jsdelivr.net/gh/%s@main/Mihomo/rule/%s.mrs\n" \
+            "$GITHUB_REPOSITORY" "$name" >> "$providers_file"
+
+            printf "    path: ./ruleset/%s.mrs\n" "$base_name" >> "$providers_file"
+            printf "    interval: 86400\n\n" >> "$providers_file"
+
+          done
 
       ################################
-      # 4️⃣ Stats
+      # 6️⃣ Commit
       ################################
-      - name: Stats
-        run: |
-          mkdir -p docs
-
-          echo "<h1>Proxy Rules Stats</h1>" > docs/index.html
-          echo "<p>Updated: $(date)</p>" >> docs/index.html
-
-      ################################
-      # 5️⃣ 单次提交（核心）
-      ################################
-      - name: Commit all changes
+      - name: Commit
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
 
           git add .
 
-          git diff --cached --quiet && exit 0
+          git diff --cached --quiet && echo "No changes" && exit 0
 
-          git commit -m "auto: full pipeline update"
+          git commit -m "auto: full pipeline"
 
           git pull --rebase origin main
           git push
