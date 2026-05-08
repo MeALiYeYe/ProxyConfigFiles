@@ -1,5 +1,6 @@
 name: Egern 网络信息
 description: 网络信息 (Network Info) 小组件
+icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/color/CTM.png
 
 scriptings:
 - generic:
