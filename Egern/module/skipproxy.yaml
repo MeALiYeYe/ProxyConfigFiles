@@ -1,7 +1,48 @@
-name: Bypass Tunnel Proxy (CN Apps)
-description: 直连国内银行、支付、运营商、政务与视频类应用，避免TUN/VIF检测
+name: Bypass Tunnel Proxy (CN Apps Enhanced)
+description: 直连国内银行、支付、运营商、政务与视频类应用，避免TUN/VIF检测（增强版）
 
 bypass_tunnel_proxy:
+  # ===== 四大运营商（含广电）=====
+  - '*.10099.com.cn'
+  - '*.10086.cn'
+  - '*.chinamobile.com'
+  - '*.cmcc.com'
+  - '*.cmcc.net'
+
+  - '*.10010.com'
+  - '*.10010.cn'
+  - '*.chinaunicom.com'
+  - '*.chinaunicom.cn'
+
+  - '*.189.cn'
+  - '*.chinatelecom.com.cn'
+  - '*.chinatelecom.com'
+
+  - '*.192.168.0.1'   # 有些光猫/运营商网关
+  - '*.bnmcc.com.cn'  # 中国广电
+  - '*.cbn.cn'
+
+  # ===== 支付体系 =====
+  - '*.alipay.com'
+  - '*.alipayobjects.com'
+  - '*.alipaydns.com'
+  - '*.alipay.net'
+  - '*.antgroup.com'
+  - '*.aliyunpay.com'
+
+  - '*.tenpay.com'
+  - '*.wechat.com'
+  - '*.weixin.qq.com'
+  - 'pay.weixin.qq.com'
+  - 'wx.tenpay.com'
+  - 'mapi.weixin.qq.com'
+  - 'api.mch.weixin.qq.com'
+
+  - '*.unionpay.com'
+  - '*.unionpaysecure.com'
+  - '*.unionpayintl.com'
+
+  # ===== 国有银行 =====
   - '*.icbc.com.cn'
   - '*.95588.com'
   - '*.ccb.com'
@@ -10,46 +51,52 @@ bypass_tunnel_proxy:
   - '*.bankofchina.com'
   - '*.abchina.com'
   - '*.abchina.com.cn'
-  - '*.cmbchina.com'
-  - '*.bankcomm.com'
-  - '*.pingan.com'
-  - '*.pingan.com.cn'
   - '*.psbc.com'
   - '*.psbc.com.cn'
-  - '*.10099.com.cn'
-  - '*.10086.cn'
-  - '*.chinamobile.com'
-  - '*.10010.com'
-  - '*.chinaunicom.com'
-  - '*.189.cn'
-  - '*.chinatelecom.com.cn'
-  - '*.alipay.com'
-  - '*.alipayobjects.com'
-  - '*.alipaydns.com'
-  - '*.tenpay.com'
-  - '*.wechat.com'
-  - '*.weixin.qq.com'
+
+  # ===== 全国性股份制银行 =====
+  - '*.cmbchina.com'
+  - '*.cmbchina.cn'
+  - '*.bankcomm.com'
+
+  - '*.cib.com.cn'         # 兴业
+  - '*.cebbank.com'
+  - '*.cebbank.com.cn'     # 光大
+  - '*.cmbc.com.cn'
+  - '*.cmbc.com'           # 民生
+  - '*.citicbank.com'
+  - '*.ecitic.com'         # 中信
+  - '*.cgbchina.com.cn'
+  - '*.cgbchina.com'       # 广发
+  - '*.hxb.com.cn'
+  - '*.hxb.com'            # 华夏
+  - '*.spdb.com.cn'
+  - '*.spdb.com'           # 浦发
+  - '*.cbhb.com.cn'        # 渤海
+  - '*.hfbank.com.cn'      # 恒丰
+  - '*.czbank.com'
+  - '*.czbank.com.cn'      # 浙商
+
+  # ===== 政务 & 其他 =====
   - '*.gov.cn'
   - '*.chinatax.gov.cn'
   - '*.etax.cn'
-  - '*.tiantianfund.com'
-  - '*.szse.cn'
-  - '*.csrc.gov.cn'
-  - '*.cnipa.gov.cn'
   - '*.医保.cn'
   - '*.yibao.cn'
-  - '*.iask.cn'
   - '*.12306.cn'
 
 real_ip_domains:
+  # ===== 运营商 =====
   - '*.10099.com.cn'
   - '*.10086.cn'
   - '*.10010.cn'
   - '*.189.cn'
   - '*.cmcc.com'
+  - '*.cmcc.net'
   - '*.chinatelecom.com'
   - '*.chinaunicom.cn'
-  - '*.cmcc.net'
+
+  # ===== 支付 =====
   - '*.alipay.com'
   - '*.alipay.net'
   - '*.alipayobjects.com'
@@ -57,6 +104,18 @@ real_ip_domains:
   - '*.open.alipay.com'
   - '*.antgroup.com'
   - '*.aliyunpay.com'
+
+  - '*.tenpay.com'
+  - 'pay.weixin.qq.com'
+  - 'wx.tenpay.com'
+  - 'mapi.weixin.qq.com'
+  - 'api.mch.weixin.qq.com'
+
+  - '*.unionpay.com'
+  - '*.unionpaysecure.com'
+  - '*.unionpayintl.com'
+
+  # ===== 银行 =====
   - '*.icbc.com.cn'
   - '*.icbc.com'
   - '*.abchina.com'
@@ -69,12 +128,26 @@ real_ip_domains:
   - '*.psbc.com'
   - '*.psbc.com.cn'
   - '*.spdb.com.cn'
+  - '*.spdb.com'
   - '*.bankcomm.com'
-  - '*.pingan.com'
-  - '*.pinganbank.com'
-  - '*.unionpay.com'
-  - '*.unionpaysecure.com'
-  - '*.unionpayintl.com'
+
+  - '*.cib.com.cn'
+  - '*.cebbank.com'
+  - '*.cebbank.com.cn'
+  - '*.cmbc.com.cn'
+  - '*.cmbc.com'
+  - '*.citicbank.com'
+  - '*.ecitic.com'
+  - '*.cgbchina.com.cn'
+  - '*.cgbchina.com'
+  - '*.hxb.com.cn'
+  - '*.hxb.com'
+  - '*.cbhb.com.cn'
+  - '*.hfbank.com.cn'
+  - '*.czbank.com'
+  - '*.czbank.com.cn'
+
+  # ===== Apple / 证书 =====
   - api.push.apple.com
   - gateway.push.apple.com
   - idmsa.apple.com
@@ -83,56 +156,77 @@ real_ip_domains:
   - crl3.digicert.com
   - ocsp.int-x3.letsencrypt.org
   - r3.o.lencr.org
-  - pay.weixin.qq.com
-  - wx.tenpay.com
-  - mapi.weixin.qq.com
-  - api.mch.weixin.qq.com
 
 mitm:
   hostnames:
     excludes:
-    - '*.10099.com.cn'
-    - '*.10086.cn'
-    - '*.10010.cn'
-    - '*.189.cn'
-    - '*.cmcc.com'
-    - '*.chinatelecom.com'
-    - '*.chinaunicom.cn'
-    - '*.cmcc.net'
-    - '*.alipay.com'
-    - '*.alipay.net'
-    - '*.alipayobjects.com'
-    - '*.mapi.alipay.com'
-    - '*.open.alipay.com'
-    - '*.antgroup.com'
-    - '*.aliyunpay.com'
-    - '*.icbc.com.cn'
-    - '*.icbc.com'
-    - '*.abchina.com'
-    - '*.bankofchina.com'
-    - '*.boc.cn'
-    - '*.ccb.com'
-    - '*.ccb.com.cn'
-    - '*.cmbchina.com'
-    - '*.cmbchina.cn'
-    - '*.psbc.com'
-    - '*.psbc.com.cn'
-    - '*.spdb.com.cn'
-    - '*.bankcomm.com'
-    - '*.pingan.com'
-    - '*.pinganbank.com'
-    - '*.unionpay.com'
-    - '*.unionpaysecure.com'
-    - '*.unionpayintl.com'
-    - api.push.apple.com
-    - gateway.push.apple.com
-    - idmsa.apple.com
-    - ocsp.apple.com
-    - ocsp.digicert.com
-    - crl3.digicert.com
-    - ocsp.int-x3.letsencrypt.org
-    - r3.o.lencr.org
-    - pay.weixin.qq.com
-    - wx.tenpay.com
-    - mapi.weixin.qq.com
-    - api.mch.weixin.qq.com
+      # ===== 运营商 =====
+      - '*.10099.com.cn'
+      - '*.10086.cn'
+      - '*.10010.cn'
+      - '*.189.cn'
+      - '*.cmcc.com'
+      - '*.cmcc.net'
+      - '*.chinatelecom.com'
+      - '*.chinaunicom.cn'
+
+      # ===== 支付 =====
+      - '*.alipay.com'
+      - '*.alipay.net'
+      - '*.alipayobjects.com'
+      - '*.mapi.alipay.com'
+      - '*.open.alipay.com'
+      - '*.antgroup.com'
+      - '*.aliyunpay.com'
+
+      - '*.tenpay.com'
+      - 'pay.weixin.qq.com'
+      - 'wx.tenpay.com'
+      - 'mapi.weixin.qq.com'
+      - 'api.mch.weixin.qq.com'
+
+      - '*.unionpay.com'
+      - '*.unionpaysecure.com'
+      - '*.unionpayintl.com'
+
+      # ===== 银行 =====
+      - '*.icbc.com.cn'
+      - '*.icbc.com'
+      - '*.abchina.com'
+      - '*.bankofchina.com'
+      - '*.boc.cn'
+      - '*.ccb.com'
+      - '*.ccb.com.cn'
+      - '*.cmbchina.com'
+      - '*.cmbchina.cn'
+      - '*.psbc.com'
+      - '*.psbc.com.cn'
+      - '*.spdb.com.cn'
+      - '*.spdb.com'
+      - '*.bankcomm.com'
+
+      - '*.cib.com.cn'
+      - '*.cebbank.com'
+      - '*.cebbank.com.cn'
+      - '*.cmbc.com.cn'
+      - '*.cmbc.com'
+      - '*.citicbank.com'
+      - '*.ecitic.com'
+      - '*.cgbchina.com.cn'
+      - '*.cgbchina.com'
+      - '*.hxb.com.cn'
+      - '*.hxb.com'
+      - '*.cbhb.com.cn'
+      - '*.hfbank.com.cn'
+      - '*.czbank.com'
+      - '*.czbank.com.cn'
+
+      # ===== Apple / 证书 =====
+      - api.push.apple.com
+      - gateway.push.apple.com
+      - idmsa.apple.com
+      - ocsp.apple.com
+      - ocsp.digicert.com
+      - crl3.digicert.com
+      - ocsp.int-x3.letsencrypt.org
+      - r3.o.lencr.org
