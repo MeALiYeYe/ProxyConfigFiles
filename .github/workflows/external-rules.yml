@@ -21,7 +21,7 @@ jobs:
           mkdir -p Surge/rule
 
           declare -A RULES=(
-            ["fakeip"]="https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/main/generated/surge.list"
+            ["FakeLocation"]="https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/main/generated/surge.list"
           )
 
           changed=0
