@@ -1,4 +1,4 @@
-name: Rules-Convert
+name: Rules Pipeline (Production)
 
 on:
   workflow_dispatch:
@@ -8,21 +8,24 @@ on:
     paths:
       - 'Surge/rule/**'
 
+concurrency:
+  group: rules-pipeline
+  cancel-in-progress: true
+
 jobs:
 
-  ################################
-  # 1️⃣ 同步外部规则
-  ################################
-  sync-external:
+################################
+# 1️⃣ Sync 外部规则
+################################
+  sync:
     runs-on: ubuntu-latest
-
     outputs:
       changed: ${{ steps.sync.outputs.changed }}
 
     steps:
       - uses: actions/checkout@v5
 
-      - name: Sync rules
+      - name: Sync external rules
         id: sync
         run: |
           set -e
@@ -36,7 +39,6 @@ jobs:
           changed=0
 
           for name in "${!RULES[@]}"; do
-
             url="${RULES[$name]}"
             dir="Surge/rule/$name"
             target="$dir/$name.list"
@@ -44,7 +46,6 @@ jobs:
             mkdir -p "$dir"
 
             tmp=$(mktemp)
-
             curl -L --retry 3 --connect-timeout 10 "$url" -o "$tmp"
 
             if [ -f "$target" ] && cmp -s "$target" "$tmp"; then
@@ -54,7 +55,6 @@ jobs:
               echo "Updated: $target"
               changed=1
             fi
-
           done
 
           echo "changed=$changed" >> $GITHUB_OUTPUT
@@ -69,12 +69,11 @@ jobs:
           git commit -m "sync external rules"
           git push
 
-
-  ################################
-  # 2️⃣ 规则生成
-  ################################
+################################
+# 2️⃣ 规则生成（核心）
+################################
   generate:
-    needs: sync-external
+    needs: sync
     runs-on: ubuntu-latest
 
     steps:
@@ -86,14 +85,14 @@ jobs:
 
           mkdir -p Mihomo/rule
           mkdir -p Egern/rule
-          mkdir -p "Quantumult X/rule"
+          mkdir -p Quantumult\ X/rule
 
           total_rules=0
 
-          find Surge/rule -type f -name '*.list' | while read -r file; do
+          while read -r file; do
 
-            rel_path="${file#Surge/rule/}"
-            name="${rel_path%.list}"
+            rel="${file#Surge/rule/}"
+            name="${rel%.list}"
 
             tmp=$(mktemp)
 
@@ -101,35 +100,29 @@ jobs:
 
             sorted=$(mktemp)
 
-            grep '^DOMAIN,' "$tmp" | sort -u >> "$sorted" || true
-            grep '^DOMAIN-SUFFIX,' "$tmp" | sort -u >> "$sorted" || true
-            grep '^DOMAIN-KEYWORD,' "$tmp" | sort -u >> "$sorted" || true
-            grep '^DOMAIN-WILDCARD,' "$tmp" | sort -u >> "$sorted" || true
+            grep '^DOMAIN,' "$tmp" >> "$sorted" || true
+            grep '^DOMAIN-SUFFIX,' "$tmp" >> "$sorted" || true
+            grep '^DOMAIN-KEYWORD,' "$tmp" >> "$sorted" || true
+            grep '^DOMAIN-WILDCARD,' "$tmp" >> "$sorted" || true
 
-            ipv4_tmp=$(mktemp)
-            ipv6_tmp=$(mktemp)
+            ipv4=$(mktemp)
+            ipv6=$(mktemp)
 
-            grep '^IP-CIDR,' "$tmp" | cut -d',' -f2 > "$ipv4_tmp" || true
-            grep '^IP-CIDR6,' "$tmp" | cut -d',' -f2 > "$ipv6_tmp" || true
+            grep '^IP-CIDR,' "$tmp" | cut -d',' -f2 > "$ipv4" || true
+            grep '^IP-CIDR6,' "$tmp" | cut -d',' -f2 > "$ipv6" || true
 
-            py_script=$(mktemp)
+            py=$(mktemp)
 
             printf '%s\n' \
             'import sys, ipaddress' \
-            'mode = sys.argv[1]' \
-            'file = sys.argv[2]' \
-            'with open(file) as f:' \
-            ' nets=[ipaddress.ip_network(line.strip(),strict=False) for line in f if line.strip()]' \
-            'collapsed=sorted(ipaddress.collapse_addresses(nets))' \
-            'for net in collapsed:' \
-            ' if (mode=="ipv4" and net.version==4): print(f"IP-CIDR,{net}")' \
-            ' if (mode=="ipv6" and net.version==6): print(f"IP-CIDR6,{net}")' \
-            > "$py_script"
+            'mode=sys.argv[1];file=sys.argv[2]' \
+            'nets=[ipaddress.ip_network(l.strip(),strict=False) for l in open(file) if l.strip()]' \
+            'for n in sorted(ipaddress.collapse_addresses(nets)):' \
+            ' print(("IP-CIDR," if mode=="v4" else "IP-CIDR6,")+str(n))' \
+            > "$py"
 
-            [ -s "$ipv4_tmp" ] && python3 "$py_script" ipv4 "$ipv4_tmp" >> "$sorted"
-            [ -s "$ipv6_tmp" ] && python3 "$py_script" ipv6 "$ipv6_tmp" >> "$sorted"
-
-            rm -f "$ipv4_tmp" "$ipv6_tmp" "$py_script"
+            [ -s "$ipv4" ] && python3 "$py" v4 "$ipv4" >> "$sorted"
+            [ -s "$ipv6" ] && python3 "$py" v6 "$ipv6" >> "$sorted"
 
             grep -Ev '^(DOMAIN|IP-CIDR)' "$tmp" >> "$sorted" || true
 
@@ -138,21 +131,21 @@ jobs:
             ################################
             # Mihomo
             ################################
-            domain_out="Mihomo/rule/$name.yaml"
-            ip_out="Mihomo/rule/${name}_ip.yaml"
+            d_out="Mihomo/rule/$name.yaml"
+            i_out="Mihomo/rule/${name}_ip.yaml"
 
-            mkdir -p "$(dirname "$domain_out")"
-            mkdir -p "$(dirname "$ip_out")"
+            mkdir -p "$(dirname "$d_out")"
 
-            echo "payload:" > "$domain_out"
-            echo "payload:" > "$ip_out"
+            echo "payload:" > "$d_out"
+            echo "payload:" > "$i_out"
 
-            grep -E '^(DOMAIN|DOMAIN-SUFFIX),' "$tmp" | while IFS=',' read -r t v _; do
-              [ "$t" = "DOMAIN-SUFFIX" ] && echo "  - +.$v" >> "$domain_out"
-              [ "$t" = "DOMAIN" ] && echo "  - $v" >> "$domain_out"
-            done
+            while IFS=',' read -r t v _; do
+              [ "$t" = "DOMAIN" ] && echo "  - $v" >> "$d_out"
+              [ "$t" = "DOMAIN-SUFFIX" ] && echo "  - +.$v" >> "$d_out"
+            done < <(grep -E '^(DOMAIN|DOMAIN-SUFFIX),' "$tmp")
 
-            grep -E '^(IP-CIDR|IP-CIDR6),' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$ip_out"
+            grep -E '^(IP-CIDR|IP-CIDR6),' "$tmp" \
+              | cut -d',' -f2 | sed 's/^/  - /' >> "$i_out"
 
             ################################
             # Quantumult X
@@ -162,33 +155,41 @@ jobs:
             cp "$tmp" "$qx"
 
             ################################
-            # Egern
+            # Egern（简化稳定版）
             ################################
-            egern="Egern/rule/$name.yaml"
-            mkdir -p "$(dirname "$egern")"
-            rm -f "$egern"
+            eg="Egern/rule/$name.yaml"
+            mkdir -p "$(dirname "$eg")"
+            rm -f "$eg"
 
-            grep -q '^DOMAIN-SUFFIX,' "$tmp" && {
-              echo "domain_suffix_set:" >> "$egern"
-              grep '^DOMAIN-SUFFIX,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern"
-            }
+            if grep -q '^DOMAIN-SUFFIX,' "$tmp"; then
+              echo "domain_suffix_set:" >> "$eg"
+              grep '^DOMAIN-SUFFIX,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$eg"
+            fi
 
-          done
+            count=$(wc -l < "$tmp")
+            total_rules=$((total_rules + count))
+
+          done < <(find Surge/rule -name '*.list')
+
+          echo "Total rules: $total_rules"
 
       - name: Commit
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
 
-          git add .
+          git add Mihomo/rule
+          git add Egern/rule
+          git add Quantumult\ X/rule
+
           git diff --cached --quiet && exit 0
+
           git commit -m "generate rules"
           git push
 
-
-  ################################
-  # 3️⃣ MRS + Providers + Stats
-  ################################
+################################
+# 3️⃣ MRS + Providers + Stats
+################################
   mrs:
     needs: generate
     runs-on: ubuntu-latest
@@ -205,39 +206,45 @@ jobs:
 
       - name: Convert MRS
         run: |
-          find Mihomo/rule -name '*.yaml' | while read f; do
-            name="${f%.yaml}"
-            ./mihomo convert-ruleset domain yaml "$f" "$name.mrs" || true
+          find Mihomo/rule -name '*.yaml' | while read -r f; do
+            out="${f%.yaml}.mrs"
+            ./mihomo convert-ruleset domain yaml "$f" "$out" || true
           done
 
-      - name: Providers
+      - name: Generate Providers
         run: |
-          echo "rule-providers:" > Mihomo/rule-providers.yaml
-          find Mihomo/rule -name '*.mrs' | while read f; do
+          file="Mihomo/rule-providers.yaml"
+          echo "rule-providers:" > "$file"
+
+          while read -r f; do
             n=$(basename "$f" .mrs)
-            cat >> Mihomo/rule-providers.yaml <<EOF
-  $n:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/${GITHUB_REPOSITORY}@main/$f
-    path: ./ruleset/$n.mrs
-    interval: 86400
 
-EOF
-          done
+            printf "  %s:\n" "$n" >> "$file"
+            printf "    type: http\n" >> "$file"
+            printf "    behavior: domain\n" >> "$file"
+            printf "    format: mrs\n" >> "$file"
+            printf "    url: https://cdn.jsdelivr.net/gh/%s@main/%s\n" "$GITHUB_REPOSITORY" "$f" >> "$file"
+            printf "    path: ./ruleset/%s.mrs\n" "$n" >> "$file"
+            printf "    interval: 86400\n\n" >> "$file"
 
-      - name: Stats
+          done < <(find Mihomo/rule -name '*.mrs')
+
+      - name: Generate Stats Page
         run: |
           mkdir -p docs
-          echo "<h1>Rules Stats</h1>" > docs/index.html
+
+          echo "<h1>Proxy Rules Stats</h1>" > docs/index.html
+          echo "<p>Updated: $(date)</p>" >> docs/index.html
 
       - name: Commit
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
 
-          git add .
+          git add Mihomo
+          git add docs
+
           git diff --cached --quiet && exit 0
-          git commit -m "mrs + stats"
+
+          git commit -m "mrs + providers + stats"
           git push
