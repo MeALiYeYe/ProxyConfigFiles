@@ -1,5 +1,6 @@
 name: 联通余量
 description: 中国联通话费流量小组件
+icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/mini/China_Unicom.png
 
 env_schema:
   Cookie:
@@ -12,7 +13,7 @@ env_schema:
 
 scriptings:
 - generic: 
-    name: 电信余量
+    name: 联通余量
     script_url: https://raw.githubusercontent.com/IBL3ND/module/refs/heads/main/Unicom_Widget.JS
 
 widgets:
