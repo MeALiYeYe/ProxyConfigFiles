@@ -20,7 +20,7 @@ jobs:
           files=(
             "https://gist.githubusercontent.com/MeALiYeYe/42151e8055f111208c92971fca6e25ce/raw/Egern.yaml Egern/Egern.yaml"
             "https://gist.githubusercontent.com/MeALiYeYe/42151e8055f111208c92971fca6e25ce/raw/Surge.conf Surge/Surge.conf"
-            "https://gist.githubusercontent.com/MeALiYeYe/42151e8055f111208c92971fca6e25ce/raw/openclash.yaml Mihomo/OpenWRT/openclash.yaml"
+            "https://gist.githubusercontent.com/MeALiYeYe/42151e8055f111208c92971fca6e25ce/raw/config.yaml Mihomo/config.yaml"
           )
 
           for file in "${files[@]}"; do
