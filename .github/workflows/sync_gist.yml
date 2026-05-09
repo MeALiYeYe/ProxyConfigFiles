@@ -18,9 +18,9 @@ jobs:
         run: |
           # 定义 Gist 列表：每行 "Gist Raw URL 目标路径"
           files=(
-            "https://gist.githubusercontent.com/MeALiYeYe/42151e8055f111208c92971fca6e25ce/raw/Egern.yaml Egern/Egern.yaml"
-            "https://gist.githubusercontent.com/MeALiYeYe/42151e8055f111208c92971fca6e25ce/raw/Surge.conf Surge/Surge.conf"
-            "https://gist.githubusercontent.com/MeALiYeYe/42151e8055f111208c92971fca6e25ce/raw/config.yaml Mihomo/config.yaml"
+            "https://gist.githubusercontent.com/MeALiYeYe/4cbe0732592fc2fe20e4ab29137c9290/raw/Egern.yaml Egern/Egern.yaml"
+            "https://gist.githubusercontent.com/MeALiYeYe/4cbe0732592fc2fe20e4ab29137c9290/raw/Surge.conf Surge/Surge.conf"
+            "https://gist.githubusercontent.com/MeALiYeYe/4cbe0732592fc2fe20e4ab29137c9290/raw/config.yaml Mihomo/config.yaml"
           )
 
           for file in "${files[@]}"; do
