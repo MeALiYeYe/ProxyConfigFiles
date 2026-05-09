@@ -11,3 +11,5 @@ DOMAIN-SUFFIX,nya.fish
 DOMAIN-SUFFIX,tnlhblnt20251207.space
 DOMAIN-SUFFIX,skybridge.cc
 DOMAIN-SUFFIX,xiaoyakankan.com
+
+IP-CIDR,16.163.175.48/32,no-resolve
