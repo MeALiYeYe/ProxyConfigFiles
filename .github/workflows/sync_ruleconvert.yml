@@ -1,4 +1,4 @@
-name: Ultimate Sync_ruleconvert
+name: Sync_ruleconvert
 
 on:
   workflow_dispatch:
