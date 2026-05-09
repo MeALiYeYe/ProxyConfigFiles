@@ -1,4 +1,4 @@
-name: Sync Multiple Gists to Repo
+name: Sync Gists
 
 on:
   schedule:
