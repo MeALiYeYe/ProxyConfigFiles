@@ -250,14 +250,14 @@ rule-providers:
     <<: *dom
     path: ./rules/emby.mrs
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Emby/Emby.mrs"
-  anti-ip-attribution:
+  fakelocation:
     <<: *dom
-    path: ./rules/anti-ip-attribution.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/anti-ip-attribution/anti-ip-attribution.mrs"
-  anti-ip-attribution_ip:
+    path: ./rules/FakeLocation.mrs
+    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/FakeLocation/FakeLocation.mrs"
+  fakelocation_ip:
     <<: *ipc
-    path: ./rules/anti-ip-attribution_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/anti-ip-attribution/anti-ip-attribution_ip.mrs"
+    path: ./rules/FakeLocation_ip.mrs
+    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/FakeLocation/FakeLocation_ip.mrs"
   
   private:
     <<: *dom
@@ -347,7 +347,7 @@ rule-providers:
 # 路由规则
 rules:
   # STUN
-- AND,((NETWORK,udp),(DST-PORT,443/3478-3479/5349-5350/19302-19309)),REJECT-DROP
+- AND,((NETWORK,udp),(DST-PORT,3478-3479/5349-5350/19302-19309)),REJECT-DROP
   # Tracker
 - DST-PORT,1337/2710/6881-6999/7777,REJECT-DROP
   # NTP
@@ -365,8 +365,8 @@ rules:
 - RULE-SET,mydirect_ip,Domestic,no-resolve
 - RULE-SET,myproxy,Foreign
 - RULE-SET,myproxy_ip,Foreign,no-resolve
-- RULE-SET,anti-ip-attribution,Location
-- RULE-SET,anti-ip-attribution_ip,Location,no-resolve
+- RULE-SET,fakelocation,Location
+- RULE-SET,fakelocation_ip,Location,no-resolve
 - RULE-SET,emby,Emby
 - RULE-SET,youtube,Youtube
 - RULE-SET,entertainment,Media
@@ -486,6 +486,8 @@ dns:
   default-nameserver:
   - 223.5.5.5
   - 223.6.6.6
+  - 1.1.1.1
+  - 1.0.0.1
   cndns: &cndns
   - 'https://dns.alidns.com/dns-query#DIRECT'
   - 'quic://dns.alidns.com#DIRECT'
