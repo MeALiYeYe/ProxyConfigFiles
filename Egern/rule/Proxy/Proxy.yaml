@@ -1,3 +1,4 @@
+no_resolve: true
 domain_suffix_set:
   - immortalwrt.org
   - metacubex.one
@@ -12,3 +13,5 @@ domain_set:
   - board.zash.run.place
   - liangxin.xyz
   - wiki.repcz.link
+ip_cidr_set:
+  - 16.163.175.48/32
