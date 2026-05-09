@@ -143,11 +143,3 @@ rule-providers:
     path: ./ruleset/WebRTC_ip.mrs
     interval: 86400
 
-  anti-ip-attribution_ip:
-    type: http
-    behavior: ipcidr
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/anti-ip-attribution/anti-ip-attribution_ip.mrs
-    path: ./ruleset/anti-ip-attribution_ip.mrs
-    interval: 86400
-
