@@ -1,4 +1,4 @@
-name: Rules-Convert
+name: sync_rule
 
 on:
   workflow_dispatch:
