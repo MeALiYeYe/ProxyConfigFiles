@@ -1,4 +1,4 @@
-name: sync_rule
+name: Sync_rule
 
 on:
   workflow_dispatch:
