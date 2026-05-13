@@ -1,5 +1,6 @@
 SubStoreUrl: &SubStoreUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
 VpsUrl: &VpsUrl "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
+CFTunnelUrl: &CFTunnelUrl "http://127.0.0.1:3000/download/CF?target=ClashMeta"
 BaiduUrl: &BaiduUrl "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/BaiduProxy.yaml"
 
 # 延迟测试链接
@@ -29,8 +30,6 @@ Proxyer: &Proxyer
     enable: true
     url: *ProxyTest
     interval: 600
-#  override:
-#    dialer-proxy: Location
   header:
     User-Agent:  # 使用注释法由上到下 默认使用第一个
     - "ClashMetaForAndroid/2.11.2.Meta"
@@ -41,9 +40,7 @@ Proxyer: &Proxyer
 
 Smartp: &Smartp
   type: smart
-  use:
-  - SubStore
-  - Vps
+  include-all-providers: true
   policy-priority:
   - '(?<![\d.])0\.\d+(?!\d):1.3'
   - '(?<![\d.])1\.\d+(?!\d):0.8'
@@ -53,14 +50,6 @@ Smartp: &Smartp
   prefer-asn: true
   max-failed-times: 3
   url: *ProxyTest
-  hidden: true
-
-Falld: &Falld
-  type: fallback
-  use:
-  - BaiduProxy
-  interval: 3600
-  url: *DirecTest
   hidden: true
 
 Groupp: &Groupp
@@ -73,7 +62,8 @@ Groupp: &Groupp
   - 日本
   - 美国
   - 低倍
-  - 高倍
+  - 自由
+  - 民主
   url: *ProxyTest
   lazy: true
   hidden: false
@@ -94,7 +84,7 @@ rule-anchor:
   cla: &cla
     type: http
     behavior: classical
-
+    format: yaml
     interval: 86400
   dom: &dom
     type: http
@@ -113,6 +103,8 @@ proxies:
 - name: 直连
   type: direct
   udp: true
+- name: DNS_Hijack
+  type: dns
 
 # 代理集
 proxy-providers:
@@ -124,10 +116,18 @@ proxy-providers:
     <<: *Proxyer
     path: ./proxies/Vps.yaml
     url: *VpsUrl
+  CFTunnel:
+    <<: *Proxyer
+    path: ./proxies/CFTunnel.yaml
+    url: *CFTunnelUrl
   BaiduProxy:
     <<: *Proxyer
     path: ./proxies/BaiduProxy.yaml
     url: *BaiduUrl
+    health-check:
+      enable: true
+      url: *DirecTest
+      interval: 600
 
 # 代理组
 proxy-groups:
@@ -137,6 +137,9 @@ proxy-groups:
 - name: Domestic
   <<: *Groupd
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Domestic.png"
+- name: DNSServer
+  <<: *Groupp
+  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/NAS(2).png"
 - name: Emby
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Emby.png"
@@ -175,15 +178,18 @@ proxy-groups:
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Final.png"
 
 - name: 江苏
-  <<: *Falld
+  <<: *Smartp
+  url: *DirecTest
   filter: "南京|苏州"
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(1).png"
 - name: 广东
-  <<: *Falld
+  <<: *Smartp
+  url: *DirecTest
   filter: "广州"
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(2).png"
 - name: 北京
-  <<: *Falld
+  <<: *Smartp
+  url: *DirecTest
   filter: "北京|保定"
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(3).png"
 
@@ -211,10 +217,15 @@ proxy-groups:
   <<: *Smartp
   filter: *FilterLow
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/liuliang(2).png"
-- name: 高倍
+
+- name: 自由
   <<: *Smartp
-  filter: *FilterHigh
-  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/liuliang(3).png"
+  filter: (?i)(?:vps|自建)
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png"
+- name: 民主
+  <<: *Smartp
+  filter: (?i)(?:CF|优选|反代)
+  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/jichang.png"
 
 # 规则集
 rule-providers:
@@ -346,6 +357,8 @@ rule-providers:
 
 # 路由规则
 rules:
+- DST-PORT,53,DNS_Hijack
+- DST-PORT,853,DNSServer
   # STUN
 - AND,((NETWORK,udp),(DST-PORT,3478-3479/5349-5350/19302-19309)),REJECT-DROP
   # Tracker
@@ -492,8 +505,8 @@ dns:
   - 'https://dns.alidns.com/dns-query#DIRECT'
   - 'quic://dns.alidns.com#DIRECT'
   cgdns: &cgdns
-  - 'https://dns.google/dns-query#Google'
-  - 'https://cloudflare-dns.com/dns-query#Cloudflare'
+  - 'https://dns.google/dns-query#DNSServer'
+  - 'https://cloudflare-dns.com/dns-query#DNSServer'
   direct-nameserver:
   - 223.5.5.5
   - 223.6.6.6
