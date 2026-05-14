@@ -62,6 +62,7 @@ Groupp: &Groupp
   - 日本
   - 美国
   - 低倍
+  - 高倍
   - 自由
   - 民主
   url: *ProxyTest
@@ -143,6 +144,9 @@ proxy-groups:
 - name: Emby
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Emby.png"
+- name: Tiktok
+  <<: *Groupp
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok.png"  
 - name: Youtube
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/YouTube.png"
@@ -217,6 +221,10 @@ proxy-groups:
   <<: *Smartp
   filter: *FilterLow
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/liuliang(2).png"
+- name: 高倍
+  <<: *Smartp
+  filter: *FilterHigh
+  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/liuliang(3).png"
 
 - name: 自由
   <<: *Smartp
@@ -273,11 +281,11 @@ rule-providers:
   private:
     <<: *dom
     path: ./rules/private.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geosite/private.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/private.mrs"
   private_ip:
     <<: *ipc
     path: ./rules/private_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geoip/private.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/private.mrs"
   googlefcm:
     <<: *dom
     path: ./rules/googlefcm.mrs
@@ -290,10 +298,14 @@ rule-providers:
     <<: *dom
     path: ./rules/httpdns-cn.mrs
     url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-httpdns-cn.mrs"
+  tiktok:
+    <<: *dom
+    path: ./rules/tiktok.mrs
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/tiktok.mrs"
   youtube:
     <<: *dom
     path: ./rules/youtube.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geosite/youtube.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/youtube.mrs"
   entertainment:
     <<: *dom
     path: ./rules/entertainment.mrs
@@ -301,27 +313,27 @@ rule-providers:
   telegram:
     <<: *dom
     path: ./rules/telegram.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geosite/telegram.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/telegram.mrs"
   telegram_ip:
     <<: *ipc
     path: ./rules/telegram_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geoip/telegram.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/telegram.mrs"
   google:
     <<: *dom
     path: ./rules/google.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geosite/google.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google.mrs"
   google_ip:
     <<: *ipc
     path: ./rules/google_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geoip/google.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/google.mrs"
   cloudflare:
     <<: *dom
     path: ./rules/cloudflare.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geosite/cloudflare.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/cloudflare.mrs"
   cloudflare_ip:
     <<: *ipc
     path: ./rules/cloudflare_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geoip/cloudflare.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/cloudflare.mrs"
   ai-chat-!cn:
     <<: *dom
     path: ./rules/ai-chat-!cn.mrs
@@ -329,7 +341,7 @@ rule-providers:
   github:
     <<: *dom
     path: ./rules/github.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geosite/github.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/github.mrs"
   apple:
     <<: *dom
     path: ./rules/apple.mrs
@@ -341,7 +353,7 @@ rule-providers:
   microsoft:
     <<: *dom
     path: ./rules/microsoft.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geosite/microsoft.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft.mrs"
   geolocation-!cn:
     <<: *dom
     path: ./rules/geolocation-!cn.mrs
@@ -349,11 +361,11 @@ rule-providers:
   cn:
     <<: *dom
     path: ./rules/cn.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geosite/cn.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/cn.mrs"
   cn_ip:
     <<: *ipc
     path: ./rules/cn_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geoip/cn.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/cn.mrs"
 
 # 路由规则
 rules:
@@ -381,6 +393,7 @@ rules:
 - RULE-SET,fakelocation,Location
 - RULE-SET,fakelocation_ip,Location,no-resolve
 - RULE-SET,emby,Emby
+- RULE-SET,tiktok,Tiktok
 - RULE-SET,youtube,Youtube
 - RULE-SET,entertainment,Media
 - RULE-SET,telegram,Telegram
@@ -394,9 +407,9 @@ rules:
 - RULE-SET,apple,Apple
 - RULE-SET,apple_ip,Apple,no-resolve
 - RULE-SET,microsoft,Microsoft
+- RULE-SET,geolocation-!cn,Foreign
 - RULE-SET,cn,Domestic
 - RULE-SET,cn_ip,Domestic,no-resolve
-- RULE-SET,geolocation-!cn,Foreign
 - MATCH,Final
 
 #######################################
