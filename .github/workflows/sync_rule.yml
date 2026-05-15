@@ -6,8 +6,7 @@ on:
     - cron: '0 0 * * *'
   push:
     paths:
-      - 'Surge/rule/**'
-      - 'Mihomo/rule/**.yaml'
+      - 'rules/**'
 
 concurrency:
   group: rules-pipeline
@@ -21,13 +20,13 @@ jobs:
       - uses: actions/checkout@v5
 
       ################################
-      # 1️⃣ Sync External Rules
+      # 1️⃣ Sync External Rules → rules/
       ################################
       - name: Sync rules
         run: |
           set -e
 
-          mkdir -p Surge/rule
+          mkdir -p rules
 
           declare -A RULES=(
             ["FakeLocation"]="https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/main/generated/surge.list"
@@ -35,59 +34,84 @@ jobs:
             ["Reject"]="https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Surge-RULE-SET.list"
           )
 
-          changed=0
-
           for name in "${!RULES[@]}"; do
-
             url="${RULES[$name]}"
-            dir="Surge/rule/$name"
-            target="$dir/$name.list"
+            dir="rules/$name"
+            target="$dir/$name.src"
 
             mkdir -p "$dir"
 
             echo "Fetching $name..."
-            tmp=$(mktemp)
+            curl -L --retry 3 --connect-timeout 10 "$url" -o "$target"
+          done
 
-            curl -L \
-              --retry 3 \
-              --connect-timeout 10 \
-              "$url" \
-              -o "$tmp"
+      ################################
+      # 2️⃣ Normalize
+      ################################
+      - name: Normalize rules
+        run: |
+          set -e
 
-            if [ -f "$target" ]; then
-              echo "Merging with existing: $name"
+          mkdir -p tmp/normalized
 
-              merged=$(mktemp)
+          convert_yaml() {
+            input="$1"
+            output="$2"
 
-              # 合并 + 去重 + 去空行 + 去注释
-              cat "$target" "$tmp" \
-                | sed '/^#/d;/^$/d' \
-                | sort -u > "$merged"
+            sed '1d' "$input" | sed 's/^- //' | while read -r line; do
 
-              if cmp -s "$target" "$merged"; then
-                echo "No change after merge: $name"
-                rm -f "$tmp" "$merged"
+              # Mihomo classical（完整规则）
+              if echo "$line" | grep -qE '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD|DOMAIN-WILDCARD|DOMAIN-REGEX|IP-CIDR|IP-CIDR6|GEOIP|PROTOCOL),'; then
+                echo "$line"
+
+              elif echo "$line" | grep -q '^\+\.'; then
+                echo "DOMAIN-SUFFIX,${line#+.}"
+
+              elif echo "$line" | grep -q '/'; then
+                echo "IP-CIDR,$line"
+
               else
-                mv "$merged" "$target"
-                rm -f "$tmp"
-                echo "Merged & Updated: $target"
-                changed=1
+                echo "DOMAIN,$line"
               fi
 
+            done > "$output"
+          }
+
+          normalize_file() {
+            input="$1"
+            output="$2"
+
+            if grep -q '^payload:' "$input"; then
+              echo "[YAML] $input"
+              convert_yaml "$input" "$output"
             else
-              mv "$tmp" "$target"
-              echo "Created: $target"
-              changed=1
+              echo "[SURGE] $input"
+              sed '/^#/d;/^$/d' "$input" > "$output"
+            fi
+          }
+
+          find rules -type f | while read -r file; do
+
+            rel="${file#rules/}"
+            out="tmp/normalized/${rel%.*}.list"
+
+            mkdir -p "$(dirname "$out")"
+
+            tmp=$(mktemp)
+
+            normalize_file "$file" "$tmp"
+
+            if [ -f "$out" ]; then
+              cat "$out" "$tmp" | sed '/^#/d;/^$/d' | sort -u > "${out}.new"
+              mv "${out}.new" "$out"
+            else
+              mv "$tmp" "$out"
             fi
 
           done
 
-          if [ "$changed" -eq 0 ]; then
-            echo "No updates"
-          fi
-
       ################################
-      # 2️⃣ Generate Rules
+      # 3️⃣ Generate Rules
       ################################
       - name: Generate rules
         run: |
@@ -101,7 +125,7 @@ jobs:
 
           while read -r file; do
 
-            rel_path="${file#Surge/rule/}"
+            rel_path="${file#tmp/normalized/}"
             name="${rel_path%.list}"
 
             tmp=$(mktemp)
@@ -264,7 +288,7 @@ jobs:
               grep '^PROTOCOL,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
             fi
 
-          done < <(find Surge/rule -type f -name '*.list')
+          done < <(find tmp/normalized -type f -name '*.list')
 
       ################################
       # 3️⃣ Download Mihomo
