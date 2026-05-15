@@ -32,7 +32,7 @@ jobs:
           declare -A RULES=(
             ["FakeLocation"]="https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/main/generated/surge.list"
             ["Direct"]="https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Direct/Direct.list"
-            
+            ["Reject"]="https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Surge-RULE-SET.list"
           )
 
           changed=0
