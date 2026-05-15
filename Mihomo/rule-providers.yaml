@@ -1,4 +1,12 @@
 rule-providers:
+  Black7Direct:
+    type: http
+    behavior: domain
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Black7Direct/Black7Direct.mrs
+    path: ./ruleset/Black7Direct.mrs
+    interval: 86400
+
   Direct:
     type: http
     behavior: domain
