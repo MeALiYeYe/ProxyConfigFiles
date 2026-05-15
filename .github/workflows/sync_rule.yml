@@ -129,7 +129,16 @@ jobs:
           while read -r file; do
 
             rel_path="${file#tmp/normalized/}"
-            name=$(basename "${rel_path%.list}")
+
+            dir=$(dirname "$rel_path")
+            base=$(basename "$rel_path" .list)
+
+            # 如果在根目录，避免 ./ 问题
+            if [ "$dir" = "." ]; then
+              name="$base"
+            else
+              name="$dir/$base"
+            fi
 
             tmp=$(mktemp)
 
