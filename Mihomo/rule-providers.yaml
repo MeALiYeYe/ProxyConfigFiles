@@ -1,28 +1,4 @@
 rule-providers:
-  Black7Direct:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Black7Direct/Black7Direct.mrs
-    path: ./ruleset/Black7Direct.mrs
-    interval: 86400
-
-  Direct:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct copy/Direct.mrs
-    path: ./ruleset/Direct.mrs
-    interval: 86400
-
-  Direct_ip:
-    type: http
-    behavior: ipcidr
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct copy/Direct_ip.mrs
-    path: ./ruleset/Direct_ip.mrs
-    interval: 86400
-
   Direct:
     type: http
     behavior: domain
@@ -37,22 +13,6 @@ rule-providers:
     format: mrs
     url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Emby/Emby.mrs
     path: ./ruleset/Emby.mrs
-    interval: 86400
-
-  FakeLocation:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/FakeLocation copy/FakeLocation.mrs
-    path: ./ruleset/FakeLocation.mrs
-    interval: 86400
-
-  FakeLocation_ip:
-    type: http
-    behavior: ipcidr
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/FakeLocation copy/FakeLocation_ip.mrs
-    path: ./ruleset/FakeLocation_ip.mrs
     interval: 86400
 
   FakeLocation:
@@ -85,22 +45,6 @@ rule-providers:
     format: mrs
     url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy/Proxy_ip.mrs
     path: ./ruleset/Proxy_ip.mrs
-    interval: 86400
-
-  Reject:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject copy/Reject.mrs
-    path: ./ruleset/Reject.mrs
-    interval: 86400
-
-  Reject_ip:
-    type: http
-    behavior: ipcidr
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject copy/Reject_ip.mrs
-    path: ./ruleset/Reject_ip.mrs
     interval: 86400
 
   Reject:
