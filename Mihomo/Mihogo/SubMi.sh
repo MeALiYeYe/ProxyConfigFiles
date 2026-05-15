@@ -382,17 +382,36 @@ deploy_mihomo() {
 
     chmod +x mihomo
 
-    # 模型选择
+     # 模型选择
     choose_model
-    safe_wget "$MODEL_URL" "Model.bin"
-
     choose_config
     safe_wget "$FINAL_CONFIG_URL" "config.yaml"
 
-    for item in "${GEO_FILES[@]}"; do
-        IFS=',' read -r dest src <<< "$item"
-        safe_wget "$src" "$dest"
-    done
+    # Model.bin + GEO_FILES 下载处理
+    if [ "${#GEO_FILES[@]}" -gt 0 ] || [ -n "${MODEL_URL:-}" ]; then
+        # 非交互模式：AUTO_DOWNLOAD_GEO=1 或 CI=true
+        if [ "${AUTO_DOWNLOAD_GEO:-0}" -eq 1 ] || [ "${CI:-0}" = true ]; then
+            log_info "自动下载 Model.bin 和 GEO 文件..."
+            [ -n "${MODEL_URL:-}" ] && safe_wget "$MODEL_URL" "Model.bin"
+            for item in "${GEO_FILES[@]}"; do
+                IFS=',' read -r dest src <<< "$item"
+                safe_wget "$src" "$dest"
+            done
+        else
+            # 交互模式
+            echo -n "是否下载 Model.bin 和 GEO 文件？(y/N): "
+            read -r confirm
+            if [[ "$confirm" =~ ^[Yy]$ ]]; then
+                [ -n "${MODEL_URL:-}" ] && safe_wget "$MODEL_URL" "Model.bin"
+                for item in "${GEO_FILES[@]}"; do
+                    IFS=',' read -r dest src <<< "$item"
+                    safe_wget "$src" "$dest"
+                done
+            else
+                log_warn "跳过 Model.bin 和 GEO 文件下载"
+            fi
+        fi
+    fi
 }
 
 start_mihomo() {
