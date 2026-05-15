@@ -37,12 +37,22 @@ jobs:
           for name in "${!RULES[@]}"; do
             url="${RULES[$name]}"
             dir="rules/$name"
-            target="$dir/$name.list"
+            target="$dir/$name.ex"
 
             mkdir -p "$dir"
 
             echo "Fetching $name..."
-            curl -L --retry 3 --connect-timeout 10 "$url" -o "$target"
+
+            tmp=$(mktemp)
+
+            curl -L --retry 3 --connect-timeout 10 "$url" -o "$tmp"
+
+            {
+              echo "# source: $url"
+              cat "$tmp"
+            } > "$target"
+
+            rm -f "$tmp"
           done
 
       ################################
@@ -54,13 +64,15 @@ jobs:
 
           mkdir -p tmp/normalized
 
+          ################################
+          # YAML → Mihomo classical
+          ################################
           convert_yaml() {
             input="$1"
             output="$2"
 
             sed '1d' "$input" | sed 's/^- //' | while read -r line; do
 
-              # Mihomo classical（完整规则）
               if echo "$line" | grep -qE '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD|DOMAIN-WILDCARD|DOMAIN-REGEX|IP-CIDR|IP-CIDR6|GEOIP|PROTOCOL),'; then
                 echo "$line"
 
@@ -77,23 +89,48 @@ jobs:
             done > "$output"
           }
 
+          ################################
+          # 单文件 normalize
+          ################################
           normalize_file() {
             input="$1"
             output="$2"
 
-            if grep -q '^payload:' "$input"; then
+            tmp_input=$(mktemp)
+
+            # ✅ 去掉来源标记
+            sed '/^# source:/d' "$input" > "$tmp_input"
+
+            # ✅ 自动识别 YAML（不依赖扩展名）
+            if grep -q '^payload:' "$tmp_input"; then
               echo "[YAML] $input"
-              convert_yaml "$input" "$output"
+              convert_yaml "$tmp_input" "$output"
+
             else
-              echo "[SURGE] $input"
-              sed '/^#/d;/^$/d' "$input" > "$output"
+              echo "[TEXT] $input"
+              sed '/^#/d;/^$/d' "$tmp_input" > "$output"
             fi
+
+            rm -f "$tmp_input"
           }
 
-          find rules -type f | while read -r file; do
+          ################################
+          # 处理规则文件
+          ################################
+          find rules -type f \
+            ! -path "*/\.*" \
+            ! -name "*.md" \
+            ! -name "*.png" \
+            ! -name "*.jpg" \
+            ! -name "*.jpeg" \
+            ! -name "*.webp" \
+            | while read -r file; do
 
             rel="${file#rules/}"
-            out="tmp/normalized/${rel%.*}.list"
+
+            # 🔥 忽略扩展名 → 同名自动合并
+            base="${rel%.*}"
+            out="tmp/normalized/${base}.list"
 
             mkdir -p "$(dirname "$out")"
 
