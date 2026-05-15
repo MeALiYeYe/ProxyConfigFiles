@@ -22,6 +22,7 @@ DOMAIN,dl.l.google.com
 DOMAIN,eco-push-api-client.meiqia.com
 DOMAIN,errlog.umeng.com
 DOMAIN,fairplay.l.qq.com
+DOMAIN,ifconfig.me
 DOMAIN,image.maimn.com
 DOMAIN,img.bfzypic.com
 DOMAIN,img.ffzypic.com
@@ -29,6 +30,7 @@ DOMAIN,img.kuaikanzy.net
 DOMAIN,img.liangzipic.com
 DOMAIN,init.ess.apple.com
 DOMAIN,itunes.apple.com
+DOMAIN,kahaoquan.com
 DOMAIN,lain.bgm.tv
 DOMAIN,livew.l.qq.com
 DOMAIN,log.mmstat.com
@@ -44,6 +46,7 @@ DOMAIN,rewards.hypixel.net
 DOMAIN,sdk.alibaba.com.ailbaba.me
 DOMAIN,smp-device-content.apple.com
 DOMAIN,static.jssp.tv
+DOMAIN,subcdn.rtx.al
 DOMAIN,sycm.mmstat.com
 DOMAIN,tiao.cjkypo.com
 DOMAIN,time.apple.com
@@ -137,6 +140,7 @@ DOMAIN-SUFFIX,dxdhd.com
 DOMAIN-SUFFIX,eastgame.org
 DOMAIN-SUFFIX,empornium.me
 DOMAIN-SUFFIX,et8.org
+DOMAIN-SUFFIX,eu.cc
 DOMAIN-SUFFIX,exoticaz.to
 DOMAIN-SUFFIX,f.video.weibocdn.com
 DOMAIN-SUFFIX,familyds.com
@@ -147,6 +151,12 @@ DOMAIN-SUFFIX,fus.cdn.krcom.cn
 DOMAIN-SUFFIX,gazellegames.net
 DOMAIN-SUFFIX,gfxpeers.net
 DOMAIN-SUFFIX,googletraveladservices.com
+DOMAIN-SUFFIX,gwm-mn.beantechyun.com
+DOMAIN-SUFFIX,gwm.cn
+DOMAIN-SUFFIX,gwm.com.cn
+DOMAIN-SUFFIX,gwmapp-h.com
+DOMAIN-SUFFIX,gwmapp-w.com
+DOMAIN-SUFFIX,haval.com.cn
 DOMAIN-SUFFIX,hd-space.org
 DOMAIN-SUFFIX,hd4.xyz
 DOMAIN-SUFFIX,hd4fans.org
@@ -191,8 +201,10 @@ DOMAIN-SUFFIX,nanyangpt.com
 DOMAIN-SUFFIX,nature.com
 DOMAIN-SUFFIX,ncore.cc
 DOMAIN-SUFFIX,nebulance.io
+DOMAIN-SUFFIX,newsntp.net
 DOMAIN-SUFFIX,nicept.net
 DOMAIN-SUFFIX,npupt.com
+DOMAIN-SUFFIX,nsloon.com
 DOMAIN-SUFFIX,ol.epicgames.com
 DOMAIN-SUFFIX,open.cd
 DOMAIN-SUFFIX,oppaiti.me
@@ -206,12 +218,16 @@ DOMAIN-SUFFIX,privatehd.to
 DOMAIN-SUFFIX,pterclub.com
 DOMAIN-SUFFIX,pthome.net
 DOMAIN-SUFFIX,ptsbao.club
+DOMAIN-SUFFIX,qiyoujiage.com
 DOMAIN-SUFFIX,redacted.ch
 DOMAIN-SUFFIX,researchgate.net
 DOMAIN-SUFFIX,sciencemag.org
 DOMAIN-SUFFIX,scopus.com
 DOMAIN-SUFFIX,sdbits.org
 DOMAIN-SUFFIX,skyey2.com
+DOMAIN-SUFFIX,sntp.dev
+DOMAIN-SUFFIX,sntp.me
+DOMAIN-SUFFIX,sntp.net
 DOMAIN-SUFFIX,soulvoice.club
 DOMAIN-SUFFIX,springer.com
 DOMAIN-SUFFIX,springernature.com
@@ -228,7 +244,12 @@ DOMAIN-SUFFIX,weather-analytics-events.apple.com
 DOMAIN-SUFFIX,weather-data.apple.com
 DOMAIN-SUFFIX,weather-map.apple.com
 DOMAIN-SUFFIX,wiley.com
+DOMAIN-SUFFIX,xianniu.cc
+DOMAIN-SUFFIX,xianniu.com
 DOMAIN-SUFFIX,xunlei.com
+IP-CIDR,156.224.76.1/24,no-resolve
+IP-CIDR,156.231.115.1/24,no-resolve
+IP-CIDR6,2401:b60:5:3c62:c3c3:8dfd:f6b9:1/112,no-resolve
 PROCESS-NAME,BaiduNetdisk_mac
 PROCESS-NAME,BitComet
 PROCESS-NAME,ClashX
