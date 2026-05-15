@@ -1,3 +1,14 @@
+#Title: AWAvenue Ads Rule
+#--------------------------------------
+#Total lines: 911
+#Version: 1.6.9-release
+#Update time: 2026-04-07 20:55:56 UTC+8
+#Update content: add domain #206
+
+#Homepage: https://github.com/TG-Twilight/AWAvenue-Ads-Rule
+#License: https://github.com/TG-Twilight/AWAvenue-Ads-Rule/blob/main/LICENSE
+
+
 DOMAIN,1500020991.vodplayer.wxamedia.com
 DOMAIN,1500022744.vodplayer.wxamedia.com
 DOMAIN,1500026601.vodplayer.wxamedia.com

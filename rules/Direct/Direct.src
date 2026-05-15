@@ -1,3 +1,13 @@
+# NAME: Direct
+# AUTHOR: blackmatrix7
+# REPO: https://github.com/blackmatrix7/ios_rule_script
+# UPDATED: 2025-08-12 02:08:14
+# DOMAIN: 56
+# DOMAIN-KEYWORD: 36
+# DOMAIN-SUFFIX: 139
+# PROCESS-NAME: 36
+# USER-AGENT: 1
+# TOTAL: 268
 DOMAIN,ad.10010.com
 DOMAIN,ad.12306.cn
 DOMAIN,ain.bgm.tv
@@ -229,6 +239,7 @@ DOMAIN-KEYWORD,wb_ad
 DOMAIN-KEYWORD,weather-adge.apple.com
 DOMAIN-KEYWORD,weather-edge.apple.com
 DOMAIN-KEYWORD,westlawchina
+USER-AGENT,%E8%BF%85%E9%9B%B7
 PROCESS-NAME,BaiduNetdisk_mac
 PROCESS-NAME,BitComet
 PROCESS-NAME,ClashX
@@ -265,4 +276,3 @@ PROCESS-NAME,trojan-go
 PROCESS-NAME,uTorrent
 PROCESS-NAME,v2ray
 PROCESS-NAME,xray
-USER-AGENT,%E8%BF%85%E9%9B%B7
