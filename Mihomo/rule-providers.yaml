@@ -7,6 +7,14 @@ rule-providers:
     path: ./ruleset/Direct.mrs
     interval: 86400
 
+  Direct_ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct/Direct_ip.mrs
+    path: ./ruleset/Direct_ip.mrs
+    interval: 86400
+
   Emby:
     type: http
     behavior: domain

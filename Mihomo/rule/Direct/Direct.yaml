@@ -23,6 +23,7 @@ payload:
   - eco-push-api-client.meiqia.com
   - errlog.umeng.com
   - fairplay.l.qq.com
+  - ifconfig.me
   - image.maimn.com
   - img.bfzypic.com
   - img.ffzypic.com
@@ -30,6 +31,7 @@ payload:
   - img.liangzipic.com
   - init.ess.apple.com
   - itunes.apple.com
+  - kahaoquan.com
   - lain.bgm.tv
   - livew.l.qq.com
   - log.mmstat.com
@@ -45,6 +47,7 @@ payload:
   - sdk.alibaba.com.ailbaba.me
   - smp-device-content.apple.com
   - static.jssp.tv
+  - subcdn.rtx.al
   - sycm.mmstat.com
   - tiao.cjkypo.com
   - time.apple.com
@@ -102,6 +105,7 @@ payload:
   - +.eastgame.org
   - +.empornium.me
   - +.et8.org
+  - +.eu.cc
   - +.exoticaz.to
   - +.f.video.weibocdn.com
   - +.familyds.com
@@ -112,6 +116,12 @@ payload:
   - +.gazellegames.net
   - +.gfxpeers.net
   - +.googletraveladservices.com
+  - +.gwm-mn.beantechyun.com
+  - +.gwm.cn
+  - +.gwm.com.cn
+  - +.gwmapp-h.com
+  - +.gwmapp-w.com
+  - +.haval.com.cn
   - +.hd-space.org
   - +.hd4.xyz
   - +.hd4fans.org
@@ -156,8 +166,10 @@ payload:
   - +.nature.com
   - +.ncore.cc
   - +.nebulance.io
+  - +.newsntp.net
   - +.nicept.net
   - +.npupt.com
+  - +.nsloon.com
   - +.ol.epicgames.com
   - +.open.cd
   - +.oppaiti.me
@@ -171,12 +183,16 @@ payload:
   - +.pterclub.com
   - +.pthome.net
   - +.ptsbao.club
+  - +.qiyoujiage.com
   - +.redacted.ch
   - +.researchgate.net
   - +.sciencemag.org
   - +.scopus.com
   - +.sdbits.org
   - +.skyey2.com
+  - +.sntp.dev
+  - +.sntp.me
+  - +.sntp.net
   - +.soulvoice.club
   - +.springer.com
   - +.springernature.com
@@ -193,4 +209,6 @@ payload:
   - +.weather-data.apple.com
   - +.weather-map.apple.com
   - +.wiley.com
+  - +.xianniu.cc
+  - +.xianniu.com
   - +.xunlei.com
