@@ -37,7 +37,7 @@ jobs:
           for name in "${!RULES[@]}"; do
             url="${RULES[$name]}"
             dir="rules/$name"
-            target="$dir/$name.src"
+            target="$dir/$name.list"
 
             mkdir -p "$dir"
 
