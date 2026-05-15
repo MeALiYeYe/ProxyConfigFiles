@@ -13,7 +13,7 @@ SHELL_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mih
 # mihomo核心地址
 MIHOMO_URL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-1383218.gz"
 # mihomo配置文件地址
-CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/OpenWRT/openclash.yaml"
+CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/config.yaml"
 # mihomo配置文件地址记录
 CONFIG_URL_FILE="$MIHOMO_DIR/config.url"
 # Geox地址
