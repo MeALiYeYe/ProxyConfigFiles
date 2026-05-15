@@ -31,7 +31,7 @@ jobs:
 
           declare -A RULES=(
             ["FakeLocation"]="https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/main/generated/surge.list"
-            ["Black7Direct"]="https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Direct/Direct.list"
+            ["Direct"]="https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Direct/Direct.list"
             
           )
 
@@ -54,12 +54,29 @@ jobs:
               "$url" \
               -o "$tmp"
 
-            if [ -f "$target" ] && cmp -s "$target" "$tmp"; then
-              echo "No change: $name"
-              rm -f "$tmp"
+            if [ -f "$target" ]; then
+              echo "Merging with existing: $name"
+
+              merged=$(mktemp)
+
+              # 合并 + 去重 + 去空行 + 去注释
+              cat "$target" "$tmp" \
+                | sed '/^#/d;/^$/d' \
+                | sort -u > "$merged"
+
+              if cmp -s "$target" "$merged"; then
+                echo "No change after merge: $name"
+                rm -f "$tmp" "$merged"
+              else
+                mv "$merged" "$target"
+                rm -f "$tmp"
+                echo "Merged & Updated: $target"
+                changed=1
+              fi
+
             else
               mv "$tmp" "$target"
-              echo "Updated: $target"
+              echo "Created: $target"
               changed=1
             fi
 
