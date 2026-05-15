@@ -121,12 +121,15 @@ jobs:
           mkdir -p Egern/rule
           mkdir -p "Quantumult X/rule"
 
+          # ✅ 防止历史残留
+          rm -rf Mihomo/rule/* Egern/rule/* "Quantumult X/rule"/*
+
           total_rules=0
 
           while read -r file; do
 
             rel_path="${file#tmp/normalized/}"
-            name="${rel_path%.list}"
+            name=$(basename "${rel_path%.list}")
 
             tmp=$(mktemp)
 
