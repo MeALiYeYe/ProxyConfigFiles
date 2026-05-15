@@ -1,15 +1,74 @@
+no_resolve: true
 domain_suffix_set:
   - 1rtb.com
+  - 2345.com
+  - 360.cn
+  - 360jie.com.cn
+  - 360totalsecurity.com
   - a.market.xiaomi.com
   - ad.gameley.com
+  - ad.mi.com
+  - ad.vivo.com.cn
+  - ad.xiaomi.com
+  - ad1.xiaomi.com
   - adintl.cn
+  - ads-drcn.platform.hicloud.com
+  - ads.huawei.com
+  - ads.vivo.com.cn
+  - adsfs.oppomobile.com
+  - adx.ads.oppomobile.com
   - adx.adwangmai.com
+  - analytics.miui.com
+  - analytics.vivo.com.cn
+  - api.ad.intl.xiaomi.com
+  - api.ad.xiaomi.com
+  - api.comm.miui.com
+  - app-measurement.com
+  - content.hicloud.com
+  - content.miui.com
+  - content.vivo.com.cn
+  - crashlytics.com
+  - data.ads.oppomobile.com
   - data.hicloud.com
+  - data.mistat.xiaomi.com
+  - duxiaoman.com
+  - dxmpay.com
+  - e-ad-monitor.huya.com
+  - e-stat.huya.com
+  - feed.hicloud.com
+  - feed.miui.com
+  - feed.oppomobile.com
+  - feed.vivo.com.cn
+  - firebaselogging.googleapis.com
+  - hao123.com
   - log.aliyuncs.com
+  - log.vivo.com.cn
+  - logservice.hicloud.com
+  - metric.huya.com
+  - metrics.data.hicloud.com
+  - monitor.vivo.com.cn
+  - p2p.huya.com
+  - qifu.tech
+  - rec.oppomobile.com
+  - rec.vivo.com.cn
+  - recommend.hicloud.com
+  - recommend.miui.com
+  - recommend.oppomobile.com
+  - recommend.vivo.com.cn
+  - sentry.io
+  - so.com
+  - statistics.oppomobile.com
+  - statwup.huya.com
+  - tracking.miui.com
   - ubixioe.com
+  - va.huya.com
   - vlion.cn
+  - xionguamaqui.com
+  - xjietiao.com
   - yfanads.com
+  - ylog.huya.com
   - zhangyuyidong.cn
+  - zhihu-web-analytics.zhihu.com
 domain_set:
   - 1500020991.vodplayer.wxamedia.com
   - 1500022744.vodplayer.wxamedia.com
@@ -202,6 +261,7 @@ domain_set:
   - analyticsengine.s3.amazonaws.com
   - analyze.lemurbrowser.com
   - andrqd.play.aiseet.atianqi.com
+  - anquan.baidu.com
   - ap.dongdianqiu.com
   - ap.dongqiudi.com
   - apd-pcdnwxlogin.teg.tencent-cloud.net
@@ -253,6 +313,7 @@ domain_set:
   - badjs.weixinbridge.com
   - baichuan-sdk.alicdn.com
   - baichuan-sdk.taobao.com
+  - baijiahao.baidu.com
   - bdad.123pan.cn
   - bdapi-ads.realmemobile.com
   - bdapi-in-ads.realmemobile.com
@@ -349,10 +410,12 @@ domain_set:
   - dsp-x.jd.com
   - dsp.fcbox.com
   - dualstack-logs.amap.com
+  - dumall.baidu.com
   - dxp.baidu.com
   - dyp2p-ali.douyucdn.cn
   - dyp2p-hw.douyucdn.cn
   - e.ad.xiaomi.com
+  - e.baidu.com
   - eclick.baidu.com
   - edge.ads.twitch.tv
   - ef-dongfeng.tanx.com
@@ -402,6 +465,7 @@ domain_set:
   - h5.analytics.126.net
   - h5.hpplay.com.cn
   - hanlanad.com
+  - haokan.baidu.com
   - hc-ssp.sm.cn
   - heads-ak.spotify.com.edgesuite.net
   - heads-fa.spotify.com
@@ -413,6 +477,7 @@ domain_set:
   - houyi.kkmh.com
   - hpplay.cdn.cibn.cc
   - httpdns.bcelive.com
+  - httpdns.bilivideo.com
   - httpdns.ocloud.oppomobile.com
   - hugelog.fcbox.com
   - huichuan-mc.sm.cn
@@ -456,6 +521,7 @@ domain_set:
   - ixav-cse.avlyun.com
   - iyfbodn.com
   - janapi.jd.com
+  - jiankang.baidu.com
   - jiguang.cn
   - jpush.cn
   - jpush.html5.qq.com
@@ -575,6 +641,7 @@ domain_set:
   - mssdk.zijieapi.com
   - mtj.baidu.com
   - nadvideo2.baidu.com
+  - news.baidu.com
   - newvoice.chiq5.smart-tv.cn
   - nex.163.com
   - nmetrics.samsung.com
@@ -864,6 +931,7 @@ domain_set:
   - w1.askwai.com
   - w1.gskwai.com
   - w1.kskwai.com
+  - wan.baidu.com
   - watson.microsoft.com
   - watson.telemetry.microsoft.com
   - wcp.taobao.com
@@ -894,7 +962,9 @@ domain_set:
   - xlog.jd.com
   - xlviiirdr.com
   - xlviirdr.com
+  - xueshu.baidu.com
   - xycdn.com
+  - yingxiao.baidu.com
   - yk-ssp-ad.cp31.ott.cibntv.net
   - yk-ssp.ad.youku.com
   - ykad-data.cp31.ott.cibntv.net
@@ -912,3 +982,25 @@ domain_keyword_set:
   - -ad.wtzw.com
   - -be-pack-sign.pglstatp-toutiao.com
   - -normal.zijieapi.com
+  - adserver
+  - adservice
+  - adsystem
+ip_cidr_set:
+  - 5.28.195.2/32
+  - 47.100.123.169/32
+  - 47.101.175.206/32
+  - 95.161.76.100/31
+  - 101.91.140.124/32
+  - 101.91.140.224/32
+  - 112.64.218.119/32
+  - 112.65.200.117/32
+  - 114.116.215.110/32
+  - 116.63.10.31/32
+  - 116.63.10.135/32
+  - 117.144.238.29/32
+  - 117.185.228.108/32
+  - 120.46.169.234/32
+  - 121.36.72.124/32
+  - 122.9.7.134/32
+  - 122.9.13.79/32
+  - 122.9.15.129/32
