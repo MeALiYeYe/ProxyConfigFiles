@@ -24,32 +24,80 @@ jobs:
       ################################
       - name: Expand @includes
         run: |
-            set -e
+          set -e
 
-            find rules -type f | while read -r file; do
-              tmp=$(mktemp)
+          expand_file() {
+            local file="$1"
+            local tmp=$(mktemp)
 
-              while IFS= read -r line || [ -n "$line" ]; do
+            while IFS= read -r line || [ -n "$line" ]; do
 
-                if echo "$line" | grep -q '^@https\?://'; then
-                  url="${line#@}"
-                  echo "# include: $url"
+              # ----------------------------------------
+              # @URL
+              # ----------------------------------------
+              if [[ "$line" =~ ^@https?:// ]]; then
+                url="${line#@}"
+                echo "# source: $url"
+                curl -L --retry 3 --connect-timeout 10 "$url" | awk '
+                  BEGIN { yaml=0 }
+                  /^payload:/ { yaml=1; next }
+                  yaml==1 { sub(/^- /,""); print; next }
+                  { print }
+                '
 
-                  curl -L --retry 3 --connect-timeout 10 "$url" | awk '
+              # ----------------------------------------
+              # 本地 @路径
+              # ----------------------------------------
+              elif [[ "$line" =~ ^@ ]]; then
+                path="${line#@}"
+                path="$(dirname "$file")/$path"
+                if [ -f "$path" ]; then
+                  echo "# include: $path"
+                  expand_file "$path"
+                else
+                  echo "Warning: local include $path not found" >&2
+                fi
+
+              # ----------------------------------------
+              # 注释 include/source
+              # ----------------------------------------
+              elif [[ "$line" =~ ^#\ (include|source): ]]; then
+                ref="${line#\#* }"
+                if [[ "$ref" =~ ^https?:// ]]; then
+                  echo "$line"
+                  curl -L --retry 3 --connect-timeout 10 "$ref" | awk '
                     BEGIN { yaml=0 }
                     /^payload:/ { yaml=1; next }
                     yaml==1 { sub(/^- /,""); print; next }
                     { print }
                   '
                 else
-                  # 普通行
-                  echo "$line"
-                fi
+                  path="$(dirname "$file")/$ref"
+                  if [ -f "$path" ]; then
+                    echo "$line"
+                    expand_file "$path"
+                  else
+                    echo "Warning: local include $path not found" >&2
+                  fi
 
-              done < "$file" > "$tmp"
+              # ----------------------------------------
+              # 普通行
+              # ----------------------------------------
+              else
+                echo "$line"
+              fi
 
-              mv "$tmp" "$file"
-            done
+            done < "$file" > "$tmp"
+
+            mv "$tmp" "$file"
+          }
+
+          export -f expand_file
+
+          # 遍历 rules 下所有文件
+          find rules -type f | while read -r file; do
+            expand_file "$file"
+          done
 
       ################################
       # 2️⃣ Normalize rules
