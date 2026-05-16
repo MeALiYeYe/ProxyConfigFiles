@@ -118,6 +118,8 @@ jobs:
             ! -name "*.webp" \
             | while read -r file; do
 
+            rel_path="${file#rules/}"         # 保留原 rules 下目录结构
+            dir_path=$(dirname "$rel_path")
             filename=$(basename "$file")
             filename="${filename%.ex}"  # 去掉 .ex 后缀
 
@@ -160,17 +162,12 @@ jobs:
 
           while read -r file; do
 
-            rel_path="${file#tmp/normalized/}"
-
-            dir=$(dirname "$rel_path")
+            rel_path="${file#tmp/normalized/}"   # 相对 tmp/normalized 目录
+            out_dir=$(dirname "$rel_path")       # 子目录
             base=$(basename "$rel_path" .list)
-
-            # 如果在根目录，避免 ./ 问题
-            if [ "$dir" = "." ]; then
-              name="$base"
-            else
-              name="$dir/$base"
-            fi
+            
+            name="$out_dir/$base"                # 保持子目录结构
+            [[ "$out_dir" == "." ]] && name="$base"
 
             tmp=$(mktemp)
 
