@@ -36,8 +36,11 @@ jobs:
           for name in "${!RULES[@]}"; do
             url="${RULES[$name]}"
             orig_file=$(basename "$url")
-            target="rules/${name}@${orig_file}.ex"
-            mkdir -p rules
+            # 去掉 .list 扩展名，如果有的话
+            base_orig="${orig_file%.list}"
+            target="rules/${name}/${name}@${base_orig}.ex"
+
+            mkdir -p "rules/$name"
 
             echo "Fetching $orig_file as $target..."
             tmp=$(mktemp)
