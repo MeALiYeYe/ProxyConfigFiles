@@ -3,6 +3,14 @@ rule-providers:
     type: http
     behavior: domain
     format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct.mrs
+    path: ./ruleset/Direct.mrs
+    interval: 86400
+
+  Direct:
+    type: http
+    behavior: domain
+    format: mrs
     url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct/Direct.mrs
     path: ./ruleset/Direct.mrs
     interval: 86400
@@ -15,12 +23,36 @@ rule-providers:
     path: ./ruleset/Direct_ip.mrs
     interval: 86400
 
+  Direct_ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct_ip.mrs
+    path: ./ruleset/Direct_ip.mrs
+    interval: 86400
+
+  Emby:
+    type: http
+    behavior: domain
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Emby.mrs
+    path: ./ruleset/Emby.mrs
+    interval: 86400
+
   Emby:
     type: http
     behavior: domain
     format: mrs
     url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Emby/Emby.mrs
     path: ./ruleset/Emby.mrs
+    interval: 86400
+
+  FakeLocation:
+    type: http
+    behavior: domain
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/FakeLocation.mrs
+    path: ./ruleset/FakeLocation.mrs
     interval: 86400
 
   FakeLocation:
@@ -39,6 +71,22 @@ rule-providers:
     path: ./ruleset/FakeLocation_ip.mrs
     interval: 86400
 
+  FakeLocation_ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/FakeLocation_ip.mrs
+    path: ./ruleset/FakeLocation_ip.mrs
+    interval: 86400
+
+  Proxy:
+    type: http
+    behavior: domain
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy.mrs
+    path: ./ruleset/Proxy.mrs
+    interval: 86400
+
   Proxy:
     type: http
     behavior: domain
@@ -55,6 +103,22 @@ rule-providers:
     path: ./ruleset/Proxy_ip.mrs
     interval: 86400
 
+  Proxy_ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy_ip.mrs
+    path: ./ruleset/Proxy_ip.mrs
+    interval: 86400
+
+  Reject:
+    type: http
+    behavior: domain
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject.mrs
+    path: ./ruleset/Reject.mrs
+    interval: 86400
+
   Reject:
     type: http
     behavior: domain
@@ -68,6 +132,14 @@ rule-providers:
     behavior: ipcidr
     format: mrs
     url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject/Reject_ip.mrs
+    path: ./ruleset/Reject_ip.mrs
+    interval: 86400
+
+  Reject_ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject_ip.mrs
     path: ./ruleset/Reject_ip.mrs
     interval: 86400
 
@@ -93,6 +165,38 @@ rule-providers:
     format: mrs
     url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Telegram/TelegramUS_ip.mrs
     path: ./ruleset/TelegramUS_ip.mrs
+    interval: 86400
+
+  TelegramEU_ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/TelegramEU_ip.mrs
+    path: ./ruleset/TelegramEU_ip.mrs
+    interval: 86400
+
+  TelegramSG_ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/TelegramSG_ip.mrs
+    path: ./ruleset/TelegramSG_ip.mrs
+    interval: 86400
+
+  TelegramUS_ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/TelegramUS_ip.mrs
+    path: ./ruleset/TelegramUS_ip.mrs
+    interval: 86400
+
+  WebRTC:
+    type: http
+    behavior: domain
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/WebRTC.mrs
+    path: ./ruleset/WebRTC.mrs
     interval: 86400
 
   WebRTC:
