@@ -38,7 +38,7 @@ jobs:
             orig_file=$(basename "$url")
             # 去掉 .list 扩展名，如果有的话
             base_orig="${orig_file%.list}"
-            target="rules/${name}/${name}@${base_orig}.ex"
+            target="rules/${name}/${name}@${orig_file}"
 
             mkdir -p "rules/$name"
 
@@ -117,7 +117,6 @@ jobs:
             rel_path="${file#rules/}"
             dir_path=$(dirname "$rel_path")
             filename=$(basename "$file")
-            filename="${filename%.ex}"
 
             if [[ "$filename" == *"@"* ]]; then
               base="${filename%%@*}"
