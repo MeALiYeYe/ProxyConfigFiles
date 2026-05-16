@@ -20,83 +20,78 @@ jobs:
       - uses: actions/checkout@v5
 
       ################################
-      # 1️⃣ Sync External Rules → rules
+      # 1️⃣ Expand @includes
       ################################
       - name: Expand @includes
         run: |
           set -e
 
           expand_file() {
-            local file="$1"
-            local tmp=$(mktemp)
+              local file="$1"
+              local tmp
+              tmp=$(mktemp)
 
-            while IFS= read -r line || [ -n "$line" ]; do
+              while IFS= read -r line || [ -n "$line" ]; do
+                  local url path ref
 
-              # ----------------------------------------
-              # @URL
-              # ----------------------------------------
-              if [[ "$line" =~ ^@https?:// ]]; then
-                url="${line#@}"
-                echo "# source: $url"
-                curl -L --retry 3 --connect-timeout 10 "$url" | awk '
-                  BEGIN { yaml=0 }
-                  /^payload:/ { yaml=1; next }
-                  yaml==1 { sub(/^- /,""); print; next }
-                  { print }
-                '
+                  # @URL
+                  if [[ "$line" =~ ^@https?:// ]]; then
+                      url="${line#@}"
+                      echo "# source: $url"
+                      curl -L --retry 3 --connect-timeout 10 "$url" | awk '
+                        BEGIN { yaml=0 }
+                        /^payload:/ { yaml=1; next }
+                        yaml==1 { sub(/^- /,""); print; next }
+                        { print }
+                      '
 
-              # ----------------------------------------
-              # 本地 @路径
-              # ----------------------------------------
-              elif [[ "$line" =~ ^@ ]]; then
-                path="${line#@}"
-                path="$(dirname "$file")/$path"
-                if [ -f "$path" ]; then
-                  echo "# include: $path"
-                  expand_file "$path"
-                else
-                  echo "Warning: local include $path not found" >&2
-                fi
+                  # 本地 @路径
+                  elif [[ "$line" =~ ^@ ]]; then
+                      path="${line#@}"
+                      path="$(dirname "$file")/$path"
+                      if [ -f "$path" ]; then
+                          echo "# include: $path"
+                          expand_file "$path"
+                      else
+                          echo "Warning: local include $path not found" >&2
+                      fi
 
-              # ----------------------------------------
-              # 注释 include/source
-              # ----------------------------------------
-              elif [[ "$line" =~ ^#\ (include|source): ]]; then
-                ref="${line#\#* }"
-                if [[ "$ref" =~ ^https?:// ]]; then
-                  echo "$line"
-                  curl -L --retry 3 --connect-timeout 10 "$ref" | awk '
-                    BEGIN { yaml=0 }
-                    /^payload:/ { yaml=1; next }
-                    yaml==1 { sub(/^- /,""); print; next }
-                    { print }
-                  '
-                else
-                  path="$(dirname "$file")/$ref"
-                  if [ -f "$path" ]; then
-                    echo "$line"
-                    expand_file "$path"
+                  # 注释 include/source
+                  elif [[ "$line" =~ ^#[[:space:]]*(include|source): ]]; then
+                      ref="${line#\#* }"
+                      if [[ "$ref" =~ ^https?:// ]]; then
+                          echo "$line"
+                          curl -L --retry 3 --connect-timeout 10 "$ref" | awk '
+                            BEGIN { yaml=0 }
+                            /^payload:/ { yaml=1; next }
+                            yaml==1 { sub(/^- /,""); print; next }
+                            { print }
+                          '
+                      else
+                          path="$(dirname "$file")/$ref"
+                          if [ -f "$path" ]; then
+                              echo "$line"
+                              expand_file "$path"
+                          else
+                              echo "Warning: local include $path not found" >&2
+                          fi
+                      fi
+
+                  # 普通行
                   else
-                    echo "Warning: local include $path not found" >&2
+                      echo "$line"
                   fi
 
-              # ----------------------------------------
-              # 普通行
-              # ----------------------------------------
-              else
-                echo "$line"
-              fi
+              done < "$file" > "$tmp"
 
-            done < "$file" > "$tmp"
-
-            mv "$tmp" "$file"
+              mv "$tmp" "$file"
           }
 
           export -f expand_file
 
           # 遍历 rules 下所有文件
           find rules -type f | while read -r file; do
-            expand_file "$file"
+              expand_file "$file"
           done
 
       ################################
