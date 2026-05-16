@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v5
 
       ################################
-      # 1️⃣ Sync External Rules → rules/
+      # 1️⃣ Sync External Rules → rules
       ################################
       - name: Sync rules
         run: |
@@ -54,6 +54,49 @@ jobs:
 
             rm -f "$tmp"
           done
+
+      ################################
+      # 1️⃣ Sync External Rules → rules
+      ################################
+      - name: Expand @includes
+        run: |
+            set -e
+
+            find rules -type f | while read -r file; do
+              tmp=$(mktemp)
+
+              while IFS= read -r line || [ -n "$line" ]; do
+
+                ################################
+                # @URL
+                ################################
+                if echo "$line" | grep -q '^@https\?://'; then
+                  url="${line#@}"
+                  echo "# include: $url"
+
+                  curl -L --retry 3 --connect-timeout 10 "$url" | awk '
+                    BEGIN { yaml=0 }
+                    /^payload:/ { yaml=1; next }
+
+                    yaml==1 {
+                      sub(/^- /, "")
+                      print
+                      next
+                    }
+      
+                    { print }
+                    
+                ################################
+                # 普通行
+                ################################
+                else
+                  echo "$line"
+                fi
+
+              done < "$file" > "$tmp"
+
+              mv "$tmp" "$file"
+            done
 
       ################################
       # 2️⃣ Normalize rules
