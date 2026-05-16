@@ -25,7 +25,6 @@ jobs:
       - name: Sync rules
         run: |
           set -e
-
           mkdir -p rules
 
           declare -A RULES=(
@@ -36,13 +35,11 @@ jobs:
 
           for name in "${!RULES[@]}"; do
             url="${RULES[$name]}"
-            dir="rules/$name"
-            target="$dir/$name.ex"
+            orig_file=$(basename "$url")                     # 原始文件名
+            target="rules/${name}@${orig_file}.ex"           # 核心规则名 + @ + 原文件名 + .ex
+            mkdir -p rules
 
-            mkdir -p "$dir"
-
-            echo "Fetching $name..."
-
+            echo "Fetching $orig_file as $target..."
             tmp=$(mktemp)
 
             curl -L --retry 3 --connect-timeout 10 "$url" -o "$tmp"
@@ -56,12 +53,11 @@ jobs:
           done
 
       ################################
-      # 2️⃣ Normalize
+      # 2️⃣ Normalize rules
       ################################
       - name: Normalize rules
         run: |
           set -e
-
           mkdir -p tmp/normalized
 
           ################################
@@ -97,15 +93,11 @@ jobs:
             output="$2"
 
             tmp_input=$(mktemp)
-
-            # ✅ 去掉来源标记
             sed '/^# source:/d' "$input" > "$tmp_input"
 
-            # ✅ 自动识别 YAML（不依赖扩展名）
             if grep -q '^payload:' "$tmp_input"; then
               echo "[YAML] $input"
               convert_yaml "$tmp_input" "$output"
-
             else
               echo "[TEXT] $input"
               sed '/^#/d;/^$/d' "$tmp_input" > "$output"
@@ -126,16 +118,20 @@ jobs:
             ! -name "*.webp" \
             | while read -r file; do
 
-            rel="${file#rules/}"
+            filename=$(basename "$file")
+            filename="${filename%.ex}"  # 去掉 .ex 后缀
 
-            # 🔥 忽略扩展名 → 同名自动合并
-            base="${rel%.*}"
+            # 判断是否含 @，提取核心规则名
+            if [[ "$filename" == *"@"* ]]; then
+              base="${filename%%@*}"  # @ 前部分作为核心规则名
+            else
+              base="${filename%.*}"   # 没有 @ 按去掉扩展名整个文件名
+            fi
+
             out="tmp/normalized/${base}.list"
-
             mkdir -p "$(dirname "$out")"
 
             tmp=$(mktemp)
-
             normalize_file "$file" "$tmp"
 
             if [ -f "$out" ]; then
@@ -144,7 +140,6 @@ jobs:
             else
               mv "$tmp" "$out"
             fi
-
           done
 
       ################################
