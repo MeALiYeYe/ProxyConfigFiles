@@ -22,42 +22,6 @@ jobs:
       ################################
       # 1️⃣ Sync External Rules → rules
       ################################
-      - name: Sync rules
-        run: |
-          set -e
-          mkdir -p rules
-
-          declare -A RULES=(
-            ["FakeLocation"]="https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/main/generated/surge.list"
-            ["Direct"]="https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Direct/Direct.list"
-            ["Reject"]="https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Surge-RULE-SET.list"
-          )
-
-          for name in "${!RULES[@]}"; do
-            url="${RULES[$name]}"
-            orig_file=$(basename "$url")
-            # 去掉 .list 扩展名，如果有的话
-            base_orig="${orig_file%.list}"
-            target="rules/${name}/${name}@${orig_file}"
-
-            mkdir -p "rules/$name"
-
-            echo "Fetching $orig_file as $target..."
-            tmp=$(mktemp)
-
-            curl -L --retry 3 --connect-timeout 10 "$url" -o "$tmp"
-
-            {
-              echo "# source: $url"
-              cat "$tmp"
-            } > "$target"
-
-            rm -f "$tmp"
-          done
-
-      ################################
-      # 1️⃣ Sync External Rules → rules
-      ################################
       - name: Expand @includes
         run: |
             set -e
