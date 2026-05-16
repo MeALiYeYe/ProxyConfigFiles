@@ -27,54 +27,52 @@ jobs:
           set -e
 
           expand_file() {
-              local file="$1"
-              local tmp
-              tmp=$(mktemp)
+            local file="$1"
+                local tmp
+                tmp=$(mktemp)
 
-              while IFS= read -r line || [ -n "$line" ]; do
-                  if [[ "$line" =~ ^@https?:// ]]; then
-                      url="${line#@}"
-                      echo "# source: $url"
-                      curl -sSL --retry 3 --connect-timeout 10 "$url" >> "$tmp"
+                while IFS= read -r line || [ -n "$line" ]; do
+                    if [[ "$line" =~ ^@https?:// ]]; then
+                        url="${line#@}"
+                        echo "# source: $url" >> "$tmp"
+                        curl -sSL --retry 3 --connect-timeout 10 "$url" >> "$tmp" || echo "Failed: $url" >&2
 
-                  elif [[ "$line" =~ ^@ ]]; then
-                      # 本地文件递归
-                      path="${line#@}"
-                      path="$(dirname "$file")/$path"
-                      if [ -f "$path" ]; then
-                          echo "# include: $path" >> "$tmp"
-                          expand_file "$path" >> "$tmp"
-                      else
-                          echo "Warning: local include $path not found" >&2
-                      fi
+                    elif [[ "$line" =~ ^@ ]]; then
+                        path="${line#@}"
+                        path="$(dirname "$file")/$path"
+                        if [ -f "$path" ]; then
+                            echo "# include: $path" >> "$tmp"
+                            expand_file "$path" >> "$tmp"
+                        else
+                            echo "Warning: local include $path not found" >&2
+                        fi
 
-                  elif [[ "$line" =~ ^#[[:space:]]*(include|source): ]]; then
-                      ref="${line#\#* }"
-                      echo "$line" >> "$tmp"
-                      if [[ "$ref" =~ ^https?:// ]]; then
-                          curl -sSL --retry 3 --connect-timeout 10 "$ref" >> "$tmp"
-                      else
-                          path="$(dirname "$file")/$ref"
-                          if [ -f "$path" ]; then
-                              expand_file "$path" >> "$tmp"
-                          else
-                              echo "Warning: local include $path not found" >&2
-                          fi
-                      fi
-                  else
-                      echo "$line" >> "$tmp"
-                  fi
-              done < "$file"
+                    elif [[ "$line" =~ ^#[[:space:]]*(include|source): ]]; then
+                        ref="${line#\#* }"
+                        echo "$line" >> "$tmp"
+                        if [[ "$ref" =~ ^https?:// ]]; then
+                            curl -sSL --retry 3 --connect-timeout 10 "$ref" >> "$tmp" || echo "Failed: $ref" >&2
+                        else
+                            path="$(dirname "$file")/$ref"
+                            if [ -f "$path" ]; then
+                                expand_file "$path" >> "$tmp"
+                            else
+                                echo "Warning: local include $path not found" >&2
+                            fi
+                        fi
 
-              mv "$tmp" "$file"
-          }
+                    else
+                        echo "$line" >> "$tmp"
+                    fi
+                done < "$file"
 
-          export -f expand_file
+                mv "$tmp" "$file"
+            }
 
-          # 遍历 rules 下所有文件
-          find rules -type f | while read -r file; do
-              expand_file "$file"
-          done
+            # 遍历
+            while IFS= read -r file; do
+                expand_file "$file"
+            done < <(find rules -type f)
 
       ################################
       # 2️⃣ Normalize rules
