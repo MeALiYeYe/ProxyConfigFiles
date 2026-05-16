@@ -29,26 +29,30 @@ jobs:
 
           declare -A RULES=(
             ["FakeLocation"]="https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/main/generated/surge.list"
-            ["Direct"]="https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Direct/black.list"
+            ["Direct"]="https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Direct/Direct.list"
             ["Reject"]="https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Surge-RULE-SET.list"
           )
 
-          for key in "${!RULES[@]}"; do
-            url="${RULES[$key]}"
+          for name in "${!RULES[@]}"; do
+            url="${RULES[$name]}"
             orig_file=$(basename "$url")
-            target="rules/$key/${key}@${orig_file}.ex"
-            mkdir -p "rules/$key"
+            target="rules/${name}/${name}@${orig_file}.ex"
+            mkdir -p "rules/$name"
 
             echo "Fetching $orig_file as $target..."
             tmp=$(mktemp)
+
             curl -L --retry 3 --connect-timeout 10 "$url" -o "$tmp"
 
-            { echo "# source: $url"; cat "$tmp"; } > "$target"
+            {
+              echo "# source: $url"
+              cat "$tmp"
+            } > "$target"
+
             rm -f "$tmp"
-          done
 
       ################################
-      # 2️⃣ Normalize rules (按目录 & 合并)
+      # 2️⃣ Normalize rules
       ################################
       - name: Normalize rules
         run: |
@@ -58,6 +62,7 @@ jobs:
           convert_yaml() {
             input="$1"
             output="$2"
+
             sed '1d' "$input" | sed 's/^- //' | while read -r line; do
               if echo "$line" | grep -qE '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD|DOMAIN-WILDCARD|DOMAIN-REGEX|IP-CIDR|IP-CIDR6|GEOIP|PROTOCOL),'; then
                 echo "$line"
@@ -74,30 +79,43 @@ jobs:
           normalize_file() {
             input="$1"
             output="$2"
+
             tmp_input=$(mktemp)
             sed '/^# source:/d' "$input" > "$tmp_input"
 
             if grep -q '^payload:' "$tmp_input"; then
+              echo "[YAML] $input"
               convert_yaml "$tmp_input" "$output"
             else
+              echo "[TEXT] $input"
               sed '/^#/d;/^$/d' "$tmp_input" > "$output"
             fi
+
             rm -f "$tmp_input"
           }
 
-          find rules -type f ! -path "*/\.*" | while read -r file; do
+          # 按规则子目录生成 normalize 文件并合并相同 base 名称
+          find rules -type f \
+            ! -path "*/\.*" \
+            ! -name "*.md" \
+            ! -name "*.png" \
+            ! -name "*.jpg" \
+            ! -name "*.jpeg" \
+            ! -name "*.webp" \
+            | while read -r file; do
+
             rel_path="${file#rules/}"
             dir_path=$(dirname "$rel_path")
             filename=$(basename "$file")
             filename="${filename%.ex}"
 
             if [[ "$filename" == *"@"* ]]; then
-              core="${filename%%@*}"
+              base="${filename%%@*}"
             else
-              core="${filename%.*}"
+              base="${filename%.*}"
             fi
 
-            out="tmp/normalized/$dir_path/$core.list"
+            out="tmp/normalized/$dir_path/$base.list"
             mkdir -p "$(dirname "$out")"
 
             tmp=$(mktemp)
