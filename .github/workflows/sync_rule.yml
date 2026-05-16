@@ -32,57 +32,39 @@ jobs:
               tmp=$(mktemp)
 
               while IFS= read -r line || [ -n "$line" ]; do
-                  local url path ref
-
-                  # @URL
                   if [[ "$line" =~ ^@https?:// ]]; then
                       url="${line#@}"
                       echo "# source: $url"
-                      curl -L --retry 3 --connect-timeout 10 "$url" | awk '
-                        BEGIN { yaml=0 }
-                        /^payload:/ { yaml=1; next }
-                        yaml==1 { sub(/^- /,""); print; next }
-                        { print }
-                      '
+                      curl -sSL --retry 3 --connect-timeout 10 "$url" >> "$tmp"
 
-                  # 本地 @路径
                   elif [[ "$line" =~ ^@ ]]; then
+                      # 本地文件递归
                       path="${line#@}"
                       path="$(dirname "$file")/$path"
                       if [ -f "$path" ]; then
-                          echo "# include: $path"
-                          expand_file "$path"
+                          echo "# include: $path" >> "$tmp"
+                          expand_file "$path" >> "$tmp"
                       else
                           echo "Warning: local include $path not found" >&2
                       fi
 
-                  # 注释 include/source
                   elif [[ "$line" =~ ^#[[:space:]]*(include|source): ]]; then
                       ref="${line#\#* }"
+                      echo "$line" >> "$tmp"
                       if [[ "$ref" =~ ^https?:// ]]; then
-                          echo "$line"
-                          curl -L --retry 3 --connect-timeout 10 "$ref" | awk '
-                            BEGIN { yaml=0 }
-                            /^payload:/ { yaml=1; next }
-                            yaml==1 { sub(/^- /,""); print; next }
-                            { print }
-                          '
+                          curl -sSL --retry 3 --connect-timeout 10 "$ref" >> "$tmp"
                       else
                           path="$(dirname "$file")/$ref"
                           if [ -f "$path" ]; then
-                              echo "$line"
-                              expand_file "$path"
+                              expand_file "$path" >> "$tmp"
                           else
                               echo "Warning: local include $path not found" >&2
                           fi
                       fi
-
-                  # 普通行
                   else
-                      echo "$line"
+                      echo "$line" >> "$tmp"
                   fi
-
-              done < "$file" > "$tmp"
+              done < "$file"
 
               mv "$tmp" "$file"
           }
