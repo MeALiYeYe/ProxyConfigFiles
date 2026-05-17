@@ -10,8 +10,8 @@ BOOT_SCRIPT_DIR="$HOME/.termux/boot"
 
 # 此脚本地址
 SHELL_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/Mihogo/SubMi.sh"
-# mihomo核心地址
-MIHOMO_URL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-1383218.gz"
+# mihomo核心地址     # 废除，旧版 release 已被清理
+# MIHOMO_URL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-1383218.gz"
 # mihomo配置文件地址
 CONFIG_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/config.yaml"
 # mihomo配置文件地址记录
@@ -372,8 +372,7 @@ deploy_mihomo() {
     MIHOMO_API_URL=$(get_mihomo_url || true)
 
     if [ -z "${MIHOMO_API_URL:-}" ]; then
-        MIHOMO_API_URL="$MIHOMO_URL"
-        log_warn "使用备用 Mihomo 下载链接"
+        log_error "无法获取 Mihomo 下载链接，请检查网络或 GitHub API"
     fi
 
     safe_wget "$MIHOMO_API_URL" "mihomo.gz"
@@ -577,7 +576,7 @@ update_mihomo_core() {
     cd "$MIHOMO_DIR"
 
     MIHOMO_API_URL=$(get_mihomo_url || true)
-    [ -z "${MIHOMO_API_URL:-}" ] && MIHOMO_API_URL="$MIHOMO_URL"
+    [ -z "${MIHOMO_API_URL:-}" ] && log_error "无法获取 Mihomo 下载链接，更新失败"
 
     safe_wget "$MIHOMO_API_URL" "mihomo.gz"
     rm -f mihomo
