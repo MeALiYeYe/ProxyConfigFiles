@@ -43,11 +43,18 @@ Surge/rule/             # Surge 输出
 
 在子目录中，可以使用如下文件命名方式：
 
-
+```
+Direct@ex1.list
+Direct@ex2.list
+Proxy@streaming.list
+```
 
 系统会自动按 @ 前缀进行合并：
 
-
+```
+Direct@ex1.list + Direct@ex2.list → Direct.list
+Proxy@streaming.list → Proxy.list
+```
 
 - 自动合并同名前缀规则
 - 便于拆分维护大规则集
@@ -55,11 +62,18 @@ Surge/rule/             # Surge 输出
 
 ### 💡 示例
 
-
+```
+rules/
+  direct/
+    Direct@base.list
+    Direct@cn.list
+```
 
 生成：
 
-
+```
+Direct.list
+```
 
 ⚠️ @ 仅用于文件名分组，不影响 include 语法
 
