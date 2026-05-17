@@ -284,7 +284,7 @@ jobs:
           mkdir -p "Quantumult X/rule"
 
           # ✅ 防止历史残留
-          rm -rf Mihomo/rule/* Egern/rule/* "Quantumult X/rule"/*
+          rm -rf Mihomo/rule/* Egern/rule/* "Quantumult X/rule"/* "Surge/rule"/*
 
           total_rules=0
 
@@ -399,6 +399,14 @@ jobs:
             qx_out="Quantumult X/rule/$name.list"
             mkdir -p "$(dirname "$qx_out")"
             cp "$tmp" "$qx_out"
+
+            ################################
+            # Surge
+            ################################
+
+            surge_out="Surge/rule/$name.list"
+            mkdir -p "$(dirname "$surge_out")"
+            cp "$tmp" "$surge_out"
 
             ################################
             # Egern
