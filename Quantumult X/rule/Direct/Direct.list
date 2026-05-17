@@ -248,7 +248,6 @@ DOMAIN-KEYWORD,weather-adge.apple.com
 DOMAIN-KEYWORD,weather-edge.apple.com
 DOMAIN-KEYWORD,westlawchina
 IP-CIDR,185.218.6.88/29
-IP-CIDR6,2401:b60:5:3c62:c3c3:8dfd:f6b9:0/112
 PROCESS-NAME,BaiduNetdisk_mac
 PROCESS-NAME,BitComet
 PROCESS-NAME,ClashX
