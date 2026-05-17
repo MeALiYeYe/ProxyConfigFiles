@@ -1,9 +1,13 @@
 SubStoreUrl: &SubStoreUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
-BaiduUrl: &BaiduUrl "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/BaiduProxy.yaml"
+VpsUrl: &VpsUrl "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
+CFTunnelUrl: &CFTunnelUrl "http://127.0.0.1:3000/download/CF?target=ClashMeta"
+BaiduUrl: &BaiduUrl "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/BaiduProxy.yaml"
 
+# 延迟测试链接
 ProxyTest: &ProxyTest "https://www.gstatic.com/generate_204"
 DirecTest: &DirecTest "https://connect.rom.miui.com/generate_204"
 
+# 过滤规则
 FilterHK: &FilterHK '(?i)(?:港|香港|🇭🇰|\bHK\b|Hong\s?Kong|HKG)'
 FilterTW: &FilterTW '(?i)(?:台|台湾|🇼🇸|🇹🇼|\bTW\b|Taiwan|TWN)'
 FilterSG: &FilterSG '(?i)(?:坡|新加坡|🇸🇬|\bSG\b|Singapore|SGP)'
@@ -15,8 +19,9 @@ FilterEU: &FilterEU '(?i)(?:🇧🇪|🇨🇿|🇩🇰|🇫🇮|🇫🇷|🇩�
 FilterOther: &FilterOther '^(?!.*(香港|台湾|新加坡|日本|美国|🇭🇰|🇼🇸|🇨🇳|🇹🇼|🇸🇬|🇯🇵|🇺🇸|\bHK\b|\bTW\b|\bSG\b|\bJP\b|\bUS\b))'
 ExcludeFilter: &ExcludeFilter '(?i)(?:佣金|套餐|官网|官方|网址|售后|免翻|过期|剩余|到期|流量|更新|点外|重置|免流|使用|教程|优惠|超实惠|址|AFF|Days|Date)'
 FilterLow: &FilterLow '(?<!\d)0\.\d+'
-FilterHigh: &FilterHigh '(?:(?:[2-9]\d*\.\d+|1\.(?:0*[1-9]\d*))|(?:[2-9]\d*|1\.(?:0*[1-9]\d*))(?=[xX×倍]))'
+FilterHigh: &FilterHigh '(?<![\dA-Za-z.])(?:1\.[1-9]\d*|[2-9]\d*\.\d+|(?:(?<![\dA-Za-z])[2-9]\d*(?:\.\d+)?\s*[xX×倍](?![\dA-Za-z])|(?<![\dA-Za-z])[xX×倍][2-9]\d*(?:\.\d+)?(?![\dA-Za-z])))(?![\dA-Za-z])'
 
+# 代理集和代理组
 Proxyer: &Proxyer
   type: http
   interval: 86400
@@ -26,7 +31,7 @@ Proxyer: &Proxyer
     url: *ProxyTest
     interval: 600
   header:
-    User-Agent:
+    User-Agent:  # 使用注释法由上到下 默认使用第一个
     - "ClashMetaForAndroid/2.11.2.Meta"
     - "clash-verge/v2.2.3"
     - "ClashforWindows/0.19.23"
@@ -37,9 +42,9 @@ Smartp: &Smartp
   type: smart
   include-all-providers: true
   policy-priority:
-#  - '(?<![\d.])0\.\d+(?!\d):1.3'
-#  - '(?<![\d.])1\.\d+(?!\d):0.8'
-#  - '(?<![\d.])[2-9]\d*(?:\.\\d+)?(?!\d):0.5'
+  - '(?<![\d.])0\.\d+(?!\d):1.3'
+  - '(?<![\d.])1\.\d+(?!\d):0.8'
+  - '(?<![\d.])[2-9]\d*(?:\.\\d+)?(?!\d):0.5'
   uselightgbm: true
   collectdata: false
   prefer-asn: true
@@ -56,6 +61,8 @@ Groupp: &Groupp
   - 狮城
   - 日本
   - 美国
+  - 低倍
+  - 高倍
   - 自由
   - 民主
   url: *ProxyTest
@@ -73,6 +80,7 @@ Groupd: &Groupd
   lazy: true
   hidden: false
 
+# 规则集
 rule-anchor:
   cla: &cla
     type: http
@@ -89,8 +97,9 @@ rule-anchor:
     behavior: ipcidr
     format: mrs
     interval: 86400
-
-
+#################################
+#############锚点结束#############
+#################################
 proxies:
 - name: 直连
   type: direct
@@ -98,239 +107,267 @@ proxies:
 - name: DNS_Hijack
   type: dns
 
+# 代理集
 proxy-providers:
   SubStore:
     <<: *Proxyer
     path: ./proxies/SubStore.yaml
     url: *SubStoreUrl
+  Vps:
+    <<: *Proxyer
+    path: ./proxies/Vps.yaml
+    url: *VpsUrl
+  CFTunnel:
+    <<: *Proxyer
+    path: ./proxies/CFTunnel.yaml
+    url: *CFTunnelUrl
   BaiduProxy:
     <<: *Proxyer
     path: ./proxies/BaiduProxy.yaml
     url: *BaiduUrl
+    health-check:
+      enable: true
+      url: *DirecTest
+      interval: 600
 
+# 代理组
 proxy-groups:
 - name: Location
   <<: *Groupd
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png"
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bypass.png"
 - name: Domestic
   <<: *Groupd
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png"
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Domestic.png"
 - name: DNSServer
   <<: *Groupp
-  icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/NAS(2).png"
+  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/NAS(2).png"
 - name: Emby
   <<: *Groupp
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png"
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Emby.png"
 - name: Tiktok
   <<: *Groupp
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok.png"
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok.png"  
 - name: Youtube
   <<: *Groupp
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png"
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/YouTube.png"
 - name: Media
   <<: *Groupp
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ForeignMedia.png"
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/ForeignMedia.png"
 - name: Ai
   <<: *Groupp
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png"
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/ChatGPT.png"
 - name: Telegram
   <<: *Groupp
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png"
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Telegram.png"
 - name: Cloudflare
   <<: *Groupp
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png"
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Cloudflare.png"
 - name: Google
   <<: *Groupp
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png"
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Google_Search.png"
 - name: Github
   <<: *Groupp
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png"
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/GitHub.png"
 - name: Microsoft
   <<: *Groupp
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png"
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Microsoft.png"
 - name: Apple
   <<: *Groupp
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png"
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Apple.png"
 - name: Foreign
   <<: *Groupp
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png"
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Global.png"
 - name: Final
   <<: *Groupp
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png"
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Final.png"
 
 - name: 江苏
   <<: *Smartp
   url: *DirecTest
-  filter: '(?i)(?:南京|苏州)'
-  icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(1).png"
+  filter: "南京|苏州"
+  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(1).png"
 - name: 广东
   <<: *Smartp
   url: *DirecTest
-  filter: '(?i)(?:广州)'
-  icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(2).png"
+  filter: "广州"
+  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(2).png"
 - name: 北京
   <<: *Smartp
   url: *DirecTest
-  filter: '(?i)(?:北京|保定)'
-  icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(3).png"
+  filter: "北京|保定"
+  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(3).png"
 
 - name: 香港
   <<: *Smartp
   filter: *FilterHK
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png"
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Hong_Kong.png"
 - name: 台湾
   <<: *Smartp
   filter: *FilterTW
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Taiwan.png"
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Taiwan.png"
 - name: 狮城
   <<: *Smartp
   filter: *FilterSG
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png"
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Singapore.png"
 - name: 日本
   <<: *Smartp
   filter: *FilterJP
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png"
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Japan.png"
 - name: 美国
   <<: *Smartp
   filter: *FilterUS
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png"
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/United_States.png"
+- name: 低倍
+  <<: *Smartp
+  filter: *FilterLow
+  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/liuliang(2).png"
+- name: 高倍
+  <<: *Smartp
+  filter: *FilterHigh
+  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/liuliang(3).png"
 
 - name: 自由
   <<: *Smartp
-  filter: '(?i)(?:vps|自建)'
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png"
+  filter: (?i)(?:vps|自建)
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png"
 - name: 民主
   <<: *Smartp
-  filter: '(?i)(?:CF|优选|反代)'
-  icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/jichang.png"
+  filter: (?i)(?:CF|优选|反代)
+  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/jichang.png"
 
+# 规则集
 rule-providers:
-  directs:
+  awavenue:
     <<: *dom
-    path: ./rules/directs.mrs
-    url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/rule/Direct/Direct.mrs"
-  directs_ip:
-    <<: *ipc
-    path: ./rules/directs_ip.mrs
-    url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/rule/Direct/Direct_ip.mrs"
-  rejects:
+    path: ./rules/awavenue.mrs
+    url: "https://cdn.jsdelivr.net/gh/TG-Twilight/AWAvenue-Ads-Rule@main/Filters/AWAvenue-Ads-Rule-Clash.mrs"
+  mydirect:
     <<: *dom
-    path: ./rules/rejects.mrs
-    url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/rule/Reject/Reject.mrs"
-  rejects_ip:
+    path: ./rules/mydirect.mrs
+    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct/Direct.mrs"
+  mydirect_ip:
     <<: *ipc
-    path: ./rules/rejects_ip.mrs
-    url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/rule/Reject/Reject_ip.mrs"
-  proxys:
+    path: ./rules/mydirect_ip.mrs
+    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct/Direct_ip.mrs"
+  myreject:
     <<: *dom
-    path: ./rules/proxys.mrs
-    url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/rule/Proxy/Proxy.mrs"
-  proxys_ip:
+    path: ./rules/myreject.mrs
+    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject/Reject.mrs"
+  myreject_ip:
     <<: *ipc
-    path: ./rules/proxys_ip.mrs
-    url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/rule/Proxy/Proxy_ip.mrs"
+    path: ./rules/myreject_ip.mrs
+    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject/Reject_ip.mrs"
+  myproxy:
+    <<: *dom
+    path: ./rules/myproxy.mrs
+    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy/Proxy.mrs"
+  myproxy_ip:
+    <<: *ipc
+    path: ./rules/myproxy_ip.mrs
+    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy/Proxy_ip.mrs"
   emby:
     <<: *dom
     path: ./rules/emby.mrs
-    url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/rule/Emby/Emby.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Emby/Emby.mrs"
   fakelocation:
     <<: *dom
     path: ./rules/FakeLocation.mrs
-    url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/rule/FakeLocation/FakeLocation.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/FakeLocation/FakeLocation.mrs"
   fakelocation_ip:
     <<: *ipc
     path: ./rules/FakeLocation_ip.mrs
-    url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/rule/FakeLocation/FakeLocation_ip.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/FakeLocation/FakeLocation_ip.mrs"
   
   private:
     <<: *dom
     path: ./rules/private.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/private.mrs"
   private_ip:
     <<: *ipc
     path: ./rules/private_ip.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/private.mrs"
   googlefcm:
     <<: *dom
     path: ./rules/googlefcm.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/googlefcm.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/googlefcm.mrs"
   ads-all:
     <<: *dom
     path: ./rules/ads-all.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ads-all.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ads-all.mrs"
   httpdns-cn:
     <<: *dom
     path: ./rules/httpdns-cn.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-httpdns-cn.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-httpdns-cn.mrs"
   tiktok:
     <<: *dom
     path: ./rules/tiktok.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tiktok.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/tiktok.mrs"
   youtube:
     <<: *dom
     path: ./rules/youtube.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/youtube.mrs"
   entertainment:
     <<: *dom
     path: ./rules/entertainment.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-entertainment.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-entertainment.mrs"
   telegram:
     <<: *dom
     path: ./rules/telegram.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/telegram.mrs"
   telegram_ip:
     <<: *ipc
     path: ./rules/telegram_ip.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/telegram.mrs"
   google:
     <<: *dom
     path: ./rules/google.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google.mrs"
   google_ip:
     <<: *ipc
     path: ./rules/google_ip.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/google.mrs"
   cloudflare:
     <<: *dom
     path: ./rules/cloudflare.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cloudflare.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/cloudflare.mrs"
   cloudflare_ip:
     <<: *ipc
     path: ./rules/cloudflare_ip.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cloudflare.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/cloudflare.mrs"
   ai-chat-!cn:
     <<: *dom
     path: ./rules/ai-chat-!cn.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-chat-!cn.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ai-chat-!cn.mrs"
   github:
     <<: *dom
     path: ./rules/github.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/github.mrs"
   apple:
     <<: *dom
     path: ./rules/apple.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geosite/apple.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geosite/apple.mrs"
   apple_ip:
     <<: *ipc
     path: ./rules/apple_ip.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/apple.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geoip/apple.mrs"
   microsoft:
     <<: *dom
     path: ./rules/microsoft.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft.mrs"
   geolocation-!cn:
     <<: *dom
     path: ./rules/geolocation-!cn.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/geolocation-!cn.mrs"
   cn:
     <<: *dom
     path: ./rules/cn.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/cn.mrs"
   cn_ip:
     <<: *ipc
     path: ./rules/cn_ip.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/cn.mrs"
 
+# 路由规则
 rules:
 - DST-PORT,53,DNS_Hijack
 - DST-PORT,853,DNSServer
@@ -341,22 +378,23 @@ rules:
   # NTP
 - AND,((NETWORK,udp),(DST-PORT,123)),DIRECT
   # FCM
-- DST-PORT,5228-5230,DIRECT
+- OR,((DST-PORT,5228-5230),(RULE-SET,googlefcm)),DIRECT
 - RULE-SET,private,DIRECT
 - RULE-SET,private_ip,DIRECT,no-resolve
 - RULE-SET,ads-all,REJECT-DROP
+- RULE-SET,awavenue,REJECT-DROP
 - RULE-SET,httpdns-cn,REJECT-DROP
-- RULE-SET,rejects,REJECT-DROP
-- RULE-SET,rejects_ip,REJECT-DROP,no-resolve
-- RULE-SET,directs,Domestic
-- RULE-SET,directs_ip,Domestic,no-resolve
-- RULE-SET,proxys,Foreign
-- RULE-SET,proxys_ip,Foreign,no-resolve
+- RULE-SET,myreject,REJECT-DROP
+- RULE-SET,myreject_ip,REJECT-DROP,no-resolve
+- RULE-SET,mydirect,Domestic
+- RULE-SET,mydirect_ip,Domestic,no-resolve
+- RULE-SET,myproxy,Foreign
+- RULE-SET,myproxy_ip,Foreign,no-resolve
 - RULE-SET,fakelocation,Location
 - RULE-SET,fakelocation_ip,Location,no-resolve
 - RULE-SET,emby,Emby
-- RULE-SET,youtube,Youtube
 - RULE-SET,tiktok,Tiktok
+- RULE-SET,youtube,Youtube
 - RULE-SET,entertainment,Media
 - RULE-SET,telegram,Telegram
 - RULE-SET,telegram_ip,Telegram,no-resolve
@@ -374,7 +412,8 @@ rules:
 - RULE-SET,cn_ip,Domestic,no-resolve
 - MATCH,Final
 
-
+#######################################
+############# 全局通用配置 #############
 mixed-port: 7890
 socks-port: 7891
 tproxy-port: 1536
@@ -391,8 +430,8 @@ external-ui: ./ui/
 external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist-no-fonts.zip"
 secret: ""
 skip-auth-prefixes:
-- 10.0.0.1/8
-- 127.0.0.1/8
+- 10.0.0.1/24
+- 127.0.0.1/32
 - 192.168.0.1/16
 
 geodata-mode: true
@@ -406,11 +445,13 @@ lgbm-auto-update: true
 lgbm-update-interval: 360
 lgbm-url: "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin"
 
+# 策略组选择和fake-ip缓存
 profile:
   store-selected: true
   store-fake-ip: true
   smart-collector-size: 100
 
+# 域名嗅探
 sniffer:
   enable: true
   force-dns-mapping: true
@@ -439,6 +480,7 @@ sniffer:
   - "Mijia Cloud"
   - "miwifi.com"
 
+# Tunnel配置
 tun:
   enable: false
   device: Mihomo
@@ -451,6 +493,7 @@ tun:
   auto-detect-interface: true
   strict-route: true
 
+# DNS配置
 dns:
   enable: true
   listen: :1053
@@ -482,10 +525,11 @@ dns:
   - 223.6.6.6
   proxy-server-nameserver: *cndns
   nameserver-policy:
-    'RULE-SET:ads-all,rejects': rcode://name_error
-    'RULE-SET:cn,apple,microsoft': *cndns
+    'RULE-SET:ads-all,awavenue,myreject': rcode://name_error
+    'RULE-SET:cn,apple,microsoft,mydirect': *cndns
   nameserver: *cgdns
 
+# hosts
 hosts:
   raw.githubusercontent.com:
   - 185.199.108.133
