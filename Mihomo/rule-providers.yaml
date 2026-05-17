@@ -1,4 +1,20 @@
 rule-providers:
+  DNS:
+    type: http
+    behavior: domain
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/DNS/DNS.mrs
+    path: ./ruleset/DNS.mrs
+    interval: 86400
+
+  DNS_ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/DNS/DNS_ip.mrs
+    path: ./ruleset/DNS_ip.mrs
+    interval: 86400
+
   Direct:
     type: http
     behavior: domain
