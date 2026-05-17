@@ -1,11 +1,9 @@
 SubStoreUrl: &SubStoreUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
 BaiduUrl: &BaiduUrl "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/BaiduProxy.yaml"
 
-# 延迟测试链接
 ProxyTest: &ProxyTest "https://www.gstatic.com/generate_204"
 DirecTest: &DirecTest "https://connect.rom.miui.com/generate_204"
 
-# 过滤规则
 FilterHK: &FilterHK '(?i)(?:港|香港|🇭🇰|\bHK\b|Hong\s?Kong|HKG)'
 FilterTW: &FilterTW '(?i)(?:台|台湾|🇼🇸|🇹🇼|\bTW\b|Taiwan|TWN)'
 FilterSG: &FilterSG '(?i)(?:坡|新加坡|🇸🇬|\bSG\b|Singapore|SGP)'
@@ -19,8 +17,7 @@ ExcludeFilter: &ExcludeFilter '(?i)(?:佣金|套餐|官网|官方|网址|售后|
 FilterLow: &FilterLow '(?<!\d)0\.\d+'
 FilterHigh: &FilterHigh '(?:(?:[2-9]\d*\.\d+|1\.(?:0*[1-9]\d*))|(?:[2-9]\d*|1\.(?:0*[1-9]\d*))(?=[xX×倍]))'
 
-# 代理集和代理组
-Proxyer: &Proxyer
+Republic: &Republic
   type: http
   interval: 86400
   exclude-filter: *ExcludeFilter
@@ -29,7 +26,7 @@ Proxyer: &Proxyer
     url: *ProxyTest
     interval: 600
   header:
-    User-Agent:  # 使用注释法由上到下 默认使用第一个
+    User-Agent:
     - "ClashMetaForAndroid/2.11.2.Meta"
     - "clash-verge/v2.2.3"
     - "ClashforWindows/0.19.23"
@@ -53,14 +50,14 @@ Smartp: &Smartp
 Groupp: &Groupp
   type: select
   proxies:
-  - 直连
-  - 香港
-  - 台湾
-  - 狮城
-  - 日本
-  - 美国
-  - 自由
-  - 民主
+  - DIRECT
+  - HK
+  - TW
+  - SG
+  - JP
+  - US
+  - Liberty
+  - Democracy
   url: *ProxyTest
   lazy: true
   hidden: false
@@ -68,15 +65,14 @@ Groupp: &Groupp
 Groupd: &Groupd
   type: select
   proxies:
-  - 直连
-  - 江苏
-  - 广东
-  - 北京
+  - DIRECT
+  - JS
+  - GD
+  - BJ
   Url: *DirecTest
   lazy: true
   hidden: false
 
-# 规则集
 rule-anchor:
   cla: &cla
     type: http
@@ -97,24 +93,19 @@ rule-anchor:
 #############锚点结束#############
 #################################
 proxies:
-- name: 直连
-  type: direct
-  udp: true
 - name: DNS_Hijack
   type: dns
 
-# 代理集
 proxy-providers:
   SubStore:
-    <<: *Proxyer
+    <<: *Republic
     path: ./proxies/SubStore.yaml
     url: *SubStoreUrl
   BaiduProxy:
-    <<: *Proxyer
+    <<: *Republic
     path: ./proxies/BaiduProxy.yaml
     url: *BaiduUrl
 
-# 代理组
 proxy-groups:
 - name: Location
   <<: *Groupd
@@ -165,53 +156,52 @@ proxy-groups:
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Final.png"
 
-- name: 江苏
+- name: JS
   <<: *Smartp
   url: *DirecTest
   filter: "南京|苏州"
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(1).png"
-- name: 广东
+- name: GD
   <<: *Smartp
   url: *DirecTest
   filter: "广州"
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(2).png"
-- name: 北京
+- name: BJ
   <<: *Smartp
   url: *DirecTest
-  filter: "北京|保定"
+  filter: 北京|保定"
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(3).png"
 
-- name: 香港
+- name: HK
   <<: *Smartp
   filter: *FilterHK
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Hong_Kong.png"
-- name: 台湾
+- name: TW
   <<: *Smartp
   filter: *FilterTW
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Taiwan.png"
-- name: 狮城
+- name: SG
   <<: *Smartp
   filter: *FilterSG
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Singapore.png"
-- name: 日本
+- name: JP
   <<: *Smartp
   filter: *FilterJP
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Japan.png"
-- name: 美国
+- name: US
   <<: *Smartp
   filter: *FilterUS
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/United_States.png"
 
-- name: 自由
+- name: Liberty
   <<: *Smartp
   filter: (?i)(?:vps|自建)
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png"
-- name: 民主
+- name: Democracy
   <<: *Smartp
   filter: (?i)(?:CF|优选|反代)
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/jichang.png"
 
-# 规则集
 rule-providers:
   directs:
     <<: *dom
@@ -339,7 +329,6 @@ rule-providers:
     path: ./rules/cn_ip.mrs
     url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/cn.mrs"
 
-# 路由规则
 rules:
 - DST-PORT,53,DNS_Hijack
 - DST-PORT,853,DNSServer
@@ -383,8 +372,7 @@ rules:
 - RULE-SET,cn_ip,Domestic,no-resolve
 - MATCH,Final
 
-#######################################
-############# 全局通用配置 #############
+
 mixed-port: 7890
 socks-port: 7891
 tproxy-port: 1536
@@ -416,13 +404,11 @@ lgbm-auto-update: true
 lgbm-update-interval: 360
 lgbm-url: "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin"
 
-# 策略组选择和fake-ip缓存
 profile:
   store-selected: true
   store-fake-ip: true
   smart-collector-size: 100
 
-# 域名嗅探
 sniffer:
   enable: true
   force-dns-mapping: true
@@ -451,7 +437,6 @@ sniffer:
   - "Mijia Cloud"
   - "miwifi.com"
 
-# Tunnel配置
 tun:
   enable: false
   device: Mihomo
@@ -464,7 +449,6 @@ tun:
   auto-detect-interface: true
   strict-route: true
 
-# DNS配置
 dns:
   enable: true
   listen: :1053
@@ -500,7 +484,6 @@ dns:
     'RULE-SET:cn,apple,microsoft,directs': *cndns
   nameserver: *cgdns
 
-# hosts
 hosts:
   raw.githubusercontent.com:
   - 185.199.108.133
