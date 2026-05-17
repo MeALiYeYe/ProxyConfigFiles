@@ -20,6 +20,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      - name: Clean tmp
+        run: |
+          rm -rf tmp/expanded tmp/normalized
+          mkdir -p tmp/expanded tmp/normalized
+
       ################################
       # 1️⃣ Expand includes（优化版）
       ################################
