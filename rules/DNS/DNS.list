@@ -17,7 +17,7 @@ IP-CIDR6,2400:3200:baba::1
 DOMAIN,dns.alidns.com
 
 # Baidu
-IP-CIDR6,180.76.76.76
+IP-CIDR,180.76.76.76
 IP-CIDR6,2400:da00::6666
 
 # ByteDance
