@@ -111,3 +111,11 @@ rule-providers:
     path: ./ruleset/anti-ad-surge.mrs
     interval: 86400
 
+  oisd_big_surge:
+    type: http
+    behavior: domain
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/oisd_big_surge.mrs
+    path: ./ruleset/oisd_big_surge.mrs
+    interval: 86400
+
