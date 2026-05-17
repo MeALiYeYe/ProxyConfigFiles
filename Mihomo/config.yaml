@@ -17,7 +17,7 @@ ExcludeFilter: &ExcludeFilter '(?i)(?:佣金|套餐|官网|官方|网址|售后|
 FilterLow: &FilterLow '(?<!\d)0\.\d+'
 FilterHigh: &FilterHigh '(?:(?:[2-9]\d*\.\d+|1\.(?:0*[1-9]\d*))|(?:[2-9]\d*|1\.(?:0*[1-9]\d*))(?=[xX×倍]))'
 
-Republic: &Republic
+Proxyer: &Proxyer
   type: http
   interval: 86400
   exclude-filter: *ExcludeFilter
@@ -50,14 +50,14 @@ Smartp: &Smartp
 Groupp: &Groupp
   type: select
   proxies:
-  - DIRECT
-  - HK
-  - TW
-  - SG
-  - JP
-  - US
-  - Liberty
-  - Democracy
+  - 直连
+  - 香港
+  - 台湾
+  - 狮城
+  - 日本
+  - 美国
+  - 自由
+  - 民主
   url: *ProxyTest
   lazy: true
   hidden: false
@@ -65,10 +65,10 @@ Groupp: &Groupp
 Groupd: &Groupd
   type: select
   proxies:
-  - DIRECT
-  - JS
-  - GD
-  - BJ
+  - 直连
+  - 江苏
+  - 广东
+  - 北京
   Url: *DirecTest
   lazy: true
   hidden: false
@@ -92,16 +92,19 @@ rule-anchor:
 
 
 proxies:
+- name: 直连
+  type: direct
+  udp: true
 - name: DNS_Hijack
   type: dns
 
 proxy-providers:
   SubStore:
-    <<: *Republic
+    <<: *Proxyer
     path: ./proxies/SubStore.yaml
     url: *SubStoreUrl
   BaiduProxy:
-    <<: *Republic
+    <<: *Proxyer
     path: ./proxies/BaiduProxy.yaml
     url: *BaiduUrl
 
@@ -155,48 +158,48 @@ proxy-groups:
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Final.png"
 
-- name: JS
+- name: 江苏
   <<: *Smartp
   url: *DirecTest
   filter: '(?i)(?:南京|苏州)'
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(1).png"
-- name: GD
+- name: 广东
   <<: *Smartp
   url: *DirecTest
   filter: '(?i)(?:广州)'
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(2).png"
-- name: BJ
+- name: 北京
   <<: *Smartp
   url: *DirecTest
   filter: '(?i)(?:北京|保定)'
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(3).png"
 
-- name: HK
+- name: 香港
   <<: *Smartp
   filter: *FilterHK
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Hong_Kong.png"
-- name: TW
+- name: 台湾
   <<: *Smartp
   filter: *FilterTW
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Taiwan.png"
-- name: SG
+- name: 狮城
   <<: *Smartp
   filter: *FilterSG
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Singapore.png"
-- name: JP
+- name: 日本
   <<: *Smartp
   filter: *FilterJP
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Japan.png"
-- name: US
+- name: 美国
   <<: *Smartp
   filter: *FilterUS
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/United_States.png"
 
-- name: Liberty
+- name: 自由
   <<: *Smartp
   filter: '(?i)(?:vps|自建)'
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png"
-- name: Democracy
+- name: 民主
   <<: *Smartp
   filter: '(?i)(?:CF|优选|反代)'
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/jichang.png"
