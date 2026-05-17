@@ -20,6 +20,6 @@ DOMAIN,subcdn.rtx.al
 
 IP-CIDR,156.224.76.0/24,no-resolve
 IP-CIDR,156.231.115.0/24,no-resolve
-IP-CIDR,185.218.6.88/29
+IP-CIDR,185.218.6.88/29,no-resolve
 
 IP-CIDR6,2401:b60:5:3c62:c3c3:8dfd:f6b9:0/112,no-resolve
