@@ -18,7 +18,14 @@
 
 # 📂 目录结构
 
-
+```
+rules/                  # 原始规则
+tmp/normalized/         # 中间产物
+Mihomo/rule/            # Mihomo 输出
+Quantumult X/rule/      # QX 输出
+Egern/rule/             # Egern 输出
+Surge/rule/             # Surge 输出
+```
 
 ---
 
@@ -31,8 +38,6 @@
 简洁：
 @local.list
 @https://example.com/rules.list
-
----
 
 ## 📁 文件名合并规则（@ 分组机制）
 
@@ -57,6 +62,7 @@
 
 
 ⚠️ @ 仅用于文件名分组，不影响 include 语法
+
 ---
 
 # 🔧 Normalize
