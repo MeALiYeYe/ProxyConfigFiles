@@ -1,6 +1,4 @@
 SubStoreUrl: &SubStoreUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
-VpsUrl: &VpsUrl "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
-CFTunnelUrl: &CFTunnelUrl "http://127.0.0.1:3000/download/CF?target=ClashMeta"
 BaiduUrl: &BaiduUrl "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/BaiduProxy.yaml"
 
 # 延迟测试链接
@@ -19,7 +17,7 @@ FilterEU: &FilterEU '(?i)(?:🇧🇪|🇨🇿|🇩🇰|🇫🇮|🇫🇷|🇩�
 FilterOther: &FilterOther '^(?!.*(香港|台湾|新加坡|日本|美国|🇭🇰|🇼🇸|🇨🇳|🇹🇼|🇸🇬|🇯🇵|🇺🇸|\bHK\b|\bTW\b|\bSG\b|\bJP\b|\bUS\b))'
 ExcludeFilter: &ExcludeFilter '(?i)(?:佣金|套餐|官网|官方|网址|售后|免翻|过期|剩余|到期|流量|更新|点外|重置|免流|使用|教程|优惠|超实惠|址|AFF|Days|Date)'
 FilterLow: &FilterLow '(?<!\d)0\.\d+'
-FilterHigh: &FilterHigh '(?<![\dA-Za-z.])(?:1\.[1-9]\d*|[2-9]\d*\.\d+|(?:(?<![\dA-Za-z])[2-9]\d*(?:\.\d+)?\s*[xX×倍](?![\dA-Za-z])|(?<![\dA-Za-z])[xX×倍][2-9]\d*(?:\.\d+)?(?![\dA-Za-z])))(?![\dA-Za-z])'
+FilterHigh: &FilterHigh '(?:(?:[2-9]\d*\.\d+|1\.(?:0*[1-9]\d*))|(?:[2-9]\d*|1\.(?:0*[1-9]\d*))(?=[xX×倍]))'
 
 # 代理集和代理组
 Proxyer: &Proxyer
@@ -42,9 +40,9 @@ Smartp: &Smartp
   type: smart
   include-all-providers: true
   policy-priority:
-  - '(?<![\d.])0\.\d+(?!\d):1.3'
-  - '(?<![\d.])1\.\d+(?!\d):0.8'
-  - '(?<![\d.])[2-9]\d*(?:\.\\d+)?(?!\d):0.5'
+#  - '(?<![\d.])0\.\d+(?!\d):1.3'
+#  - '(?<![\d.])1\.\d+(?!\d):0.8'
+#  - '(?<![\d.])[2-9]\d*(?:\.\\d+)?(?!\d):0.5'
   uselightgbm: true
   collectdata: false
   prefer-asn: true
@@ -61,8 +59,6 @@ Groupp: &Groupp
   - 狮城
   - 日本
   - 美国
-  - 低倍
-  - 高倍
   - 自由
   - 民主
   url: *ProxyTest
@@ -113,22 +109,10 @@ proxy-providers:
     <<: *Proxyer
     path: ./proxies/SubStore.yaml
     url: *SubStoreUrl
-  Vps:
-    <<: *Proxyer
-    path: ./proxies/Vps.yaml
-    url: *VpsUrl
-  CFTunnel:
-    <<: *Proxyer
-    path: ./proxies/CFTunnel.yaml
-    url: *CFTunnelUrl
   BaiduProxy:
     <<: *Proxyer
     path: ./proxies/BaiduProxy.yaml
     url: *BaiduUrl
-    health-check:
-      enable: true
-      url: *DirecTest
-      interval: 600
 
 # 代理组
 proxy-groups:
@@ -146,7 +130,7 @@ proxy-groups:
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Emby.png"
 - name: Tiktok
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok.png"  
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok.png"
 - name: Youtube
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/YouTube.png"
@@ -217,14 +201,6 @@ proxy-groups:
   <<: *Smartp
   filter: *FilterUS
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/United_States.png"
-- name: 低倍
-  <<: *Smartp
-  filter: *FilterLow
-  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/liuliang(2).png"
-- name: 高倍
-  <<: *Smartp
-  filter: *FilterHigh
-  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/liuliang(3).png"
 
 - name: 自由
   <<: *Smartp
@@ -237,33 +213,29 @@ proxy-groups:
 
 # 规则集
 rule-providers:
-  awavenue:
+  directs:
     <<: *dom
-    path: ./rules/awavenue.mrs
-    url: "https://cdn.jsdelivr.net/gh/TG-Twilight/AWAvenue-Ads-Rule@main/Filters/AWAvenue-Ads-Rule-Clash.mrs"
-  mydirect:
-    <<: *dom
-    path: ./rules/mydirect.mrs
+    path: ./rules/directs.mrs
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct/Direct.mrs"
-  mydirect_ip:
+  directs_ip:
     <<: *ipc
-    path: ./rules/mydirect_ip.mrs
+    path: ./rules/directs_ip.mrs
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct/Direct_ip.mrs"
-  myreject:
+  rejects:
     <<: *dom
-    path: ./rules/myreject.mrs
+    path: ./rules/rejects.mrs
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject/Reject.mrs"
-  myreject_ip:
+  rejects_ip:
     <<: *ipc
-    path: ./rules/myreject_ip.mrs
+    path: ./rules/rejects_ip.mrs
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject/Reject_ip.mrs"
-  myproxy:
+  proxys:
     <<: *dom
-    path: ./rules/myproxy.mrs
+    path: ./rules/proxys.mrs
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy/Proxy.mrs"
-  myproxy_ip:
+  proxys_ip:
     <<: *ipc
-    path: ./rules/myproxy_ip.mrs
+    path: ./rules/proxys_ip.mrs
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy/Proxy_ip.mrs"
   emby:
     <<: *dom
@@ -378,23 +350,22 @@ rules:
   # NTP
 - AND,((NETWORK,udp),(DST-PORT,123)),DIRECT
   # FCM
-- OR,((DST-PORT,5228-5230),(RULE-SET,googlefcm)),DIRECT
+- DST-PORT,5228-5230,DIRECT
 - RULE-SET,private,DIRECT
 - RULE-SET,private_ip,DIRECT,no-resolve
 - RULE-SET,ads-all,REJECT-DROP
-- RULE-SET,awavenue,REJECT-DROP
 - RULE-SET,httpdns-cn,REJECT-DROP
-- RULE-SET,myreject,REJECT-DROP
-- RULE-SET,myreject_ip,REJECT-DROP,no-resolve
-- RULE-SET,mydirect,Domestic
-- RULE-SET,mydirect_ip,Domestic,no-resolve
-- RULE-SET,myproxy,Foreign
-- RULE-SET,myproxy_ip,Foreign,no-resolve
+- RULE-SET,rejects,REJECT-DROP
+- RULE-SET,rejects_ip,REJECT-DROP,no-resolve
+- RULE-SET,directs,Domestic
+- RULE-SET,directs_ip,Domestic,no-resolve
+- RULE-SET,proxys,Foreign
+- RULE-SET,proxys_ip,Foreign,no-resolve
 - RULE-SET,fakelocation,Location
 - RULE-SET,fakelocation_ip,Location,no-resolve
 - RULE-SET,emby,Emby
-- RULE-SET,tiktok,Tiktok
 - RULE-SET,youtube,Youtube
+- RULE-SET,tiktok,Tiktok
 - RULE-SET,entertainment,Media
 - RULE-SET,telegram,Telegram
 - RULE-SET,telegram_ip,Telegram,no-resolve
@@ -430,8 +401,8 @@ external-ui: ./ui/
 external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist-no-fonts.zip"
 secret: ""
 skip-auth-prefixes:
-- 10.0.0.1/24
-- 127.0.0.1/32
+- 10.0.0.1/8
+- 127.0.0.1/8
 - 192.168.0.1/16
 
 geodata-mode: true
@@ -525,8 +496,8 @@ dns:
   - 223.6.6.6
   proxy-server-nameserver: *cndns
   nameserver-policy:
-    'RULE-SET:ads-all,awavenue,myreject': rcode://name_error
-    'RULE-SET:cn,apple,microsoft,mydirect': *cndns
+    'RULE-SET:ads-all,rejects': rcode://name_error
+    'RULE-SET:cn,apple,microsoft,directs': *cndns
   nameserver: *cgdns
 
 # hosts
