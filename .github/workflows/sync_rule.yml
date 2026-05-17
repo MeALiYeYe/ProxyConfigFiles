@@ -202,7 +202,8 @@ jobs:
             ! -name "*.jpeg" \
             ! -name "*.webp" \
             | while read -r file; do
-            rel_path="${file#tmp/normalized/}"
+            rel_path="${file#tmp/expanded/}"
+            rel_path="${rel_path#./}"
             dir_path=$(dirname "$rel_path")
             filename=$(basename "$file")
 
