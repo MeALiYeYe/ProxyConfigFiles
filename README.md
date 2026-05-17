@@ -18,11 +18,7 @@
 
 # 📂 目录结构
 
-rules/                  # 原始规则
-tmp/normalized/         # 中间产物
-Mihomo/rule/            # Mihomo 输出
-Quantumult X/rule/      # QX 输出
-Egern/rule/             # Egern 输出
+
 
 ---
 
@@ -36,6 +32,31 @@ Egern/rule/             # Egern 输出
 @local.list
 @https://example.com/rules.list
 
+---
+
+## 📁 文件名合并规则（@ 分组机制）
+
+在子目录中，可以使用如下文件命名方式：
+
+
+
+系统会自动按 @ 前缀进行合并：
+
+
+
+- 自动合并同名前缀规则
+- 便于拆分维护大规则集
+- 不影响目录结构
+
+### 💡 示例
+
+
+
+生成：
+
+
+
+⚠️ @ 仅用于文件名分组，不影响 include 语法
 ---
 
 # 🔧 Normalize
@@ -57,6 +78,7 @@ Egern/rule/             # Egern 输出
 - Mihomo（YAML + MRS）
 - Quantumult X
 - Egern
+- Surge
 
 ---
 
