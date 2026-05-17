@@ -202,7 +202,7 @@ jobs:
             ! -name "*.jpeg" \
             ! -name "*.webp" \
             | while read -r file; do
-            rel_path="${file#rules/}"
+            rel_path="${file#tmp/normalized/}"
             dir_path=$(dirname "$rel_path")
             filename=$(basename "$file")
 
@@ -291,6 +291,7 @@ jobs:
           while read -r file; do
 
             rel_path="${file#tmp/normalized/}"   # 相对 tmp/normalized 目录
+            rel_path="${rel_path#./}"   # 防御 ./ 前缀
             out_dir=$(dirname "$rel_path")       # 子目录
             base=$(basename "$rel_path" .list)
             
