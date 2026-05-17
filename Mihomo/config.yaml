@@ -89,9 +89,8 @@ rule-anchor:
     behavior: ipcidr
     format: mrs
     interval: 86400
-#################################
-#############锚点结束#############
-#################################
+
+
 proxies:
 - name: DNS_Hijack
   type: dns
@@ -159,17 +158,17 @@ proxy-groups:
 - name: JS
   <<: *Smartp
   url: *DirecTest
-  filter: "南京|苏州"
+  filter: '(?i)(?:南京|苏州)'
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(1).png"
 - name: GD
   <<: *Smartp
   url: *DirecTest
-  filter: "广州"
+  filter: '(?i)(?:广州)'
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(2).png"
 - name: BJ
   <<: *Smartp
   url: *DirecTest
-  filter: 北京|保定"
+  filter: '(?i)(?:北京|保定)'
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(3).png"
 
 - name: HK
@@ -195,11 +194,11 @@ proxy-groups:
 
 - name: Liberty
   <<: *Smartp
-  filter: (?i)(?:vps|自建)
+  filter: '(?i)(?:vps|自建)'
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png"
 - name: Democracy
   <<: *Smartp
-  filter: (?i)(?:CF|优选|反代)
+  filter: '(?i)(?:CF|优选|反代)'
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/jichang.png"
 
 rule-providers:
