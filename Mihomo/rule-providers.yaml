@@ -103,3 +103,11 @@ rule-providers:
     path: ./ruleset/WebRTC.mrs
     interval: 86400
 
+  anti-ad-surge:
+    type: http
+    behavior: domain
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/anti-ad-surge.mrs
+    path: ./ruleset/anti-ad-surge.mrs
+    interval: 86400
+
