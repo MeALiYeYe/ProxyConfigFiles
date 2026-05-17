@@ -21,106 +21,121 @@ jobs:
         uses: actions/checkout@v5
 
       ################################
-      # 1️⃣ Expand includes
+      # 1️⃣ Expand includes（优化版）
       ################################
       - name: Expand includes
         run: |
           set -e
 
-          declare -A visited
+          declare -A visited_file
+          declare -A visited_url
+
           cache_dir="/tmp/rule_cache"
           mkdir -p "$cache_dir"
+          mkdir -p tmp/expanded
 
-          # 下载（带缓存）
+          # URL 缓存
           fetch_url() {
             local url="$1"
-            local cache_file="$cache_dir/$(echo -n "$url" | md5sum | cut -d' ' -f1)"
+            local key
+            key=$(echo -n "$url" | md5sum | cut -d' ' -f1)
+            local cache_file="$cache_dir/$key"
 
+            # 已下载直接用
             if [ -f "$cache_file" ]; then
               cat "$cache_file"
-            else
-              curl -sSL --retry 3 --connect-timeout 10 "$url" | tee "$cache_file"
-            fi
-          }
-
-          # 递归展开
-          expand_file() {
-            local file="$1"
-            local tmp
-            tmp=$(mktemp)
-
-            # 防循环 include
-            if [[ -n "${visited[$file]}" ]]; then
-              echo "# skipped duplicate: $file" >&2
               return
             fi
-            visited[$file]=1
+
+            # 避免并发重复下载
+            if [[ -n "${visited_url[$url]}" ]]; then
+              return
+            fi
+            visited_url[$url]=1
+
+            echo "[fetch] $url"
+
+            curl -sSL --retry 3 --connect-timeout 10 "$url" \
+              | tee "$cache_file"
+          }
+
+          # 递归展开（输出到 stdout，不写文件）
+          expand_file() {
+            local file="$1"
+
+            # 防止重复展开
+            if [[ -n "${visited_file[$file]}" ]]; then
+              return
+            fi
+            visited_file[$file]=1
 
             while IFS= read -r line || [ -n "$line" ]; do
-
-              # @xxx（最高优先级）
+      
+              # @ URL
               if [[ "$line" =~ ^@https?:// ]]; then
                 url="${line#@}"
-                echo "# source: $url" >> "$tmp"
-                fetch_url "$url" >> "$tmp" || echo "Failed: $url" >&2
+                echo "# source: $url"
+                fetch_url "$url"
 
+              # @ 本地
               elif [[ "$line" =~ ^@ ]]; then
-                path="${line#@}"
-                path="$(dirname "$file")/$path"
+                path="$(dirname "$file")/${line#@}"
                 if [ -f "$path" ]; then
-                  echo "# include: $path" >> "$tmp"
-                  expand_file "$path" >> "$tmp"
+                  echo "# include: $path"
+                  expand_file "$path"
                 else
-                  echo "Warning: local include $path not found" >&2
+                  echo "Warning: $path not found" >&2
                 fi
 
-              #  #!include / #!source（推荐语法）
+              # #!include / #!source
               elif [[ "$line" =~ ^#!(include|source):[[:space:]]* ]]; then
                 ref="$(echo "$line" | sed -E 's/^#!(include|source):[[:space:]]*//')"
 
-                echo "$line" >> "$tmp"
-
-                if [[ "$ref" =~ ^https?://[^[:space:]]+$ ]]; then
-                  fetch_url "$ref" >> "$tmp" || echo "Failed: $ref" >&2
-                else
-                  path="$(dirname "$file")/$ref"
-                  if [ -f "$path" ]; then
-                    expand_file "$path" >> "$tmp"
-                  else
-                    echo "Warning: local include $path not found" >&2
-                  fi
-                fi
-
-              # 兼容旧 # include:（严格匹配）
-              elif [[ "$line" =~ ^#[[:space:]]*(include|source):[[:space:]]*(https?://[^[:space:]]+|[^[:space:]]+)$ ]]; then
-                ref="$(echo "$line" | sed -E 's/^#[[:space:]]*(include|source):[[:space:]]*//')"
-
-                echo "$line" >> "$tmp"
+                echo "$line"
 
                 if [[ "$ref" =~ ^https?:// ]]; then
-                  fetch_url "$ref" >> "$tmp" || echo "Failed: $ref" >&2
+                  fetch_url "$ref"
                 else
                   path="$(dirname "$file")/$ref"
                   if [ -f "$path" ]; then
-                    expand_file "$path" >> "$tmp"
+                    expand_file "$path"
                   else
-                    echo "Warning: local include $path not found" >&2
+                    echo "Warning: $path not found" >&2
                   fi
                 fi
 
-              # 普通内容
+              # 兼容旧语法
+              elif [[ "$line" =~ ^#[[:space:]]*(include|source): ]]; then
+                ref="$(echo "$line" | sed -E 's/^#[[:space:]]*(include|source):[[:space:]]*//')"
+
+                echo "$line"
+
+                if [[ "$ref" =~ ^https?:// ]]; then
+                  fetch_url "$ref"
+                else
+                  path="$(dirname "$file")/$ref"
+                  if [ -f "$path" ]; then
+                    expand_file "$path"
+                  else
+                    echo "Warning: $path not found" >&2
+                  fi
+                fi
+
               else
-                echo "$line" >> "$tmp"
+                echo "$line"
               fi
 
-            done < "$file"
-
-            mv "$tmp" "$file"
+           done < "$file"
           }
 
-          # 遍历 rules 目录
+          # 遍历 rules → 输出到 tmp/expanded
           while IFS= read -r file; do
-            expand_file "$file"
+            out="tmp/expanded/${file#rules/}"
+            mkdir -p "$(dirname "$out")"
+
+            echo "[expand] $file → $out"
+
+            expand_file "$file" > "$out"
           done < <(find rules -type f)
 
       ################################
@@ -174,7 +189,7 @@ jobs:
           ################################ 
           # 处理规则文件，保留 rules 子目录结构
           ################################
-          find rules -type f \
+          find tmp/expanded -type f \
             ! -path "*/\.*" \
             ! -name "*.md" \
             ! -name "*.png" \
