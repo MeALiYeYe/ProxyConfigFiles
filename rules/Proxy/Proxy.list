@@ -13,3 +13,5 @@ DOMAIN-SUFFIX,skybridge.cc
 DOMAIN-SUFFIX,xiaoyakankan.com
 
 IP-CIDR,16.163.175.48/32,no-resolve
+IP-CIDR,156.224.76.0/24,no-resolve
+IP-CIDR,156.231.115.0/24,no-resolve
