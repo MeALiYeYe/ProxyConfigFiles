@@ -17,62 +17,111 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout
+        uses: actions/checkout@v5
 
       ################################
-      # 1️⃣ Expand @includes
+      # 1️⃣ Expand includes
       ################################
-      - name: Expand @includes
+      - name: Expand includes
         run: |
           set -e
 
+          declare -A visited
+          cache_dir="/tmp/rule_cache"
+          mkdir -p "$cache_dir"
+
+          # 下载（带缓存）
+          fetch_url() {
+            local url="$1"
+            local cache_file="$cache_dir/$(echo -n "$url" | md5sum | cut -d' ' -f1)"
+
+            if [ -f "$cache_file" ]; then
+              cat "$cache_file"
+            else
+              curl -sSL --retry 3 --connect-timeout 10 "$url" | tee "$cache_file"
+            fi
+          }
+
+          # 递归展开
           expand_file() {
             local file="$1"
-                local tmp
-                tmp=$(mktemp)
+            local tmp
+            tmp=$(mktemp)
 
-                while IFS= read -r line || [ -n "$line" ]; do
-                    if [[ "$line" =~ ^@https?:// ]]; then
-                        url="${line#@}"
-                        echo "# source: $url" >> "$tmp"
-                        curl -sSL --retry 3 --connect-timeout 10 "$url" >> "$tmp" || echo "Failed: $url" >&2
+            # 防循环 include
+            if [[ -n "${visited[$file]}" ]]; then
+              echo "# skipped duplicate: $file" >&2
+              return
+            fi
+            visited[$file]=1
 
-                    elif [[ "$line" =~ ^@ ]]; then
-                        path="${line#@}"
-                        path="$(dirname "$file")/$path"
-                        if [ -f "$path" ]; then
-                            echo "# include: $path" >> "$tmp"
-                            expand_file "$path" >> "$tmp"
-                        else
-                            echo "Warning: local include $path not found" >&2
-                        fi
+            while IFS= read -r line || [ -n "$line" ]; do
 
-                    elif [[ "$line" =~ ^#[[:space:]]*(include|source): ]]; then
-                        ref="${line#\#* }"
-                        echo "$line" >> "$tmp"
-                        if [[ "$ref" =~ ^https?:// ]]; then
-                            curl -sSL --retry 3 --connect-timeout 10 "$ref" >> "$tmp" || echo "Failed: $ref" >&2
-                        else
-                            path="$(dirname "$file")/$ref"
-                            if [ -f "$path" ]; then
-                                expand_file "$path" >> "$tmp"
-                            else
-                                echo "Warning: local include $path not found" >&2
-                            fi
-                        fi
+              # @xxx（最高优先级）
+              if [[ "$line" =~ ^@https?:// ]]; then
+                url="${line#@}"
+                echo "# source: $url" >> "$tmp"
+                fetch_url "$url" >> "$tmp" || echo "Failed: $url" >&2
 
-                    else
-                        echo "$line" >> "$tmp"
-                    fi
-                done < "$file"
+              elif [[ "$line" =~ ^@ ]]; then
+                path="${line#@}"
+                path="$(dirname "$file")/$path"
+                if [ -f "$path" ]; then
+                  echo "# include: $path" >> "$tmp"
+                  expand_file "$path" >> "$tmp"
+                else
+                  echo "Warning: local include $path not found" >&2
+                fi
 
-                mv "$tmp" "$file"
-            }
+              #  #!include / #!source（推荐语法）
+              elif [[ "$line" =~ ^#!(include|source):[[:space:]]* ]]; then
+                ref="$(echo "$line" | sed -E 's/^#!(include|source):[[:space:]]*//')"
 
-            # 遍历
-            while IFS= read -r file; do
-                expand_file "$file"
-            done < <(find rules -type f)
+                echo "$line" >> "$tmp"
+
+                if [[ "$ref" =~ ^https?://[^[:space:]]+$ ]]; then
+                  fetch_url "$ref" >> "$tmp" || echo "Failed: $ref" >&2
+                else
+                  path="$(dirname "$file")/$ref"
+                  if [ -f "$path" ]; then
+                    expand_file "$path" >> "$tmp"
+                  else
+                    echo "Warning: local include $path not found" >&2
+                  fi
+                fi
+
+              # 兼容旧 # include:（严格匹配）
+              elif [[ "$line" =~ ^#[[:space:]]*(include|source):[[:space:]]*(https?://[^[:space:]]+|[^[:space:]]+)$ ]]; then
+                ref="$(echo "$line" | sed -E 's/^#[[:space:]]*(include|source):[[:space:]]*//')"
+
+                echo "$line" >> "$tmp"
+
+                if [[ "$ref" =~ ^https?:// ]]; then
+                  fetch_url "$ref" >> "$tmp" || echo "Failed: $ref" >&2
+                else
+                  path="$(dirname "$file")/$ref"
+                  if [ -f "$path" ]; then
+                    expand_file "$path" >> "$tmp"
+                  else
+                    echo "Warning: local include $path not found" >&2
+                  fi
+                fi
+
+              # 普通内容
+              else
+                echo "$line" >> "$tmp"
+              fi
+
+            done < "$file"
+
+            mv "$tmp" "$file"
+          }
+
+          # 遍历 rules 目录
+          while IFS= read -r file; do
+            expand_file "$file"
+          done < <(find rules -type f)
 
       ################################
       # 2️⃣ Normalize rules
