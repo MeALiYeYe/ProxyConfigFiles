@@ -9,7 +9,7 @@ MIHOMO_DIR="$HOME/mihomo"
 BOOT_SCRIPT_DIR="$HOME/.termux/boot"
 
 # 此脚本地址
-SHELL_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/Mihogo/SubMi.sh"
+SHELL_URL="https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/SubMi/SubMi.sh"
 # mihomo核心地址     # 废除，旧版 release 已被清理
 # MIHOMO_URL="https://github.com/vernesong/mihomo/releases/download/Prerelease-Alpha/mihomo-android-arm64-v8-alpha-smart-1383218.gz"
 # mihomo配置文件地址
