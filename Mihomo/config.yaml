@@ -1,5 +1,7 @@
-SubStoreUrl: &SubStoreUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
-BaiduUrl: &BaiduUrl "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/BaiduProxy.yaml"
+SubStore: &SubStore "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
+VPS: &VPS "http://10.0.0.1:3000/download/VPS?target=ClashMeta&includeUnsupportedProxy=true"
+CFTunnel: &CFTunnel "http://10.0.0.1:3000/download/CF?target=ClashMeta&includeUnsupportedProxy=true"
+BaiduProxy: &BaiduProxy "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/BaiduProxy.yaml"
 
 ProxyTest: &ProxyTest "https://www.gstatic.com/generate_204"
 DirecTest: &DirecTest "https://connect.rom.miui.com/generate_204"
@@ -88,7 +90,6 @@ rule-anchor:
     format: mrs
     interval: 86400
 
-
 proxies:
 - name: 直连
   type: direct
@@ -100,11 +101,19 @@ proxy-providers:
   SubStore:
     <<: *Proxyer
     path: ./proxies/SubStore.yaml
-    url: *SubStoreUrl
+    url: *SubStore
+  VPS:
+    <<: *Proxyer
+    path: ./proxies/VPS.yaml
+    url: *VPS
+  CFTunnel:
+    <<: *Proxyer
+    path: ./proxies/CFTunnel.yaml
+    url: *CFTunnel
   BaiduProxy:
     <<: *Proxyer
     path: ./proxies/BaiduProxy.yaml
-    url: *BaiduUrl
+    url: *BaiduProxy
 
 proxy-groups:
 - name: Location
@@ -155,7 +164,6 @@ proxy-groups:
 - name: Final
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Final.png"
-
 - name: 江苏
   <<: *Smartp
   url: *DirecTest
@@ -170,7 +178,6 @@ proxy-groups:
   <<: *Smartp
   url: *DirecTest
   filter: '(?i)(?:北京|保定)'
-
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(3).png"
 - name: 香港
   <<: *Smartp
@@ -200,7 +207,6 @@ proxy-groups:
   <<: *Smartp
   filter: '(?i)(?:CF|优选|反代)'
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/jichang.png"
-
 rule-providers:
   directs:
     <<: *dom
@@ -247,10 +253,6 @@ rule-providers:
     <<: *ipc
     path: ./rules/private_ip.mrs
     url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs"
-  googlefcm:
-    <<: *dom
-    path: ./rules/googlefcm.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/googlefcm.mrs"
   ads-all:
     <<: *dom
     path: ./rules/ads-all.mrs
@@ -370,7 +372,6 @@ rules:
 - RULE-SET,cn,Domestic
 - RULE-SET,cn_ip,Domestic,no-resolve
 - MATCH,Final
-
 
 mixed-port: 7890
 socks-port: 7891
