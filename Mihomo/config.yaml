@@ -282,10 +282,6 @@ rule-providers:
     <<: *ipc
     path: ./rules/telegram_ip.mrs
     url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"
-  googlefcm:
-    <<: *dom
-    path: ./rules/googlefcm.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/googlefcm.mrs"
   google:
     <<: *dom
     path: ./rules/google.mrs
@@ -337,14 +333,9 @@ rule-providers:
 
 rules:
 - DST-PORT,53,DNS_Hijack
-- DST-PORT,853,DNSServer
-  # STUN
 - AND,((NETWORK,udp),(DST-PORT,443/3478-3479/5349-5350/19302-19309)),REJECT-DROP
-  # Tracker
 - DST-PORT,1337/2710/6881-6999/7777,REJECT-DROP
-  # NTP
 - AND,((NETWORK,udp),(DST-PORT,123)),DIRECT
-  # FCM
 - DST-PORT,5228-5230,DIRECT
 - RULE-SET,private,DIRECT
 - RULE-SET,private_ip,DIRECT,no-resolve
@@ -378,9 +369,9 @@ rules:
 - RULE-SET,cn_ip,Domestic,no-resolve
 - MATCH,Final
 
+port: 8080
+socks-port: 1080
 mixed-port: 7890
-socks-port: 7891
-http-port: 7892
 tproxy-port: 1536
 redir-port: 1538
 ipv6: true
@@ -484,15 +475,6 @@ dns:
   nameserver: *cgdns
 
 hosts:
-  raw.githubusercontent.com:
-  - 185.199.108.133
-  - 185.199.109.133
-  - 185.199.110.133
-  - 185.199.111.133
-  - "2606:50c0:8000::154"
-  - "2606:50c0:8001::154"
-  - "2606:50c0:8002::154"
-  - "2606:50c0:8003::154"
   doh.pub:
   - 1.12.12.21
   - 120.53.53.53
