@@ -337,8 +337,6 @@ deploy_mihomo() {
 
     chmod +x mihomo
 
-     # 模型选择
-    choose_model
     choose_config
     safe_wget "$FINAL_CONFIG_URL" "config.yaml"
 
@@ -347,6 +345,8 @@ deploy_mihomo() {
         # 非交互模式：AUTO_DOWNLOAD_GEO=1 或 CI=true
         if [ "${AUTO_DOWNLOAD_GEO:-0}" -eq 1 ] || [ "${CI:-0}" = true ]; then
             log_info "自动下载 Model.bin 和 GEO 文件..."
+            # 模型选择
+            choose_model
             [ -n "${MODEL_URL:-}" ] && safe_wget "$MODEL_URL" "Model.bin"
             for item in "${GEO_FILES[@]}"; do
                 IFS=',' read -r dest src <<< "$item"
@@ -357,6 +357,8 @@ deploy_mihomo() {
             echo -n "是否下载 Model.bin 和 GEO 文件？(y/N): "
             read -r confirm
             if [[ "$confirm" =~ ^[Yy]$ ]]; then
+                # 模型选择
+                choose_model
                 [ -n "${MODEL_URL:-}" ] && safe_wget "$MODEL_URL" "Model.bin"
                 for item in "${GEO_FILES[@]}"; do
                     IFS=',' read -r dest src <<< "$item"
