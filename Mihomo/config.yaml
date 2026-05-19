@@ -67,7 +67,7 @@ Groupd: &Groupd
   - 江苏
   - 广东
   - 北京
-  Url: *DirecTest
+  url: *DirecTest
   lazy: true
   hidden: false
 
@@ -350,8 +350,8 @@ rules:
 - RULE-SET,fakelocation,Location
 - RULE-SET,fakelocation_ip,Location,no-resolve
 - RULE-SET,emby,Emby
-- RULE-SET,youtube,Youtube
 - RULE-SET,tiktok,Tiktok
+- RULE-SET,youtube,Youtube
 - RULE-SET,entertainment,Media
 - RULE-SET,telegram,Telegram
 - RULE-SET,telegram_ip,Telegram,no-resolve
@@ -382,7 +382,6 @@ tcp-concurrent: true
 allow-lan: true
 external-controller: 0.0.0.0:9090
 external-ui: ./ui/
-external-ui-name: Zash
 external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist-no-fonts.zip"
 secret: ""
 skip-auth-prefixes:
@@ -472,6 +471,7 @@ dns:
   nameserver-policy:
     'RULE-SET:ads-all,rejects': rcode://name_error
     'RULE-SET:cn,apple,microsoft,directs': *cndns
+    'RULE-SET:geolocation-!cn,proxys': *cgdns
   nameserver: *cgdns
 
 hosts:
