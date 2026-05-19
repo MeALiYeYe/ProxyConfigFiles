@@ -17,6 +17,7 @@ DOMAIN-SUFFIX,xianniu.com
 DOMAIN,ifconfig.me
 DOMAIN,kahaoquan.com
 DOMAIN,subcdn.rtx.al
+DOMAIN,cdn.jsdelivr.net
 
 IP-CIDR,185.218.6.88/29,no-resolve
 IP-CIDR,156.224.76.0/24,no-resolve
