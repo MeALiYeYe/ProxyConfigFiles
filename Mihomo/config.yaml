@@ -238,13 +238,12 @@ rule-providers:
     url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/rule/Emby/Emby.mrs"
   fakelocation:
     <<: *dom
-    path: ./rules/FakeLocation.mrs
+    path: ./rules/fakelocation.mrs
     url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/rule/FakeLocation/FakeLocation.mrs"
   fakelocation_ip:
     <<: *ipc
-    path: ./rules/FakeLocation_ip.mrs
+    path: ./rules/fakelocation_ip.mrs
     url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/rule/FakeLocation/FakeLocation_ip.mrs"
-
   private:
     <<: *dom
     path: ./rules/private.mrs
@@ -375,6 +374,7 @@ rules:
 
 mixed-port: 7890
 socks-port: 7891
+http-port: 7892
 tproxy-port: 1536
 redir-port: 1538
 ipv6: true
@@ -383,9 +383,9 @@ log-level: warning
 unified-delay: true
 tcp-concurrent: true
 allow-lan: true
-
 external-controller: 0.0.0.0:9090
 external-ui: ./ui/
+external-ui-name: Zash
 external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist-no-fonts.zip"
 secret: ""
 skip-auth-prefixes:
@@ -394,7 +394,6 @@ skip-auth-prefixes:
 - 192.168.0.1/16
 
 geodata-mode: true
-geodata-loader: memconservative
 geo-auto-update: true
 geo-update-interval: 168
 geox-url:
