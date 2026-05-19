@@ -41,7 +41,6 @@ Smartp: &Smartp
 #  - '(?<![\d.])[2-9]\d*(?:\.\\d+)?(?!\d):0.5'
   uselightgbm: true
   collectdata: false
-  prefer-asn: true
   max-failed-times: 3
   url: *ProxyTest
   hidden: true
@@ -163,6 +162,7 @@ proxy-groups:
 - name: Final
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Final.png"
+
 - name: 江苏
   <<: *Smartp
   url: *DirecTest
@@ -178,6 +178,7 @@ proxy-groups:
   url: *DirecTest
   filter: '(?i)(?:北京|保定)'
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(3).png"
+
 - name: 香港
   <<: *Smartp
   filter: *FilterHK
@@ -244,6 +245,7 @@ rule-providers:
     <<: *ipc
     path: ./rules/fakelocation_ip.mrs
     url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/rule/FakeLocation/FakeLocation_ip.mrs"
+
   private:
     <<: *dom
     path: ./rules/private.mrs
@@ -280,6 +282,10 @@ rule-providers:
     <<: *ipc
     path: ./rules/telegram_ip.mrs
     url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"
+  googlefcm:
+    <<: *dom
+    path: ./rules/googlefcm.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/googlefcm.mrs"
   google:
     <<: *dom
     path: ./rules/google.mrs
@@ -392,12 +398,6 @@ skip-auth-prefixes:
 - 10.0.0.1/8
 - 127.0.0.1/8
 - 192.168.0.1/16
-
-geodata-mode: true
-geo-auto-update: true
-geo-update-interval: 168
-geox-url:
-  asn: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
 
 lgbm-auto-update: true
 lgbm-update-interval: 360
