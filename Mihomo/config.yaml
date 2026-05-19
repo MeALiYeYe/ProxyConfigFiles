@@ -372,8 +372,8 @@ rules:
 port: 8080
 socks-port: 1080
 mixed-port: 7890
-tproxy-port: 1536
-redir-port: 1538
+redir-port: 1911
+tproxy-port: 1919
 ipv6: true
 mode: Rule
 log-level: warning
