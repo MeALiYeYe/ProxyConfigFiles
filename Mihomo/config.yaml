@@ -13,7 +13,6 @@ FilterJP: &FilterJP '(?i)(?:日|日本|🇯🇵|\bJP\b|Japan|JPN)'
 FilterKR: &FilterKR '(?i)(?:韩|韩国|🇰🇷|\bKR\b|KOR|Korea)'
 FilterUS: &FilterUS '(?i)(?:美|美国|🇺🇸|\bUS\b|USA|States|America)'
 FilterRU: &FilterRU '(?i)(?:俄罗斯|莫斯科|🇷🇺|RU|Russia|Moscow)'
-FilterEU: &FilterEU '(?i)(?:🇧🇪|🇨🇿|🇩🇰|🇫🇮|🇫🇷|🇩🇪|🇮🇪|🇮🇹|🇱🇹|🇱🇺|🇳🇱|🇵🇱|🇸🇪|🇬🇧|CDG|FRA|AMS|MAD|BCN|FCO|MUC|BRU)'
 FilterOther: &FilterOther '^(?!.*(香港|台湾|新加坡|日本|美国|🇭🇰|🇼🇸|🇨🇳|🇹🇼|🇸🇬|🇯🇵|🇺🇸|\bHK\b|\bTW\b|\bSG\b|\bJP\b|\bUS\b))'
 ExcludeFilter: &ExcludeFilter '(?i)(?:佣金|套餐|官网|官方|网址|售后|免翻|过期|剩余|到期|流量|更新|点外|重置|免流|使用|教程|优惠|超实惠|址|AFF|Days|Date)'
 FilterLow: &FilterLow '(?<!\d)0\.\d+'
@@ -207,6 +206,7 @@ proxy-groups:
   <<: *Smartp
   filter: '(?i)(?:CF|优选|反代)'
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/jichang.png"
+
 rule-providers:
   directs:
     <<: *dom
