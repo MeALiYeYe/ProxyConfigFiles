@@ -67,7 +67,7 @@ Groupd: &Groupd
   - 江苏
   - 广东
   - 北京
-  Url: *DirecTest
+  url: *DirecTest
   lazy: true
   hidden: false
 
@@ -472,6 +472,7 @@ dns:
   nameserver-policy:
     'RULE-SET:ads-all,rejects': rcode://name_error
     'RULE-SET:cn,apple,microsoft,directs': *cndns
+    'RULE-SET:geolocation-!cn,proxys': *cgdns
   nameserver: *cgdns
 
 hosts:
