@@ -44,65 +44,19 @@ log_error() { echo -e "\e[31m[ERROR]\e[0m $1"; exit 1; }
 safe_wget() {
     local url="$1"
     local out="${2:-}"
-    local cdn_url=""
 
-    # 生成加速 URL
-    if echo "$url" | grep -q "raw.githubusercontent.com"; then
-        cdn_url=$(echo "$url" | sed -E \
-            's#https://raw.githubusercontent.com/([^/]+)/([^/]+)/([^/]+)/(.*)#https://cdn.jsdelivr.net/gh/\1/\2@\3/\4#')
+    log_info "下载: $url"
 
-    elif echo "$url" | grep -q "github.com/.*/releases/download"; then
-        cdn_url="https://ghproxy.com/$url"
-    fi
-
-    download() {
-        local u="$1"
-
-        if [ -z "$out" ]; then
-            wget --header="User-Agent: Mozilla/5.0" \
-                 --tries=3 --timeout=20 \
-                 -qO- "$u"
-        else
-            log_info "下载: $u"
-            wget --header="User-Agent: Mozilla/5.0" \
-                 --no-check-certificate \
-                 --tries=3 --timeout=20 \
-                 -O "$out" "$u"
-        fi
-    }
-
-    #--------------------------------
-    # 主源
-    #--------------------------------
-    if download "$url"; then
-        if [ -n "$out" ] && grep -qi "<html" "$out"; then
-            log_warn "主源返回 HTML，尝试加速源..."
-        else
-            return 0   # ✅ 成功必须立即退出
-        fi
+    if [ -z "$out" ]; then
+        wget --header="User-Agent: Mozilla/5.0" \
+             --tries=3 --timeout=20 \
+             -qO- "$url" || true
     else
-        log_warn "主源失败，尝试加速源..."
+        wget --header="User-Agent: Mozilla/5.0" \
+             --no-check-certificate \
+             --tries=3 --timeout=20 \
+             -O "$out" "$url" || true
     fi
-
-    #--------------------------------
-    # CDN
-    #--------------------------------
-    if [ -n "$cdn_url" ]; then
-        if download "$cdn_url"; then
-            if [ -n "$out" ] && grep -qi "<html" "$out"; then
-                log_warn "加速源返回 HTML"
-            else
-                return 0   # ✅ 成功必须立即退出
-            fi
-        else
-            log_warn "加速源下载失败"
-        fi
-    fi
-
-    #--------------------------------
-    # 最终失败
-    #--------------------------------
-    log_error "下载失败: $url"
 }
 
 # 获取版本号
