@@ -126,9 +126,6 @@ proxy-groups:
 - name: Emby
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Emby.png"
-- name: Tiktok
-  <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok.png"
 - name: Youtube
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/YouTube.png"
@@ -144,6 +141,9 @@ proxy-groups:
 - name: Cloudflare
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Cloudflare.png"
+- name: GoogleFCM
+  <<: *Groupp
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Google.png"  
 - name: Google
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Google_Search.png"
@@ -262,10 +262,6 @@ rule-providers:
     <<: *dom
     path: ./rules/httpdns-cn.mrs
     url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-httpdns-cn.mrs"
-  tiktok:
-    <<: *dom
-    path: ./rules/tiktok.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tiktok.mrs"
   youtube:
     <<: *dom
     path: ./rules/youtube.mrs
@@ -282,6 +278,10 @@ rule-providers:
     <<: *ipc
     path: ./rules/telegram_ip.mrs
     url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"
+  googlefcm:
+    <<: *dom
+    path: ./rules/googlefcm.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/googlefcm.mrs"
   google:
     <<: *dom
     path: ./rules/google.mrs
@@ -336,7 +336,8 @@ rules:
 - AND,((NETWORK,udp),(DST-PORT,443/3478-3479/5349-5350/19302-19309)),REJECT-DROP
 - DST-PORT,1337/2710/6881-6999/7777,REJECT-DROP
 - AND,((NETWORK,udp),(DST-PORT,123)),DIRECT
-- DST-PORT,5228-5230,DIRECT
+- DST-PORT,5228-5230,GoogleFCM
+- RULE-SET,googlefcm,GoogleFCM
 - RULE-SET,private,DIRECT
 - RULE-SET,private_ip,DIRECT,no-resolve
 - RULE-SET,ads-all,REJECT-DROP
@@ -351,7 +352,6 @@ rules:
 - RULE-SET,fakelocation_ip,Location,no-resolve
 - RULE-SET,emby,Emby
 - RULE-SET,youtube,Youtube
-- RULE-SET,tiktok,Tiktok
 - RULE-SET,entertainment,Media
 - RULE-SET,telegram,Telegram
 - RULE-SET,telegram_ip,Telegram,no-resolve
