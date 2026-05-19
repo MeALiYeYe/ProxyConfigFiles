@@ -112,11 +112,48 @@ wait_port() {
     return 1
 }
 
-# 获取 Smart Mihomo 核心文件
+# 获取 Mihomo 核心文件
 get_mihomo_url() {
-    wget -qO- https://api.github.com/repos/vernesong/mihomo/releases/tags/Prerelease-Alpha \
-    | jq -r '.assets[] | select(.name | test("android-arm64.*alpha.*\\.gz")) | .browser_download_url' \
-    | head -n 1
+    case "$MIHOMO_CHANNEL" in
+        smart)
+            wget -qO- https://api.github.com/repos/vernesong/mihomo/releases/tags/Prerelease-Alpha \
+            | jq -r '.assets[] | select(.name | test("android-arm64.*alpha.*smart.*\\.gz")) | .browser_download_url' \
+            | head -n 1
+            ;;
+        release)
+            wget -qO- https://api.github.com/repos/MetaCubeX/mihomo/releases/latest \
+            | jq -r '.assets[] | select(.name | test("android-arm64.*\\.gz$")) | .browser_download_url' \
+            | head -n 1
+            ;;
+        alpha)
+            wget -qO- https://api.github.com/repos/MetaCubeX/mihomo/releases/tags/Prerelease-Alpha \
+            | jq -r '.assets[] | select(.name | test("android-arm64.*alpha.*\\.gz")) | .browser_download_url' \
+            | head -n 1
+            ;;
+    esac
+}
+
+choose_mihomo_channel() {
+    echo "请选择 Mihomo 核心类型："
+    echo "1) Smart（智能版，默认）"
+    echo "2) Release（稳定版）"
+    echo "3) Alpha（测试版）"
+
+    if read -t 10 -rp "输入选项 [1-3] (默认1): " choice; then
+        echo ""
+    else
+        echo -e "\n超时未输入，使用默认 Smart"
+        choice=1
+    fi
+
+    case "${choice:-1}" in
+        1) MIHOMO_CHANNEL="smart";;
+        2) MIHOMO_CHANNEL="release";;
+        3) MIHOMO_CHANNEL="alpha";;
+        *) MIHOMO_CHANNEL="smart";;
+    esac
+
+    log_info "已选择核心类型: $MIHOMO_CHANNEL"
 }
 
 #------------------------------------------------
@@ -325,6 +362,7 @@ deploy_mihomo() {
     mkdir -p "$MIHOMO_DIR"
     cd "$MIHOMO_DIR"
 
+    choose_mihomo_channel
     MIHOMO_API_URL=$(get_mihomo_url || true)
 
     if [ -z "${MIHOMO_API_URL:-}" ]; then
@@ -533,6 +571,7 @@ update_mihomo_core() {
     log_info "更新 Mihomo 核心..."
     cd "$MIHOMO_DIR"
 
+    choose_mihomo_channel
     MIHOMO_API_URL=$(get_mihomo_url || true)
     [ -z "${MIHOMO_API_URL:-}" ] && log_error "无法获取 Mihomo 下载链接，更新失败"
 
