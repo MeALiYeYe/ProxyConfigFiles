@@ -100,6 +100,7 @@ DOMAIN-SUFFIX,wsproxy.douyu.com,DIRECT
 DOMAIN-SUFFIX,xiaohongshu.com
 DOMAIN-SUFFIX,y.qq.com
 DOMAIN-SUFFIX,zhihu.com
+DOMAIN-SUFFIX,zhimg.com
 DOMAIN-SUFFIX,zijieapi.com,DIRECT
 DOMAIN-KEYWORD,-core-c-hl
 DOMAIN-KEYWORD,-core-c-lf
@@ -207,3 +208,4 @@ IP-CIDR,203.107.1.0/24
 IP-CIDR,203.205.220.62/32
 IP-CIDR,211.152.149.12/32
 IP-CIDR6,2402:4e00:1200::/40
+[fetch] https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Zhihu/Zhihu.list

@@ -49,6 +49,7 @@ domain_suffix_set:
   - xiaohongshu.com
   - y.qq.com
   - zhihu.com
+  - zhimg.com
   - zijieapi.com
 domain_set:
   - ac.dun.163.com
