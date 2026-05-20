@@ -162,7 +162,6 @@ proxy-groups:
 - name: Final
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Final.png"
-
 - name: 江苏
   <<: *Smartp
   url: *DirecTest
@@ -178,7 +177,6 @@ proxy-groups:
   url: *DirecTest
   filter: '(?i)(?:北京|保定)'
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(3).png"
-
 - name: 香港
   <<: *Smartp
   filter: *FilterHK
@@ -245,7 +243,6 @@ rule-providers:
     <<: *ipc
     path: ./rules/fakelocation_ip.mrs
     url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/rule/FakeLocation/FakeLocation_ip.mrs"
-
   private:
     <<: *dom
     path: ./rules/private.mrs
@@ -254,6 +251,10 @@ rule-providers:
     <<: *ipc
     path: ./rules/private_ip.mrs
     url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs"
+  ntp:
+    <<: *dom
+    path: ./rules/ntp.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ntp.mrs"
   ads-all:
     <<: *dom
     path: ./rules/ads-all.mrs
@@ -282,6 +283,10 @@ rule-providers:
     <<: *ipc
     path: ./rules/telegram_ip.mrs
     url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"
+  googlefcm:
+    <<: *dom
+    path: ./rules/googlefcm.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/googlefcm.mrs"
   google:
     <<: *dom
     path: ./rules/google.mrs
@@ -336,7 +341,9 @@ rules:
 - AND,((NETWORK,udp),(DST-PORT,443/3478-3479/5349-5350/19302-19309)),REJECT-DROP
 - DST-PORT,1337/2710/6881-6999/7777,REJECT-DROP
 - AND,((NETWORK,udp),(DST-PORT,123)),DIRECT
+- RULE-SET,ntp,DIRECT
 - DST-PORT,5228-5230,DIRECT
+- RULE-SET,googlefcm,DIRECT
 - RULE-SET,private,DIRECT
 - RULE-SET,private_ip,DIRECT,no-resolve
 - RULE-SET,ads-all,REJECT-DROP
@@ -446,13 +453,13 @@ dns:
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.0/16
   fake-ip-range6: fdfe:dcba:9876::1/64
+  fake-ip-filter-mode: rule
   fake-ip-filter:
-  - "+.lan"
-  - "+.local"
-  - "localhost"
-  - "+.ntp.org"
-  - "+.pool.ntp.org"
-  - "time.*.com"
+  - DOMAIN-SUFFIX,eu.cc,real-ip
+  - RULE-SET,private,real-ip
+  - RULE-SET,ntp,real-ip
+  - RULE-SET,googlefcm,real-ip
+  - MATCH,fake-ip
   default-nameserver:
   - 223.5.5.5
   - 223.6.6.6
@@ -469,7 +476,7 @@ dns:
   - 223.6.6.6
   proxy-server-nameserver: *cndns
   nameserver-policy:
-    '.eu.ccc': *cgdns
+    '.eu.cc': *cgdns
     'RULE-SET:ads-all,rejects': rcode://name_error
     'RULE-SET:cn,apple,microsoft,directs': *cndns
     'RULE-SET:geolocation-!cn,proxys': *cgdns
