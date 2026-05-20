@@ -32,11 +32,8 @@ Surge/rule/             # Surge 输出
 # 🔁 引入语法
 
 ```
-推荐：#!include:
-local.list \    #!source:
-https://example.com/rules.list  简洁：@local.list
- 
-@https://example.com/rules.list
+推荐：#!include: local.list    #!source: https://example.com/rules.list
+简洁：@local.list              @https://example.com/rules.list
 ```
 
 ## 📁 文件名合并规则（@ 分组机制）
