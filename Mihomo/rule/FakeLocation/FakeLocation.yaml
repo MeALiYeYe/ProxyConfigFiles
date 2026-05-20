@@ -64,6 +64,7 @@ payload:
   - +.douyu.com
   - +.douyucdn.cn
   - +.ecombdapi.com
+  - +.fengkongcloud.com
   - +.gifshow.com
   - +.hdslb.com
   - +.hls1a-akm.douyucdn.cn
@@ -98,6 +99,8 @@ payload:
   - +.ws-tct.douyucdn.cn
   - +.ws3.douyucdn.cn
   - +.wsproxy.douyu.com
+  - +.xhscdn.com
+  - +.xhscdn.net
   - +.xiaohongshu.com
   - +.y.qq.com
   - +.zhihu.com

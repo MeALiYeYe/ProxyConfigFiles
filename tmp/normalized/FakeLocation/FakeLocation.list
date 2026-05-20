@@ -77,6 +77,7 @@ DOMAIN-SUFFIX,douban.com
 DOMAIN-SUFFIX,douyu.com
 DOMAIN-SUFFIX,douyucdn.cn
 DOMAIN-SUFFIX,ecombdapi.com,DIRECT
+DOMAIN-SUFFIX,fengkongcloud.com
 DOMAIN-SUFFIX,gifshow.com
 DOMAIN-SUFFIX,hdslb.com,DIRECT
 DOMAIN-SUFFIX,hls1a-akm.douyucdn.cn,DIRECT
@@ -111,6 +112,8 @@ DOMAIN-SUFFIX,weibocdn.com
 DOMAIN-SUFFIX,ws-tct.douyucdn.cn,DIRECT
 DOMAIN-SUFFIX,ws3.douyucdn.cn,DIRECT
 DOMAIN-SUFFIX,wsproxy.douyu.com,DIRECT
+DOMAIN-SUFFIX,xhscdn.com
+DOMAIN-SUFFIX,xhscdn.net
 DOMAIN-SUFFIX,xiaohongshu.com
 DOMAIN-SUFFIX,y.qq.com
 DOMAIN-SUFFIX,zhihu.com
@@ -208,4 +211,5 @@ IP-CIDR,81.69.116.86/31
 IP-CIDR,81.70.124.99/32
 IP-CIDR,81.70.125.19/32
 IP-CIDR6,2402:4e00:1200::/40
+[fetch] https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/XiaoHongShu/XiaoHongShu.list
 [fetch] https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Zhihu/Zhihu.list
