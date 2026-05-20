@@ -506,11 +506,13 @@ update_substore() {
     else
         log_info "更新前端 → $LATEST_FRONTEND_VER"
 
-        mv dist dist.bak 2>/dev/null || true
+        if [ -d "dist" ]; then
+           mv dist dist.bak
+        fi
 
         safe_wget "https://github.com/sub-store-org/Sub-Store-Front-End/releases/latest/download/dist.zip" "dist.zip"
 
-        rm -rf dist
+        find dist -mindepth 1 -exec rm -rf {} +
         mkdir -p tmp_dist
         unzip -o dist.zip -d tmp_dist
 
