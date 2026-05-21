@@ -1,0 +1,119 @@
+name: Sync Mihomo and Dashboard to CDN
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *' # 每天北京时间早上 8 点自动运行
+  workflow_dispatch: # 允许在 GitHub 网页上手动点击按钮触发
+
+env:
+  TARGET_DIR: "ProxyConfigFiles/Mihomo/static"
+  
+  # Mihomo 内核配置
+  MIHOMO_VERSION: "v1.19.24"
+  MIHOMO_URL: "https://github.com/MetaCubeX/mihomo/releases/download/v1.19.24/mihomo-linux-amd64-v1.19.24.gz"
+  
+  # Mihomo Smart版模型配置
+  MODEL_URL: "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin"
+  
+  # Zashboard 面板配置
+  DASHBOARD_URL: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist-no-fonts.zip"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # 赋予 Actions 向仓库提交代码的权限
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Sync and Process Files
+        run: |
+          set -e
+
+          # 1. 确保目标目录存在
+          mkdir -p "$TARGET_DIR"
+
+          echo "========================================="
+          echo "1. 处理 Mihomo 核心 (解压成可执行文件)"
+          echo "========================================="
+          # 如果目标目录已存在可执行的 mihomo，则跳过下载
+          if [ -x "$TARGET_DIR/mihomo" ]; then
+            echo "Mihomo already exists in target directory, checking version..."
+            "$TARGET_DIR/mihomo" -v || true
+          else
+            echo "Downloading Mihomo from: $MIHOMO_URL"
+            rm -f mihomo.gz
+            curl -L --fail --retry 3 --connect-timeout 10 -o mihomo.gz "$MIHOMO_URL"
+
+            # 校验 gzip（防止下载到 HTML 报错页面）
+            if ! file mihomo.gz | grep -q gzip; then
+              echo "Error: Download failed (not a valid gzip file)"
+              cat mihomo.gz | head -n 20
+              exit 1
+            fi
+
+            # 解压并移动到目标目录
+            gunzip -f mihomo.gz
+            mv mihomo "$TARGET_DIR/mihomo"
+            chmod +x "$TARGET_DIR/mihomo"
+            echo "Mihomo core ready:"
+            "$TARGET_DIR/mihomo" -v || true
+          fi
+
+
+          echo "========================================="
+          echo "2. 下载 Mihomo Smart 版 Model 文件"
+          echo "========================================="
+          echo "Downloading Model.bin from: $MODEL_URL"
+          curl -L --fail --retry 3 --connect-timeout 15 -o "$TARGET_DIR/Model.bin" "$MODEL_URL"
+          echo "Model.bin synced successfully."
+
+
+          echo "========================================="
+          echo "3. 下载并解压 Zashboard 静态压缩包"
+          echo "========================================="
+          echo "Downloading zashboard dist from: $DASHBOARD_URL"
+          rm -f dist.zip
+          curl -L --fail --retry 3 --connect-timeout 15 -o dist.zip "$DASHBOARD_URL"
+
+          # 校验是否为 zip 压缩包
+          if ! file dist.zip | grep -q 'Zip archive'; then
+            echo "Error: Download failed (not a valid zip file)"
+            exit 1
+          fi
+
+          echo "Unzipping zashboard into $TARGET_DIR/dist/ ..."
+          # 清理历史残留的面板目录，确保是一次干净的解压更新
+          rm -rf "$TARGET_DIR/dist"
+          
+          # 解压并删除压缩包
+          unzip -o dist.zip -d "$TARGET_DIR/dist"
+          rm -f dist.zip
+          echo "Zashboard static files deployed."
+
+
+          echo "========================================="
+          echo "4. 检查最终目录状态"
+          echo "========================================="
+          ls -lh "$TARGET_DIR"
+
+      - name: Commit and Push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+          # 暂存目标目录的所有修改
+          git add "$TARGET_DIR/"
+
+          # 检查是否有文件变更，有则提交，没有则跳过
+          if git diff --staged --quiet; then
+            echo "No changes detected. Repository is up-to-date."
+          else
+            git commit -m "Automated Sync: Mihomo core, Model and Zashboard [$(date -u +'%Y-%m-%d %H:%M:%S') UTC]"
+            git push origin main
+          fi
