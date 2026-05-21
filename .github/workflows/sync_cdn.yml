@@ -9,8 +9,8 @@ on:
   workflow_dispatch: # 允许在 GitHub 网页上手动点击按钮触发
 
 env:
-  TARGET_DIR: "ProxyConfigFiles/Mihomo/static"
-  VERSION_FILE: "ProxyConfigFiles/Mihomo/static/version.json"
+  TARGET_DIR: "Mihomo/static"
+  VERSION_FILE: "Mihomo/static/version.json"
 
 jobs:
   sync:
