@@ -132,33 +132,22 @@ jobs:
 
            done < "$file"
           }
-
-          # 遍历 rules → 输出到 tmp/expanded
-          while IFS= read -r file; do
-            out="tmp/expanded/${file#rules/}"
-            mkdir -p "$(dirname "$out")"
-
-            echo "[expand] $file → $out"
-
-            expand_file "$file" > "$out"
+          
           # 收集所有被 include 的文件（只做一次）
           included_files=$(mktemp)
 
           grep -RhoE '^#!(include|source):[[:space:]]*[^ ]+' rules \
             | sed -E 's/^#!(include|source):[[:space:]]*//' \
-            | while read -r ref; do
-                if [[ ! "$ref" =~ ^https?:// ]]; then
-                  echo "$ref"
-                fi
-              done \
+            | grep -vE '^https?://' \
             | sort -u > "$included_files"
 
-          # 只处理入口文件
+          # 只处理入口文件（核心逻辑）
           find rules -type f -name '*.list' | while read -r file; do
 
             rel="${file#rules/}"
+            base="$(basename "$file")"
 
-            # 如果是被 include 的文件 → 跳过
+            # 如果是被 include 的子模块 → 跳过
             if grep -qx "$rel" "$included_files"; then
               echo "[skip include] $file"
               continue
@@ -169,7 +158,7 @@ jobs:
 
             echo "[expand] $file → $out"
 
-            # 每个入口独立 visited（关键）
+            # 每个入口独立 visited（防止污染）
             unset visited_file
             declare -A visited_file
 
