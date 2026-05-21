@@ -87,28 +87,20 @@ rule-providers:
     path: ./ruleset/Reject_ip.mrs
     interval: 86400
 
-  TelegramEU_ip:
-    type: http
-    behavior: ipcidr
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Telegram/TelegramEU_ip.mrs
-    path: ./ruleset/TelegramEU_ip.mrs
-    interval: 86400
-
-  TelegramSG_ip:
-    type: http
-    behavior: ipcidr
-    format: mrs
-    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Telegram/TelegramSG_ip.mrs
-    path: ./ruleset/TelegramSG_ip.mrs
-    interval: 86400
-
   TelegramUS_ip:
     type: http
     behavior: ipcidr
     format: mrs
     url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Telegram/TelegramUS_ip.mrs
     path: ./ruleset/TelegramUS_ip.mrs
+    interval: 86400
+
+  Telegram_ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Telegram/Telegram_ip.mrs
+    path: ./ruleset/Telegram_ip.mrs
     interval: 86400
 
   WebRTC:
