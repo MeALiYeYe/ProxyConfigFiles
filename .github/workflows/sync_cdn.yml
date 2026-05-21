@@ -115,7 +115,7 @@ jobs:
           echo "3. 下载并解压 Zashboard 静态压缩包"
           echo "========================================="
           
-          if [ -d "$TARGET_DIR/dist.zip" ] && [ "$LOCAL_DASH_VER" = "$LATEST_DASH_VER" ] && [ "$LOCAL_DASH_VER" != "none" ]; then
+          if [ -x "$TARGET_DIR/dist.zip" ] && [ "$LOCAL_DASH_VER" = "$LATEST_DASH_VER" ] && [ "$LOCAL_DASH_VER" != "none" ]; then
             echo "Zashboard 面板已是最新版 ($LATEST_DASH_VER)，跳过下载。"
           else
             echo "开始下载最新版 Zashboard 面板: $LATEST_DASH_VER"
