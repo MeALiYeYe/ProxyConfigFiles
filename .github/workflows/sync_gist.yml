@@ -1,4 +1,4 @@
-name: Sync Gists
+name: sync gist
 
 on:
   schedule:
