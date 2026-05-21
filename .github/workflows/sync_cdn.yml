@@ -65,11 +65,7 @@ jobs:
 
           # =========================================================
           # 2. 处理 Mihomo 核心
-          # =========================================================
-          echo "========================================="
-          echo "1. 处理 Mihomo 核心 (解压成可执行文件)"
-          echo "========================================="
-          
+          # ========================================================= 
           # 判断条件：如果本地有可执行文件且版本号一致，则跳过
           if [ -x "$TARGET_DIR/mihomo" ] && [ "$LOCAL_MIHOMO_VER" = "$LATEST_MIHOMO_VER" ] && [ "$LOCAL_MIHOMO_VER" != "none" ]; then
             echo "Mihomo 核心已是最新版 ($LATEST_MIHOMO_VER)，跳过下载。"
@@ -99,9 +95,6 @@ jobs:
           # =========================================================
           # 3. 下载 Mihomo Smart 版 Model 文件
           # =========================================================
-          echo "========================================="
-          echo "2. 下载 Mihomo Smart 版 Model 文件"
-          echo "========================================="
           echo "Downloading Model.bin..."
           # 模型文件一般建议直接覆盖覆盖确保规则最新
           curl -L --fail --retry 3 --connect-timeout 15 -o "$TARGET_DIR/Model.bin" "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin"
@@ -110,28 +103,40 @@ jobs:
 
           # =========================================================
           # 4. 下载并解压 Zashboard 静态压缩包
-          # =========================================================
-          echo "========================================="
-          echo "3. 下载并解压 Zashboard 静态压缩包"
-          echo "========================================="
-          
-          if [ -x "$TARGET_DIR/dist.zip" ] && [ "$LOCAL_DASH_VER" = "$LATEST_DASH_VER" ] && [ "$LOCAL_DASH_VER" != "none" ]; then
+          # =========================================================      
+          ZIP_FILE="$TARGET_DIR/dist.zip"
+          TMP_ZIP="$TARGET_DIR/dist.tmp.zip"
+
+          # 确保目录存在（关键！）
+          mkdir -p "$TARGET_DIR"
+
+          if [ -f "$ZIP_FILE" ] && [ "$LOCAL_DASH_VER" = "$LATEST_DASH_VER" ] && [ "$LOCAL_DASH_VER" != "none" ]; then
             echo "Zashboard 面板已是最新版 ($LATEST_DASH_VER)，跳过下载。"
           else
             echo "开始下载最新版 Zashboard 面板: $LATEST_DASH_VER"
-            DASHBOARD_URL="https://github.com/Zephyruso/zashboard/releases/download/${LATEST_DASH_VER}/dist-no-fonts.zip"
-            
-            rm -f dist.zip
-            curl -L --fail --retry 3 --connect-timeout 15 -o dist.zip "$DASHBOARD_URL"
 
-            if ! file dist.zip | grep -q 'Zip archive'; then
+            DASHBOARD_URL="https://github.com/Zephyruso/zashboard/releases/download/${LATEST_DASH_VER}/dist-no-fonts.zip"
+
+            rm -f "$TMP_ZIP"
+
+            curl -L --fail --retry 3 --connect-timeout 15 \
+              -o "$TMP_ZIP" "$DASHBOARD_URL"
+
+            # 校验 zip
+            if ! file "$TMP_ZIP" | grep -q 'Zip archive'; then
               echo "Error: Download failed (not a valid zip file)"
+              rm -f "$TMP_ZIP"
               exit 1
             fi
-            
-            # 更新内存中的 JSON 记录值
-            jq ".zashboard = \"$LATEST_DASH_VER\"" "$VERSION_FILE" > version.tmp && mv version.tmp "$VERSION_FILE"
-            echo "Zashboard 面板更新成功！"
+
+            # 原子替换
+            mv "$TMP_ZIP" "$ZIP_FILE"
+
+            # 更新版本
+            jq ".zashboard = \"$LATEST_DASH_VER\"" "$VERSION_FILE" > version.tmp \
+              && mv version.tmp "$VERSION_FILE"
+
+            echo "Zashboard 压缩包更新成功！"
           fi
 
 
