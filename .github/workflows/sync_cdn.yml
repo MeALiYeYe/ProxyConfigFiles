@@ -9,7 +9,7 @@ on:
   workflow_dispatch: # 允许在 GitHub 网页上手动点击按钮触发
 
 env:
-  TARGET_DIR: "ProxyConfigFiles/Mihomo/static"
+  TARGET_DIR: "Mihomo/static"
   
   # Mihomo 内核配置
   MIHOMO_VERSION: "v1.19.24"
