@@ -55,6 +55,7 @@ Smartp: &Smartp
   collectdata: false
   max-failed-times: 3
   url: *ProxyTest
+  lazy: true
   hidden: true
 
 Selectp: &Selectp
@@ -64,6 +65,7 @@ Selectp: &Selectp
   - VPS
   - CFTunnel
   url: *ProxyTest
+  lazy: true
   hidden: true
 
 Groupp: &Groupp
@@ -483,11 +485,10 @@ dns:
   fake-ip-range6: fdfe:dcba:9876::1/64
   fake-ip-filter-mode: rule
   fake-ip-filter:
-  - DOMAIN-SUFFIX,eu.cc,real-ip
   - RULE-SET,private,real-ip
+  - RULE-SET,directs,real-ip
   - RULE-SET,ntp,real-ip
   - RULE-SET,googlefcm,real-ip
-  - RULE-SET,cn,real-ip
   - MATCH,fake-ip
   default-nameserver:
   - 223.5.5.5
