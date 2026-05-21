@@ -9,17 +9,8 @@ on:
   workflow_dispatch: # 允许在 GitHub 网页上手动点击按钮触发
 
 env:
-  TARGET_DIR: "Mihomo/static"
-  
-  # Mihomo 内核配置
-  MIHOMO_VERSION: "v1.19.24"
-  MIHOMO_URL: "https://github.com/MetaCubeX/mihomo/releases/download/v1.19.24/mihomo-linux-amd64-v1.19.24.gz"
-  
-  # Mihomo Smart版模型配置
-  MODEL_URL: "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin"
-  
-  # Zashboard 面板配置
-  DASHBOARD_URL: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist-no-fonts.zip"
+  TARGET_DIR: "ProxyConfigFiles/Mihomo/static"
+  VERSION_FILE: "ProxyConfigFiles/Mihomo/static/version.json"
 
 jobs:
   sync:
@@ -35,71 +26,125 @@ jobs:
         run: |
           set -e
 
-          # 1. 确保目标目录存在
+          # 确保目标目录存在
           mkdir -p "$TARGET_DIR"
 
+          # =========================================================
+          # 0. 初始化或读取本地版本记录
+          # =========================================================
+          if [ -f "$VERSION_FILE" ]; then
+            LOCAL_MIHOMO_VER=$(jq -r '.mihomo // "none"' "$VERSION_FILE")
+            LOCAL_DASH_VER=$(jq -r '.zashboard // "none"' "$VERSION_FILE")
+          else
+            LOCAL_MIHOMO_VER="none"
+            LOCAL_DASH_VER="none"
+            echo '{"mihomo": "none", "zashboard": "none"}' > "$VERSION_FILE"
+          fi
+
+          echo "本地已存版本 -> Mihomo: $LOCAL_MIHOMO_VER | Zashboard: $LOCAL_DASH_VER"
+
+          # =========================================================
+          # 1. 动态获取远程最新版本号
+          # =========================================================
+          echo "正在从 GitHub API 获取最新版本号..."
+          LATEST_MIHOMO_VER=$(curl -sL "https://api.github.com/repos/MetaCubeX/mihomo/releases/latest" | jq -r '.tag_name')
+          LATEST_DASH_VER=$(curl -sL "https://api.github.com/repos/Zephyruso/zashboard/releases/latest" | jq -r '.tag_name')
+
+          # 容错处理：避免网络抖动拿到空变量导致脚本异常
+          if [ -z "$LATEST_MIHOMO_VER" ] || [ "$LATEST_MIHOMO_VER" = "null" ]; then
+            echo "警告: 无法获取最新 Mihomo 版本，降级使用本地版本或默认值"
+            LATEST_MIHOMO_VER=$LOCAL_MIHOMO_VER
+          fi
+          if [ -z "$LATEST_DASH_VER" ] || [ "$LATEST_DASH_VER" = "null" ]; then
+            echo "警告: 无法获取最新 Zashboard 版本，降级使用本地版本或默认值"
+            LATEST_DASH_VER=$LOCAL_DASH_VER
+          fi
+
+          echo "远程最新版本 -> Mihomo: $LATEST_MIHOMO_VER | Zashboard: $LATEST_DASH_VER"
+
+
+          # =========================================================
+          # 2. 处理 Mihomo 核心
+          # =========================================================
           echo "========================================="
           echo "1. 处理 Mihomo 核心 (解压成可执行文件)"
           echo "========================================="
-          # 如果目标目录已存在可执行的 mihomo，则跳过下载
-          if [ -x "$TARGET_DIR/mihomo" ]; then
-            echo "Mihomo already exists in target directory, checking version..."
-            "$TARGET_DIR/mihomo" -v || true
+          
+          # 判断条件：如果本地有可执行文件且版本号一致，则跳过
+          if [ -x "$TARGET_DIR/mihomo" ] && [ "$LOCAL_MIHOMO_VER" = "$LATEST_MIHOMO_VER" ] && [ "$LOCAL_MIHOMO_VER" != "none" ]; then
+            echo "Mihomo 核心已是最新版 ($LATEST_MIHOMO_VER)，跳过下载。"
           else
-            echo "Downloading Mihomo from: $MIHOMO_URL"
+            echo "开始下载最新版 Mihomo Core: $LATEST_MIHOMO_VER"
+            MIHOMO_URL="https://github.com/MetaCubeX/mihomo/releases/download/${LATEST_MIHOMO_VER}/mihomo-linux-amd64-${LATEST_MIHOMO_VER}.gz"
+            
             rm -f mihomo.gz
             curl -L --fail --retry 3 --connect-timeout 10 -o mihomo.gz "$MIHOMO_URL"
 
-            # 校验 gzip（防止下载到 HTML 报错页面）
             if ! file mihomo.gz | grep -q gzip; then
               echo "Error: Download failed (not a valid gzip file)"
               cat mihomo.gz | head -n 20
               exit 1
             fi
 
-            # 解压并移动到目标目录
             gunzip -f mihomo.gz
-            mv mihomo "$TARGET_DIR/mihomo"
+            mv -f mihomo "$TARGET_DIR/mihomo"
             chmod +x "$TARGET_DIR/mihomo"
-            echo "Mihomo core ready:"
-            "$TARGET_DIR/mihomo" -v || true
+            
+            # 更新内存中的 JSON 记录值
+            jq ".mihomo = \"$LATEST_MIHOMO_VER\"" "$VERSION_FILE" > version.tmp && mv version.tmp "$VERSION_FILE"
+            echo "Mihomo 核心更新成功！"
           fi
 
 
+          # =========================================================
+          # 3. 下载 Mihomo Smart 版 Model 文件
+          # =========================================================
           echo "========================================="
           echo "2. 下载 Mihomo Smart 版 Model 文件"
           echo "========================================="
-          echo "Downloading Model.bin from: $MODEL_URL"
-          curl -L --fail --retry 3 --connect-timeout 15 -o "$TARGET_DIR/Model.bin" "$MODEL_URL"
+          echo "Downloading Model.bin..."
+          # 模型文件一般建议直接覆盖覆盖确保规则最新
+          curl -L --fail --retry 3 --connect-timeout 15 -o "$TARGET_DIR/Model.bin" "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin"
           echo "Model.bin synced successfully."
 
 
+          # =========================================================
+          # 4. 下载并解压 Zashboard 静态压缩包
+          # =========================================================
           echo "========================================="
           echo "3. 下载并解压 Zashboard 静态压缩包"
           echo "========================================="
-          echo "Downloading zashboard dist from: $DASHBOARD_URL"
-          rm -f dist.zip
-          curl -L --fail --retry 3 --connect-timeout 15 -o dist.zip "$DASHBOARD_URL"
+          
+          if [ -d "$TARGET_DIR/dist" ] && [ "$LOCAL_DASH_VER" = "$LATEST_DASH_VER" ] && [ "$LOCAL_DASH_VER" != "none" ]; then
+            echo "Zashboard 面板已是最新版 ($LATEST_DASH_VER)，跳过下载。"
+          else
+            echo "开始下载最新版 Zashboard 面板: $LATEST_DASH_VER"
+            DASHBOARD_URL="https://github.com/Zephyruso/zashboard/releases/download/${LATEST_DASH_VER}/dist-no-fonts.zip"
+            
+            rm -f dist.zip
+            curl -L --fail --retry 3 --connect-timeout 15 -o dist.zip "$DASHBOARD_URL"
 
-          # 校验是否为 zip 压缩包
-          if ! file dist.zip | grep -q 'Zip archive'; then
-            echo "Error: Download failed (not a valid zip file)"
-            exit 1
+            if ! file dist.zip | grep -q 'Zip archive'; then
+              echo "Error: Download failed (not a valid zip file)"
+              exit 1
+            fi
+
+            echo "Unzipping zashboard into $TARGET_DIR/dist/ ..."
+            rm -rf "$TARGET_DIR/dist"
+            unzip -o dist.zip -d "$TARGET_DIR/dist"
+            rm -f dist.zip
+            
+            # 更新内存中的 JSON 记录值
+            jq ".zashboard = \"$LATEST_DASH_VER\"" "$VERSION_FILE" > version.tmp && mv version.tmp "$VERSION_FILE"
+            echo "Zashboard 面板更新成功！"
           fi
 
-          echo "Unzipping zashboard into $TARGET_DIR/dist/ ..."
-          # 清理历史残留的面板目录，确保是一次干净的解压更新
-          rm -rf "$TARGET_DIR/dist"
-          
-          # 解压并删除压缩包
-          unzip -o dist.zip -d "$TARGET_DIR/dist"
-          rm -f dist.zip
-          echo "Zashboard static files deployed."
-
 
           echo "========================================="
-          echo "4. 检查最终目录状态"
+          echo "5. 检查最终目录状态"
           echo "========================================="
+          cat "$VERSION_FILE"
+          echo ""
           ls -lh "$TARGET_DIR"
 
       - name: Commit and Push changes
@@ -107,13 +152,17 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
 
-          # 暂存目标目录的所有修改
+          # 暂存目标目录的所有修改（包含更新后的旧文件和 version.json）
           git add "$TARGET_DIR/"
 
           # 检查是否有文件变更，有则提交，没有则跳过
           if git diff --staged --quiet; then
             echo "No changes detected. Repository is up-to-date."
           else
-            git commit -m "Automated Sync: Mihomo core, Model and Zashboard [$(date -u +'%Y-%m-%d %H:%M:%S') UTC]"
+            # 动态获取最终记录在本地的版本，用于生成直观的 Commit 信息
+            FINAL_MIHOMO=$(jq -r '.mihomo' "$VERSION_FILE")
+            FINAL_DASH=$(jq -r '.zashboard' "$VERSION_FILE")
+            
+            git commit -m "Automated Sync: Core@${FINAL_MIHOMO} & Dash@${FINAL_DASH} [$(date -u +'%Y-%m-%d %H:%M:%S') UTC]"
             git push origin main
           fi
