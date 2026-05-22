@@ -79,10 +79,8 @@ Groupp: &Groupp
   - 狮城
   - 日本
   - 美国
-  - 欧洲
   - 自由
   - 民主
-  - 共和
   url: *ProxyTest
   lazy: true
   hidden: false
@@ -94,7 +92,6 @@ Groupd: &Groupd
   - 江苏
   - 广东
   - 北京
-  - 共和
   url: *DirecTest
   lazy: true
   hidden: false
@@ -148,99 +145,91 @@ proxy-providers:
 proxy-groups:
 - name: Location
   <<: *Groupd
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bypass.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png"
 - name: Domestic
   <<: *Groupd
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Domestic.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png"
 - name: DNSServer
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/NAS(2).png"
+  icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/NAS(2).png"
 - name: Emby
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Emby.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png"
 - name: Tiktok
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok.png"
 - name: Youtube
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/YouTube.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png"
 - name: Media
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/ForeignMedia.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ForeignMedia.png"
 - name: Ai
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/ChatGPT.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png"
 - name: Telegram
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Telegram.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png"
 - name: Cloudflare
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Cloudflare.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png"
 - name: Google
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Google_Search.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png"
 - name: Github
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/GitHub.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png"
 - name: Microsoft
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Microsoft.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png"
 - name: Apple
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Apple.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png"
 - name: Foreign
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Global.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png"
 - name: Final
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Final.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png"
 - name: 江苏
   <<: *Falld
   filter: '(?i)(?:南京|苏州)'
-  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(1).png"
+  icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(1).png"
 - name: 广东
   <<: *Falld
   filter: '(?i)(?:广州)'
-  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(2).png"
+  icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(2).png"
 - name: 北京
   <<: *Falld
   filter: '(?i)(?:北京|保定)'
-  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(3).png"
+  icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(3).png"
 - name: 香港
   <<: *Smartp
   filter: *FilterHK
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Hong_Kong.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png"
 - name: 台湾
   <<: *Smartp
   filter: *FilterTW
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Taiwan.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Taiwan.png"
 - name: 狮城
   <<: *Smartp
   filter: *FilterSG
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Singapore.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png"
 - name: 日本
   <<: *Smartp
   filter: *FilterJP
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Japan.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png"
 - name: 美国
   <<: *Smartp
   filter: *FilterUS
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/United_States.png"
-- name: 欧洲
-  <<: *Smartp
-  filter: *FilterEU
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/European_Union.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png"
 - name: 自由
   <<: *Smartp
   filter: '(?i)(?:vps|自建)'
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png"
 - name: 民主
-  <<: *Smartp
-  filter: '(?i)(?:CF|优选|反代)'
-  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/jichang.png"
-- name: 共和
   <<: *Selectp
-  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/home.png"
+  icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/jichang.png"
 
 rule-providers:
   directs:
