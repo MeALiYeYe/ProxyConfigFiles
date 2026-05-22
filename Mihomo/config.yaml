@@ -3,7 +3,7 @@ VPS: &VPS "http://127.0.0.1:3000/download/VPS?target=ClashMeta&includeUnsupporte
 CFTunnel: &CFTunnel "http://127.0.0.1:3000/download/CF?target=ClashMeta&includeUnsupportedProxy=true"
 BaiduProxy: &BaiduProxy "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/BaiduProxy.yaml"
 
-ProxyTest: &ProxyTest "https://www.google.com/generate_204"
+ProxyTest: &ProxyTest "https://www.gstatic.com/generate_204"
 DirecTest: &DirecTest "https://connect.rom.miui.com/generate_204"
 
 FilterHK: &FilterHK '(?i)(?:港|香港|🇭🇰|\bHK\b|Hong\s?Kong|HKG)'
