@@ -95,10 +95,26 @@ jobs:
           # =========================================================
           # 3. 下载 Mihomo Smart 版 Model 文件
           # =========================================================
-          echo "Downloading Model.bin..."
-          # 模型文件一般建议直接覆盖覆盖确保规则最新
-          curl -L --fail --retry 3 --connect-timeout 15 -o "$TARGET_DIR/Model.bin" "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin"
-          echo "Model.bin synced successfully."
+          MODEL_FILE="$TARGET_DIR/Model.bin"
+          MODEL_URL="https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin"
+
+          if [ -f "$MODEL_FILE" ]; then
+            echo "Model.bin 已存在，检查是否需要更新..."
+
+            # 获取远程文件大小（轻量校验）
+            REMOTE_SIZE=$(curl -sI "$MODEL_URL" | awk '/Content-Length/ {print $2}' | tr -d '\r')
+            LOCAL_SIZE=$(stat -c%s "$MODEL_FILE" 2>/dev/null || echo 0)
+
+            if [ "$REMOTE_SIZE" = "$LOCAL_SIZE" ] && [ -n "$REMOTE_SIZE" ]; then
+              echo "Model.bin 已是最新版本，跳过下载。"
+            else
+              echo "检测到更新，重新下载 Model.bin..."
+              curl -L --fail --retry 3 --connect-timeout 15 -o "$MODEL_FILE" "$MODEL_URL"
+            fi
+          else
+            echo "Model.bin 不存在，开始下载..."
+            curl -L --fail --retry 3 --connect-timeout 15 -o "$MODEL_FILE" "$MODEL_URL"
+          fi
 
 
           # =========================================================
