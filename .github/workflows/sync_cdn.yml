@@ -1,4 +1,4 @@
-name: Sync Mihomo and Dashboard to CDN
+name: sync_cdn
 
 on:
   push:
