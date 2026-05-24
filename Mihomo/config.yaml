@@ -1,4 +1,6 @@
 SubStore: &SubStore "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
+VPS: &VPS "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
+CFTunnel: &CFTunnel"http://127.0.0.1:3000/download/CFTunnel?target=ClashMeta"
 BaiduProxy: &BaiduProxy "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/BaiduProxy.yaml"
 
 ProxyTest: &ProxyTest "https://www.gstatic.com/generate_204"
@@ -12,7 +14,6 @@ FilterKR: &FilterKR '(?i)(?:韩|韩国|🇰🇷|\bKR\b|KOR|Korea)'
 FilterUS: &FilterUS '(?i)(?:美|美国|🇺🇸|\bUS\b|USA|States|America)'
 FilterRU: &FilterRU '(?i)(?:俄罗斯|莫斯科|🇷🇺|RU|Russia|Moscow)'
 FilterOther: &FilterOther '^(?!.*(香港|台湾|新加坡|日本|美国|🇭🇰|🇼🇸|🇨🇳|🇹🇼|🇸🇬|🇯🇵|🇺🇸|\bHK\b|\bTW\b|\bSG\b|\bJP\b|\bUS\b))'
-FilterEU: &FilterEU '(?i)(?:英国|🇬🇧|\bUK\b|GBR|Britain|Germany|德国|🇩🇪|\bDE\b|DEU|France|法国|🇫🇷|\bFR\b|FRA|Spain|西班牙|🇪🇸|\bES\b|ESP|Italy|意大利|🇮🇹|\bIT\b|ITA|Portugal|葡萄牙|🇵🇹|\bPT\b|PRT|Switzerland|瑞士|🇨🇭|\bCH\b|CHE|Norway|挪威|🇳🇴|\bNO\b|NOR|Sweden|瑞典|🇸🇪|\bSE\b|SWE|Finland|芬兰|🇫🇮|\bFI\b|FIN|Denmark|丹麦|🇩🇰|\bDK\b|DNK|Iceland|冰岛|🇮🇸|\bIS\b|ISL|Ukraine|乌克兰|🇺🇦|\bUA\b|UKR|Poland|波兰|🇵🇱|\bPL\b|POL)'
 ExcludeFilter: &ExcludeFilter '(?i)(?:佣金|套餐|官网|官方|网址|售后|免翻|过期|剩余|到期|流量|更新|点外|重置|免流|使用|教程|优惠|超实惠|址|AFF|Days|Date)'
 FilterLow: &FilterLow '(?<!\d)0\.\d+'
 FilterHigh: &FilterHigh '(?:(?:[2-9]\d*\.\d+|1\.(?:0*[1-9]\d*))|(?:[2-9]\d*|1\.(?:0*[1-9]\d*))(?=[xX×倍]))'
@@ -102,6 +103,14 @@ proxy-providers:
     <<: *Proxyer
     path: ./proxies/SubStore.yaml
     url: *SubStore
+  VPS:
+    <<: *Proxyer
+    path: ./proxies/VPS.yaml
+    url: *VPS
+  CFTunnel:
+    <<: *Proxyer
+    path: ./proxies/CFTunnel.yaml
+    url: *CFTunnel
   BaiduProxy:
     <<: *Proxyer
     path: ./proxies/BaiduProxy.yaml
@@ -248,7 +257,7 @@ rule-providers:
   ntp:
     <<: *dom
     path: ./rules/ntp.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ntp.mrs"
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite//category-ntp.mrs"
   ads-all:
     <<: *dom
     path: ./rules/ads-all.mrs
@@ -334,10 +343,8 @@ rules:
 - DST-PORT,53,DNS_Hijack
 - AND,((NETWORK,udp),(DST-PORT,443/3478-3479/5349-5350/19302-19309)),REJECT-DROP
 - DST-PORT,1337/2710/6881-6999/7777,REJECT-DROP
-- AND,((NETWORK,udp),(DST-PORT,123)),DIRECT
-- RULE-SET,ntp,DIRECT
 - DST-PORT,5228-5230,DIRECT
-- RULE-SET,googlefcm,DIRECT
+- DST-PORT,123,DIRECT
 - RULE-SET,private,DIRECT
 - RULE-SET,private_ip,DIRECT,no-resolve
 - RULE-SET,ads-all,REJECT-DROP
@@ -403,6 +410,13 @@ profile:
   store-selected: true
   store-fake-ip: true
   smart-collector-size: 100
+
+ntp:
+  enable: true
+  write-to-system: false
+  server: time.apple.com
+  port: 123
+  interval: 30
 
 sniffer:
   enable: true
