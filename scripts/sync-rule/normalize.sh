@@ -39,10 +39,19 @@ find tmp/expanded -type f \
   ! -name "*.md" \
   | while read -r file; do
 
-  rel="${file#tmp/expanded/}"
-  base="${rel%.*}"
-  out="tmp/normalized/${base}.list"
+  rel_path="${file#tmp/expanded/}"
+  rel_path="${rel_path#./}"
 
+  dir_path=$(dirname "$rel_path")
+  filename=$(basename "$file")
+
+  if [[ "$filename" == *"@"* ]]; then
+    base="${filename%%@*}"
+  else
+    base="${filename%.*}"
+  fi
+
+  out="tmp/normalized/${dir_path}/${base}.list"
   mkdir -p "$(dirname "$out")"
 
   tmp=$(mktemp)
