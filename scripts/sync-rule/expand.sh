@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
-rm -rf tmp/expanded
-mkdir -p tmp/expanded
-
 declare -A visited_file
 declare -A visited_url
 
 cache_dir="/tmp/rule_cache"
 mkdir -p "$cache_dir"
+mkdir -p tmp/expanded
 
 fetch_url() {
   local url="$1"
@@ -27,7 +25,9 @@ fetch_url() {
   visited_url[$url]=1
 
   echo "[fetch] $url"
-  curl -sSL --retry 3 --connect-timeout 10 "$url" | tee "$cache_file"
+
+  curl -sSL --retry 3 --connect-timeout 10 "$url" \
+    | tee "$cache_file"
 }
 
 expand_file() {
@@ -47,16 +47,21 @@ expand_file() {
 
     elif [[ "$line" =~ ^@ ]]; then
       path="$(dirname "$file")/${line#@}"
-      [ -f "$path" ] && expand_file "$path"
+      if [ -f "$path" ]; then
+        echo "# include: $path"
+        expand_file "$path"
+      fi
 
     elif [[ "$line" =~ ^#!(include|source): ]]; then
-      ref=$(echo "$line" | sed -E 's/^#!(include|source):[[:space:]]*//')
+      ref="$(echo "$line" | sed -E 's/^#!(include|source):[[:space:]]*//')"
+
       echo "$line"
 
       if [[ "$ref" =~ ^https?:// ]]; then
         fetch_url "$ref"
       else
-        expand_file "$(dirname "$file")/$ref"
+        path="$(dirname "$file")/$ref"
+        [ -f "$path" ] && expand_file "$path"
       fi
 
     else
@@ -74,6 +79,7 @@ grep -RhoE '^#!(include|source):[[:space:]]*[^ ]+' rules \
   | sort -u > "$included_files"
 
 find rules -type f -name '*.list' | while read -r file; do
+
   rel="${file#rules/}"
 
   if grep -qx "$rel" "$included_files"; then
@@ -87,7 +93,7 @@ find rules -type f -name '*.list' | while read -r file; do
   unset visited_file
   declare -A visited_file
 
-  echo "[expand] $file"
+  echo "[expand] $file → $out"
   expand_file "$file" > "$out"
 
 done
