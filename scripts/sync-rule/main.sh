@@ -16,4 +16,7 @@ bash scripts/sync-rule/generate.sh
 echo "== Mihomo Core & MRS =="
 bash scripts/sync-rule/tomrs.sh
 
+echo "== Commit =="
+bash scripts/sync-rule/commit.sh
+
 echo "== DONE =="
