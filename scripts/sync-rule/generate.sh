@@ -72,7 +72,7 @@ while read -r file; do
 
   rm -f "$ipv4_tmp" "$ipv6_tmp" "$py_script"
 
-  grep -Ev '^(DOMAIN|IP-CIDR)' "$tmp" >> "$sorted" || true
+  grep -Ev '^(DOMAIN,|DOMAIN-SUFFIX,|DOMAIN-KEYWORD,|DOMAIN-WILDCARD,|IP-CIDR,|IP-CIDR6,)' "$tmp" >> "$sorted" || true
 
   mv "$sorted" "$tmp"
 
