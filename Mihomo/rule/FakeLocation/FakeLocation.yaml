@@ -106,3 +106,17 @@ payload:
   - +.zhihu.com
   - +.zhimg.com
   - +.zijieapi.com
+  - -core-c-hl
+  - -core-c-lf
+  - -normal-c-hl
+  - -normal-c-lf
+  - -normal-hl
+  - -normal-lf
+  - core-c-lq
+  - core-lq
+  - normal-c-lq
+  - normal-lq
+  - search-lq
+  - search-quic-lq
+  - weibo
+  - xiaohongshu
