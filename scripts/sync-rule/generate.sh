@@ -19,8 +19,14 @@ while read -r file; do
   out_dir=$(dirname "$rel_path")
   base=$(basename "$rel_path" .list)
 
-  name="$out_dir/$base"
-  [[ "$out_dir" == "." ]] && name="$base"
+  if [[ -z "$out_dir" || "$out_dir" == "." ]]; then
+    name="$base"
+  else
+    name="$out_dir/$base"
+  fi
+
+  # 防止生成绝对路径
+  name="${name#/}"
 
   tmp=$(mktemp)
   sorted=$(mktemp)
