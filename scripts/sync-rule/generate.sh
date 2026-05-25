@@ -4,34 +4,49 @@ set -e
 mkdir -p Mihomo/rule
 mkdir -p Egern/rule
 mkdir -p "Quantumult X/rule"
+mkdir -p Surge/rule
 
-# ✅ 防止历史残留
-rm -rf Mihomo/rule/* Egern/rule/* "Quantumult X/rule"/* "Surge/rule"/*
+# ✅ 清理旧文件
+rm -rf Mihomo/rule/* Egern/rule/* "Quantumult X/rule"/* Surge/rule/*
 
 total_rules=0
 
 while read -r file; do
 
-  rel_path="${file#tmp/normalized/}"   # 相对 tmp/normalized 目录
-  rel_path="${rel_path#./}"   # 防御 ./ 前缀
-  out_dir=$(dirname "$rel_path")       # 子目录
+  rel_path="${file#tmp/normalized/}"
+  rel_path="${rel_path#./}"
+
+  out_dir=$(dirname "$rel_path")
   base=$(basename "$rel_path" .list)
-  
-  name="$out_dir/$base"                # 保持子目录结构
+
+  name="$out_dir/$base"
   [[ "$out_dir" == "." ]] && name="$base"
 
   tmp=$(mktemp)
+  sorted=$(mktemp)
 
   echo "Processing $name"
 
+  ################################
+  # 基础清洗
+  ################################
+
   sed '/^#/d;/^$/d' "$file" | sort -u > "$tmp"
 
-  sorted=$(mktemp)
+  ################################
+  # 分类输出（保证不丢规则）
+  ################################
 
+  # DOMAIN 系列
   grep '^DOMAIN,' "$tmp" | sort -u >> "$sorted" || true
   grep '^DOMAIN-SUFFIX,' "$tmp" | sort -u >> "$sorted" || true
   grep '^DOMAIN-KEYWORD,' "$tmp" | sort -u >> "$sorted" || true
   grep '^DOMAIN-WILDCARD,' "$tmp" | sort -u >> "$sorted" || true
+  grep '^DOMAIN-REGEX,' "$tmp" | sort -u >> "$sorted" || true
+
+  ################################
+  # IP 聚合
+  ################################
 
   ipv4_tmp=$(mktemp)
   ipv6_tmp=$(mktemp)
@@ -41,26 +56,26 @@ while read -r file; do
 
   py_script=$(mktemp)
 
-  printf '%s\n' \
-  'import sys, ipaddress' \
-  '' \
-  'mode = sys.argv[1]' \
-  'file = sys.argv[2]' \
-  '' \
-  'with open(file) as f:' \
-  '    nets = [ipaddress.ip_network(line.strip(), strict=False) for line in f if line.strip()]' \
-  '' \
-  'collapsed = sorted(ipaddress.collapse_addresses(nets))' \
-  '' \
-  'if mode == "ipv4":' \
-  '    for net in collapsed:' \
-  '        if net.version == 4:' \
-  '            print(f"IP-CIDR,{net}")' \
-  'elif mode == "ipv6":' \
-  '    for net in collapsed:' \
-  '        if net.version == 6:' \
-  '            print(f"IP-CIDR6,{net}")' \
-  > "$py_script"
+  cat > "$py_script" << 'EOF'
+import sys, ipaddress
+
+mode = sys.argv[1]
+file = sys.argv[2]
+
+with open(file) as f:
+    nets = [ipaddress.ip_network(line.strip(), strict=False) for line in f if line.strip()]
+
+collapsed = sorted(ipaddress.collapse_addresses(nets))
+
+if mode == "ipv4":
+    for net in collapsed:
+        if net.version == 4:
+            print(f"IP-CIDR,{net}")
+elif mode == "ipv6":
+    for net in collapsed:
+        if net.version == 6:
+            print(f"IP-CIDR6,{net}")
+EOF
 
   if [ -s "$ipv4_tmp" ]; then
     python3 "$py_script" ipv4 "$ipv4_tmp" >> "$sorted"
@@ -72,9 +87,21 @@ while read -r file; do
 
   rm -f "$ipv4_tmp" "$ipv6_tmp" "$py_script"
 
-  grep -E '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD|DOMAIN-WILDCARD|DOMAIN-REGEX|IP-CIDR|IP-CIDR6|GEOIP|PROTOCOL),' "$tmp" > "$sorted" || true
+  ################################
+  # 其他规则（不覆盖，只追加）
+  ################################
+
+  grep -Ev '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD|DOMAIN-WILDCARD|DOMAIN-REGEX|IP-CIDR|IP-CIDR6),' "$tmp" >> "$sorted" || true
+
+  ################################
+  # 覆盖 tmp（最终规则集）
+  ################################
 
   mv "$sorted" "$tmp"
+
+  ################################
+  # 统计
+  ################################
 
   count=$(wc -l < "$tmp")
   total_rules=$((total_rules + count))
@@ -92,10 +119,8 @@ while read -r file; do
   mihomo_ip_out="Mihomo/rule/${name}_ip.yaml"
 
   mkdir -p "$(dirname "$mihomo_domain_out")"
-  mkdir -p "$(dirname "$mihomo_ip_out")"
 
-  # DOMAIN
-  omain_lines=$(grep -E '^(DOMAIN(-SUFFIX)?),' "$tmp" || true)
+  domain_lines=$(grep -E '^(DOMAIN|DOMAIN-SUFFIX),' "$tmp" || true)
 
   if [ -n "$domain_lines" ]; then
     echo "payload:" > "$mihomo_domain_out"
@@ -114,7 +139,10 @@ while read -r file; do
     rm -f "$mihomo_domain_out"
   fi
 
-  # IP
+  ################################
+  # Mihomo IP
+  ################################
+
   ip_lines=$(grep -E '^(IP-CIDR|IP-CIDR6),' "$tmp" | cut -d',' -f2 || true)
 
   if [ -n "$ip_lines" ]; then
@@ -198,3 +226,5 @@ while read -r file; do
   fi
 
 done < <(find tmp/normalized -type f -name '*.list')
+
+echo "Total rules: $total_rules"
