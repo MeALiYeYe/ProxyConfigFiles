@@ -1,32 +1,30 @@
 #!/usr/bin/env bash
 set -e
 
+# 根目录
+SRC_DIR="tmp/normalized"
+
 mkdir -p Mihomo/rule
 mkdir -p Egern/rule
 mkdir -p "Quantumult X/rule"
 mkdir -p Surge/rule
 
-# ✅ 清理旧文件
+# 清理旧文件
 rm -rf Mihomo/rule/* Egern/rule/* "Quantumult X/rule"/* Surge/rule/*
 
 total_rules=0
 
-while read -r file; do
+# 使用 -print0 防止路径问题
+find "$SRC_DIR" -type f -name '*.list' -print0 | while IFS= read -r -d '' file; do
 
-  rel_path="${file#tmp/normalized/}"
-  rel_path="${rel_path#./}"
+  # 相对路径（关键修复点）
+  rel_path="${file#$SRC_DIR/}"
 
-  out_dir=$(dirname "$rel_path")
-  base=$(basename "$rel_path" .list)
+  # 去掉 .list 后缀
+  rel_no_ext="${rel_path%.list}"
 
-  if [[ -z "$out_dir" || "$out_dir" == "." ]]; then
-    name="$base"
-  else
-    name="$out_dir/$base"
-  fi
-
-  # 防止生成绝对路径
-  name="${name#/}"
+  # name = 保留目录结构
+  name="$rel_no_ext"
 
   tmp=$(mktemp)
   sorted=$(mktemp)
@@ -36,14 +34,12 @@ while read -r file; do
   ################################
   # 基础清洗
   ################################
-
   sed '/^#/d;/^$/d' "$file" | sort -u > "$tmp"
 
   ################################
   # 分类输出（保证不丢规则）
   ################################
 
-  # DOMAIN 系列
   grep '^DOMAIN,' "$tmp" | sort -u >> "$sorted" || true
   grep '^DOMAIN-SUFFIX,' "$tmp" | sort -u >> "$sorted" || true
   grep '^DOMAIN-KEYWORD,' "$tmp" | sort -u >> "$sorted" || true
@@ -94,14 +90,10 @@ EOF
   rm -f "$ipv4_tmp" "$ipv6_tmp" "$py_script"
 
   ################################
-  # 其他规则（不覆盖，只追加）
+  # 其他规则
   ################################
 
   grep -Ev '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD|DOMAIN-WILDCARD|DOMAIN-REGEX|IP-CIDR|IP-CIDR6),' "$tmp" >> "$sorted" || true
-
-  ################################
-  # 覆盖 tmp（最终规则集）
-  ################################
 
   mv "$sorted" "$tmp"
 
@@ -144,10 +136,6 @@ EOF
   else
     rm -f "$mihomo_domain_out"
   fi
-
-  ################################
-  # Mihomo IP
-  ################################
 
   ip_lines=$(grep -E '^(IP-CIDR|IP-CIDR6),' "$tmp" | cut -d',' -f2 || true)
 
@@ -231,6 +219,6 @@ EOF
     grep '^PROTOCOL,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
   fi
 
-done < <(find tmp/normalized -type f -name '*.list')
+done
 
 echo "Total rules: $total_rules"
