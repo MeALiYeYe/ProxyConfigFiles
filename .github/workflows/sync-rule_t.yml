@@ -1,0 +1,31 @@
+name: sync_rule_t
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+  push:
+    paths:
+      - 'rules/**'
+
+concurrency:
+  group: rules-pipeline
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        
+      - name: Clean tmp
+        run: |
+          rm -rf tmp/expanded tmp/normalized
+          mkdir -p tmp/expanded tmp/normalized
+
+      - name: Run sync-rule
+        run: |
+          chmod +x scripts/sync-rule/*.sh
+          bash scripts/sync-rule/main.sh
