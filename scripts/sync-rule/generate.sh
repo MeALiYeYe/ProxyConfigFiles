@@ -72,7 +72,7 @@ while read -r file; do
 
   rm -f "$ipv4_tmp" "$ipv6_tmp" "$py_script"
 
-  grep -Ev '^(DOMAIN,|DOMAIN-SUFFIX,|DOMAIN-KEYWORD,|DOMAIN-WILDCARD,|IP-CIDR,|IP-CIDR6,)' "$tmp" >> "$sorted" || true
+  grep -Ev '^(DOMAIN(-SUFFIX|-KEYWORD|-WILDCARD|-REGEX)?,|IP-CIDR6?,)' "$tmp" >> "$sorted" || true
 
   mv "$sorted" "$tmp"
 
@@ -97,12 +97,21 @@ while read -r file; do
   echo "payload:" > "$mihomo_domain_out"
   echo "payload:" > "$mihomo_ip_out"
 
-  grep -E '^(DOMAIN|DOMAIN-SUFFIX),' "$tmp" | while IFS=',' read -r type value extra; do
+  grep -E '^(DOMAIN(-SUFFIX|-KEYWORD|-WILDCARD|-REGEX)?),' "$tmp" | while IFS=',' read -r type value extra; do
     case "$type" in
       DOMAIN-SUFFIX)
         echo "  - +.$value" >> "$mihomo_domain_out"
         ;;
       DOMAIN)
+        echo "  - $value" >> "$mihomo_domain_out"
+        ;;
+      DOMAIN-KEYWORD)
+        echo "  - $value" >> "$mihomo_domain_out"
+        ;;
+      DOMAIN-WILDCARD)
+        echo "  - $value" >> "$mihomo_domain_out"
+        ;;
+      DOMAIN-REGEX)
         echo "  - $value" >> "$mihomo_domain_out"
         ;;
     esac
