@@ -72,7 +72,7 @@ while read -r file; do
 
   rm -f "$ipv4_tmp" "$ipv6_tmp" "$py_script"
 
-  grep -Ev '^(DOMAIN(-SUFFIX|-KEYWORD|-WILDCARD|-REGEX)?,|IP-CIDR6?,)' "$tmp" >> "$sorted" || true
+  grep -E '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD|DOMAIN-WILDCARD|DOMAIN-REGEX|IP-CIDR|IP-CIDR6|GEOIP|PROTOCOL),' "$tmp" > "$sorted" || true
 
   mv "$sorted" "$tmp"
 
@@ -94,35 +94,35 @@ while read -r file; do
   mkdir -p "$(dirname "$mihomo_domain_out")"
   mkdir -p "$(dirname "$mihomo_ip_out")"
 
-  echo "payload:" > "$mihomo_domain_out"
-  echo "payload:" > "$mihomo_ip_out"
+  # DOMAIN
+  omain_lines=$(grep -E '^(DOMAIN(-SUFFIX)?),' "$tmp" || true)
 
-  grep -E '^(DOMAIN(-SUFFIX|-KEYWORD|-WILDCARD|-REGEX)?),' "$tmp" | while IFS=',' read -r type value extra; do
-    case "$type" in
-      DOMAIN-SUFFIX)
-        echo "  - +.$value" >> "$mihomo_domain_out"
-        ;;
-      DOMAIN)
-        echo "  - $value" >> "$mihomo_domain_out"
-        ;;
-      DOMAIN-KEYWORD)
-        echo "  - $value" >> "$mihomo_domain_out"
-        ;;
-      DOMAIN-WILDCARD)
-        echo "  - $value" >> "$mihomo_domain_out"
-        ;;
-      DOMAIN-REGEX)
-        echo "  - $value" >> "$mihomo_domain_out"
-        ;;
-    esac
-  done
+  if [ -n "$domain_lines" ]; then
+    echo "payload:" > "$mihomo_domain_out"
 
-  grep -E '^(IP-CIDR|IP-CIDR6),' "$tmp" \
-  | cut -d',' -f2 \
-  | sed 's/^/  - /' >> "$mihomo_ip_out"
+    echo "$domain_lines" | while IFS=',' read -r type value extra; do
+      case "$type" in
+        DOMAIN-SUFFIX)
+          echo "  - +.$value"
+          ;;
+        DOMAIN)
+          echo "  - $value"
+          ;;
+      esac
+    done >> "$mihomo_domain_out"
+  else
+    rm -f "$mihomo_domain_out"
+  fi
 
-  if [ $(wc -l < "$mihomo_domain_out") -le 1 ]; then rm -f "$mihomo_domain_out"; fi
-  if [ $(wc -l < "$mihomo_ip_out") -le 1 ]; then rm -f "$mihomo_ip_out"; fi
+  # IP
+  ip_lines=$(grep -E '^(IP-CIDR|IP-CIDR6),' "$tmp" | cut -d',' -f2 || true)
+
+  if [ -n "$ip_lines" ]; then
+    echo "payload:" > "$mihomo_ip_out"
+    echo "$ip_lines" | sed 's/^/  - /' >> "$mihomo_ip_out"
+  else
+    rm -f "$mihomo_ip_out"
+  fi
 
   ################################
   # Quantumult X
