@@ -1,4 +1,6 @@
 SubStore: &SubStore "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
+VPS: &VPS "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
+CFTunnel: &CFTunnel"http://127.0.0.1:3000/download/CFTunnel?target=ClashMeta"
 BaiduProxy: &BaiduProxy "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/BaiduProxy.yaml"
 
 ProxyTest: &ProxyTest "https://www.gstatic.com/generate_204"
@@ -101,6 +103,14 @@ proxy-providers:
     <<: *Proxyer
     path: ./proxies/SubStore.yaml
     url: *SubStore
+  VPS:
+    <<: *Proxyer
+    path: ./proxies/VPS.yaml
+    url: *VPS
+  CFTunnel:
+    <<: *Proxyer
+    path: ./proxies/CFTunnel.yaml
+    url: *CFTunnel
   BaiduProxy:
     <<: *Proxyer
     path: ./proxies/BaiduProxy.yaml
@@ -244,6 +254,10 @@ rule-providers:
     <<: *ipc
     path: ./rules/private_ip.mrs
     url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs"
+  ntp:
+    <<: *dom
+    path: ./rules/ntp.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite//category-ntp.mrs"
   ads-all:
     <<: *dom
     path: ./rules/ads-all.mrs
@@ -272,6 +286,10 @@ rule-providers:
     <<: *ipc
     path: ./rules/telegram_ip.mrs
     url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"
+  googlefcm:
+    <<: *dom
+    path: ./rules/googlefcm.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/googlefcm.mrs"
   google:
     <<: *dom
     path: ./rules/google.mrs
@@ -325,6 +343,8 @@ rules:
 - DST-PORT,53,DNS_Hijack
 - AND,((NETWORK,udp),(DST-PORT,443/3478-3479/5349-5350/19302-19309)),REJECT-DROP
 - DST-PORT,1337/2710/6881-6999/7777,REJECT-DROP
+- DST-PORT,5228-5230,DIRECT
+- DST-PORT,123,DIRECT
 - RULE-SET,private,DIRECT
 - RULE-SET,private_ip,DIRECT,no-resolve
 - RULE-SET,ads-all,REJECT-DROP
@@ -391,6 +411,13 @@ profile:
   store-fake-ip: true
   smart-collector-size: 100
 
+ntp:
+  enable: true
+  write-to-system: false
+  server: time.apple.com
+  port: 123
+  interval: 30
+
 sniffer:
   enable: true
   force-dns-mapping: true
@@ -442,6 +469,8 @@ dns:
   fake-ip-filter-mode: rule
   fake-ip-filter:
   - RULE-SET,private,real-ip
+  - RULE-SET,ntp,real-ip
+  - RULE-SET,googlefcm,real-ip
   - RULE-SET,directs,real-ip
   - RULE-SET,cn,real-ip
   - MATCH,fake-ip
