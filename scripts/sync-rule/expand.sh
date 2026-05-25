@@ -24,34 +24,44 @@ err() {
   echo "[ERROR] $*" >&2
 }
 
+trim() {
+  # 去空格 + 去 \r
+  echo "$1" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | tr -d '\r'
+}
+
 hash() {
   echo -n "$1" | md5sum | cut -d' ' -f1
 }
 
 ################################
-# 🔐 Safe Fetch（带并发锁 + 缓存）
+# 🔐 Safe Fetch（并发安全 + 缓存）
 ################################
 
 fetch_url() {
-  local url="$1"
+  local url
+  url=$(trim "$1")
+
+  # 基础校验
+  if ! [[ "$url" =~ ^https?:// ]]; then
+    err "invalid url: $url"
+    return 1
+  fi
+
   local key
   key=$(hash "$url")
 
   local cache_file="$CACHE_DIR/$key"
   local lock_file="$CACHE_DIR/$key.lock"
 
-  # 已缓存
   if [[ -s "$cache_file" ]]; then
     log "cache hit: $url"
     cat "$cache_file"
     return
   fi
 
-  # 🔐 文件锁（并发安全）
   exec 9>"$lock_file"
   flock 9
 
-  # 再次检查（防止别的进程刚写完）
   if [[ -s "$cache_file" ]]; then
     log "cache hit after lock: $url"
     cat "$cache_file"
@@ -70,22 +80,24 @@ fetch_url() {
     return 1
   fi
 
-  mv "$tmp_file" "$cache_file"
+  # 去 BOM
+  sed -i '1s/^\xEF\xBB\xBF//' "$tmp_file"
 
+  mv "$tmp_file" "$cache_file"
   flock -u 9
 
   cat "$cache_file"
 }
 
 ################################
-# 🔁 Expand Core（递归展开）
+# 🔁 Expand Core
 ################################
 
-declare -A visited   # 防循环（统一 file+url）
+declare -A visited
 
 expand_stream() {
-  local source="$1"   # file path or URL tag
-  local input="$2"    # 实际内容来源（file or stdin）
+  local source="$1"
+  local input="$2"
   local depth="$3"
 
   if (( depth > MAX_DEPTH )); then
@@ -99,23 +111,31 @@ expand_stream() {
   fi
   visited["$source"]=1
 
-  while IFS= read -r line || [[ -n "$line" ]]; do
+  while IFS= read -r raw || [[ -n "$raw" ]]; do
+
+    line=$(trim "$raw")
 
     ################################
     # @https
     ################################
     if [[ "$line" =~ ^@https?:// ]]; then
       url="${line#@}"
+      url=$(trim "$url")
+
       echo "# source: $url"
 
-      content=$(fetch_url "$url" || true)
-      [[ -n "$content" ]] && expand_stream "$url" <(echo "$content") $((depth+1))
+      if content=$(fetch_url "$url"); then
+        expand_stream "$url" <(printf "%s\n" "$content") $((depth+1))
+      fi
 
     ################################
     # @local
     ################################
     elif [[ "$line" =~ ^@ ]]; then
-      local_path="$(dirname "$input")/${line#@}"
+      ref="${line#@}"
+      ref=$(trim "$ref")
+
+      local_path="$(dirname "$input")/$ref"
 
       if [[ -f "$local_path" ]]; then
         echo "# include: $local_path"
@@ -129,14 +149,17 @@ expand_stream() {
     ################################
     elif [[ "$line" =~ ^#!(include|source): ]]; then
       ref=$(echo "$line" | sed -E 's/^#!(include|source):[[:space:]]*//')
+      ref=$(trim "$ref")
 
-      echo "$line"
+      echo "#!include: $ref"
 
       if [[ "$ref" =~ ^https?:// ]]; then
-        content=$(fetch_url "$ref" || true)
-        [[ -n "$content" ]] && expand_stream "$ref" <(echo "$content") $((depth+1))
+        if content=$(fetch_url "$ref"); then
+          expand_stream "$ref" <(printf "%s\n" "$content") $((depth+1))
+        fi
       else
         local_path="$(dirname "$input")/$ref"
+
         if [[ -f "$local_path" ]]; then
           expand_stream "$local_path" "$local_path" $((depth+1))
         else
@@ -145,7 +168,7 @@ expand_stream() {
       fi
 
     ################################
-    # normal line
+    # normal
     ################################
     else
       echo "$line"
@@ -155,13 +178,14 @@ expand_stream() {
 }
 
 ################################
-# 🧹 找出被 include 的文件（避免重复生成）
+# 🧹 include 检测
 ################################
 
 included_files=$(mktemp)
 
 grep -RhoE '^#!(include|source):[[:space:]]*[^ ]+' rules \
   | sed -E 's/^#!(include|source):[[:space:]]*//' \
+  | sed 's/\r//' \
   | grep -vE '^https?://' \
   | sort -u > "$included_files"
 
