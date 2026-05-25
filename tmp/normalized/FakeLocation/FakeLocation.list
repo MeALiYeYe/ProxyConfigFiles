@@ -240,7 +240,3 @@ IP-CIDR,81.70.124.99/32,no-resolve
 IP-CIDR,81.70.125.19/32,no-resolve
 IP-CIDR6,2402:4e00:1200:ed00:0:9089:6dac:96b6/128,no-resolve
 IP-CIDR6,2402:4e00:1200:ed00:0:9089:6dac:96b6/40,REJECT,no-resolve
-[fetch] https://raw.githubusercontent.com/SunsetMkt/anti-ip-attribution/main/generated/surge.list
-[fetch] https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Weibo/Weibo.list
-[fetch] https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/XiaoHongShu/XiaoHongShu.list
-[fetch] https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Zhihu/Zhihu.list
