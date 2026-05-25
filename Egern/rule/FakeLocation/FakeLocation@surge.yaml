@@ -12,7 +12,6 @@ domain_suffix_set:
   - douyu.com
   - douyucdn.cn
   - ecombdapi.com
-  - fengkongcloud.com
   - gifshow.com
   - hdslb.com
   - hls1a-akm.douyucdn.cn
@@ -47,12 +46,9 @@ domain_suffix_set:
   - ws-tct.douyucdn.cn
   - ws3.douyucdn.cn
   - wsproxy.douyu.com
-  - xhscdn.com
-  - xhscdn.net
   - xiaohongshu.com
   - y.qq.com
   - zhihu.com
-  - zhimg.com
   - zijieapi.com
 domain_set:
   - ac.dun.163.com
