@@ -14,9 +14,6 @@ echo "== Generate =="
 bash scripts/sync-rule/generate.sh
 
 echo "== Mihomo Core & MRS =="
-bash scripts/sync-rule/mihomo.sh
-
-echo "== Providers =="
-bash scripts/sync-rule/providers.sh
+bash scripts/sync-rule/tomrs.sh
 
 echo "== DONE =="
