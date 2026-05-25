@@ -1,6 +1,7 @@
 payload:
   - 1dot1dot1dot1.cloudflare-dns.com
   - cloudflare-dns.com
+  - dns.adguard-dns.com
   - dns.alidns.com
   - dns.cloudflare.com
   - dns.google
@@ -11,7 +12,9 @@ payload:
   - doh.pub
   - dot.360.cn
   - dot.pub
+  - family.adguard-dns.com
   - family.cloudflare-dns.com
   - one.one.one.one
   - security.cloudflare-dns.com
   - sm2.doh.pub
+  - unfiltered.adguard-dns.com

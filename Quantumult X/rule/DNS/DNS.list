@@ -1,5 +1,6 @@
 DOMAIN,1dot1dot1dot1.cloudflare-dns.com
 DOMAIN,cloudflare-dns.com
+DOMAIN,dns.adguard-dns.com
 DOMAIN,dns.alidns.com
 DOMAIN,dns.cloudflare.com
 DOMAIN,dns.google
@@ -10,10 +11,12 @@ DOMAIN,doh.360.cn
 DOMAIN,doh.pub
 DOMAIN,dot.360.cn
 DOMAIN,dot.pub
+DOMAIN,family.adguard-dns.com
 DOMAIN,family.cloudflare-dns.com
 DOMAIN,one.one.one.one
 DOMAIN,security.cloudflare-dns.com
 DOMAIN,sm2.doh.pub
+DOMAIN,unfiltered.adguard-dns.com
 IP-CIDR,1.0.0.1/32
 IP-CIDR,1.0.0.2/31
 IP-CIDR,1.1.1.1/32
@@ -22,6 +25,10 @@ IP-CIDR,1.12.12.12/32
 IP-CIDR,8.8.4.4/32
 IP-CIDR,8.8.8.8/32
 IP-CIDR,9.9.9.9/32
+IP-CIDR,94.140.14.14/31
+IP-CIDR,94.140.14.140/31
+IP-CIDR,94.140.15.15/32
+IP-CIDR,94.140.15.16/32
 IP-CIDR,101.226.4.6/32
 IP-CIDR,119.28.28.28/32
 IP-CIDR,119.29.29.29/32
@@ -50,3 +57,9 @@ IP-CIDR6,2606:4700:4700::1112/127
 IP-CIDR6,2620:fe::9/128
 IP-CIDR6,2620:fe::fe/128
 IP-CIDR6,2620:fe::fe:9/128
+IP-CIDR6,2a10:50c0::1:ff/128
+IP-CIDR6,2a10:50c0::2:ff/128
+IP-CIDR6,2a10:50c0::ad1:ff/128
+IP-CIDR6,2a10:50c0::ad2:ff/128
+IP-CIDR6,2a10:50c0::bad1:ff/128
+IP-CIDR6,2a10:50c0::bad2:ff/128
