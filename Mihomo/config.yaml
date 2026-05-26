@@ -1,6 +1,6 @@
 SubStore: &SubStore "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
 VPS: &VPS "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
-CFTunnel: &CFTunnel"http://127.0.0.1:3000/download/CFTunnel?target=ClashMeta"
+CFTunnel: "&CFTunnel"http://127.0.0.1:3000/download/CFTunnel?target=ClashMeta"
 BaiduProxy: &BaiduProxy "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/BaiduProxy.yaml"
 
 ProxyTest: &ProxyTest "https://www.gstatic.com/generate_204"
