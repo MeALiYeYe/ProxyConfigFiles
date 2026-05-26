@@ -1,6 +1,4 @@
-SubStore: &SubStore "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
-VPS: &VPS "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
-CFTunnel: &CFTunnel"http://127.0.0.1:3000/download/CFTunnel?target=ClashMeta"
+SubStore: &SubStore "https://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
 BaiduProxy: &BaiduProxy "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/BaiduProxy.yaml"
 
 ProxyTest: &ProxyTest "https://www.gstatic.com/generate_204"
@@ -103,14 +101,6 @@ proxy-providers:
     <<: *Proxyer
     path: ./proxies/SubStore.yaml
     url: *SubStore
-  VPS:
-    <<: *Proxyer
-    path: ./proxies/VPS.yaml
-    url: *VPS
-  CFTunnel:
-    <<: *Proxyer
-    path: ./proxies/CFTunnel.yaml
-    url: *CFTunnel
   BaiduProxy:
     <<: *Proxyer
     path: ./proxies/BaiduProxy.yaml
@@ -123,9 +113,9 @@ proxy-groups:
 - name: Domestic
   <<: *Groupd
   icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png"
-- name: DNSServer
+- name: DNSService
   <<: *Groupp
-  icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/NAS(2).png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Direct.png"
 - name: Emby
   <<: *Groupp
   icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png"
@@ -202,7 +192,7 @@ proxy-groups:
   icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png"
 - name: 自由
   <<: *Smartp
-  filter: '(?i)(?:vps|自建)'
+  filter: '(?i)(?:VPS)'
   icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png"
 - name: 民主
   <<: *Smartp
@@ -341,7 +331,7 @@ rule-providers:
 
 rules:
 - DST-PORT,53,DNS_Hijack
-- AND,((NETWORK,udp),(DST-PORT,443/3478-3479/5349-5350/19302-19309)),REJECT-DROP
+- AND,((NETWORK,udp),(DST-PORT,3478-3479/5349-5350/19302-19309)),REJECT-DROP
 - DST-PORT,1337/2710/6881-6999/7777,REJECT-DROP
 - DST-PORT,5228-5230,DIRECT
 - DST-PORT,123,DIRECT
@@ -483,8 +473,8 @@ dns:
   - 'https://dns.alidns.com/dns-query#DIRECT'
   - 'quic://dns.alidns.com#DIRECT'
   cgdns: &cgdns
-  - 'https://dns.google/dns-query#DNSServer'
-  - 'https://cloudflare-dns.com/dns-query#DNSServer'
+  - 'https://dns.google/dns-query#DNSService'
+  - 'https://cloudflare-dns.com/dns-query#DNSService'
   direct-nameserver:
   - 223.5.5.5
   - 223.6.6.6
