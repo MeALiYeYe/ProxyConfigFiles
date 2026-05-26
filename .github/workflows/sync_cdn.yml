@@ -1,11 +1,8 @@
 name: sync_cdn
 
 on:
-  push:
-    branches:
-      - main
   schedule:
-    - cron: '0 0 * * *' # 每天北京时间早上 8 点自动运行
+    - cron: '0 0 */30 * *' # 每30天北京时间早上 8 点自动运行
   workflow_dispatch: # 允许在 GitHub 网页上手动点击按钮触发
 
 env:
