@@ -1,0 +1,22 @@
+name: 机场订阅
+description: 机场订阅流量小组件
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/jichang.png
+
+env_schema:
+  NAME1:
+    default_value: 订阅1
+  URL1 :
+    default_value:
+  NAME2:
+    default_value: 订阅2
+  URL2 :
+    default_value:
+
+scriptings:
+- generic: 
+    name: 机场订阅
+    script_url: https://raw.githubusercontent.com/mickeu/Egern/refs/heads/main/Sub_Widget_Y.JS
+
+widgets:
+- name: 机场订阅
+  script_name: 机场订阅
