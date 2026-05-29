@@ -44,7 +44,7 @@ find "$SRC_DIR" -type f -name '*.list' -print0 | while IFS= read -r -d '' file; 
   grep '^DOMAIN-SUFFIX,' "$tmp" | sort -u >> "$sorted" || true
   grep '^DOMAIN-KEYWORD,' "$tmp" | sort -u >> "$sorted" || true
   grep '^DOMAIN-WILDCARD,' "$tmp" | sort -u >> "$sorted" || true
-  grep '^DOMAIN-REGEX,' "$tmp" | sort -u >> "$sorted" || true
+  grep '^URL-REGEX,' "$tmp" | sort -u >> "$sorted" || true
 
   ################################
   # IP 聚合
@@ -55,6 +55,8 @@ find "$SRC_DIR" -type f -name '*.list' -print0 | while IFS= read -r -d '' file; 
 
   grep '^IP-CIDR,' "$tmp" | cut -d',' -f2 > "$ipv4_tmp" || true
   grep '^IP-CIDR6,' "$tmp" | cut -d',' -f2 > "$ipv6_tmp" || true
+  grep '^GEOIP,' "$tmp" | sort -u >> "$sorted" || true
+  grep '^IP-ASN,' "$tmp" | sort -u >> "$sorted" || true
 
   py_script=$(mktemp)
 
@@ -93,7 +95,7 @@ EOF
   # 其他规则
   ################################
 
-  grep -Ev '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD|DOMAIN-WILDCARD|DOMAIN-REGEX|IP-CIDR|IP-CIDR6),' "$tmp" >> "$sorted" || true
+  grep -Ev '^(DEST-PORT|DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD|DOMAIN-WILDCARD|URL-REGEX|IP-CIDR|IP-CIDR6|GEOIP|IP-ASN|PROTOCOL),' "$tmp" >> "$sorted" || true
 
   mv "$sorted" "$tmp"
 
@@ -170,7 +172,7 @@ EOF
   mkdir -p "$(dirname "$egern_out")"
   rm -f "$egern_out"
 
-  if grep -qE '^IP-CIDR,|^IP-CIDR6,|^GEOIP,' "$tmp"; then
+  if grep -qE '^IP-CIDR,|^IP-CIDR6,|^GEOIP|^IP-ASN,' "$tmp"; then
     echo "no_resolve: true" >> "$egern_out"
   fi
 
@@ -194,9 +196,9 @@ EOF
     grep '^DOMAIN-WILDCARD,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
   fi
 
-  if grep -q '^DOMAIN-REGEX,' "$tmp"; then
+  if grep -q '^URL-REGEX,' "$tmp"; then
     echo "domain_regex_set:" >> "$egern_out"
-    grep '^DOMAIN-REGEX,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
+    grep '^URL-REGEX,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
   fi
 
   if grep -q '^IP-CIDR,' "$tmp"; then
@@ -214,6 +216,16 @@ EOF
     grep '^GEOIP,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
   fi
 
+  if grep -q '^IP-ASN,' "$tmp"; then
+    echo "asn_set:" >> "$egern_out"
+    grep '^IP-ASN,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
+  fi
+
+  if grep -q '^DEST-PORT,' "$tmp"; then
+    echo "dest_port_set:" >> "$egern_out"
+    grep '^DEST-PORT,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
+  fi
+  
   if grep -q '^PROTOCOL,' "$tmp"; then
     echo "protocol_set:" >> "$egern_out"
     grep '^PROTOCOL,' "$tmp" | cut -d',' -f2 | sed 's/^/  - /' >> "$egern_out"
