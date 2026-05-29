@@ -6,12 +6,26 @@ convert_yaml() {
   output="$2"
 
   sed '1d' "$input" | sed 's/^- //' | while read -r line; do
-    if echo "$line" | grep -qE '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD|DOMAIN-WILDCARD|DOMAIN-REGEX|IP-CIDR|IP-CIDR6|GEOIP|PROTOCOL),'; then
-      echo "$line"
+    if echo "$line" | grep -qE '^(DEST-PORT|DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD|DOMAIN-WILDCARD|URL-REGEX|IP-CIDR|IP-CIDR6|GEOIP|IP-ASN|PROTOCOL),'; then
+      # DOMAIN-REGEX 统一成 URL-REGEX
+      if [[ "$line" == DOMAIN-REGEX,* ]]; then
+        echo "URL-REGEX,${line#*,}"
+      else
+        echo "$line"
+      fi
+
     elif echo "$line" | grep -q '^\+\.'; then
       echo "DOMAIN-SUFFIX,${line#+.}"
+
+    elif echo "$line" | grep -qE '^[0-9]+$'; then
+      echo "DEST-PORT,$line"
+
+    elif echo "$line" | grep -qE '^[0-9a-fA-F:]+/[0-9]+$'; then
+      echo "IP-CIDR6,$line"
+
     elif echo "$line" | grep -q '/'; then
       echo "IP-CIDR,$line"
+
     else
       echo "DOMAIN,$line"
     fi
