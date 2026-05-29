@@ -58,7 +58,25 @@ find tmp/expanded -type f \
   normalize_file "$file" "$tmp"
 
   if [ -f "$out" ]; then
-    cat "$out" "$tmp" | sed '/^#/d;/^$/d' | sort -u > "${out}.new"
+    # 新增权重排序
+    cat "$out" "$tmp" | sed '/^#/d;/^$/d' | \
+    awk -F',' '{
+      type=$1
+      if (type=="DEST-PORT") w=1;
+      else if (type=="DOMAIN") w=2;
+      else if (type=="DOMAIN-SUFFIX") w=3;
+      else if (type=="DOMAIN-KEYWORD") w=4;
+      else if (type=="DOMAIN-WILDCARD") w=5;
+      else if (type=="URL-REGEX") w=6;
+      else if (type=="IP-CIDR") w=7;
+      else if (type=="IP-CIDR6") w=8;
+      else if (type=="GEOIP") w=9;
+      else if (type=="IP-ASN") w=10;
+      else if (type=="PROTOCOL") w=11;
+      else w=99;
+
+      print w "|" $0
+    }' | sort -t'|' -k1,1n -k2 | cut -d'|' -f2- | uniq > "${out}.new"
     mv "${out}.new" "$out"
   else
     mv "$tmp" "$out"
