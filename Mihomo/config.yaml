@@ -1,5 +1,6 @@
 SubStore: &SubStore "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
 VPS: &VPS "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
+CF: &CF"http://127.0.0.1:3000/download/CF?target=ClashMeta"
 BaiduProxy: &BaiduProxy "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/BaiduProxy.yaml"
 
 ProxyTest: &ProxyTest "https://www.gstatic.com/generate_204"
@@ -107,6 +108,10 @@ proxy-providers:
     <<: *Proxyer
     path: ./proxies/VPS.yaml
     url: *VPS
+  CFTunnel:
+    <<: *Proxyer
+    path: ./proxies/CFTunnel.yaml
+    url: *CF
   BaiduProxy:
     <<: *Proxyer
     path: ./proxies/BaiduProxy.yaml
