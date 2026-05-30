@@ -470,8 +470,8 @@ dns:
   - 1.1.1.1
   - 1.0.0.1
   cndns: &cndns
-  - 'https://dns.alidns.com/dns-query#DIRECT'
-  - 'quic://dns.alidns.com#DIRECT'
+  - 'https://dns.alidns.com/dns-query#🟢 直连'
+  - 'quic://dns.alidns.com#🟢 直连'
   cgdns: &cgdns
   - 'https://dns.google/dns-query#DNServer'
   - 'https://cloudflare-dns.com/dns-query#DNServer'
