@@ -337,10 +337,10 @@ rules:
 - RULE-SET,ntp,直连
 - RULE-SET,private,直连
 - RULE-SET,private_ip,直连,no-resolve
-- RULE-SET,ads-all,REJECT-DROP
-- RULE-SET,httpdns-cn,REJECT-DROP
-- RULE-SET,rejects,REJECT-DROP
-- RULE-SET,rejects_ip,REJECT-DROP,no-resolve
+- RULE-SET,ads-all,拒绝
+- RULE-SET,httpdns-cn,拒绝
+- RULE-SET,rejects,拒绝
+- RULE-SET,rejects_ip,拒绝,no-resolve
 - RULE-SET,directs,Domestic
 - RULE-SET,directs_ip,Domestic,no-resolve
 - RULE-SET,proxys,Foreign
