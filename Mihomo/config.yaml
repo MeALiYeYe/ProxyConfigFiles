@@ -475,8 +475,8 @@ dns:
   - 1.1.1.1
   - 1.0.0.1
   cndns: &cndns
-  - 'https://dns.alidns.com/dns-query#🟢 直连'
   - 'quic://dns.alidns.com#🟢 直连'
+  - 'https://dns.alidns.com/dns-query#🟢 直连'
   cgdns: &cgdns
   - 'https://dns.google/dns-query#DNServer'
   - 'https://cloudflare-dns.com/dns-query#DNServer'
@@ -485,7 +485,6 @@ dns:
   - 223.6.6.6
   proxy-server-nameserver: *cndns
   nameserver-policy:
-    '.eu.cc': *cgdns
     'RULE-SET:ads-all,awavenue,rejects': rcode://name_error
     'RULE-SET:cn,apple,microsoft,directs': *cndns
   nameserver: *cgdns
