@@ -1,9 +1,8 @@
-SubStore: &SubStore "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
-VPS: &VPS "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
-CF: &CF "http://127.0.0.1:3000/download/CF?target=ClashMeta"
+SubStore: &SubStore "https://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
 BaiduProxy: &BaiduProxy "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/BaiduProxy.yaml"
 
 ProxyTest: &ProxyTest "https://www.gstatic.com/generate_204"
+DirecTest: &DirecTest "https://connect.rom.miui.com/generate_204"
 
 FilterHK: &FilterHK '(?i)(?:港|香港|🇭🇰|\bHK\b|Hong\s?Kong|HKG)'
 FilterTW: &FilterTW '(?i)(?:台|台湾|🇼🇸|🇹🇼|\bTW\b|Taiwan|TWN)'
@@ -33,6 +32,7 @@ Proxyer: &Proxyer
 
 Smartp: &Smartp
   type: smart
+  use:
   include-all-providers: true
   policy-priority:
 #  - '(?<![\d.])0\.\d+(?!\d):1.3'
@@ -46,27 +46,29 @@ Smartp: &Smartp
   lazy: true
   hidden: true
 
-Groupd: &Groupd
+Groupp: &Groupp
   type: select
   proxies:
-  - 🟢 直连
-  - 广东
-  - 江苏
-  - 北京
+  - 直连
+  - 香港
+  - 台湾
+  - 狮城
+  - 日本
+  - 美国
+  - 自由
+  - 民主
   url: *ProxyTest
   lazy: true
   hidden: false
 
-Groupp: &Groupp
+Groupd: &Groupd
   type: select
   proxies:
-  - 🟢 直连
-  - 自由
-  - 香港
-  - 狮城
-  - 日本
-  - 美国
-  url: *ProxyTest
+  - 直连
+  - 江苏
+  - 广东
+  - 北京
+  url: *DirecTest
   lazy: true
   hidden: false
 
@@ -88,12 +90,10 @@ rule-anchor:
     interval: 86400
 
 proxies:
-- name: 🟢 直连
+- name: 直连
   type: direct
   udp: true
-- name: ⛔️ 拒绝
-  type: reject
-- name: ⭕️ DNS_Hijack
+- name: DNS_Hijack
   type: dns
 
 proxy-providers:
@@ -101,14 +101,6 @@ proxy-providers:
     <<: *Proxyer
     path: ./proxies/SubStore.yaml
     url: *SubStore
-  VPS:
-    <<: *Proxyer
-    path: ./proxies/VPS.yaml
-    url: *VPS
-  CFTunnel:
-    <<: *Proxyer
-    path: ./proxies/CFTunnel.yaml
-    url: *CF
   BaiduProxy:
     <<: *Proxyer
     path: ./proxies/BaiduProxy.yaml
@@ -121,9 +113,9 @@ proxy-groups:
 - name: Domestic
   <<: *Groupd
   icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Domestic.png"
-- name: DNServer
+- name: DNSService
   <<: *Groupp
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Filter.png"
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Direct.png"
 - name: Emby
   <<: *Groupp
   icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png"
@@ -165,24 +157,27 @@ proxy-groups:
   icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png"
 - name: 江苏
   <<: *Smartp
+  url: *DirecTest
   filter: '(?i)(?:南京|苏州)'
   icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(1).png"
 - name: 广东
   <<: *Smartp
+  url: *DirecTest
   filter: '(?i)(?:广州)'
   icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(2).png"
 - name: 北京
   <<: *Smartp
+  url: *DirecTest
   filter: '(?i)(?:北京|保定)'
   icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(3).png"
-- name: 自由
-  <<: *Smartp
-  filter: '(?i)(?:VPS|小机)'
-  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png"
 - name: 香港
   <<: *Smartp
   filter: *FilterHK
   icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png"
+- name: 台湾
+  <<: *Smartp
+  filter: *FilterTW
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Taiwan.png"
 - name: 狮城
   <<: *Smartp
   filter: *FilterSG
@@ -195,6 +190,14 @@ proxy-groups:
   <<: *Smartp
   filter: *FilterUS
   icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png"
+- name: 自由
+  <<: *Smartp
+  filter: '(?i)(?:VPS)'
+  icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png"
+- name: 民主
+  <<: *Smartp
+  filter: '(?i)(?:CF|优选|反代)'
+  icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/jichang.png"
 
 rule-providers:
   directs:
@@ -233,10 +236,6 @@ rule-providers:
     <<: *ipc
     path: ./rules/fakelocation_ip.mrs
     url: "https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Mihomo/rule/FakeLocation/FakeLocation_ip.mrs"
-  awavenue:
-    <<: *dom
-    path: ./rules/awavenue.mrs
-    url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Clash.mrs"
   private:
     <<: *dom
     path: ./rules/private.mrs
@@ -331,21 +330,17 @@ rule-providers:
     url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"
 
 rules:
-- DST-PORT,53,⭕️ DNS_Hijack
-- DST-PORT,853/8853,DNServer
+- DST-PORT,53,DNS_Hijack
 - AND,((NETWORK,udp),(DST-PORT,3478-3479/5349-5350/19302-19309)),REJECT-DROP
 - DST-PORT,1337/2710/6881-6999/7777,REJECT-DROP
-- DST-PORT,5228-5230,🟢 直连
-- RULE-SET,googlefcm,🟢 直连
-- DST-PORT,123,🟢 直连
-- RULE-SET,ntp,🟢 直连
-- RULE-SET,private,🟢 直连
-- RULE-SET,private_ip,🟢 直连,no-resolve
-- RULE-SET,ads-all,⛔️ 拒绝
-- RULE-SET,awavenue,⛔️ 拒绝
-- RULE-SET,httpdns-cn,⛔️ 拒绝
-- RULE-SET,rejects,⛔️ 拒绝
-- RULE-SET,rejects_ip,⛔️ 拒绝,no-resolve
+- DST-PORT,5228-5230,DIRECT
+- DST-PORT,123,DIRECT
+- RULE-SET,private,DIRECT
+- RULE-SET,private_ip,DIRECT,no-resolve
+- RULE-SET,ads-all,REJECT-DROP
+- RULE-SET,httpdns-cn,REJECT-DROP
+- RULE-SET,rejects,REJECT-DROP
+- RULE-SET,rejects_ip,REJECT-DROP,no-resolve
 - RULE-SET,directs,Domestic
 - RULE-SET,directs_ip,Domestic,no-resolve
 - RULE-SET,proxys,Foreign
@@ -460,7 +455,7 @@ dns:
   prefer-h3: true
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.0/16
-  fake-ip-range6: fdfe:dcba:9876::/64
+  fake-ip-range6: fdfe:dcba:9876::1/64
   fake-ip-filter-mode: rule
   fake-ip-filter:
   - RULE-SET,private,real-ip
@@ -475,18 +470,20 @@ dns:
   - 1.1.1.1
   - 1.0.0.1
   cndns: &cndns
-  - 'quic://dns.alidns.com#🟢 直连'
-  - 'https://dns.alidns.com/dns-query#🟢 直连'
+  - 'https://dns.alidns.com/dns-query#DIRECT'
+  - 'quic://dns.alidns.com#DIRECT'
   cgdns: &cgdns
-  - 'https://dns.google/dns-query#DNServer'
-  - 'https://cloudflare-dns.com/dns-query#DNServer'
+  - 'https://dns.google/dns-query#DNSService'
+  - 'https://cloudflare-dns.com/dns-query#DNSService'
   direct-nameserver:
   - 223.5.5.5
   - 223.6.6.6
   proxy-server-nameserver: *cndns
   nameserver-policy:
-    'RULE-SET:ads-all,awavenue,rejects': rcode://name_error
+    '.eu.cc': *cgdns
+    'RULE-SET:ads-all,rejects': rcode://name_error
     'RULE-SET:cn,apple,microsoft,directs': *cndns
+    'RULE-SET:geolocation-!cn,proxys': *cgdns
   nameserver: *cgdns
 
 hosts:
