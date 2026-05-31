@@ -486,9 +486,8 @@ dns:
   proxy-server-nameserver: *cndns
   nameserver-policy:
     '.eu.cc': *cgdns
-    'RULE-SET:ads-all,rejects': rcode://name_error
+    'RULE-SET:ads-all,awavenue,rejects': rcode://name_error
     'RULE-SET:cn,apple,microsoft,directs': *cndns
-    'RULE-SET:geolocation-!cn,proxys': *cgdns
   nameserver: *cgdns
 
 hosts:
