@@ -40,7 +40,6 @@ Smartp: &Smartp
 #  - '(?<![\d.])1\.\d+(?!\d):0.8'
 #  - '(?<![\d.])[2-9]\d*(?:\.\\d+)?(?!\d):0.5'
   uselightgbm: true
-  prefer-asn: true
   collectdata: false
   max-failed-times: 3
   url: *ProxyTest
@@ -396,14 +395,9 @@ skip-auth-prefixes:
 - 127.0.0.1/8
 - 192.168.0.1/16
 
-geo-auto-update: false
-geo-update-interval: 168
-geox-url:
-  asn: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/GeoLite2-ASN.mmdb"
-
 lgbm-auto-update: true
 lgbm-update-interval: 360
-lgbm-url: "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model-large.bin"
+lgbm-url: "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin"
 
 profile:
   store-selected: true
