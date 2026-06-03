@@ -470,8 +470,6 @@ dns:
   - RULE-SET,private,real-ip
   - RULE-SET,ntp,real-ip
   - RULE-SET,googlefcm,real-ip
-  - RULE-SET,directs,real-ip
-  - RULE-SET,cn,real-ip
   - MATCH,fake-ip
   default-nameserver:
   - 223.5.5.5
