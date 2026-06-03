@@ -6,14 +6,14 @@ BaiduProxy: &BaiduProxy "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@
 ProxyTest: &ProxyTest "https://www.gstatic.com/generate_204"
 DirecTest: &DirecTest "https://wifi.vivo.com.cn/generate_204"
 
-FilterHK: &FilterHK '(?i)(?:港|香港|🇭🇰|\bHK\b|Hong\s?Kong|HKG)'
-FilterTW: &FilterTW '(?i)(?:台|台湾|🇼🇸|🇹🇼|\bTW\b|Taiwan|TWN)'
-FilterSG: &FilterSG '(?i)(?:坡|新加坡|🇸🇬|\bSG\b|Singapore|SGP)'
-FilterJP: &FilterJP '(?i)(?:日|日本|🇯🇵|\bJP\b|Japan|JPN)'
+FilterHK: &FilterHK '(?i)(?:港|香港|🇭🇰|HK|Hong\s?Kong)'
+FilterTW: &FilterTW '(?i)(?:台|台湾|🇼🇸|🇹🇼|TW|Taiwan)'
+FilterSG: &FilterSG '(?i)(?:坡|新加坡|🇸🇬|SG|Singapore)'
+FilterJP: &FilterJP '(?i)(?:日|日本|🇯🇵|JP|Japan)'
 FilterKR: &FilterKR '(?i)(?:韩|韩国|🇰🇷|\bKR\b|KOR|Korea)'
-FilterUS: &FilterUS '(?i)(?:美|美国|🇺🇸|\bUS\b|USA|States|America)'
+FilterUS: &FilterUS '(?i)(?:美|美国|🇺🇸|US|States|America)'
 FilterRU: &FilterRU '(?i)(?:俄罗斯|莫斯科|🇷🇺|RU|Russia|Moscow)'
-FilterOther: &FilterOther '^(?!.*(香港|台湾|新加坡|日本|美国|🇭🇰|🇼🇸|🇨🇳|🇹🇼|🇸🇬|🇯🇵|🇺🇸|\bHK\b|\bTW\b|\bSG\b|\bJP\b|\bUS\b))'
+FilterOther: &FilterOther '^(?!.*(香港|台湾|新加坡|日本|美国|🇭🇰|🇼🇸|🇨🇳|🇹🇼|🇸🇬|🇯🇵|🇺🇸|HK|TW|SG|JP|US))'
 ExcludeFilter: &ExcludeFilter '(?i)(?:佣金|套餐|官网|官方|网址|售后|免翻|过期|剩余|到期|流量|更新|点外|重置|免流|使用|教程|优惠|超实惠|址|AFF|Days|Date)'
 FilterLow: &FilterLow '(?<!\d)0\.\d+'
 FilterHigh: &FilterHigh '(?:(?:[2-9]\d*\.\d+|1\.(?:0*[1-9]\d*))|(?:[2-9]\d*|1\.(?:0*[1-9]\d*))(?=[xX×倍]))'
