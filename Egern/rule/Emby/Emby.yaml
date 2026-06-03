@@ -1,56 +1,91 @@
 domain_suffix_set:
   - 123456.al
-  - 285286.xyz
-  - agahk1.jmsooo.com
-  - agajp1.jmsooo.com
-  - agasg1.jmsooo.com
+  - 404.sb
+  - 4545.cf
   - array2026.cc
   - array2026.com
-  - aws.jmsooo.com
-  - cf1.jmsooo.com
+  - blueseacdn.com
+  - cn-music.mefun.vip
   - cn2gias.uk
-  - cristiamo.xyz
+  - emby.ml
+  - emby1.69yun69.com
+  - embyplus.club
+  - feverss.cloud
+  - gfwemby.org
+  - hongxingyunmovie.vip
+  - ju.dog
+  - loseremby.org
+  - media-1.co.uk
+  - misakaf.org
+  - mius.uk
+  - nebula-emby.com
+  - nvidia.rip
+  - plex.direct
+  - poloemby.xyz
+  - pololine.ml
+  - server2.cn2gias.uk
+  - sfcj.org
+  - sgtv.ii00.cc
+  - singularity.deja-vu.beauty
+  - sptv.ii00.cc
+  - stream.ntrrr.top
+  - stream.synn.cc
+  - texon.fans
+  - yunti.online
+domain_set:
+  - agahk.odysseyplus.site
+  - agahk1.jmsooo.com
+  - agajp1.jmsooo.com
+  - agasg.odysseyplus.site
+  - agasg1.jmsooo.com
+  - aws.jmsooo.com
+  - az-hk.embyclub.com
+  - azsgp.embyclub.com
+  - cc.ccemby.tk
+  - cf.jmsooo.com
+  - cf.odysseyplus.site
+  - cf1.jmsooo.com
+  - emby-cf.plusmedia.site
+  - emby-sg.plusmedia.site
+  - emby.aiyowei.ml
   - emby.cjpc.cc
-  - emby.cjpc.tv
-  - emby.cjpc.xyz
-  - emby.cristiamo.top
   - emby.flowercloud.yt
   - emby.immtel.com
   - emby.maying.club
-  - emby.mcwy.me
   - emby.mdss.cloud
-  - emby.neko.edu.rs
   - emby.nexitally.com
   - emby.nyancat.net
-  - emby.ok.edu.hk
-  - emby.paoche.ooo
+  - emby.otakudrive.life
+  - emby.p-p.men
+  - emby.plusmedia.site
   - emby.prprcloud.com
+  - emby.run
   - emby.wtf
   - emby.xeton.dev
   - emby.ytoo.li
-  - embymv.tk
-  - embyplus.org
+  - emby2.otakudrive.life
+  - embyclub.com
   - embyserver.ga
   - hinet.jmsooo.com
-  - imetyou.top
-  - jellyfin.asia
+  - hk.jmsooo.com
   - jellyfin.xeton.dev
+  - jmsooo.com
   - line.emby.men
-  - mickeycloud.com
   - movie.xeton.dev
   - ntt1.jmsooo.com
-  - ohhhh.org
-  - peachmv.me
-  - pilipiliultra.com
-  - plusmedia.site
-  - poloemby.xyz
+  - payload:
+  - play.charontv.com
+  - plex.llon.net
   - pornemby.club
+  - pub1.emby.wtf
+  - pub1back.emby.wtf
+  - pub2.emby.wtf
+  - pub2back.emby.wtf
+  - pub3.emby.wtf
+  - pub3back.emby.wtf
+  - ru.odysseyplus.site
   - servers.xeton.dev
-  - xmsl.org
-domain_set:
-  - emby.enjoyit.eu.org
-  - emby.lcloud.wiki
-  - notnetflix.cos.cat
+  - sg.jmsooo.com
 domain_keyword_set:
   - emby.wtf
   - jmsooo
