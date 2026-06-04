@@ -2,8 +2,8 @@ name: sync gist
 
 on:
   schedule:
-    - cron: '0 16 * * *'  # UTC 时间，每天北京时间 00:00
-  workflow_dispatch:      # 允许手动触发
+    - cron: '*/30 * * * *'  # 每30分钟执行一次
+  workflow_dispatch:
 
 jobs:
   sync:
@@ -16,37 +16,46 @@ jobs:
 
       - name: Sync Gist files with logs
         run: |
-          # 定义 Gist 列表：每行 "Gist Raw URL 目标路径"
           files=(
             "https://gist.githubusercontent.com/MeALiYeYe/4cbe0732592fc2fe20e4ab29137c9290/raw/Egern.yaml Egern/Egern.yaml"
             "https://gist.githubusercontent.com/MeALiYeYe/4cbe0732592fc2fe20e4ab29137c9290/raw/Surge.conf Surge/Surge.conf"
             "https://gist.githubusercontent.com/MeALiYeYe/4cbe0732592fc2fe20e4ab29137c9290/raw/config.yaml Mihomo/config.yaml"
           )
 
+          changed=0
+
           for file in "${files[@]}"; do
             url=$(echo $file | awk '{print $1}')
             dest=$(echo $file | awk '{print $2}')
             mkdir -p $(dirname "$dest")
-            
-            echo "Downloading $dest from $url..."
-            curl -sL "$url" -o "$dest"
-            
-            # 打印文件大小和最后修改时间
-            filesize=$(stat -c%s "$dest")
-            modtime=$(stat -c%y "$dest")
-            echo "Downloaded $dest | Size: $filesize bytes | Last Modified: $modtime"
 
-            git add "$dest"
+            echo "Downloading $dest from $url..."
+            
+            # 下载到临时文件
+            tmpfile=$(mktemp)
+            curl -sL "$url" -o "$tmpfile"
+
+            # 如果文件不存在 or 内容不同 → 替换
+            if [ ! -f "$dest" ] || ! cmp -s "$tmpfile" "$dest"; then
+              mv "$tmpfile" "$dest"
+              echo "Updated: $dest"
+              git add "$dest"
+              changed=1
+            else
+              echo "No change: $dest"
+              rm "$tmpfile"
+            fi
           done
 
       - name: Commit & Push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
           if git diff --cached --quiet; then
             echo "No changes detected. Nothing to commit."
           else
-            git commit -m "Sync multiple Gist files"
+            git commit -m "Sync Gist files (auto)"
             git push
             echo "Changes committed and pushed."
           fi
