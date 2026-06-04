@@ -420,7 +420,6 @@ sniffer:
   enable: true
   force-dns-mapping: true
   parse-pure-ip: true
-  override-destination: false
   sniff:
     HTTP:
       ports:
