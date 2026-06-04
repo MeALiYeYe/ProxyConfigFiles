@@ -472,25 +472,34 @@ dns:
   - RULE-SET,directs,real-ip
   - RULE-SET,cn,real-ip
   - MATCH,fake-ip
-  default-nameserver:
+  cndns: &cndns
   - 223.5.5.5
   - 223.6.6.6
-  - 1.1.1.1
+  - "2400:3200::1"
+  - "2400:3200:baba::1"
+  cgdns: &cgdns
   - 1.0.0.1
-  cndns: &cndns
+  - 1.1.1.1
+  - 8.8.4.4
+  - 8.8.8.8
+  - "2606:4700:4700::1001"
+  - "2606:4700:4700::1111"
+  - "2001:4860:4860::8844"
+  - "2001:4860:4860::8888"  
+  cnoh: &cndoh
   - 'quic://dns.alidns.com#🟢 直连'
   - 'https://dns.alidns.com/dns-query#🟢 直连'
-  cgdns: &cgdns
+  cgdoh: &cgdoh
   - 'https://dns.google/dns-query#DNServer'
   - 'https://cloudflare-dns.com/dns-query#DNServer'
+  default-nameserver: *cndns
   direct-nameserver:
-  - 223.5.5.5
-  - 223.6.6.6
-  proxy-server-nameserver: *cndns
+  - cndns
+  proxy-server-nameserver: *cndoh
   nameserver-policy:
     'RULE-SET:ads-all,awavenue,rejects': rcode://name_error
-    'RULE-SET:cn,apple,microsoft,directs': *cndns
-  nameserver: *cgdns
+    'RULE-SET:cn,apple,microsoft,directs': *cndoh
+  nameserver: *cgdoh
 
 hosts:
   cdn.jsdelivr.net:
