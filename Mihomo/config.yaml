@@ -335,8 +335,7 @@ rule-providers:
     url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/cn.mrs"
 
 rules:
-- DST-PORT,53,⭕️ DNS_Hijack
-- DST-PORT,853/8853,DNServer
+- DST-PORT,53/853/8853,⭕️ DNS_Hijack
 - AND,((NETWORK,udp),(DST-PORT,3478-3479/5349-5350/19302-19309)),REJECT-DROP
 - DST-PORT,1337/2710/6881-6999/7777,REJECT-DROP
 - DST-PORT,5228-5230,🟢 直连
@@ -470,6 +469,8 @@ dns:
   - RULE-SET,private,real-ip
   - RULE-SET,ntp,real-ip
   - RULE-SET,googlefcm,real-ip
+  - RULE-SET,directs,real-ip
+  - RULE-SET,cn,real-ip
   - MATCH,fake-ip
   default-nameserver:
   - 223.5.5.5
