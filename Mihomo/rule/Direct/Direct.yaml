@@ -3,7 +3,6 @@ payload:
   - ifconfig.me
   - kahaoquan.com
   - subcdn.rtx.al
-  - +.eu.cc
   - +.gwm-mn.beantechyun.com
   - +.gwm.cn
   - +.gwm.com.cn
@@ -19,5 +18,6 @@ payload:
   - +.sntp.dev
   - +.sntp.me
   - +.sntp.net
+  - +.wawei.eu.cc
   - +.xianniu.cc
   - +.xianniu.com

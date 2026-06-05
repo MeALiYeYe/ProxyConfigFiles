@@ -2,7 +2,6 @@ DOMAIN,cdn.jsdelivr.net
 DOMAIN,ifconfig.me
 DOMAIN,kahaoquan.com
 DOMAIN,subcdn.rtx.al
-DOMAIN-SUFFIX,eu.cc
 DOMAIN-SUFFIX,gwm-mn.beantechyun.com
 DOMAIN-SUFFIX,gwm.cn
 DOMAIN-SUFFIX,gwm.com.cn
@@ -18,6 +17,7 @@ DOMAIN-SUFFIX,qweatherapi.com
 DOMAIN-SUFFIX,sntp.dev
 DOMAIN-SUFFIX,sntp.me
 DOMAIN-SUFFIX,sntp.net
+DOMAIN-SUFFIX,wawei.eu.cc
 DOMAIN-SUFFIX,xianniu.cc
 DOMAIN-SUFFIX,xianniu.com
 IP-CIDR,185.218.6.88/29
