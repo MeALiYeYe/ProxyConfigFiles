@@ -16,7 +16,7 @@ FilterRU: &FilterRU '(?i)(?:俄罗斯|莫斯科|🇷🇺|RU|Russia|Moscow)'
 FilterOther: &FilterOther '^(?!.*(香港|台湾|新加坡|日本|美国|🇭🇰|🇼🇸|🇨🇳|🇹🇼|🇸🇬|🇯🇵|🇺🇸|HK|TW|SG|JP|US))'
 ExcludeFilter: &ExcludeFilter '(?i)(?:佣金|套餐|官网|官方|网址|售后|免翻|过期|剩余|到期|流量|更新|点外|重置|免流|使用|教程|优惠|超实惠|址|AFF|Days|Date)'
 FilterLow: &FilterLow '(?<!\d)(?<!\d\.)0\.\d+(?!\.\d)'
-FilterHigh: &FilterHigh '(^|[^\d.])((?:[2-9]\d*\.\d+|1\.(?:0*[1-9]\d*)|[2-9]\d*)(?:[xX×倍])?)(?!\.\d)'
+FilterHigh: &FilterHigh '(?<!\d\.)(?:(?:[2-9]\d*\.\d+|1\.(?:0*[1-9]\d*))|(?:[2-9]\d*|1\.(?:0*[1-9]\d*))(?=[xX×倍]))(?!\.\d)'
 
 Proxyer: &Proxyer
   type: http
@@ -36,8 +36,8 @@ Smartp: &Smartp
   type: smart
   include-all-providers: true
   policy-priority:
-#  - '(?<!\d)(?<!\d\.)0\.\d+(?!\.\d):1.3'
-#  - '(?<!\d)(?<!\d\.)1\.\d+(?!\.\d)'
+#  - '(?<![\d.])0\.\d+(?!\d):1.3'
+#  - '(?<![\d.])1\.\d+(?!\d):0.8'
 #  - '(?<![\d.])[2-9]\d*(?:\.\\d+)?(?!\d):0.5'
   uselightgbm: true
   collectdata: false
