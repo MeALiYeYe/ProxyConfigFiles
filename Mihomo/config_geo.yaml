@@ -250,6 +250,8 @@ skip-auth-prefixes:
 - 127.0.0.1/8
 - 192.168.0.1/16
 
+geodata-mode: true 
+geodata-loader: standard
 geo-auto-update: true
 geo-update-interval: 168
 geox-url:
