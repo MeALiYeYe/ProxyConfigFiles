@@ -156,30 +156,6 @@ proxy-groups:
   filter: *FilterHigh
 
 rule-providers:
-  directs:
-    <<: *dom
-    path: ./rules/directs.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct/Direct.mrs"
-  directs_ip:
-    <<: *ipc
-    path: ./rules/directs_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct/Direct_ip.mrs"
-  rejects:
-    <<: *dom
-    path: ./rules/rejects.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject/Reject.mrs"
-  rejects_ip:
-    <<: *ipc
-    path: ./rules/rejects_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject/Reject_ip.mrs"
-  proxys:
-    <<: *dom
-    path: ./rules/proxys.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy/Proxy.mrs"
-  proxys_ip:
-    <<: *ipc
-    path: ./rules/proxys_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy/Proxy_ip.mrs"
   awavenue:
     <<: *dom
     path: ./rules/awavenue.mrs
@@ -193,12 +169,6 @@ rules:
 - DST-PORT,123,🟢 直连
 
 - RULE-SET,awavenue,⛔️ 拒绝
-- RULE-SET,rejects,⛔️ 拒绝
-- RULE-SET,directs,🟢 直连
-- RULE-SET,proxys,🍴 Foreign
-- RULE-SET,rejects_ip,⛔️ 拒绝,no-resolve
-- RULE-SET,directs_ip,🟢 直连,no-resolve
-- RULE-SET,proxys_ip,🍴 Foreign,no-resolve
 
 - GEOSITE,private,🟢 直连
 - GEOSITE,bilibili,📺 Bilibili
