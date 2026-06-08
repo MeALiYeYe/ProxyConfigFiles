@@ -97,11 +97,11 @@ proxy-providers:
     url: *CF
 
 proxy-groups:
+- name: 📡 DNServer
+  <<: *Groupp
 - name: 📺 Bilibili
   <<: *Groupp
 - name: 🇨🇳 Domestic
-  <<: *Groupp
-- name: 📡 DNServer
   <<: *Groupp
 - name: 📽️ Netflix
   <<: *Groupp
