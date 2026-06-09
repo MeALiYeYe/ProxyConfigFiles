@@ -41,6 +41,7 @@ Smartp: &Smartp
   uselightgbm: true
   collectdata: false
   prefer-asn: true
+  interval: 120
   max-failed-times: 3
   url: *ProxyTest
   lazy: true
