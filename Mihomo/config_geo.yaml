@@ -58,7 +58,6 @@ Groupp: &Groupp
   - 🇺🇸 美国
   - 🪙 低倍
   - 💰 高倍
-  interval: 300
   url: *ProxyTest
   lazy: true
   hidden: false
@@ -215,7 +214,7 @@ tcp-concurrent: true
 allow-lan: true
 external-controller: 0.0.0.0:9090
 external-ui: ./ui/
-external-ui-url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/static/dist.zip"
+external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist-no-fonts.zip"
 secret: ""
 skip-auth-prefixes:
 - 10.0.0.1/8
@@ -234,7 +233,7 @@ geox-url:
 
 lgbm-auto-update: true
 lgbm-update-interval: 360
-lgbm-url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/static/Modle.bin"
+lgbm-url: "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin"
 
 profile:
   store-selected: true
