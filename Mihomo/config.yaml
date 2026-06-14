@@ -42,8 +42,6 @@ Smartp: &Smartp
   uselightgbm: true
   collectdata: false
   prefer-asn: true
-  interval: 120
-  max-failed-times: 3
   url: *ProxyTest
   lazy: true
   hidden: true
@@ -73,11 +71,6 @@ Groupp: &Groupp
   hidden: false
 
 rule-anchor:
-  cla: &cla
-    type: http
-    behavior: classical
-    format: yaml
-    interval: 86400
   dom: &dom
     type: http
     behavior: domain
@@ -376,8 +369,6 @@ rules:
 - RULE-SET,cn_ip,Domestic,no-resolve
 - MATCH,Final
 
-port: 8080
-socks-port: 1080
 mixed-port: 7890
 redir-port: 1911
 tproxy-port: 1919
@@ -389,7 +380,7 @@ tcp-concurrent: true
 allow-lan: true
 external-controller: 0.0.0.0:9090
 external-ui: ./ui/
-external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist-no-fonts.zip"
+external-ui-url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/static/dist.zip"
 secret: ""
 skip-auth-prefixes:
 - 10.0.0.1/8
@@ -403,7 +394,7 @@ geox-url:
 
 lgbm-auto-update: true
 lgbm-update-interval: 360
-lgbm-url: "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin"
+lgbm-url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/static/Modle.bin"
 
 profile:
   store-selected: true
