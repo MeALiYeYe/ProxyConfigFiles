@@ -1,6 +1,7 @@
 SubStore: &SubStore "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
 VPS: &VPS "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
 CF: &CF "http://127.0.0.1:3000/download/CF?target=ClashMeta"
+BaiduProxy: &BaiduProxy "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/BaiduProxy.yaml"
 
 ProxyTest: &ProxyTest "https://www.gstatic.com/generate_204"
 DirecTest: &DirecTest "https://wifi.vivo.com.cn/generate_204"
@@ -41,18 +42,29 @@ Smartp: &Smartp
   uselightgbm: true
   collectdata: false
   prefer-asn: true
+  interval: 120
+  max-failed-times: 3
   url: *ProxyTest
   lazy: true
   hidden: true
+
+Groupd: &Groupd
+  type: select
+  proxies:
+  - 🟢 直连
+  - 广东
+  - 江苏
+  - 北京
+  url: *DirecTest
+  lazy: true
+  hidden: false
 
 Groupp: &Groupp
   type: select
   proxies:
   - 🟢 直连
-  - ⛔️ 拒绝
   - 自由
   - 香港
-  - 台湾
   - 狮城
   - 日本
   - 美国
@@ -61,6 +73,11 @@ Groupp: &Groupp
   hidden: false
 
 rule-anchor:
+  cla: &cla
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
   dom: &dom
     type: http
     behavior: domain
@@ -94,13 +111,17 @@ proxy-providers:
     <<: *Proxyer
     path: ./proxies/CFTunnel.yaml
     url: *CF
+  BaiduProxy:
+    <<: *Proxyer
+    path: ./proxies/BaiduProxy.yaml
+    url: *BaiduProxy
 
 proxy-groups:
 - name: Location
-  <<: *Groupp
+  <<: *Groupd
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bypass.png"
 - name: Domestic
-  <<: *Groupp
+  <<: *Groupd
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Domestic.png"
 - name: DNServer
   <<: *Groupp
@@ -144,6 +165,21 @@ proxy-groups:
 - name: Final
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Final.png"
+- name: 江苏
+  <<: *Smartp
+  url: *DirecTest
+  filter: '(?i)(?:南京|苏州)'
+  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(1).png"
+- name: 广东
+  <<: *Smartp
+  url: *DirecTest
+  filter: '(?i)(?:广州)'
+  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(2).png"
+- name: 北京
+  <<: *Smartp
+  url: *DirecTest
+  filter: '(?i)(?:北京|保定)'
+  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(3).png"
 - name: 自由
   <<: *Smartp
   filter: '(?i)(?:VPS|小机)'
@@ -151,10 +187,6 @@ proxy-groups:
 - name: 香港
   <<: *Smartp
   filter: *FilterHK
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Hong_Kong.png"
-- name: 台湾
-  <<: *Smartp
-  filter: *FilterTW
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Hong_Kong.png"
 - name: 狮城
   <<: *Smartp
@@ -344,6 +376,8 @@ rules:
 - RULE-SET,cn_ip,Domestic,no-resolve
 - MATCH,Final
 
+port: 8080
+socks-port: 1080
 mixed-port: 7890
 redir-port: 1911
 tproxy-port: 1919
@@ -355,7 +389,7 @@ tcp-concurrent: true
 allow-lan: true
 external-controller: 0.0.0.0:9090
 external-ui: ./ui/
-external-ui-url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/static/dist.zip"
+external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist-no-fonts.zip"
 secret: ""
 skip-auth-prefixes:
 - 10.0.0.1/8
@@ -369,7 +403,7 @@ geox-url:
 
 lgbm-auto-update: true
 lgbm-update-interval: 360
-lgbm-url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/static/Modle.bin"
+lgbm-url: "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin"
 
 profile:
   store-selected: true
