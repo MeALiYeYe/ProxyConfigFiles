@@ -456,14 +456,9 @@ dns:
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.0/16
   fake-ip-range6: fdfe:dcba:9876::/64
-  fake-ip-filter-mode: rule
   fake-ip-filter:
-  - RULE-SET,private,real-ip
-  - RULE-SET,ntp,real-ip
-  - RULE-SET,googlefcm,real-ip
-  - RULE-SET,directs,real-ip
-  - RULE-SET,cn,real-ip
-  - MATCH,fake-ip
+  - ".eu.cc"
+  - "RULE-SET:private,googlefcm,ntp"
   cndns: &cndns
   - 223.5.5.5
   - 223.6.6.6
