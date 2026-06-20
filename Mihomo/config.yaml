@@ -136,21 +136,6 @@ proxy-groups:
 - name: Final
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Final.png"
-- name: 江苏
-  <<: *Smartp
-  filter: '(?i)(?:南京|苏州)'
-  url: *DirecTest
-  icon: "https://cdn.jsdelivr.net/gh/lige47/lige_icon@main/icon/05icon/liuliang(1).png"
-- name: 广东
-  <<: *Smartp
-  filter: '(?i)(?:广州)'
-  url: *DirecTest
-  icon: "https://cdn.jsdelivr.net/gh/lige47/lige_icon@main/icon/05icon/liuliang(2).png"
-- name: 北京
-  <<: *Smartp
-  filter: '(?i)(?:北京|保定)'
-  url: *DirecTest
-  icon: "https://cdn.jsdelivr.net/gh/lige47/lige_icon@main/icon/05icon/liuliang(3).png" 
 - name: 自由
   <<: *Smartp
   filter: '(?i)(?:VPS|小机)'
