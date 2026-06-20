@@ -231,7 +231,7 @@ geox-url:
 
 lgbm-auto-update: true
 lgbm-update-interval: 360
-lgbm-url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/static/Modle.bin"
+lgbm-url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/static/Model.bin"
 
 profile:
   store-selected: true
@@ -314,6 +314,7 @@ dns:
     'eu.cc': *cgdoh
     'RULE-SET:ads-all,awavenue,rejects': rcode://name_error
     'RULE-SET:cn,apple,microsoft,directs': *cndoh
+    'RULE-SET:geolocation-!cn,proxys': *cndoh
   nameserver: *cgdoh
 
 hosts:

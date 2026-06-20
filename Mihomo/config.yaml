@@ -1,7 +1,6 @@
 SubStore: &SubStore "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
 VPS: &VPS "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
 CF: &CF "http://127.0.0.1:3000/download/CF?target=ClashMeta"
-BaiduProxy: &BaiduProxy "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/BaiduProxy.yaml"
 
 ProxyTest: &ProxyTest "https://www.gstatic.com/generate_204"
 DirecTest: &DirecTest "https://wifi.vivo.com.cn/generate_204"
@@ -59,17 +58,6 @@ Groupp: &Groupp
   lazy: true
   hidden: false
 
-Groupd: &Groupd
-  type: select
-  proxies:
-  - 🟢 直连
-  - 江苏
-  - 广东
-  - 北京
-  url: *DirecTest
-  lazy: true
-  hidden: false
-
 rule-anchor:
   dom: &dom
     type: http
@@ -104,17 +92,10 @@ proxy-providers:
     <<: *Proxyer
     path: ./proxies/CFTunnel.yaml
     url: *CF
-  BaiduProxy:
-    <<: *Proxyer
-    path: ./proxies/BaiduProxy.yaml
-    url: *BaiduProxy
 
 proxy-groups:
-- name: Location
-  <<: *Groupd
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bypass.png"
 - name: Domestic
-  <<: *Groupd
+  <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Domestic.png"
 - name: DNServer
   <<: *Groupp
@@ -122,9 +103,6 @@ proxy-groups:
 - name: Emby
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Emby.png"
-- name: Tiktok
-  <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok.png"
 - name: Youtube
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/YouTube.png"
@@ -223,14 +201,6 @@ rule-providers:
     <<: *dom
     path: ./rules/emby.mrs
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Emby/Emby.mrs"
-  fakelocation:
-    <<: *dom
-    path: ./rules/fakelocation.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/FakeLocation/FakeLocation.mrs"
-  fakelocation_ip:
-    <<: *ipc
-    path: ./rules/fakelocation_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/FakeLocation/FakeLocation_ip.mrs"
   awavenue:
     <<: *dom
     path: ./rules/awavenue.mrs
@@ -255,10 +225,6 @@ rule-providers:
     <<: *dom
     path: ./rules/httpdns-cn.mrs
     url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-httpdns-cn.mrs"
-  tiktok:
-    <<: *dom
-    path: ./rules/tiktok.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/tiktok.mrs"
   youtube:
     <<: *dom
     path: ./rules/youtube.mrs
@@ -329,12 +295,7 @@ rule-providers:
     url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/cn.mrs"
 
 rules:
-- DST-PORT,53/853/8853,⭕️ DNS_Hijack
-- AND,((NETWORK,udp),(DST-PORT,3478-3479/5349-5350/19302-19309)),REJECT-DROP
-- DST-PORT,1337/2710/6881-6999/7777,REJECT-DROP
-- DST-PORT,5228-5230,🟢 直连
 - RULE-SET,googlefcm,🟢 直连
-- DST-PORT,123,🟢 直连
 - RULE-SET,ntp,🟢 直连
 - RULE-SET,private,🟢 直连
 - RULE-SET,private_ip,🟢 直连,no-resolve
@@ -347,10 +308,7 @@ rules:
 - RULE-SET,directs_ip,Domestic,no-resolve
 - RULE-SET,proxys,Foreign
 - RULE-SET,proxys_ip,Foreign,no-resolve
-- RULE-SET,fakelocation,Location
-- RULE-SET,fakelocation_ip,Location,no-resolve
 - RULE-SET,emby,Emby
-- RULE-SET,tiktok,Tiktok
 - RULE-SET,youtube,Youtube
 - RULE-SET,entertainment,Media
 - RULE-SET,telegram,Telegram
@@ -394,7 +352,7 @@ geox-url:
 
 lgbm-auto-update: true
 lgbm-update-interval: 360
-lgbm-url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/static/Modle.bin"
+lgbm-url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/static/Model.bin"
 
 profile:
   store-selected: true
@@ -477,6 +435,7 @@ dns:
     'eu.cc': *cgdoh
     'RULE-SET:ads-all,awavenue,rejects': rcode://name_error
     'RULE-SET:cn,apple,microsoft,directs': *cndoh
+    'RULE-SET:geolocation-!cn,proxys': *cgdoh
   nameserver: *cgdoh
 
 hosts:
