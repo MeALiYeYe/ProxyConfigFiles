@@ -417,7 +417,6 @@ dns:
   cgdoh: &cgdoh
   - 'https://dns.google/dns-query#DNServer'
   - 'https://cloudflare-dns.com/dns-query#DNServer'
-  default-nameserver: *cndns
   direct-nameserver: *cndns
   proxy-server-nameserver: *cndoh
   nameserver-policy:
