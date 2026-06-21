@@ -401,7 +401,6 @@ dns:
   fake-ip-range6: fdfe:dcba:9876::/64
   fake-ip-filter-mode: rule
   fake-ip-filter:
-  - RULE-SET,private,real-ip
   - RULE-SET,googlefcm,real-ip
   - RULE-SET,ntp,real-ip
   - RULE-SET,directs,real-ip
