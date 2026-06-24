@@ -1,6 +1,4 @@
 SubStore: &SubStore "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
-VPS: &VPS "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
-CF: &CF "http://127.0.0.1:3000/download/CF?target=ClashMeta"
 
 ProxyTest: &ProxyTest "https://www.gstatic.com/generate_204"
 DirecTest: &DirecTest "https://wifi.vivo.com.cn/generate_204"
@@ -84,14 +82,6 @@ proxy-providers:
     <<: *Proxyer
     path: ./proxies/SubStore.yaml
     url: *SubStore
-  VPS:
-    <<: *Proxyer
-    path: ./proxies/VPS.yaml
-    url: *VPS
-  CFTunnel:
-    <<: *Proxyer
-    path: ./proxies/CFTunnel.yaml
-    url: *CF
 
 proxy-groups:
 - name: Domestic
@@ -401,6 +391,7 @@ dns:
   fake-ip-range6: fdfe:dcba:9876::/64
   fake-ip-filter-mode: rule
   fake-ip-filter:
+  - RULE-SET,private,real-ip
   - RULE-SET,googlefcm,real-ip
   - RULE-SET,ntp,real-ip
   - RULE-SET,directs,real-ip
@@ -417,7 +408,6 @@ dns:
   cgdoh: &cgdoh
   - 'https://dns.google/dns-query#DNServer'
   - 'https://cloudflare-dns.com/dns-query#DNServer'
-  default-nameserver: *cndns
   direct-nameserver: *cndns
   proxy-server-nameserver: *cndoh
   nameserver-policy:
