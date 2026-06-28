@@ -223,10 +223,6 @@ rule-providers:
     <<: *dom
     path: ./rules/awavenue.mrs
     url: "https://cdn.jsdelivr.net/gh/TG-Twilight/AWAvenue-Ads-Rule@main/Filters/AWAvenue-Ads-Rule-Clash.mrs"
-  connectivity-check:
-    <<: *dom
-    path: ./rules/connectivity-check.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite//connectivity-check.mrs"
   private:
     <<: *dom
     path: ./rules/private.mrs
@@ -442,7 +438,6 @@ dns:
   - "RULE-SET:private"
   - "RULE-SET:googlefcm"
   - "RULE-SET:ntp"
-  - "RULE-SET:connectivity-check"
   cndns: &cndns
   - 223.5.5.5
   - 223.6.6.6

@@ -295,7 +295,7 @@ dns:
   fake-ip-range6: fdfe:dcba:9876::/64
   fake-ip-filter:
   - ".eu.cc"
-  - "RULE-SET:private,googlefcm,ntp,connectivity-chec"
+  - "RULE-SET:private,googlefcm,ntp"
   cndns: &cndns
   - 223.5.5.5
   - 223.6.6.6
