@@ -1,5 +1,7 @@
-SubStore: &SubStore "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
-BaiduProxy: &BaiduProxy "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/BaiduProxy.yaml"
+SubUrl: &SubUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
+VPSUrl: &VPSUrl "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
+CFUrl: &CFUrl "http://127.0.0.1:3000/download/CF?target=ClashMeta"
+BaiduUrl: &BaiduUrl "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/BaiduProxy.yaml"
 
 ProxyTest: &ProxyTest "https://www.gstatic.com/generate_204"
 DirecTest: &DirecTest "https://wifi.vivo.com.cn/generate_204"
@@ -94,11 +96,19 @@ proxy-providers:
   SubStore:
     <<: *Proxyer
     path: ./proxies/SubStore.yaml
-    url: *SubStore
+    url: *SubUrl
+  VPS:
+    <<: *Proxyer
+    path: ./proxies/VPS.yaml
+    url: *VPSUrl
+  CFTunnl:
+    <<: *Proxyer
+    path: ./proxies/CFTunnl.yaml
+    url: *CFUrl
   Baidu:
     <<: *Proxyer
     path: ./proxies/Baidu.yaml
-    url: *BaiduProxy
+    url: *BaiduUrl
 
 proxy-groups:
 - name: Location
