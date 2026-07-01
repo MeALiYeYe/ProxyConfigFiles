@@ -449,6 +449,7 @@ dns:
   cgdoh: &cgdoh
   - 'https://dns.google/dns-query#DNServer'
   - 'https://cloudflare-dns.com/dns-query#DNServer'
+  proxy-server-nameserver: *cndoh
   nameserver-policy:
     'eu.cc': *cgdoh
     'RULE-SET:ads-all,awavenue,rejects': rcode://name_error
