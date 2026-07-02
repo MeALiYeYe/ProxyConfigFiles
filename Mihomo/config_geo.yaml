@@ -1,5 +1,7 @@
-SubStore: &SubStore "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
-BaiduProxy: &BaiduProxy "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/BaiduProxy.yaml"
+SubUrl: &SubUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
+VPSUrl: &VPSUrl "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
+CFUrl: &CFUrl "http://127.0.0.1:3000/download/CF?target=ClashMeta"
+BaiduUrl: &BaiduUrl "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/BaiduProxy.yaml"
 
 ProxyTest: &ProxyTest "https://www.gstatic.com/generate_204"
 DirecTest: &DirecTest "https://wifi.vivo.com.cn/generate_204"
@@ -94,11 +96,19 @@ proxy-providers:
   SubStore:
     <<: *Proxyer
     path: ./proxies/SubStore.yaml
-    url: *SubStore
+    url: *SubUrl
+  VPS:
+    <<: *Proxyer
+    path: ./proxies/VPS.yaml
+    url: *VPSUrl
+  CFTunnel:
+    <<: *Proxyer
+    path: ./proxies/CFTunnel.yaml
+    url: *CFUrl
   Baidu:
     <<: *Proxyer
     path: ./proxies/Baidu.yaml
-    url: *BaiduProxy
+    url: *BaiduUrl
 
 proxy-groups:
 - name: Location
@@ -434,44 +444,3 @@ dns:
   - "RULE-SET:ntp"
   nameserver:
   - 127.0.0.1:5591
-
-hosts:
-  cdn.jsdelivr.net:
-  - 104.17.207.5
-  - 104.17.208.5
-  - 167.82.1.229
-  - 167.82.49.229
-  raw.githubusercontent.com:
-  - 185.199.108.133
-  - 185.199.109.133
-  - 185.199.110.133
-  - 185.199.111.133
-  - 2606:50c0:8000::154
-  - 2606:50c0:8001::154
-  - 2606:50c0:8002::154
-  - 2606:50c0:8003::154
-  doh.pub:
-  - 1.12.12.21
-  - 120.53.53.53
-  - "2402:4e00::"
-  - "2402:4e00:1::"
-  dns.alidns.com:
-  - 223.5.5.5
-  - 223.6.6.6
-  - "2400:3200::1"
-  - "2400:3200:baba::1"
-  dns.google:
-  - 8.8.4.4
-  - 8.8.8.8
-  - "2001:4860:4860::8844"
-  - "2001:4860:4860::8888"
-  cloudflare-dns.com:
-  - 1.0.0.1
-  - 1.1.1.1
-  - "2606:4700:4700::1001"
-  - "2606:4700:4700::1111"
-  dns.cloudflare.com:
-  - 1.0.0.1
-  - 1.1.1.1
-  - "2606:4700:4700::1001"
-  - "2606:4700:4700::1111"
