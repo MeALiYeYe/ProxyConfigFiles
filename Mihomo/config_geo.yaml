@@ -1,7 +1,6 @@
-SubUrl: &SubUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
-VPSUrl: &VPSUrl "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
-CFUrl: &CFUrl "http://127.0.0.1:3000/download/CF?target=ClashMeta"
-BaiduUrl: &BaiduUrl "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/BaiduProxy.yaml"
+SubStore: &SubStore "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
+VPS: &VPS "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
+CF: &CF "http://127.0.0.1:3000/download/CF?target=ClashMeta"
 
 ProxyTest: &ProxyTest "https://www.gstatic.com/generate_204"
 DirecTest: &DirecTest "https://wifi.vivo.com.cn/generate_204"
@@ -42,7 +41,6 @@ Smartp: &Smartp
   uselightgbm: true
   collectdata: false
   prefer-asn: true
-  interval: 120
   url: *ProxyTest
   lazy: true
   hidden: true
@@ -51,23 +49,15 @@ Groupp: &Groupp
   type: select
   proxies:
   - 🟢 直连
-  - 自由
-  - 香港
-  - 狮城
-  - 日本
-  - 美国
+  - 📦 自由
+  - 🇭🇰 香港
+  - 🇸🇬 狮城
+  - 🇯🇵 日本
+  - 🇺🇸 美国
+  - 🪙 低倍
+  - 💰 高倍
+  interval: 300
   url: *ProxyTest
-  lazy: true
-  hidden: false
-
-Groupd: &Groupd
-  type: select
-  proxies:
-  - 🟢 直连
-  - 江苏
-  - 广东
-  - 北京
-  url: *DirecTest
   lazy: true
   hidden: false
 
@@ -96,260 +86,120 @@ proxy-providers:
   SubStore:
     <<: *Proxyer
     path: ./proxies/SubStore.yaml
-    url: *SubUrl
+    url: *SubStore
   VPS:
     <<: *Proxyer
     path: ./proxies/VPS.yaml
-    url: *VPSUrl
+    url: *VPS
   CFTunnel:
     <<: *Proxyer
     path: ./proxies/CFTunnel.yaml
-    url: *CFUrl
-  Baidu:
-    <<: *Proxyer
-    path: ./proxies/Baidu.yaml
-    url: *BaiduUrl
+    url: *CF
 
 proxy-groups:
-- name: Location
-  <<: *Groupd
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bypass.png"
-- name: Domestic
-  <<: *Groupd
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Domestic.png"
-- name: Emby
+- name: 📡 DNServer
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Emby.png"
-- name: Youtube
+- name: 📺 Bilibili
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/YouTube.png"
-- name: Media
+- name: 🇨🇳 Domestic
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/ForeignMedia.png"
-- name: Ai
+- name: 📽️ Netflix
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/ChatGPT.png"
-- name: Telegram
+- name: 📹︎ Tiktok
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Telegram.png"
-- name: Cloudflare
+- name: 🎞️ Youtube
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Cloudflare.png"
-- name: Google
+- name: 📻 Media
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Google_Search.png"
-- name: Github
+- name: 🤖 Ai
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/GitHub.png"
-- name: Microsoft
+- name: 📘 Facebook
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Microsoft.png"
-- name: Apple
+- name: ✈️ Telegram
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Apple.png"
-- name: Foreign
+- name: 📲 Twitter
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Global.png"
-- name: Final
+- name: 🧰 Cloudflare
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Final.png"
-- name: 江苏
-  <<: *Smartp
-  filter: '(?i)(?:南京|江苏)'
-  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(1).png"
-- name: 广东
-  <<: *Smartp
-  filter: '(?i)(?:广州)'
-  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(2).png"
-- name: 北京
-  <<: *Smartp
-  filter: '(?i)(?:北京|保定)'
-  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(3).png"
-- name: 自由
+- name: 🔍 Google
+  <<: *Groupp
+- name: 📝 Github
+  <<: *Groupp
+- name: 🪟 Microsoft
+  <<: *Groupp
+- name: 🍎 Apple
+  <<: *Groupp
+- name: 🍴 Foreign
+  <<: *Groupp
+- name: ♾️ Final
+  <<: *Groupp
+- name: 📦 自由
   <<: *Smartp
   filter: '(?i)(?:VPS|小机)'
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png"
-- name: 香港
+- name: 🇭🇰 香港
   <<: *Smartp
   filter: *FilterHK
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Hong_Kong.png"
-- name: 狮城
+- name: 🇸🇬 狮城
   <<: *Smartp
   filter: *FilterSG
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Singapore.png"
-- name: 日本
+- name: 🇯🇵 日本
   <<: *Smartp
   filter: *FilterJP
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Japan.png"
-- name: 美国
+- name: 🇺🇸 美国
   <<: *Smartp
   filter: *FilterUS
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/United_States.png"
+- name: 🪙 低倍
+  <<: *Smartp
+  filter: *FilterLow
+- name: 💰 高倍
+  <<: *Smartp
+  filter: *FilterHigh
 
 rule-providers:
-  directs:
-    <<: *dom
-    path: ./rules/directs.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct/Direct.mrs"
-  directs_ip:
-    <<: *ipc
-    path: ./rules/directs_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct/Direct_ip.mrs"
-  rejects:
-    <<: *dom
-    path: ./rules/rejects.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject/Reject.mrs"
-  rejects_ip:
-    <<: *ipc
-    path: ./rules/rejects_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject/Reject_ip.mrs"
-  proxys:
-    <<: *dom
-    path: ./rules/proxys.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy/Proxy.mrs"
-  proxys_ip:
-    <<: *ipc
-    path: ./rules/proxys_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy/Proxy_ip.mrs"
-  fakelocation:
-    <<: *dom
-    path: ./rules/fakelocation.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/FakeLocation/FakeLocation.mrs"
-  fakelocation_ip:
-    <<: *ipc
-    path: ./rules/fakelocation_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/FakeLocation/FakeLocation_ip.mrs"
-  emby:
-    <<: *dom
-    path: ./rules/emby.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Emby/Emby.mrs"
   awavenue:
     <<: *dom
     path: ./rules/awavenue.mrs
     url: "https://cdn.jsdelivr.net/gh/TG-Twilight/AWAvenue-Ads-Rule@main/Filters/AWAvenue-Ads-Rule-Clash.mrs"
-  private:
-    <<: *dom
-    path: ./rules/private.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/private.mrs"
-  private_ip:
-    <<: *ipc
-    path: ./rules/private_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/private.mrs"
-  ntp:
-    <<: *dom
-    path: ./rules/ntp.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite//category-ntp.mrs"
-  ads-all:
-    <<: *dom
-    path: ./rules/ads-all.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ads-all.mrs"
-  httpdns-cn:
-    <<: *dom
-    path: ./rules/httpdns-cn.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-httpdns-cn.mrs"
-  youtube:
-    <<: *dom
-    path: ./rules/youtube.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/youtube.mrs"
-  entertainment:
-    <<: *dom
-    path: ./rules/entertainment.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-entertainment.mrs"
-  telegram:
-    <<: *dom
-    path: ./rules/telegram.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/telegram.mrs"
-  telegram_ip:
-    <<: *ipc
-    path: ./rules/telegram_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/telegram.mrs"
-  googlefcm:
-    <<: *dom
-    path: ./rules/googlefcm.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/googlefcm.mrs"
-  google:
-    <<: *dom
-    path: ./rules/google.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google.mrs"
-  google_ip:
-    <<: *ipc
-    path: ./rules/google_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/google.mrs"
-  cloudflare:
-    <<: *dom
-    path: ./rules/cloudflare.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/cloudflare.mrs"
-  cloudflare_ip:
-    <<: *ipc
-    path: ./rules/cloudflare_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/cloudflare.mrs"
-  ai-chat-!cn:
-    <<: *dom
-    path: ./rules/ai-chat-!cn.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ai-chat-!cn.mrs"
-  github:
-    <<: *dom
-    path: ./rules/github.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/github.mrs"
-  apple:
-    <<: *dom
-    path: ./rules/apple.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geosite/apple.mrs"
-  apple_ip:
-    <<: *ipc
-    path: ./rules/apple_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geoip/apple.mrs"
-  microsoft:
-    <<: *dom
-    path: ./rules/microsoft.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft.mrs"
-  geolocation-!cn:
-    <<: *dom
-    path: ./rules/geolocation-!cn.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/geolocation-!cn.mrs"
-  cn:
-    <<: *dom
-    path: ./rules/cn.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/cn.mrs"
-  cn_ip:
-    <<: *ipc
-    path: ./rules/cn_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/cn.mrs"
 
 rules:
-- OR,((DST-PORT,5228-5230),(RULE-SET,googlefcm)),🟢 直连
-- OR,((DST-PORT,123),(RULE-SET,ntp)),🟢 直连
-- RULE-SET,private,🟢 直连
-- RULE-SET,private_ip,🟢 直连,no-resolve
-- RULE-SET,ads-all,⛔️ 拒绝
+- DST-PORT,53/853/8853,⭕️ DNS_Hijack
+- AND,((NETWORK,udp),(DST-PORT,3478-3479/5349-5350/19302-19309)),REJECT-DROP
+- DST-PORT,1337/2710/6881-6999/7777,REJECT-DROP
+- DST-PORT,5228-5230,🟢 直连
+- DST-PORT,123,🟢 直连
+
 - RULE-SET,awavenue,⛔️ 拒绝
-- RULE-SET,httpdns-cn,⛔️ 拒绝
-- RULE-SET,rejects,⛔️ 拒绝
-- RULE-SET,rejects_ip,⛔️ 拒绝,no-resolve
-- RULE-SET,directs,Domestic
-- RULE-SET,directs_ip,Domestic,no-resolve
-- RULE-SET,proxys,Foreign
-- RULE-SET,proxys_ip,Foreign,no-resolve
-- RULE-SET,fakelocation,Location
-- RULE-SET,fakelocation_ip,Location,no-resolve
-- RULE-SET,emby,Emby
-- RULE-SET,youtube,Youtube
-- RULE-SET,entertainment,Media
-- RULE-SET,telegram,Telegram
-- RULE-SET,telegram_ip,Telegram,no-resolve
-- RULE-SET,google,Google
-- RULE-SET,google_ip,Google,no-resolve
-- RULE-SET,cloudflare,Cloudflare
-- RULE-SET,cloudflare_ip,Cloudflare,no-resolve
-- RULE-SET,ai-chat-!cn,Ai
-- RULE-SET,github,Github
-- RULE-SET,apple,Apple
-- RULE-SET,apple_ip,Apple,no-resolve
-- RULE-SET,microsoft,Microsoft
-- RULE-SET,geolocation-!cn,Foreign
-- RULE-SET,cn,Domestic
-- RULE-SET,cn_ip,Domestic,no-resolve
-- MATCH,Final
+
+- GEOSITE,private,🟢 直连
+- GEOSITE,bilibili,📺 Bilibili
+- GEOSITE,netflix,📽️ Netflix
+- GEOSITE,tiktok,📹︎ Tiktok
+- GEOSITE,youtube,🎞️ Youtube
+- GEOSITE,proxymedia,📻 Media
+- GEOSITE,telegram,✈️ Telegram
+- GEOSITE,twitter,📲 Twitter
+- GEOSITE,google,🔍 Google
+- GEOSITE,cloudflare,🧰 Cloudflare
+- GEOSITE,openai,🤖 Ai
+- GEOSITE,github,📝 Github
+- GEOSITE,apple,🍎 Apple
+- GEOSITE,microsoft,🪟 Microsoft
+- GEOSITE,proxy,🍴 Foreign
+- GEOSITE,cn,🇨🇳 Domestic
+
+- GEOIP,private,🟢 直连,no-resolve
+- GEOIP,bilibili,📺 Bilibili,no-resolve
+- GEOIP,netflix,📽️ Netflix,no-resolve
+- GEOIP,facebook,📘 Facebook,no-resolve
+- GEOIP,telegram,✈️ Telegram,no-resolve
+- GEOIP,twitter,📲 Twitter,no-resolve
+- GEOIP,google,🔍 Google,no-resolve
+- GEOIP,cloudflare,🧰 Cloudflare,no-resolve
+- GEOIP,apple,🍎 Apple,no-resolve
+- GEOIP,cn,🇨🇳 Domestic,no-resolve
+
+- MATCH,♾️ Final
+
 
 mixed-port: 7890
 redir-port: 1911
@@ -369,9 +219,14 @@ skip-auth-prefixes:
 - 127.0.0.1/8
 - 192.168.0.1/16
 
+geodata-mode: true 
+geodata-loader: standard
 geo-auto-update: true
 geo-update-interval: 168
 geox-url:
+  geosite: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite-lite.dat"
+  geoip: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@releases/geoip-lite.dat"
+  mmdb: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@releases/country-lite.mmdb"
   asn: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/GeoLite2-ASN.mmdb"
 
 lgbm-auto-update: true
@@ -439,8 +294,66 @@ dns:
   fake-ip-range: 198.18.0.0/16
   fake-ip-range6: fdfe:dcba:9876::/64
   fake-ip-filter:
-  - "RULE-SET:private"
-  - "RULE-SET:googlefcm"
-  - "RULE-SET:ntp"
-  nameserver:
-  - 127.0.0.1:5591
+  - ".eu.cc"
+  - "RULE-SET:private,googlefcm,ntp"
+  cndns: &cndns
+  - 223.5.5.5
+  - 223.6.6.6
+  - "2400:3200::1"
+  - "2400:3200:baba::1"
+  cndoh: &cndoh
+  - 'quic://dns.alidns.com#🟢 直连'
+  - 'https://dns.alidns.com/dns-query#🟢 直连'
+  cgdoh: &cgdoh
+  - 'https://dns.google/dns-query#DNServer'
+  - 'https://cloudflare-dns.com/dns-query#DNServer'
+  default-nameserver: *cndns
+  direct-nameserver: *cndns
+  proxy-server-nameserver: *cndoh
+  nameserver-policy:
+    'eu.cc': *cgdoh
+    'RULE-SET:ads-all,awavenue,rejects': rcode://name_error
+    'RULE-SET:cn,apple,microsoft,directs': *cndoh
+    'RULE-SET:geolocation-!cn,proxys': *cndoh
+  nameserver: *cgdoh
+
+hosts:
+  cdn.jsdelivr.net:
+  - 104.17.207.5
+  - 104.17.208.5
+  - 167.82.1.229
+  - 167.82.49.229
+  raw.githubusercontent.com:
+  - 185.199.108.133
+  - 185.199.109.133
+  - 185.199.110.133
+  - 185.199.111.133
+  - 2606:50c0:8000::154
+  - 2606:50c0:8001::154
+  - 2606:50c0:8002::154
+  - 2606:50c0:8003::154
+  doh.pub:
+  - 1.12.12.21
+  - 120.53.53.53
+  - "2402:4e00::"
+  - "2402:4e00:1::"
+  dns.alidns.com:
+  - 223.5.5.5
+  - 223.6.6.6
+  - "2400:3200::1"
+  - "2400:3200:baba::1"
+  dns.google:
+  - 8.8.4.4
+  - 8.8.8.8
+  - "2001:4860:4860::8844"
+  - "2001:4860:4860::8888"
+  cloudflare-dns.com:
+  - 1.0.0.1
+  - 1.1.1.1
+  - "2606:4700:4700::1001"
+  - "2606:4700:4700::1111"
+  dns.cloudflare.com:
+  - 1.0.0.1
+  - 1.1.1.1
+  - "2606:4700:4700::1001"
+  - "2606:4700:4700::1111"
