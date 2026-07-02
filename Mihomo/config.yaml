@@ -3,7 +3,6 @@ VPSUrl: &VPSUrl "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
 CFUrl: &CFUrl "http://127.0.0.1:3000/download/CF?target=ClashMeta"
 
 ProxyTest: &ProxyTest "https://www.gstatic.com/generate_204"
-DirecTest: &DirecTest "https://wifi.vivo.com.cn/generate_204"
 
 FilterHK: &FilterHK '(?i)(?:港|香港|🇭🇰|HK|Hong\s?Kong)'
 FilterTW: &FilterTW '(?i)(?:台|台湾|🇼🇸|🇹🇼|TW|Taiwan)'
@@ -43,7 +42,6 @@ Smartp: &Smartp
   prefer-asn: true
   interval: 120
   url: *ProxyTest
-  lazy: true
   hidden: true
 
 Groupp: &Groupp
@@ -96,11 +94,8 @@ proxy-providers:
 
 proxy-groups:
 - name: Domestic
-  <<: *Groupd
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Domestic.png"
-- name: DNServer
   <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Filter.png"
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Domestic.png"
 - name: Emby
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Emby.png"
@@ -119,9 +114,6 @@ proxy-groups:
 - name: Cloudflare
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Cloudflare.png"
-- name: GoogleFCM
-  <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Google.png"
 - name: Google
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Google_Search.png"
@@ -284,7 +276,7 @@ rule-providers:
     url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/cn.mrs"
 
 rules:
-- OR,((DST-PORT,5228-5230),(RULE-SET,googlefcm)),GoogleFCM
+- OR,((DST-PORT,5228-5230),(RULE-SET,googlefcm)),🟢 直连
 - OR,((DST-PORT,123),(RULE-SET,ntp)),🟢 直连
 - RULE-SET,private,🟢 直连
 - RULE-SET,private_ip,🟢 直连,no-resolve
@@ -416,8 +408,8 @@ dns:
   - 'quic://dns.alidns.com#🟢 直连'
   - 'https://dns.alidns.com/dns-query#🟢 直连'
   cgdoh: &cgdoh
-  - 'https://dns.google/dns-query#DNServer'
-  - 'https://cloudflare-dns.com/dns-query#DNServer'
+  - 'https://dns.google/dns-query#Google'
+  - 'https://cloudflare-dns.com/dns-query#Cloudflare'
   proxy-server-nameserver: *cndoh
   nameserver-policy:
     'eu.cc': *cgdoh
