@@ -89,7 +89,7 @@ proxy-providers:
     url: *VPSUrl
   CFTunnl:
     <<: *Proxyer
-    path: ./proxies/CFTunnl.yaml
+    path: ./proxies/CFTunnel.yaml
     url: *CFUrl
 
 proxy-groups:
@@ -399,18 +399,12 @@ dns:
   - "RULE-SET:private"
   - "RULE-SET:googlefcm"
   - "RULE-SET:ntp"
-  cndns: &cndns
-  - 223.5.5.5
-  - 223.6.6.6
-  - "2400:3200::1"
-  - "2400:3200:baba::1"
   cndoh: &cndoh
   - 'quic://dns.alidns.com#🟢 直连'
   - 'https://dns.alidns.com/dns-query#🟢 直连'
   cgdoh: &cgdoh
   - 'https://dns.google/dns-query#Google'
   - 'https://cloudflare-dns.com/dns-query#Cloudflare'
-  proxy-server-nameserver: *cndoh
   nameserver-policy:
     'eu.cc': *cgdoh
     'RULE-SET:ads-all,awavenue,rejects': rcode://name_error
