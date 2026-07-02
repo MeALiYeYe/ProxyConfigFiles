@@ -1,8 +1,10 @@
 SubUrl: &SubUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
 VPSUrl: &VPSUrl "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
 CFUrl: &CFUrl "http://127.0.0.1:3000/download/CF?target=ClashMeta"
+BaiduUrl: &BaiduUrl "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/BaiduProxy.yaml"
 
 ProxyTest: &ProxyTest "https://www.gstatic.com/generate_204"
+DirecTest: &DirecTest "https://wifi.vivo.com.cn/generate_204"
 
 FilterHK: &FilterHK '(?i)(?:港|香港|🇭🇰|HK|Hong\s?Kong)'
 FilterTW: &FilterTW '(?i)(?:台|台湾|🇼🇸|🇹🇼|TW|Taiwan)'
@@ -54,7 +56,16 @@ Groupp: &Groupp
   - 日本
   - 美国
   url: *ProxyTest
-  lazy: true
+  hidden: false
+
+Groupd: &Groupd
+  type: select
+  proxies:
+  - 🟢 直连
+  - 江苏
+  - 广东
+  - 北京
+  url: *DirecTest
   hidden: false
 
 rule-anchor:
@@ -91,10 +102,17 @@ proxy-providers:
     <<: *Proxyer
     path: ./proxies/CFTunnel.yaml
     url: *CFUrl
+  Baidu:
+    <<: *Proxyer
+    path: ./proxies/Baidu.yaml
+    url: *BaiduUrl
 
 proxy-groups:
+- name: Location
+  <<: *Groupd
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bypass.png"
 - name: Domestic
-  <<: *Groupp
+  <<: *Groupd
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Domestic.png"
 - name: Emby
   <<: *Groupp
@@ -136,6 +154,18 @@ proxy-groups:
   <<: *Smartp
   filter: '(?i)(?:VPS|小机)'
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png"
+- name: 江苏
+  <<: *Smartp
+  filter: '(?i)(?:南京|苏州|)'
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Hong_Kong.png"
+- name: 广东
+  <<: *Smartp
+  filter: '(?i)(?:广州)'
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Singapore.png"
+- name: 北京
+  <<: *Smartp
+  filter: '(?i)(?:北京|保定)'
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Japan.png"
 - name: 香港
   <<: *Smartp
   filter: *FilterHK
@@ -178,6 +208,14 @@ rule-providers:
     <<: *ipc
     path: ./rules/proxys_ip.mrs
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy/Proxy_ip.mrs"
+  fakelocation:
+    <<: *dom
+    path: ./rules/fakelocation.mrs
+    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/FakeLocation/FakeLocation.mrs"
+  fakelocation_ip:
+    <<: *ipc
+    path: ./rules/fakelocation_ip.mrs
+    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/FakeLocation/FakeLocation_ip.mrs"
   emby:
     <<: *dom
     path: ./rules/emby.mrs
@@ -289,6 +327,8 @@ rules:
 - RULE-SET,directs_ip,Domestic,no-resolve
 - RULE-SET,proxys,Foreign
 - RULE-SET,proxys_ip,Foreign,no-resolve
+- RULE-SET,fakelocation,Location
+- RULE-SET,fakelocation_ip,Location,no-resolve
 - RULE-SET,emby,Emby
 - RULE-SET,youtube,Youtube
 - RULE-SET,entertainment,Media
