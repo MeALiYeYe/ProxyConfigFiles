@@ -157,14 +157,17 @@ proxy-groups:
 - name: 江苏
   <<: *Smartp
   filter: '(?i)(?:南京|苏州)'
+  url: *DirecTest
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(1).png"
 - name: 广东
   <<: *Smartp
   filter: '(?i)(?:广州)'
+  url: *DirecTest
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(2).png"
 - name: 北京
   <<: *Smartp
   filter: '(?i)(?:北京|保定)'
+  url: *DirecTest
   icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(3).png"
 - name: 香港
   <<: *Smartp
