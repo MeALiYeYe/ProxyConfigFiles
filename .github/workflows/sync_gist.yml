@@ -20,7 +20,6 @@ jobs:
             "https://gist.githubusercontent.com/MeALiYeYe/4cbe0732592fc2fe20e4ab29137c9290/raw/Egern.yaml Egern/Egern.yaml"
             "https://gist.githubusercontent.com/MeALiYeYe/4cbe0732592fc2fe20e4ab29137c9290/raw/Surge.conf Surge/Surge.conf"
             "https://gist.githubusercontent.com/MeALiYeYe/4cbe0732592fc2fe20e4ab29137c9290/raw/config.yaml Mihomo/config.yaml"
-            "https://gist.githubusercontent.com/MeALiYeYe/4cbe0732592fc2fe20e4ab29137c9290/raw/config_geo.yaml Mihomo/config_geo.yaml"
           )
 
           changed=0
