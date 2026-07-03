@@ -429,7 +429,6 @@ tun:
 
 dns:
   enable: true
-  cache-algorithm: arc
   listen: :1053
   ipv6: true
   prefer-h3: true
