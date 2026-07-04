@@ -1,7 +1,6 @@
-SubUrl: &SubUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
-VPSUrl: &VPSUrl "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
-CFUrl: &CFUrl "http://127.0.0.1:3000/download/CF?target=ClashMeta"
-BaiduUrl: &BaiduUrl "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/BaiduProxy.yaml"
+SubStore: &SubStore "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
+VPS: &VPS "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
+CF: &CF "http://127.0.0.1:3000/download/CF?target=ClashMeta"
 
 ProxyTest: &ProxyTest "https://www.gstatic.com/generate_204"
 DirecTest: &DirecTest "https://wifi.vivo.com.cn/generate_204"
@@ -42,8 +41,8 @@ Smartp: &Smartp
   uselightgbm: true
   collectdata: false
   prefer-asn: true
-  interval: 120
   url: *ProxyTest
+  lazy: true
   hidden: true
 
 Groupp: &Groupp
@@ -56,16 +55,7 @@ Groupp: &Groupp
   - 日本
   - 美国
   url: *ProxyTest
-  hidden: false
-
-Groupd: &Groupd
-  type: select
-  proxies:
-  - 🟢 直连
-  - 江苏
-  - 广东
-  - 北京
-  url: *DirecTest
+  lazy: true
   hidden: false
 
 rule-anchor:
@@ -93,27 +83,23 @@ proxy-providers:
   SubStore:
     <<: *Proxyer
     path: ./proxies/SubStore.yaml
-    url: *SubUrl
+    url: *SubStore
   VPS:
     <<: *Proxyer
     path: ./proxies/VPS.yaml
-    url: *VPSUrl
-  CFTunnl:
+    url: *VPS
+  CFTunnel:
     <<: *Proxyer
     path: ./proxies/CFTunnel.yaml
-    url: *CFUrl
-  Baidu:
-    <<: *Proxyer
-    path: ./proxies/Baidu.yaml
-    url: *BaiduUrl
+    url: *CF
 
 proxy-groups:
-- name: Location
-  <<: *Groupd
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bypass.png"
 - name: Domestic
-  <<: *Groupd
+  <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Domestic.png"
+- name: DNServer
+  <<: *Groupp
+  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Filter.png"
 - name: Emby
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Emby.png"
@@ -154,21 +140,6 @@ proxy-groups:
   <<: *Smartp
   filter: '(?i)(?:VPS|小机)'
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png"
-- name: 江苏
-  <<: *Smartp
-  filter: '(?i)(?:南京|苏州)'
-  url: *DirecTest
-  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(1).png"
-- name: 广东
-  <<: *Smartp
-  filter: '(?i)(?:广州)'
-  url: *DirecTest
-  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(2).png"
-- name: 北京
-  <<: *Smartp
-  filter: '(?i)(?:北京|保定)'
-  url: *DirecTest
-  icon: "https://cdn.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/05icon/lightning(3).png"
 - name: 香港
   <<: *Smartp
   filter: *FilterHK
@@ -211,14 +182,6 @@ rule-providers:
     <<: *ipc
     path: ./rules/proxys_ip.mrs
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy/Proxy_ip.mrs"
-  fakelocation:
-    <<: *dom
-    path: ./rules/fakelocation.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/FakeLocation/FakeLocation.mrs"
-  fakelocation_ip:
-    <<: *ipc
-    path: ./rules/fakelocation_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/FakeLocation/FakeLocation_ip.mrs"
   emby:
     <<: *dom
     path: ./rules/emby.mrs
@@ -317,8 +280,8 @@ rule-providers:
     url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/cn.mrs"
 
 rules:
-- OR,((DST-PORT,5228-5230),(RULE-SET,googlefcm)),🟢 直连
-- OR,((DST-PORT,123),(RULE-SET,ntp)),🟢 直连
+- RULE-SET,googlefcm,🟢 直连
+- RULE-SET,ntp,🟢 直连
 - RULE-SET,private,🟢 直连
 - RULE-SET,private_ip,🟢 直连,no-resolve
 - RULE-SET,ads-all,⛔️ 拒绝
@@ -330,8 +293,6 @@ rules:
 - RULE-SET,directs_ip,Domestic,no-resolve
 - RULE-SET,proxys,Foreign
 - RULE-SET,proxys_ip,Foreign,no-resolve
-- RULE-SET,fakelocation,Location
-- RULE-SET,fakelocation_ip,Location,no-resolve
 - RULE-SET,emby,Emby
 - RULE-SET,youtube,Youtube
 - RULE-SET,entertainment,Media
@@ -438,16 +399,27 @@ dns:
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.0/16
   fake-ip-range6: fdfe:dcba:9876::/64
+  fake-ip-filter-mode: rule
   fake-ip-filter:
-  - "RULE-SET:private"
-  - "RULE-SET:googlefcm"
-  - "RULE-SET:ntp"
+  - RULE-SET,googlefcm,real-ip
+  - RULE-SET,ntp,real-ip
+  - RULE-SET,directs,real-ip
+  - RULE-SET,cn,real-ip
+  - MATCH,fake-ip
+  cndns: &cndns
+  - 223.5.5.5
+  - 223.6.6.6
+  - "2400:3200::1"
+  - "2400:3200:baba::1"
   cndoh: &cndoh
   - 'quic://dns.alidns.com#🟢 直连'
   - 'https://dns.alidns.com/dns-query#🟢 直连'
   cgdoh: &cgdoh
-  - 'https://dns.google/dns-query#Google'
-  - 'https://cloudflare-dns.com/dns-query#Cloudflare'
+  - 'https://dns.google/dns-query#DNServer'
+  - 'https://cloudflare-dns.com/dns-query#DNServer'
+  default-nameserver: *cndns
+  direct-nameserver: *cndns
+  proxy-server-nameserver: *cndoh
   nameserver-policy:
     'eu.cc': *cgdoh
     'RULE-SET:ads-all,awavenue,rejects': rcode://name_error
