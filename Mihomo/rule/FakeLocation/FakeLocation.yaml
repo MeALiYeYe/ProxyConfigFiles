@@ -29,6 +29,7 @@ payload:
   - img.soulapp.cn
   - keylol.com
   - lbs.netease.im
+  - lf3-static.bytednsdoc.com
   - mam.netease.com
   - mp.weixin.qq.com
   - nga.178.com
@@ -43,6 +44,7 @@ payload:
   - tbmsg.baidu.com
   - tieba.baidu.com
   - tiebac.baidu.com
+  - v5-dy-o-abtest.zjcdn.com
   - wannos.127.net
   - wanproxy.127.net
   - www.baidu.com
@@ -54,6 +56,7 @@ payload:
   - zonai.skland.com
   - +.akamaized.net
   - +.akm-tct.douyucdn.cn
+  - +.amemv.com
   - +.biliapi.com
   - +.biliapi.net
   - +.bilibili.com
@@ -61,6 +64,10 @@ payload:
   - +.danmuproxy.douyu.com
   - +.dongqiudi.com
   - +.douban.com
+  - +.douyincdn.com
+  - +.douyinpic.com
+  - +.douyinstatic.com
+  - +.douyinvod.com
   - +.douyu.com
   - +.douyucdn.cn
   - +.ecombdapi.com
@@ -72,8 +79,10 @@ payload:
   - +.hls3a-akm.douyucdn.cn
   - +.hlsa-akm.douyucdn.cn
   - +.huya.com
+  - +.idouyinvod.com
   - +.img.douyucdn.cn
   - +.ixigua.com
+  - +.ixiguavideo.com
   - +.ksapisrv.com
   - +.laiqukankan.com
   - +.lf127.net
@@ -82,11 +91,13 @@ payload:
   - +.music.163.com
   - +.music.163.com.163jiasu.com
   - +.music.ntes53.netease.com
+  - +.pstatp.com
   - +.sinaimg.cn
   - +.snssdk.com
   - +.soulapp.cn
   - +.szbdyd.com
   - +.tc-tct1.douyucdn.cn
+  - +.toutiao.com
   - +.toutiaoapi.com
   - +.tx2play1.douyucdn.cn
   - +.vplay1a.douyucdn.cn

@@ -28,6 +28,7 @@ DOMAIN,httpsdns.baidu.com
 DOMAIN,img.soulapp.cn,DIRECT
 DOMAIN,keylol.com
 DOMAIN,lbs.netease.im
+DOMAIN,lf3-static.bytednsdoc.com
 DOMAIN,mam.netease.com
 DOMAIN,mp.weixin.qq.com
 DOMAIN,nga.178.com
@@ -42,6 +43,7 @@ DOMAIN,tb5.bdstatic.com
 DOMAIN,tbmsg.baidu.com
 DOMAIN,tieba.baidu.com
 DOMAIN,tiebac.baidu.com
+DOMAIN,v5-dy-o-abtest.zjcdn.com
 DOMAIN,wannos.127.net
 DOMAIN,wanproxy.127.net
 DOMAIN,www.baidu.com
@@ -53,6 +55,7 @@ DOMAIN,yaolu.yuedu.163.com
 DOMAIN,zonai.skland.com
 DOMAIN-SUFFIX,akamaized.net,DIRECT
 DOMAIN-SUFFIX,akm-tct.douyucdn.cn,DIRECT
+DOMAIN-SUFFIX,amemv.com
 DOMAIN-SUFFIX,biliapi.com
 DOMAIN-SUFFIX,biliapi.net
 DOMAIN-SUFFIX,bilibili.com
@@ -60,6 +63,10 @@ DOMAIN-SUFFIX,bilivideo.com,DIRECT
 DOMAIN-SUFFIX,danmuproxy.douyu.com,DIRECT
 DOMAIN-SUFFIX,dongqiudi.com
 DOMAIN-SUFFIX,douban.com
+DOMAIN-SUFFIX,douyincdn.com
+DOMAIN-SUFFIX,douyinpic.com
+DOMAIN-SUFFIX,douyinstatic.com
+DOMAIN-SUFFIX,douyinvod.com
 DOMAIN-SUFFIX,douyu.com
 DOMAIN-SUFFIX,douyucdn.cn
 DOMAIN-SUFFIX,ecombdapi.com,DIRECT
@@ -71,8 +78,10 @@ DOMAIN-SUFFIX,hls3-akm.douyucdn.cn,DIRECT
 DOMAIN-SUFFIX,hls3a-akm.douyucdn.cn,DIRECT
 DOMAIN-SUFFIX,hlsa-akm.douyucdn.cn,DIRECT
 DOMAIN-SUFFIX,huya.com
+DOMAIN-SUFFIX,idouyinvod.com
 DOMAIN-SUFFIX,img.douyucdn.cn,DIRECT
 DOMAIN-SUFFIX,ixigua.com
+DOMAIN-SUFFIX,ixiguavideo.com
 DOMAIN-SUFFIX,ksapisrv.com
 DOMAIN-SUFFIX,laiqukankan.com
 DOMAIN-SUFFIX,lf127.net,DIRECT
@@ -81,11 +90,13 @@ DOMAIN-SUFFIX,music.126.net
 DOMAIN-SUFFIX,music.163.com
 DOMAIN-SUFFIX,music.163.com.163jiasu.com
 DOMAIN-SUFFIX,music.ntes53.netease.com
+DOMAIN-SUFFIX,pstatp.com
 DOMAIN-SUFFIX,sinaimg.cn
 DOMAIN-SUFFIX,snssdk.com
 DOMAIN-SUFFIX,soulapp.cn
 DOMAIN-SUFFIX,szbdyd.com,DIRECT
 DOMAIN-SUFFIX,tc-tct1.douyucdn.cn,DIRECT
+DOMAIN-SUFFIX,toutiao.com
 DOMAIN-SUFFIX,toutiaoapi.com
 DOMAIN-SUFFIX,tx2play1.douyucdn.cn,DIRECT
 DOMAIN-SUFFIX,vplay1a.douyucdn.cn,DIRECT
