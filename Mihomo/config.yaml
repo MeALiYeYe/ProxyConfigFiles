@@ -346,8 +346,8 @@ rules:
 - MATCH,Final
 
 mixed-port: 7890
-redir-port: 1911
-tproxy-port: 1919
+redir-port: 9797
+tproxy-port: 9898
 ipv6: true
 mode: Rule
 log-level: warning
@@ -436,61 +436,14 @@ dns:
   - "RULE-SET:private"
   - "RULE-SET:googlefcm"
   - "RULE-SET:ntp"
-  cndns: &cndns
-  - 223.5.5.5
-  - 223.6.6.6
-  - 2400:3200::1
-  - 2400:3200:baba::1
+  - "RULE-SET:cn"
   cndoh: &cndoh
   - 'quic://dns.alidns.com#🟢 直连'
   - 'https://dns.alidns.com/dns-query#🟢 直连'
   cgdoh: &cgdoh
   - 'https://dns.google/dns-query#Google'
   - 'https://cloudflare-dns.com/dns-query#Cloudflare'
-  default-nameserver: *cndns
   nameserver-policy:
     'RULE-SET:ads-all,awavenue,rejects': rcode://name_error
     'RULE-SET:cn,apple,microsoft,directs': *cndoh
-    'RULE-SET:geolocation-!cn,proxys': *cgdoh
   nameserver: *cgdoh
-
-hosts:
-  cdn.jsdelivr.net:
-  - 104.17.207.5
-  - 104.17.208.5
-  - 167.82.1.229
-  - 167.82.49.229
-  raw.githubusercontent.com:
-  - 185.199.108.133
-  - 185.199.109.133
-  - 185.199.110.133
-  - 185.199.111.133
-  - 2606:50c0:8000::154
-  - 2606:50c0:8001::154
-  - 2606:50c0:8002::154
-  - 2606:50c0:8003::154
-  doh.pub:
-  - 1.12.12.21
-  - 120.53.53.53
-  - "2402:4e00::"
-  - "2402:4e00:1::"
-  dns.alidns.com:
-  - 223.5.5.5
-  - 223.6.6.6
-  - "2400:3200::1"
-  - "2400:3200:baba::1"
-  dns.google:
-  - 8.8.4.4
-  - 8.8.8.8
-  - "2001:4860:4860::8844"
-  - "2001:4860:4860::8888"
-  cloudflare-dns.com:
-  - 1.0.0.1
-  - 1.1.1.1
-  - "2606:4700:4700::1001"
-  - "2606:4700:4700::1111"
-  dns.cloudflare.com:
-  - 1.0.0.1
-  - 1.1.1.1
-  - "2606:4700:4700::1001"
-  - "2606:4700:4700::1111"
