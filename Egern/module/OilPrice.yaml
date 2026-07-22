@@ -2,10 +2,22 @@ name: 全国油价
 description: 全国油价小组件
 
 env_schema:
-  GAS_REGION:
-    name: 📍 油价查询地区
-    description: "直辖市输入拼音，其他省份输入省份/省会拼音"
-    default_value: sichuan/chengdu
+ PROVINCE:
+    name: ♾️ 省份
+    description: "省份名称/编码 (默认: 51 或 四川)"
+    default_value: 四川
+ CITY:
+    name: 🍭 城市
+    description: "城市或地区名称 (默认: 成都)"
+    default_value: 成都
+ AREA_INDEX:
+    name: 🍪 多区域
+    description: "多区域特殊索引 (数字，可选)"
+    default_value:
+ OFFSET_SCALE:
+    name: 🍬 涨跌幅
+    description: "涨跌幅系数缩放 (默认: 1)"
+    default_value: 1
     
 scriptings:
 - generic: 
