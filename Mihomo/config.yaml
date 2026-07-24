@@ -433,9 +433,10 @@ dns:
   fake-ip-range: 198.18.0.0/16
   fake-ip-range6: fdfe:dcba:9876::/64
   fake-ip-filter:
-  - "RULE-SET:private"
-  - "RULE-SET:googlefcm"
-  - "RULE-SET:ntp"
+  - "RULE-SET,private"
+  - "RULE-SET,googlefcm"
+  - "RULE-SET,ntp"
+  - "RULE-SET,cn"
   cndoh: &cndoh
   - 'quic://dns.alidns.com#🟢 直连'
   - 'https://dns.alidns.com/dns-query#🟢 直连'
