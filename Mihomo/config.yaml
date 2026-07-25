@@ -436,6 +436,7 @@ dns:
   - "RULE-SET:private"
   - "RULE-SET:googlefcm"
   - "RULE-SET:ntp"
+  - "RULE-SET:cn"
   cndns: &cndns
   - 223.5.5.5
   - 223.6.6.6
