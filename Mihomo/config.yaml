@@ -377,13 +377,6 @@ profile:
   store-fake-ip: true
   smart-collector-size: 100
 
-ntp:
-  enable: true
-  write-to-system: false
-  server: time.apple.com
-  port: 123
-  interval: 30
-
 sniffer:
   enable: true
   force-dns-mapping: true
