@@ -27,7 +27,6 @@ Proxyer: &Proxyer
     interval: 600
   header:
     User-Agent:
-    - "ClashMetaForAndroid/2.11.2.Meta"
     - "clash.meta"
     - "mihomo"
 
