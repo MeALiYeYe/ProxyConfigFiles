@@ -27,6 +27,7 @@ Proxyer: &Proxyer
     interval: 600
   header:
     User-Agent:
+    - "ClashMetaForAndroid/2.11.2.Meta"
     - "clash.meta"
     - "mihomo"
 
@@ -375,6 +376,13 @@ profile:
   store-selected: true
   store-fake-ip: true
   smart-collector-size: 100
+
+ntp:
+  enable: true
+  write-to-system: false
+  server: time.apple.com
+  port: 123
+  interval: 30
 
 sniffer:
   enable: true
