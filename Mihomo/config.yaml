@@ -27,6 +27,7 @@ Proxyer: &Proxyer
     interval: 600
   header:
     User-Agent:
+    - "ClashMetaForAndroid/2.11.2.Meta"
     - "clash.meta"
     - "mihomo"
 
@@ -310,10 +311,8 @@ rule-providers:
     url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/cn.mrs"
 
 rules:
-- DST-PORT,123,🟢 直连
-- DST-PORT,5228-5230,🟢 直连
-- RULE-SET,ntp,🟢 直连
-- RULE-SET,googlefcm,🟢 直连
+- OR,((DST-PORT,5228-5230),(RULE-SET,googlefcm)),🟢 直连
+- OR,((DST-PORT,123),(RULE-SET,ntp)),🟢 直连
 - RULE-SET,private,🟢 直连
 - RULE-SET,private_ip,🟢 直连,no-resolve
 - RULE-SET,ads-all,⛔️ 拒绝
@@ -377,6 +376,13 @@ profile:
   store-selected: true
   store-fake-ip: true
   smart-collector-size: 100
+
+ntp:
+  enable: true
+  write-to-system: false
+  server: time.apple.com
+  port: 123
+  interval: 30
 
 sniffer:
   enable: true
