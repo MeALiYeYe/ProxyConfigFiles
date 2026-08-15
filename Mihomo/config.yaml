@@ -161,10 +161,6 @@ rule-providers:
     <<: *dom
     path: ./rules/awavenue.mrs
     url: "https://cdn.jsdelivr.net/gh/TG-Twilight/AWAvenue-Ads-Rule@main/Filters/AWAvenue-Ads-Rule-Clash.mrs"
-  adblock:
-    <<: *dom
-    path: ./rules/adblock.mrs
-    url: "https://cdn.jsdelivr.net/gh/217heidai/adblockfilters@main/rules/adblockmihomo.mrs"
   private:
     <<: *dom
     path: ./rules/private.mrs
@@ -260,7 +256,6 @@ rules:
 - RULE-SET,private_ip,🟢 直连,no-resolve
 - RULE-SET,ads-all,⛔️ 拒绝
 - RULE-SET,awavenue,⛔️ 拒绝
-- RULE-SET,adblock,⛔️ 拒绝
 - RULE-SET,httpdns-cn,⛔️ 拒绝
 - RULE-SET,rejects,⛔️ 拒绝
 - RULE-SET,rejects_ip,⛔️ 拒绝,no-resolve
@@ -378,6 +373,6 @@ dns:
   - 'https://cloudflare-dns.com/dns-query#Cloudflare'
   default-nameserver: *cndns
   nameserver-policy:
-    'RULE-SET:ads-all,awavenue,adblock,rejects': rcode://name_error
+    'RULE-SET:ads-all,awavenue,rejects': rcode://name_error
     'RULE-SET:cn,apple,microsoft,directs': *cndoh
   nameserver: *cgdoh
