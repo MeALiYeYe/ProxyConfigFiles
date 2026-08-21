@@ -7,7 +7,7 @@ FilterHK: &FilterHK '(?i)(?:香港|🇭🇰|HK|Hong\s?Kong)'
 FilterSG: &FilterSG '(?i)(?:新加坡|🇸🇬|SG|Singapore)'
 FilterJP: &FilterJP '(?i)(?:日本|🇯🇵|JP|Japan)'
 FilterUS: &FilterUS '(?i)(?:美国|🇺🇸|US|States|America)'
-ExFilter: &ExFilter '(?i)(?:佣金|套餐|官网|官方|网址|售后|过期|剩余|到期|流量|更新|重置|免流|使用|教程|优惠|址|AFF|Days|Date)'
+ExFilter: &ExFilter '(?i)(?:套餐|官网|官方|网址|售后|过期|剩余|到期|流量|更新|重置|免流|使用|教程|优惠)'
 
 Proxyer: &Proxyer
   type: http
@@ -56,6 +56,35 @@ rule-anchor:
     format: mrs
     interval: 86400
 
+listeners:
+  - name: ebpf-in
+    type: ebpf
+    mode: hybrid
+    network:
+    - tcp
+    - udp
+    udp-timeout: 300
+    dns-mode: hijack
+    bypass-private-address: true
+    bypass-rule-set:
+    - cn_ip
+    local:
+      cgroup-path: ""
+      ipv6-mode: auto
+      include-package: []
+      exclude-package:
+      - com.ss.android.ugc.aweme
+      - com.netease.onmyoji
+      state-capacity: 65536
+    shared:
+      interface:
+      - "wlan0"
+      - "ap0"
+      ipv6-mode: always
+      state-capacity: 65536
+      advanced:
+        tc-priority: 1
+
 proxies:
 - name: 🟢 直连
   type: direct
@@ -64,7 +93,6 @@ proxies:
   type: reject
 - name: ⭕️ DNS_Hijack
   type: dns
-  udp: true
 
 proxy-providers:
   Sub1:
@@ -83,9 +111,6 @@ proxy-groups:
 - name: Emby
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Emby.png"
-- name: Youtube
-  <<: *Groupp
-  icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/YouTube.png"
 - name: Ai
   <<: *Groupp
   icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/ChatGPT.png"
@@ -183,14 +208,6 @@ rule-providers:
     <<: *dom
     path: ./rules/ads-all.mrs
     url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ads-all.mrs"
-  httpdns-cn:
-    <<: *dom
-    path: ./rules/httpdns-cn.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-httpdns-cn.mrs"
-  youtube:
-    <<: *dom
-    path: ./rules/youtube.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/youtube.mrs"
   telegram:
     <<: *dom
     path: ./rules/telegram.mrs
@@ -253,7 +270,6 @@ rule-providers:
     url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/cn.mrs"
 
 rules:
-- DST-PORT,53,⭕️ DNS_Hijack
 - DST-PORT,123,🟢 直连
 - DST-PORT,5228-5230,🟢 直连
 - RULE-SET,ntp,🟢 直连
@@ -262,7 +278,6 @@ rules:
 - RULE-SET,private_ip,🟢 直连,no-resolve
 - RULE-SET,ads-all,🚫 拒绝
 - RULE-SET,awavenue,🚫 拒绝
-- RULE-SET,httpdns-cn,🚫 拒绝
 - RULE-SET,rejects,🚫 拒绝
 - RULE-SET,rejects_ip,🚫 拒绝,no-resolve
 - RULE-SET,directs,Domestic
@@ -270,7 +285,6 @@ rules:
 - RULE-SET,proxys,Foreign
 - RULE-SET,proxys_ip,Foreign,no-resolve
 - RULE-SET,emby,Emby
-- RULE-SET,youtube,Youtube
 - RULE-SET,telegram,Telegram
 - RULE-SET,telegram_ip,Telegram,no-resolve
 - RULE-SET,google,Google
@@ -305,6 +319,11 @@ skip-auth-prefixes:
 - 127.0.0.1/8
 - 192.168.0.1/16
 
+geo-auto-update: true
+geo-update-interval: 168
+geox-url:
+  asn: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/GeoLite2-ASN.mmdb"
+
 lgbm-auto-update: true
 lgbm-update-interval: 360
 lgbm-url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/static/Model.bin"
@@ -336,10 +355,6 @@ sniffer:
   force-domain:
   - "+.v2ex.com"
   skip-domain:
-  - "+.local"
-  - "+.lan"
-  - "localhost"
-  - "Mijia Cloud"
   - "miwifi.com"
 
 tun:
@@ -359,6 +374,7 @@ dns:
   listen: :1053
   cache-algorithm: arc
   ipv6: true
+  prefer-h3: true
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.0/16
   fake-ip-range6: fdfe:dcba:9876::/64
@@ -375,10 +391,10 @@ dns:
   - 'quic://dns.alidns.com'
   - 'https://dns.alidns.com/dns-query'
   cgdoh: &cgdoh
-  - 'https://dns.google/dns-query#Google'
-  - 'https://cloudflare-dns.com/dns-query#Cloudflare'
+  - 'https://dns.google/dns-query'
+  - 'https://cloudflare-dns.com/dns-query'
   default-nameserver: *cndns
   nameserver-policy:
-    'RULE-SET:ads-all,awavenue,rejects': rcode://name_error
+    'RULE-SET:ads-all,awavenue,rejects': rcode://success
     'RULE-SET:cn,apple,microsoft,directs': *cndoh
   nameserver: *cgdoh
