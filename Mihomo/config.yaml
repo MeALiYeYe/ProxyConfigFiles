@@ -1,4 +1,4 @@
-Sub1Url: &Sub1Url "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
+Sub1Url: &Sub1Url "http://127.0.0.1:3000/download/col/Sub?target=ClashMeta"
 Sub2Url: &Sub2Url "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
 
 ProxyTest: &ProxyTest "https://www.gstatic.com/generate_204"
@@ -8,7 +8,7 @@ FilterHK: &FilterHK '(?i)(?:香港|🇭🇰|HK|Hong\s?Kong)'
 FilterSG: &FilterSG '(?i)(?:新加坡|🇸🇬|SG|Singapore)'
 FilterJP: &FilterJP '(?i)(?:日本|🇯🇵|JP|Japan)'
 FilterUS: &FilterUS '(?i)(?:美国|🇺🇸|US|States|America)'
-ExFilter: &ExFilter '(?i)(?:套餐|官网|官方|网址|售后|过期|剩余|到期|流量|更新|重置|免流|使用|教程|优惠|址|推广|佣金)'
+ExFilter: &ExFilter '(?i)(?:套餐|官网|官方|网址|售后|过期|剩余|到期|流量|更新|重置|免流|使用|教程|优惠)'
 
 Proxyer: &Proxyer
   type: http
@@ -73,7 +73,9 @@ listeners:
       cgroup-path: ""
       ipv6-mode: auto
       include-package: []
-      exclude-package: []
+      exclude-package:
+      - com.ss.android.ugc.aweme
+      - com.netease.onmyoji
       state-capacity: 65536
     shared:
       interface:
@@ -392,7 +394,6 @@ dns:
   - 'https://dns.google/dns-query'
   - 'https://cloudflare-dns.com/dns-query'
   default-nameserver: *cndns
-  proxy-server-nameserver: *cndoh
   nameserver-policy:
     'RULE-SET:ads-all,awavenue,rejects': rcode://success
     'RULE-SET:cn,apple,microsoft,directs': *cndoh
