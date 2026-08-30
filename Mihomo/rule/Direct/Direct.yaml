@@ -1,4 +1,5 @@
 payload:
+  - bsync.snssdk.com:443
   - cdn.jsdelivr.net
   - ifconfig.me
   - kahaoquan.com

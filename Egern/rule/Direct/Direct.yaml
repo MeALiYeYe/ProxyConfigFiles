@@ -19,6 +19,7 @@ domain_suffix_set:
   - xianniu.cc
   - xianniu.com
 domain_set:
+  - bsync.snssdk.com:443
   - cdn.jsdelivr.net
   - ifconfig.me
   - kahaoquan.com
