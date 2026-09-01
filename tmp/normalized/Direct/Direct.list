@@ -1,4 +1,5 @@
 DOMAIN-SUFFIX,wawei.eu.cc
+DOMAIN-SUFFIX,snssdk.com
 DOMAIN-SUFFIX,gwm-mn.beantechyun.com
 DOMAIN-SUFFIX,gwm.cn
 DOMAIN-SUFFIX,gwm.com.cn
@@ -19,7 +20,6 @@ DOMAIN-SUFFIX,xianniu.cc
 DOMAIN-SUFFIX,xianniu.com
 DOMAIN,ifconfig.me
 DOMAIN,kahaoquan.com
-DOMAIN,bsync.snssdk.com
 DOMAIN,subcdn.rtx.al
 DOMAIN,cdn.jsdelivr.net
 IP-CIDR,185.218.6.88/29,no-resolve

@@ -1,5 +1,4 @@
 payload:
-  - bsync.snssdk.com
   - cdn.jsdelivr.net
   - ifconfig.me
   - kahaoquan.com
@@ -17,6 +16,7 @@ payload:
   - +.qweather.com
   - +.qweatherapi.com
   - +.shvip888.com
+  - +.snssdk.com
   - +.sntp.dev
   - +.sntp.me
   - +.sntp.net
