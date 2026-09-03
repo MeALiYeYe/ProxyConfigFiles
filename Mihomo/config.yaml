@@ -1,14 +1,14 @@
 Sub1Url: &Sub1Url "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
 Sub2Url: &Sub2Url "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
 
-ProxyTest: &ProxyTest "https://captive.apple.com/"
+ProxyTest: &ProxyTest "https://captive.apple.com"
 
 FilterVPS: &FilterVPS '(?i)(?:VPS|hkv)'
 FilterHK: &FilterHK '(?i)(?:香港|🇭🇰|HK|Hong\s?Kong)'
 FilterSG: &FilterSG '(?i)(?:新加坡|🇸🇬|SG|Singapore)'
 FilterJP: &FilterJP '(?i)(?:日本|🇯🇵|JP|Japan)'
 FilterUS: &FilterUS '(?i)(?:美国|🇺🇸|US|States|America)'
-ExFilter: &ExFilter '(?i)(?:套餐|官网|官方|网址|售后|过期|剩余|到期|流量|更新|重置|免流|使用|教程|优惠|址)'
+ExFilter: &ExFilter '(?i)(?:套餐|官网|官方|网址|售后|过期|剩余|到期|流量|更新|重置|免流|使用|教程|址|优惠|推广|AFF)'
 
 Proxyer: &Proxyer
   type: http
@@ -26,7 +26,7 @@ Proxyer: &Proxyer
 Smartp: &Smartp
   type: smart
   include-all-providers: true
-  policy-priority: '(?i)(?:VPS|hkv):2.0;(?<![\d.])0\.\d+(?!\d):1.5'
+  policy-priority: '(?<![\d.])0\.\d+(?!\d):1.5'
   uselightgbm: true
   collectdata: false
   prefer-asn: true
@@ -75,13 +75,11 @@ listeners:
       ipv6-mode: auto
       include-package: []
       exclude-package: []
-      state-capacity: 65536
     shared:
       interface:
       - "wlan0"
       - "ap0"
       ipv6-mode: always
-      state-capacity: 65536
       advanced:
         tc-priority: 1
 
@@ -310,6 +308,7 @@ log-level: warning
 unified-delay: true
 tcp-concurrent: true
 allow-lan: true
+
 external-controller: 0.0.0.0:9090
 external-ui: ./dist/
 external-ui-url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/static/dist.zip"
@@ -336,6 +335,7 @@ sniffer:
   enable: true
   force-dns-mapping: true
   parse-pure-ip: true
+  override-destination: false
   sniff:
     HTTP:
       ports:
@@ -397,4 +397,4 @@ dns:
     'RULE-SET:ads-all,awavenue,rejects': rcode://success
     'RULE-SET:cn,apple,microsoft,directs': *cndoh
     'RULE-SET:geolocation-!cn': *cgdoh
-  nameserver: *cndoh
+  nameserver: *cgdoh
