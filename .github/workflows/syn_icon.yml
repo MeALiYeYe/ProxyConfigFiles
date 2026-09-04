@@ -1,24 +1,30 @@
-name: PNG to SVG
+name: Sync & Convert Icons
 
 on:
-  push:
-    paths:
-      - 'icon/**/*.png'
   workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'   # 每天自动更新
 
 jobs:
-  convert:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout 自己仓库
         uses: actions/checkout@v4
 
-      - name: Install tools
+      - name: 安装依赖
         run: |
           sudo apt update
-          sudo apt install -y imagemagick potrace
+          sudo apt install -y subversion imagemagick potrace
 
+      # ✅ 1. 拉取 Koolson 图标
+      - name: Sync Koolson Icons
+        run: |
+          rm -rf icon/Koolson
+          svn export https://github.com/Koolson/Qure/trunk/IconSet/Color icon/Koolson
+
+      # ✅ 2. PNG → SVG（保持目录结构）
       - name: Convert PNG to SVG
         run: |
           find icon -type f -name "*.png" | while read file; do
@@ -29,17 +35,18 @@ jobs:
             potrace "$pgm" -s -o "$svg"
             rm "$pgm"
 
-            echo "Converted $file -> $svg"
+            echo "Converted: $file -> $svg"
           done
 
+      # ✅ 3. 提交变更
       - name: Commit & Push
         run: |
           if [[ -n $(git status --porcelain) ]]; then
             git config user.name "github-actions"
-            git config user.email "github-actions@github.com"
+            git config user.email "actions@github.com"
 
             git add icon
-            git commit -m "chore: auto convert png to svg"
+            git commit -m "chore: sync koolson icons & convert to svg"
             git push
           else
             echo "No changes"
