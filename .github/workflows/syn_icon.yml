@@ -1,30 +1,39 @@
-name: Sync & Convert Icons
+name: Sync Icons & Convert SVG
 
 on:
+  push:
   workflow_dispatch:
-  schedule:
-    - cron: '0 3 * * *'   # 每天自动更新
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout 自己仓库
+      - name: Checkout self
         uses: actions/checkout@v4
 
-      - name: 安装依赖
-        run: |
-          sudo apt update
-          sudo apt install -y subversion imagemagick potrace
-
-      # ✅ 1. 拉取 Koolson 图标
-      - name: Sync Koolson Icons
+      # ✅ 拉取 Koolson 图标（sparse）
+      - name: Fetch Koolson Icons
         run: |
           rm -rf icon/Koolson
-          svn export https://github.com/Koolson/Qure/trunk/IconSet/Color icon/Koolson
 
-      # ✅ 2. PNG → SVG（保持目录结构）
+          git clone --depth=1 --filter=blob:none --sparse https://github.com/Koolson/Qure.git koolson
+          cd koolson
+          git sparse-checkout set IconSet/Color
+
+          mkdir -p ../icon/Koolson
+          cp -r IconSet/Color/* ../icon/Koolson/
+
+          cd ..
+          rm -rf koolson
+
+      # ✅ 安装工具
+      - name: Install tools
+        run: |
+          sudo apt update
+          sudo apt install -y imagemagick potrace
+
+      # ✅ 转换（保持目录结构）
       - name: Convert PNG to SVG
         run: |
           find icon -type f -name "*.png" | while read file; do
@@ -35,18 +44,18 @@ jobs:
             potrace "$pgm" -s -o "$svg"
             rm "$pgm"
 
-            echo "Converted: $file -> $svg"
+            echo "Converted $file"
           done
 
-      # ✅ 3. 提交变更
+      # ✅ 提交
       - name: Commit & Push
         run: |
           if [[ -n $(git status --porcelain) ]]; then
             git config user.name "github-actions"
-            git config user.email "actions@github.com"
+            git config user.email "github-actions@github.com"
 
             git add icon
-            git commit -m "chore: sync koolson icons & convert to svg"
+            git commit -m "sync koolson icons & convert svg"
             git push
           else
             echo "No changes"
