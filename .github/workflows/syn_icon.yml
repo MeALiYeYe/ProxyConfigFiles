@@ -1,4 +1,4 @@
-name: PNG to SVG (icons)
+name: PNG to SVG
 
 on:
   push:
@@ -13,38 +13,32 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Install tools
         run: |
-          sudo apt-get update
-          sudo apt-get install -y imagemagick potrace
+          sudo apt update
+          sudo apt install -y imagemagick potrace
 
       - name: Convert PNG to SVG
         run: |
-          shopt -s globstar nullglob
-
-          for file in icon/**/*.png; do
+          find icon -type f -name "*.png" | while read file; do
             svg="${file%.png}.svg"
+            pgm="${file%.png}.pgm"
 
-            echo "Processing $file -> $svg"
+            convert "$file" -threshold 70% "$pgm"
+            potrace "$pgm" -s -o "$svg"
+            rm "$pgm"
 
-            # 转为黑白（适合 icon）
-            convert "$file" -alpha remove -alpha off -colorspace Gray -threshold 65% temp.pgm
-
-            # 矢量化
-            potrace temp.pgm -s -o "$svg" --tight --opttolerance 0.2
-
-            rm -f temp.pgm
+            echo "Converted $file -> $svg"
           done
 
-      - name: Commit changes
+      - name: Commit & Push
         run: |
           if [[ -n $(git status --porcelain) ]]; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add icon/**/*.svg
+            git config user.name "github-actions"
+            git config user.email "github-actions@github.com"
+
+            git add icon
             git commit -m "chore: auto convert png to svg"
             git push
           else
