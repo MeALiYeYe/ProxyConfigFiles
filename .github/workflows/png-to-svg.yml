@@ -1,0 +1,52 @@
+name: PNG to SVG (icons)
+
+on:
+  push:
+    paths:
+      - 'icon/**/*.png'
+  workflow_dispatch:
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y imagemagick potrace
+
+      - name: Convert PNG to SVG
+        run: |
+          shopt -s globstar nullglob
+
+          for file in icon/**/*.png; do
+            svg="${file%.png}.svg"
+
+            echo "Processing $file -> $svg"
+
+            # 转为黑白（适合 icon）
+            convert "$file" -alpha remove -alpha off -colorspace Gray -threshold 65% temp.pgm
+
+            # 矢量化
+            potrace temp.pgm -s -o "$svg" --tight --opttolerance 0.2
+
+            rm -f temp.pgm
+          done
+
+      - name: Commit changes
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add icon/**/*.svg
+            git commit -m "chore: auto convert png to svg"
+            git push
+          else
+            echo "No changes"
+          fi
