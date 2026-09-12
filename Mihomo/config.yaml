@@ -354,7 +354,6 @@ listeners:
       - wlan0
       - ap0
       - rndis0
-      - br-lan
       dns-mode: hijack
       ipv6: true
       bypass-private-address: false
