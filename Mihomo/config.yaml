@@ -284,7 +284,7 @@ tcp-concurrent: true
 allow-lan: true
 external-controller: 0.0.0.0:9090
 external-ui: ./dist/
-external-ui-url: "https://v6.gh-proxy.org/https://github.com/Zephyruso/zashboard/releases/latest/download/gh-pages-no-fonts.zip"
+external-ui-url: "https://v6.gh-proxy.org/https://github.com/Zephyruso/zashboard/archive/gh-pages-no-fonts.zip"
 skip-auth-prefixes:
   - 10.0.0.1/8
   - 127.0.0.1/8
