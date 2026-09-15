@@ -1,5 +1,5 @@
 SubUrl: &SubUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
-VPSUrl: &VPSUrl "http://127.0.0.1/download/VPS?target=ClashMeta"
+VPSUrl: &VPSUrl "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
 
 ProxyTest: &ProxyTest "https://captive.apple.com"
 
