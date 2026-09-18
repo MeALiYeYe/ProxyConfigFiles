@@ -1,6 +1,3 @@
-SubUrl: &SubUrl "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
-VPSUrl: &VPSUrl "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
-
 ProxyTest: &ProxyTest "https://captive.apple.com"
 
 FilterVPS: &FilterVPS '(?i)(?:VPS|hkv)'
@@ -70,11 +67,11 @@ proxy-providers:
   Sub:
     <<: *Proxyer
     path: ./proxies/Sub.yaml
-    url: *SubUrl
+    url: "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
   VPS:
     <<: *Proxyer
     path: ./proxies/VPS.yaml
-    url: *VPSUrl
+    url: "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
 
 proxy-groups:
   - name: Domestic
