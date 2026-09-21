@@ -22,7 +22,7 @@ env_schema:
 scriptings:
 - generic: 
     name: 全国油价
-    script_url: https://raw.githubusercontent.com/jnlaoshu/MySelf/master/Egern/Widget/GasPrice.js
+    script_url: https://raw.githubusercontent.com/MeALiYeYe/ProxyConfigFiles/main/Egern/module/oil.js
 
 widgets:
 - name: 全国油价
