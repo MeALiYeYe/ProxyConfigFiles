@@ -177,6 +177,7 @@ async function loadPrediction(ctx, provinceCode) {
     if (range) {
       return {
         up,
+        down,
         minV: parseFloat(range[1]),
         maxV: parseFloat(range[2]),
         text: `${range[1]}-${range[2]}元/L`
@@ -188,6 +189,7 @@ async function loadPrediction(ctx, provinceCode) {
     if (ton) {
       return {
         up,
+        down,
         minV: null,
         maxV: null,
         text: ton[1] + '元/吨'
@@ -197,6 +199,7 @@ async function loadPrediction(ctx, provinceCode) {
     // ===== fallback =====
     return {
       up,
+      down,
       minV: null,
       maxV: null,
       text: raw.replace(/\s+/g, '')
@@ -308,7 +311,7 @@ export default async function (ctx) {
   const items  = { p92: null, p95: null, p98: null, diesel: null };
   let regionName = cityName || "全国";
   // 调价临近（≤3天）时，左下角标签默认切换为"下轮预测"；若预测抓取失败则回退为"较上次调整"
-  let trendLabel = nextAdjust.isUrgent ? "下轮预测: " : "较上次调整: ";
+  let trendLabel = "较上次调整: ";
   let trendInfo  = "";
   let trendColor = C.muted;
   let hasTrendData = false; 
@@ -352,31 +355,39 @@ export default async function (ctx) {
 
     // 调价趋势：尝试从汽油价格网抓取真实的下轮调价预测涨跌幅并覆盖显示
     // 抓取失败时静默回退到上面算出的"较上次调整"历史涨跌幅，不影响整体渲染
-    if (true) {
-      try {
-        const prediction = await loadPrediction(ctx, provinceCode);
-        if (prediction) {
-          let rangeStr;
+    try {
+      const prediction = await loadPrediction(ctx, provinceCode);
+      if (prediction) {
+        let rangeStr;
 
-          if (prediction.text) {
-            rangeStr = prediction.text;
-          } else if (prediction.minV != null) {
-            rangeStr = prediction.minV === prediction.maxV
-              ? `${prediction.minV.toFixed(2)}¥/L`
-              : `${prediction.minV.toFixed(2)}-${prediction.maxV.toFixed(2)}¥/L`;
-          } else {
-            rangeStr = "--";
-          }
-          trendLabel = "下轮预测: ";
-          trendColor = prediction.up ? C.red : C.teal;
-          trendInfo  = `${prediction.up ? "↑" : "↓"} ${rangeStr}`;
-          hasTrendData = true;
+        if (prediction.text) {
+          rangeStr = prediction.text;
+        } else if (prediction.minV != null) {
+          rangeStr = prediction.minV === prediction.maxV
+            ? `${prediction.minV.toFixed(2)}¥/L`
+            : `${prediction.minV.toFixed(2)}-${prediction.maxV.toFixed(2)}¥/L`;
         } else {
-          trendLabel = "较上次调整: ";
+          rangeStr = "--";
         }
-      } catch (_) {
+        trendLabel = "下轮预测: ";
+        if (prediction.up) {
+            trendColor = C.red;
+            trendInfo = `↑ ${rangeStr}`;
+        }
+        else if (prediction.down) {
+            trendColor = C.teal;
+            trendInfo = `↓ ${rangeStr}`;
+        }
+        else {
+            trendColor = C.muted;
+            trendInfo = `≈ ${rangeStr}`;
+        }
+        hasTrendData = true;
+      } else {
         trendLabel = "较上次调整: ";
       }
+    } catch (_) {
+      trendLabel = "较上次调整: ";
     }
   } catch (e) {
     fetchError = e && e.message ? e.message : String(e);
