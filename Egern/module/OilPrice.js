@@ -21,7 +21,6 @@
  * ==========================================
  */
 
-
 const BASE = 'https://cx.sinopecsales.com/yjkqiantai';
 const QYJ_BASE = 'http://m.qiyoujiage.com';
 
@@ -539,4 +538,3 @@ export default async function (ctx) {
     ]
   };
 }
-修改完的功能正常可以正常运行，是否有冗余代码，如nextAdjust.isUrgent 部分
