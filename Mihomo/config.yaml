@@ -19,16 +19,29 @@ Proxyer: &Proxyer
     User-Agent:
       - "clash.meta"
       - "mihomo"
+      
+混淆覆写: &host
+  override-expr:
+    - .servername = "m.youku.com"
+    - .sni = .servername
+    - (select(.network == "ws") | .["ws-opts"].headers.Host) = .servername
+    - (select(.network == "http") | .["http-opts"].headers.Host) = [.servername]
+    - (select(.network == "h2") | .["h2-opts"].headers.Host) = [.servername]
+    - (select(.network == "xhttp") | .["xhttp-opts"].headers.Host) = .servername
+
+Uses: &Uses
+  type: select
+  include-all-providers: true
+  url: *ProxyTest
+  hidden: true
 
 Smartp: &Smartp
   type: smart
-  include-all-providers: true
+  <<: *Uses
   policy-priority: '(?<![\d.])0\.\d+(?!\d):1.5'
   uselightgbm: true
   collectdata: false
   prefer-asn: true
-  url: *ProxyTest
-  hidden: true
 
 Groupp: &Groupp
   type: select
@@ -64,14 +77,16 @@ proxies:
     type: dns
 
 proxy-providers:
-  Sub:
-    <<: *Proxyer
-    path: ./proxies/Sub.yaml
-    url: "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
   VPS:
     <<: *Proxyer
     path: ./proxies/VPS.yaml
-    url: "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
+    url: "https://127.0.0.1:3000/download/VPS?target=ClashMeta"
+  Free:
+    <<: *Proxyer
+    path: ./proxies/Free.yaml
+    url: "https://127.0.0.1:3000/download/Best?target=ClashMeta"
+    override:
+      <<: *host
 
 proxy-groups:
   - name: Domestic
@@ -329,7 +344,6 @@ sniffer:
 listeners:
   - name: ebpf-in
     type: ebpf
-    mode: hybrid
     network:
       - tcp
       - udp
@@ -345,14 +359,17 @@ listeners:
       bypass-private-address: true
       include-package: []
       exclude-package: []
+      enabled: true
     shared:
       data-plane: packet_rewrite
       interface:
         - wlan0
         - ap0
+        - br-lan
       dns-mode: hijack
       ipv6: true
       bypass-private-address: false
+      enabled: true
 
 tun:
   enable: false
