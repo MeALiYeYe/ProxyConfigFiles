@@ -4,7 +4,7 @@ FilterHK: &FilterHK '(?i)(?:香港|🇭🇰|HK|Hong\s?Kong)'
 FilterSG: &FilterSG '(?i)(?:新加坡|🇸🇬|SG|Singapore)'
 FilterJP: &FilterJP '(?i)(?:日本|🇯🇵|JP|Japan)'
 FilterUS: &FilterUS '(?i)(?:美国|🇺🇸|US|States|America)'
-FilterOT: &FilterOT '(?i)^(?!.*(?:VPS|hkv|香港|🇭🇰|HK|Hong\s?Kong|新加坡|🇸🇬|SG|Singapore|日本|🇯🇵|JP|Japan|美国|🇺🇸|US|States|America)).*$'
+FilterAll: &FilterAll '(?i)(?:VPS|hkv|香港|🇭🇰|HK|Hong\s?Kong|新加坡|🇸🇬|SG|Singapore|日本|🇯🇵|JP|Japan|美国|🇺🇸|US|States|America)'
 ExFilter: &ExFilter '(?i)(?:套餐|官网|官方|网址|售后|过期|剩余|到期|流量|更新|重置|免流|使用|教程)'
 
 Proxyer: &Proxyer
@@ -20,7 +20,7 @@ Proxyer: &Proxyer
       - "clash.meta"
       - "mihomo"
       
-混淆覆写: &host
+host: &host
   override-expr:
     - .servername = "pull.free.video.10010.com"
     - .sni = .servername
@@ -140,7 +140,7 @@ proxy-groups:
     icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/United_States.png"
   - name: 其他
     <<: *Uses
-    filter: *FilterOT
+    exclude-filter: *FilterAll
     icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Global.png"
 
 rule-providers:
