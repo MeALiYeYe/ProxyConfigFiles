@@ -1,5 +1,6 @@
 no_resolve: true
 domain_suffix_set:
+  - eu.cc
   - gwm-mn.beantechyun.com
   - gwm.cn
   - gwm.com.cn
@@ -19,7 +20,6 @@ domain_suffix_set:
   - sntp.me
   - sntp.net
   - unicom88.com
-  - wawei.eu.cc
   - xianniu.cc
   - xianniu.com
 domain_set:
