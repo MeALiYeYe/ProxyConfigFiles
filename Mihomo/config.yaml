@@ -4,7 +4,7 @@ FilterHK: &FilterHK '(?i)(?:香港|🇭🇰|HK|Hong\s?Kong)'
 FilterSG: &FilterSG '(?i)(?:新加坡|🇸🇬|SG|Singapore)'
 FilterJP: &FilterJP '(?i)(?:日本|🇯🇵|JP|Japan)'
 FilterUS: &FilterUS '(?i)(?:美国|🇺🇸|US|States|America)'
-FilterOT: &FilterOT '(?i)^(?!.*(?:VPS|hkv|香港|🇭🇰|HK|Hong\s?Kong|新加坡|🇸🇬|SG|Singapore|日本|🇯🇵|JP|Japan|美国|🇺🇸|US|States|America)).*$'
+FilterALL: &FilterALL '(?i)(?:VPS|hkv|香港|🇭🇰|HK|Hong\s?Kong|新加坡|🇸🇬|SG|Singapore|日本|🇯🇵|JP|Japan|美国|🇺🇸|US|States|America)'
 ExFilter: &ExFilter '(?i)(?:套餐|官网|官方|网址|售后|过期|剩余|到期|流量|更新|重置|免流|使用|教程)'
 
 Proxyer: &Proxyer
@@ -14,13 +14,13 @@ Proxyer: &Proxyer
   health-check:
     enable: true
     url: *ProxyTest
-    interval: 600
+    interval: 300
   header:
     User-Agent:
       - "clash.meta"
       - "mihomo"
       
-混淆覆写: &host
+host: &host
   override-expr:
     - .servername = "pull.free.video.10010.com"
     - .sni = .servername
@@ -38,10 +38,11 @@ Uses: &Uses
 Smartp: &Smartp
   type: smart
   <<: *Uses
-  policy-priority: '(?<![\d.])0\.\d+(?!\d):1.5'
+  policy-priority: '(?:^|[^0-9.])0\.\d+(?:[^0-9.]|$):1.5'
   uselightgbm: true
   collectdata: false
   prefer-asn: true
+  lazy: false
 
 Groupp: &Groupp
   type: select
@@ -77,6 +78,10 @@ proxies:
     type: dns
 
 proxy-providers:
+  Sub:
+    <<: *Proxyer
+    path: ./proxies/Sub.yaml
+    url: "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
   VPS:
     <<: *Proxyer
     path: ./proxies/VPS.yaml
@@ -139,8 +144,8 @@ proxy-groups:
     filter: *FilterUS
     icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/United_States.png"
   - name: 其他
-    <<: *Uses
-    filter: *FilterOT
+    <<: *Smartp
+    exclude-filter: *FilterALL
     icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Global.png"
 
 rule-providers:
@@ -187,7 +192,7 @@ rule-providers:
   ntp:
     <<: *dom
     path: ./rules/ntp.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite//category-ntp.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ntp.mrs"
   ads-all:
     <<: *dom
     path: ./rules/ads-all.mrs
@@ -268,6 +273,8 @@ rules:
   - RULE-SET,directs_ip,Domestic,no-resolve
   - RULE-SET,proxys,Foreign
   - RULE-SET,proxys_ip,Foreign,no-resolve
+  - RULE-SET,cn,Domestic
+  - RULE-SET,cn_ip,Domestic,no-resolve
   - RULE-SET,emby,Emby
   - RULE-SET,ai-chat-!cn,Ai
   - RULE-SET,telegram,Telegram
@@ -281,8 +288,6 @@ rules:
   - RULE-SET,apple_ip,Apple,no-resolve
   - RULE-SET,microsoft,Microsoft
   - RULE-SET,geolocation-!cn,Foreign
-  - RULE-SET,cn,Domestic
-  - RULE-SET,cn_ip,Domestic,no-resolve
   - MATCH,Final
 
 mixed-port: 7890
@@ -296,11 +301,11 @@ tcp-concurrent: true
 allow-lan: true
 external-controller: 0.0.0.0:9090
 external-ui: ./dist/
-external-ui-url: "https://v6.gh-proxy.org/https://github.com/Zephyruso/zashboard/archive/gh-pages-no-fonts.zip"
+external-ui-url: "https://ghfast.top//https://github.com/Zephyruso/zashboard/archive/gh-pages-no-fonts.zip"
 skip-auth-prefixes:
-  - 10.0.0.1/8
-  - 127.0.0.1/8
-  - 192.168.0.1/16
+  - 10.0.0.0/8
+  - 127.0.0.0/8
+  - 192.168.0.0/16
 
 geo-auto-update: true
 geo-update-interval: 168
@@ -309,7 +314,7 @@ geox-url:
 
 lgbm-auto-update: true
 lgbm-update-interval: 360
-lgbm-url: "https://v6.gh-proxy.org/https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model-large.bin"
+lgbm-url: "https://ghfast.top//https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model-large.bin"
 
 profile:
   store-selected: true
@@ -344,20 +349,20 @@ sniffer:
 listeners:
   - name: ebpf-in
     type: ebpf
+    mode: hybrid
     network:
       - tcp
       - udp
-    udp-timeout: 300
-    tc-priority: 1
+    udp-timeout: 120
+    bypass-rule-set:
+      - cn_ip
     local:
       data-plane: cgroup
-      cgroup-path: ''
       dns-mode: hijack
       ipv6: true
       bypass-private-address: true
       include-package: []
       exclude-package: []
-      enabled: true
     shared:
       data-plane: packet_rewrite
       interface:
@@ -367,9 +372,6 @@ listeners:
       dns-mode: hijack
       ipv6: true
       bypass-private-address: false
-      enabled: true
-    bypass-rule-set:
-      - cn_ip
 
 tun:
   enable: false
@@ -396,6 +398,11 @@ dns:
     - "RULE-SET:private"
     - "RULE-SET:googlefcm"
     - "RULE-SET:ntp"
+    - "+.lan"
+    - "+.local"
+    - "+.msftconnecttest.com"
+    - "+.msftncsi.com"
+    - "+.captive.apple.com"
   cndns: &cndns
     - 223.5.5.5
     - 223.6.6.6
@@ -413,4 +420,4 @@ dns:
     'RULE-SET:ads-all,awavenue,rejects': rcode://success
     'RULE-SET:cn,apple,microsoft,directs': *cndoh
     'RULE-SET:geolocation-!cn': *cgdoh
-  nameserver: *cgdoh
+  nameserver: *cndoh
