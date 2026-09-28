@@ -1,0 +1,41 @@
+# SPDX-License-Identifier: MIT
+
+name: Runs-Clean
+
+on:
+  # 每月1日清理（UTC 00:00 ≈ 北京时间 08:00）
+  schedule:
+    - cron: 0 0 1 * *
+  workflow_dispatch:
+
+permissions: write-all
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  clean-runs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete old workflow runs
+        run: |
+          echo "== Get workflow runs =="
+          
+          # 保留最近 20 条，其余全部删除
+          KEEP=20
+
+          RUNS=$(gh run list \
+            --limit 200 \
+            --json databaseId \
+            --jq '.[].databaseId')
+
+          COUNT=0
+          for id in $RUNS; do
+            COUNT=$((COUNT+1))
+            if [ $COUNT -gt $KEEP ]; then
+              echo "Deleting run $id"
+              gh run delete $id --confirm || true
+            else
+              echo "Keep run $id"
+            fi
+          done
