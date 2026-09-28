@@ -27,7 +27,7 @@ jobs:
 
           KEEP=20
 
-          RUNS=$(gh run list --repo "$REPO" -L 200 --json databaseId --jq '.[].databaseId')
+          RUNS=$(gh run list --repo "$GITHUB_REPOSITORY" -L 200 --json databaseId --jq '.[].databaseId')
 
           COUNT=0
           for id in $RUNS; do
