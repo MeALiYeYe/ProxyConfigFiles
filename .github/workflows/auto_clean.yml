@@ -1,41 +1,56 @@
 # SPDX-License-Identifier: MIT
 
-name: Runs-Clean
+name: Clean Workflow Runs (No External Action)
 
 on:
-  # 每月1日清理（UTC 00:00 ≈ 北京时间 08:00）
+  # 每月执行
   schedule:
     - cron: 0 0 1 * *
   workflow_dispatch:
 
-permissions: write-all
+permissions:
+  actions: write
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  clean-runs:
+  clean:
     runs-on: ubuntu-latest
-    steps:
 
-      - name: Checkout
-        uses: actions/checkout@v5
-        
+    steps:
       - name: Delete old workflow runs
         run: |
-          echo "== Get workflow runs =="
+          echo "== Clean workflow runs =="
 
-          KEEP=20
+          # 保留天数（改这里）
+          KEEP_DAYS=1
 
-          RUNS=$(gh run list --repo "$GITHUB_REPOSITORY" -L 200 --json databaseId --jq '.[].databaseId')
+          # 计算时间阈值（ISO8601）
+          CUTOFF=$(date -u -d "$KEEP_DAYS days ago" +"%Y-%m-%dT%H:%M:%SZ")
+          echo "Delete runs older than: $CUTOFF"
 
-          COUNT=0
-          for id in $RUNS; do
-            COUNT=$((COUNT+1))
-            if [ $COUNT -gt $KEEP ]; then
-              echo "Deleting run $id"
-              gh run delete $id --repo $REPO || true
-            else
-              echo "Keep run $id"
+          PAGE=1
+
+          while true; do
+            echo "== Fetch page $PAGE =="
+
+            RUNS=$(gh api \
+              -H "Accept: application/vnd.github+json" \
+              "/repos/$GITHUB_REPOSITORY/actions/runs?per_page=100&page=$PAGE" \
+              --jq ".workflow_runs[] | select(.created_at < \"$CUTOFF\") | .id")
+
+            # 没有更多了就退出
+            if [ -z "$RUNS" ]; then
+              echo "No more runs to delete."
+              break
             fi
+
+            for id in $RUNS; do
+              echo "Deleting run $id"
+              gh api -X DELETE "/repos/$GITHUB_REPOSITORY/actions/runs/$id" || true
+              sleep 0.2
+            done
+
+            PAGE=$((PAGE+1))
           done
