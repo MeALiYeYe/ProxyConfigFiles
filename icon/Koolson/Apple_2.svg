@@ -1,14 +1,8 @@
-<?xml version="1.0" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
- "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
-<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
- width="144.000000pt" height="144.000000pt" viewBox="0 0 144.000000 144.000000"
- preserveAspectRatio="xMidYMid meet">
-<metadata>
-Created by potrace 1.16, written by Peter Selinger 2001-2019
-</metadata>
-<g transform="translate(0.000000,144.000000) scale(0.100000,-0.100000)"
-fill="#000000" stroke="none">
-<path d="M0 720 l0 -720 720 0 720 0 0 720 0 720 -720 0 -720 0 0 -720z"/>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generator: visioncortex VTracer 0.6.12 -->
+<svg width="144" height="144" version="1.1" xmlns="http://www.w3.org/2000/svg">
+ <path transform="translate(0)" d="m0 0h144v144h-144v-144z" fill="#767580"/>
+ <path transform="translate(0)" d="m0 0h144v144h-43c3-2 3-2 6.12-3.5 12.07-6.97 19.76-21.96 24.88-34.5-0.74-0.5-1.47-0.99-2.23-1.5-8.17-5.69-14.73-11.31-16.77-21.5-0.91-9.5-0.9-18.01 5-26 2.67-3.12 5.3-6.15 9-8-2.39-6.45-9.15-10.07-15-13-2.69-0.75-2.69-0.75-6-1-0.82-0.07-1.64-0.15-2.48-0.23-7.2-0.37-13.05 1-19.74 3.45-7.55 2.69-13.35 2.27-20.9-0.72-9.32-3.39-19.38-4.35-28.8-0.6-9.54 5.03-16.8 12.77-20.52 22.91-5.21 19.21-0.98 40.88 8.48 58.08 6.25 10.68 12.54 19.72 23.96 25.11v1h-46v-144z" fill="#FEFEFE"/>
+ <path transform="translate(99)" d="m0 0c0.63 9.77-2.11 17.5-8.22 25.18-4.81 4.92-10.48 8.76-17.47 8.88-1.09-0.02-2.18-0.04-3.31-0.06-0.92-8.82 0.76-14.83 6-22 5.89-6.53 14.01-12 23-12z" fill="#9E9CAE"/>
+ <path transform="translate(95,143)" d="m0 0v1h-42c15.15-7.57 26.62-7.46 42-1z" fill="#FCFCFC"/>
 </svg>

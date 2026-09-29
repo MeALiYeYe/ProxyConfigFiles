@@ -4,9 +4,17 @@ on:
   push:
   workflow_dispatch:
 
+# 连续 push 会并发触发多个 run，它们 push 时会互相冲突（rejected）。
+# 用 concurrency 串行化，配合下面的 pull --rebase 兜底。
+concurrency:
+  group: icon-sync-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout self
@@ -28,34 +36,59 @@ jobs:
           rm -rf koolson
 
       # ✅ 安装工具
+      # 旧方案是 imagemagick + potrace：`convert -threshold 70%` 会先把图二值化，
+      # 颜色信息在追踪之前就已经丢失，且透明圆角外沿会被填成一整块黑色矩形。
+      # 换成 vtracer（颜色感知的 hierarchical 聚类）+ scour（SVG 压缩）。
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
       - name: Install tools
         run: |
-          sudo apt update
-          sudo apt install -y imagemagick potrace
+          python -m pip install --upgrade pip
+          pip install vtracer pillow scour
 
       # ✅ 转换（保持目录结构）
       - name: Convert PNG to SVG
         run: |
-          find icon -type f -name "*.png" | while read file; do
-            svg="${file%.png}.svg"
-            pgm="${file%.png}.pgm"
+          python tools/png2svg.py \
+            --colormode color \
+            --hierarchical stacked \
+            --mode spline \
+            --upscale auto \
+            --filter-speckle 4 \
+            --color-precision 7 \
+            --layer-difference 12 \
+            --corner-threshold 60 \
+            --path-precision 2 \
+            --bg white \
+            --overwrite \
+            $(find icon -type f -name '*.png' | sort)
 
-            convert "$file" -threshold 70% "$pgm"
-            potrace "$pgm" -s -o "$svg"
-            rm "$pgm"
-
-            echo "Converted $file"
-          done
+      # ✅ 清理孤儿 SVG（PNG 被删掉时同步删除对应 SVG）
+      - name: Clean up orphan SVGs
+        run: |
+          python - <<'PY'
+          import pathlib
+          root = pathlib.Path('icon')
+          pngs = {p.with_suffix('').as_posix() for p in root.rglob('*.png')}
+          svgs = {p.with_suffix('').as_posix() for p in root.rglob('*.svg')}
+          for o in sorted((pathlib.Path(s + '.svg') for s in svgs - pngs), key=str):
+              print('remove', o)
+              o.unlink()
+          PY
 
       # ✅ 提交
       - name: Commit & Push
         run: |
           if [[ -n $(git status --porcelain) ]]; then
-            git config user.name "github-actions"
-            git config user.email "github-actions@github.com"
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
 
             git add icon
-            git commit -m "sync koolson icons & convert svg"
+            git commit -m "sync koolson icons & convert svg (vtracer)"
+            git pull --rebase origin "${GITHUB_REF_NAME}"
             git push
           else
             echo "No changes"
