@@ -4,7 +4,7 @@ FilterHK: &FilterHK '(?i)(?:香港|🇭🇰|HK|Hong\s?Kong)'
 FilterSG: &FilterSG '(?i)(?:新加坡|🇸🇬|SG|Singapore)'
 FilterJP: &FilterJP '(?i)(?:日本|🇯🇵|JP|Japan)'
 FilterUS: &FilterUS '(?i)(?:美国|🇺🇸|US|States|America)'
-FilterCN: &FilterCN '(?i)(?:上海|南京|苏州|广州|北京|保定)'
+FilterALL: &FilterALL '(?i)(?:VPS|hkv|香港|🇭🇰|HK|Hong\s?Kong|新加坡|🇸🇬|SG|Singapore|日本|🇯🇵|JP|Japan|美国|🇺🇸|US|States|America)'
 ExFilter: &ExFilter '(?i)(?:套餐|官网|官方|网址|售后|过期|剩余|到期|流量|更新|重置|免流|使用|教程)'
 
 Proxyer: &Proxyer
@@ -20,11 +20,19 @@ Proxyer: &Proxyer
       - "clash.meta"
       - "mihomo"
       
-host: &host {}
+host: &host
+  override-expr:
+    - .servername = "m.youku.com"
+    - .sni = .servername
+    - (select(.network == "ws") | .["ws-opts"].headers.Host) = .servername
+    - (select(.network == "http") | .["http-opts"].headers.Host) = [.servername]
+    - (select(.network == "h2") | .["h2-opts"].headers.Host) = [.servername]
+    - (select(.network == "xhttp") | .["xhttp-opts"].headers.Host) = .servername
 
 Uses: &Uses
   type: select
   include-all-providers: true
+  url: *ProxyTest
   hidden: true
 
 Smartp: &Smartp
@@ -34,7 +42,6 @@ Smartp: &Smartp
   uselightgbm: true
   collectdata: false
   prefer-asn: true
-  url: *ProxyTest
   lazy: false
 
 Groupp: &Groupp
@@ -45,7 +52,7 @@ Groupp: &Groupp
     - 狮城
     - 日本
     - 美国
-    - 国内
+    - 其他
   url: *ProxyTest
   hidden: false
 
@@ -71,24 +78,20 @@ proxies:
     type: dns
 
 proxy-providers:
-  机场:
+  Sub:
     <<: *Proxyer
     path: ./proxies/Sub.yaml
     url: "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
-  自建:
+  VPS:
     <<: *Proxyer
     path: ./proxies/VPS.yaml
-    url: "https://http://127.0.0.1:3000/download/VPS?target=ClashMeta"
-  免流:
+    url: "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
+  Best:
     <<: *Proxyer
     path: ./proxies/Free.yaml
-    url: "https://http://127.0.0.1:3000/download/Best?target=ClashMeta"
+    url: "http://127.0.0.1:3000/download/Best?target=ClashMeta"
     override:
       <<: *host
-  钉钉:
-    <<: *Proxyer
-    path: ./proxies/钉钉直连.yaml
-    url: "https://http://127.0.0.1:3000/download/dingding.yaml?target=ClashMeta"
 
 proxy-groups:
   - name: Domestic
@@ -140,9 +143,9 @@ proxy-groups:
     <<: *Smartp
     filter: *FilterUS
     icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/United_States.png"
-  - name: 国内
-    <<: *Uses
-    filter: *FilterCN
+  - name: 其他
+    <<: *Smartp
+    exclude-filter: *FilterALL
     icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Global.png"
 
 rule-providers:
@@ -256,12 +259,12 @@ rule-providers:
     url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/cn.mrs"
 
 rules:
-  - DST-PORT,123,Domestic
-  - DST-PORT,5228-5230,Domestic
-  - RULE-SET,ntp,Domestic
-  - RULE-SET,googlefcm,Domestic
-  - RULE-SET,private,Domestic
-  - RULE-SET,private_ip,Domestic,no-resolve
+  - DST-PORT,123,🟢 直连
+  - DST-PORT,5228-5230,🟢 直连
+  - RULE-SET,ntp,🟢 直连
+  - RULE-SET,googlefcm,🟢 直连
+  - RULE-SET,private,🟢 直连
+  - RULE-SET,private_ip,🟢 直连,no-resolve
   - RULE-SET,ads-all,🚫 拒绝
   - RULE-SET,awavenue,🚫 拒绝
   - RULE-SET,rejects,🚫 拒绝
@@ -365,6 +368,7 @@ listeners:
       interface:
         - wlan0
         - ap0
+        - br-lan
       dns-mode: hijack
       ipv6: true
       bypass-private-address: false
