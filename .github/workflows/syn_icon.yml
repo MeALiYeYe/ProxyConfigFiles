@@ -4,6 +4,12 @@ on:
   push:
   workflow_dispatch:
 
+# 连续 push 会并发触发多个 run，它们 push 时会互相冲突（rejected）。
+# 用 concurrency 串行化，配合下面的 pull --rebase 兜底。
+concurrency:
+  group: icon-sync-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -57,6 +63,7 @@ jobs:
             --corner-threshold 60 \
             --path-precision 2 \
             --bg white \
+            --overwrite \
             $(find icon -type f -name '*.png' | sort)
 
       # ✅ 清理孤儿 SVG（PNG 被删掉时同步删除对应 SVG）
@@ -81,6 +88,7 @@ jobs:
 
             git add icon
             git commit -m "sync koolson icons & convert svg (vtracer)"
+            git pull --rebase origin "${GITHUB_REF_NAME}"
             git push
           else
             echo "No changes"
