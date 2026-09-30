@@ -301,7 +301,7 @@ tcp-concurrent: true
 allow-lan: true
 external-controller: 0.0.0.0:9090
 external-ui: ./dist/
-external-ui-url: "https://ghfast.top//https://github.com/Zephyruso/zashboard/archive/gh-pages-no-fonts.zip"
+external-ui-url: "https://github.com/Zephyruso/zashboard/archive/gh-pages-no-fonts.zip"
 skip-auth-prefixes:
   - 10.0.0.0/8
   - 127.0.0.0/8
@@ -314,7 +314,7 @@ geox-url:
 
 lgbm-auto-update: true
 lgbm-update-interval: 360
-lgbm-url: "https://ghfast.top//https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model-large.bin"
+lgbm-url: "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model-large.bin"
 
 profile:
   store-selected: true
