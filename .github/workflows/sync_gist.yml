@@ -2,7 +2,7 @@ name: sync gist
 
 on:
   schedule:
-    - cron: '*/30 * * * *'  # 每30分钟执行一次
+    - cron: '0 */1 * * *'
   workflow_dispatch:
 
 jobs:
