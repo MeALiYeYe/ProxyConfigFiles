@@ -1,82 +1,32 @@
-ProxyTest: &ProxyTest "https://captive.apple.com"
-
-FilterHK: &FilterHK '(?i)(?:香港|🇭🇰|HK|Hong\s?Kong)'
-FilterSG: &FilterSG '(?i)(?:新加坡|🇸🇬|SG|Singapore)'
-FilterJP: &FilterJP '(?i)(?:日本|🇯🇵|JP|Japan)'
-FilterUS: &FilterUS '(?i)(?:美国|🇺🇸|US|States|America)'
-FilterOT: &FilterOT '(?i)^(?!.*(?:VPS|hkv|香港|🇭🇰|HK|Hong\s?Kong|新加坡|🇸🇬|SG|Singapore|日本|🇯🇵|JP|Japan|美国|🇺🇸|US|States|America)).*$'
-ExFilter: &ExFilter '(?i)(?:套餐|官网|官方|网址|售后|过期|剩余|到期|流量|更新|重置|免流|使用|教程)'
-
-Proxyer: &Proxyer
+# 代理集锚点
+代理订阅: &Proxyer
   type: http
   interval: 86400
-  exclude-filter: *ExFilter
+  exclude-filter: '(?i)(?:套餐|官网|官方|网址|售后|过期|剩余|到期|流量|更新|重置|免流|使用|教程)'
   health-check:
     enable: true
-    url: *ProxyTest
-    interval: 600
+    url: "https://captive.apple.com"
+    interval: 300
   header:
     User-Agent:
       - "clash.meta"
       - "mihomo"
       
-混淆覆写: &host
+免流混淆: &host
   override-expr:
-    - .servername = "pull.free.video.10010.com"
+    - .servername = "m.youku.com"
     - .sni = .servername
     - (select(.network == "ws") | .["ws-opts"].headers.Host) = .servername
     - (select(.network == "http") | .["http-opts"].headers.Host) = [.servername]
     - (select(.network == "h2") | .["h2-opts"].headers.Host) = [.servername]
     - (select(.network == "xhttp") | .["xhttp-opts"].headers.Host) = .servername
 
-Uses: &Uses
-  type: select
-  include-all-providers: true
-  url: *ProxyTest
-  hidden: true
-
-Smartp: &Smartp
-  type: smart
-  <<: *Uses
-  policy-priority: '(?<![\d.])0\.\d+(?!\d):1.5'
-  uselightgbm: true
-  collectdata: false
-  prefer-asn: true
-
-Groupp: &Groupp
-  type: select
-  proxies:
-    - 🟢 直连
-    - 香港
-    - 狮城
-    - 日本
-    - 美国
-    - 其他
-  url: *ProxyTest
-  hidden: false
-
-rule-anchor:
-  dom: &dom
-    type: http
-    behavior: domain
-    format: mrs
-    interval: 86400
-  ipc: &ipc
-    type: http
-    behavior: ipcidr
-    format: mrs
-    interval: 86400
-
-proxies:
-  - name: 🟢 直连
-    type: direct
-    udp: true
-  - name: 🚫 拒绝
-    type: reject
-  - name: ⭕️ DNS_Hijack
-    type: dns
-
+# 代理集
 proxy-providers:
+  Sub:
+    <<: *Proxyer
+    path: ./proxies/Sub.yaml
+    url: "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
   VPS:
     <<: *Proxyer
     path: ./proxies/VPS.yaml
@@ -88,6 +38,39 @@ proxy-providers:
     override:
       <<: *host
 
+# 出站代理
+proxies:
+  - name: 🟢 直连
+    type: direct
+    udp: true
+  - name: 🚫 拒绝
+    type: reject
+  - name: ⭕️ DNS_Hijack
+    type: dns
+
+# 代理组锚点
+智能节点地区组: &Smartp
+  type: smart
+  include-all-providers: true
+  policy-priority: '(?:^|[^0-9.])0\.\d+(?:[^0-9.]|$):1.5'
+  uselightgbm: true
+  collectdata: false
+  prefer-asn: true
+  lazy: false
+  hidden: true
+
+软件分流组: &Groupp
+  type: select
+  proxies:
+    - 🟢 直连
+    - 香港
+    - 狮城
+    - 日本
+    - 美国
+    - 其他
+  hidden: false
+
+# 代理组
 proxy-groups:
   - name: Domestic
     <<: *Groupp
@@ -124,25 +107,39 @@ proxy-groups:
     icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Final.png"
   - name: 香港
     <<: *Smartp
-    filter: *FilterHK
+    filter: '(?i)(?:香港|🇭🇰|HK|Hong\s?Kong)'
     icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Hong_Kong.png"
   - name: 狮城
     <<: *Smartp
-    filter: *FilterSG
+    filter: '(?i)(?:新加坡|🇸🇬|SG|Singapore)'
     icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Singapore.png"
   - name: 日本
     <<: *Smartp
-    filter: *FilterJP
+    filter: '(?i)(?:日本|🇯🇵|JP|Japan)'
     icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Japan.png"
   - name: 美国
     <<: *Smartp
-    filter: *FilterUS
+    filter: '(?i)(?:美国|🇺🇸|US|States|America)'
     icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/United_States.png"
   - name: 其他
-    <<: *Uses
-    filter: *FilterOT
+    <<: *Smartp
+    exclude-filter: '(?i)(?:VPS|hkv|香港|🇭🇰|HK|Hong\s?Kong|新加坡|🇸🇬|SG|Singapore|日本|🇯🇵|JP|Japan|美国|🇺🇸|US|States|America)'
     icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Global.png"
 
+# 规则集锚点
+rule-anchor:
+  域名规则集: &dom
+    type: http
+    behavior: domain
+    format: mrs
+    interval: 86400
+  ip规则集: &ipc
+    type: http
+    behavior: ipcidr
+    format: mrs
+    interval: 86400
+
+# 规则集
 rule-providers:
   directs:
     <<: *dom
@@ -187,7 +184,7 @@ rule-providers:
   ntp:
     <<: *dom
     path: ./rules/ntp.mrs
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite//category-ntp.mrs"
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ntp.mrs"
   ads-all:
     <<: *dom
     path: ./rules/ads-all.mrs
@@ -253,6 +250,7 @@ rule-providers:
     path: ./rules/cn_ip.mrs
     url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/cn.mrs"
 
+# 路由规则
 rules:
   - DST-PORT,123,🟢 直连
   - DST-PORT,5228-5230,🟢 直连
@@ -268,6 +266,8 @@ rules:
   - RULE-SET,directs_ip,Domestic,no-resolve
   - RULE-SET,proxys,Foreign
   - RULE-SET,proxys_ip,Foreign,no-resolve
+  - RULE-SET,cn,Domestic
+  - RULE-SET,cn_ip,Domestic,no-resolve
   - RULE-SET,emby,Emby
   - RULE-SET,ai-chat-!cn,Ai
   - RULE-SET,telegram,Telegram
@@ -281,10 +281,9 @@ rules:
   - RULE-SET,apple_ip,Apple,no-resolve
   - RULE-SET,microsoft,Microsoft
   - RULE-SET,geolocation-!cn,Foreign
-  - RULE-SET,cn,Domestic
-  - RULE-SET,cn_ip,Domestic,no-resolve
   - MATCH,Final
 
+# 全局设置
 mixed-port: 7890
 redir-port: 9797
 tproxy-port: 9898
@@ -296,11 +295,11 @@ tcp-concurrent: true
 allow-lan: true
 external-controller: 0.0.0.0:9090
 external-ui: ./dist/
-external-ui-url: "https://v6.gh-proxy.org/https://github.com/Zephyruso/zashboard/archive/gh-pages-no-fonts.zip"
+external-ui-url: "https://github.com/Zephyruso/zashboard/archive/gh-pages-no-fonts.zip"
 skip-auth-prefixes:
-  - 10.0.0.1/8
-  - 127.0.0.1/8
-  - 192.168.0.1/16
+  - 10.0.0.0/8
+  - 127.0.0.0/8
+  - 192.168.0.0/16
 
 geo-auto-update: true
 geo-update-interval: 168
@@ -309,13 +308,14 @@ geox-url:
 
 lgbm-auto-update: true
 lgbm-update-interval: 360
-lgbm-url: "https://v6.gh-proxy.org/https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model-large.bin"
+lgbm-url: "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model-large.bin"
 
 profile:
   store-selected: true
   store-fake-ip: true
   smart-collector-size: 100
 
+# 域名嗅探
 sniffer:
   enable: true
   force-dns-mapping: true
@@ -341,36 +341,37 @@ sniffer:
   skip-domain:
     - "miwifi.com"
 
+# 入栈监听
 listeners:
   - name: ebpf-in
     type: ebpf
     network:
       - tcp
       - udp
-    udp-timeout: 300
-    tc-priority: 1
+    udp-timeout: 120
+    bypass-rule-set:
+      - cn_ip
     local:
+      enabled: true
       data-plane: cgroup
-      cgroup-path: ''
       dns-mode: hijack
       ipv6: true
       bypass-private-address: true
       include-package: []
       exclude-package: []
-      enabled: true
     shared:
+      enabled: true
       data-plane: packet_rewrite
       interface:
         - wlan0
         - ap0
+        - rndis0
         - br-lan
       dns-mode: hijack
       ipv6: true
       bypass-private-address: false
-      enabled: true
-    bypass-rule-set:
-      - cn_ip
 
+# tunnel虚拟网卡
 tun:
   enable: false
   device: Mihomo
@@ -383,6 +384,7 @@ tun:
   auto-detect-interface: true
   strict-route: true
 
+# DNS
 dns:
   enable: true
   listen: :1053
@@ -396,21 +398,25 @@ dns:
     - "RULE-SET:private"
     - "RULE-SET:googlefcm"
     - "RULE-SET:ntp"
-  cndns: &cndns
-    - 223.5.5.5
-    - 223.6.6.6
-    - '2400:3200::1'
-    - '2400:3200:baba::1'
+    - "+.lan"
+    - "+.local"
+    - "+.msftconnecttest.com"
+    - "+.msftncsi.com"
+    - "+.captive.apple.com"
   cndoh: &cndoh
     - 'quic://dns.alidns.com'
     - 'https://dns.alidns.com/dns-query'
   cgdoh: &cgdoh
     - 'https://dns.google/dns-query#Google'
     - 'https://cloudflare-dns.com/dns-query#Cloudflare'
-  default-nameserver: *cndns
+  default-nameserver:
+    - 223.5.5.5
+    - 223.6.6.6
+    - '2400:3200::1'
+    - '2400:3200:baba::1'
   proxy-server-nameserver: *cndoh
   nameserver-policy:
     'RULE-SET:ads-all,awavenue,rejects': rcode://success
     'RULE-SET:cn,apple,microsoft,directs': *cndoh
-    'RULE-SET:geolocation-!cn': *cgdoh
-  nameserver: *cgdoh
+    'RULE-SET:geolocation-!cn,proxys': *cgdoh
+  nameserver: *cndoh
