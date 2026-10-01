@@ -1,6 +1,5 @@
 no_resolve: true
 domain_suffix_set:
-  - eu.cc
   - immortalwrt.org
   - nya.fish
   - sntp.uk
