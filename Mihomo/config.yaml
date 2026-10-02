@@ -294,7 +294,7 @@ unified-delay: true
 tcp-concurrent: true
 allow-lan: true
 external-controller: 0.0.0.0:9090
-external-ui: ./dist/
+external-ui: ui
 external-ui-url: "https://github.com/Zephyruso/zashboard/archive/gh-pages-no-fonts.zip"
 skip-auth-prefixes:
   - 10.0.0.0/8
