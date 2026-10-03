@@ -1,5 +1,4 @@
 DOMAIN-SUFFIX,unicom88.com
-DOMAIN-SUFFIX,eu.cc
 DOMAIN-SUFFIX,snssdk.com
 DOMAIN-SUFFIX,gwm-mn.beantechyun.com
 DOMAIN-SUFFIX,gwm.cn
@@ -22,11 +21,6 @@ DOMAIN-SUFFIX,xianniu.cc
 DOMAIN-SUFFIX,xianniu.com
 DOMAIN-SUFFIX,workbuddy.ai
 DOMAIN-SUFFIX,codebuddy.ai
-
-DOMAIN,ifconfig.me
-DOMAIN,kahaoquan.com
-DOMAIN,subcdn.rtx.al
-DOMAIN,cdn.jsdelivr.net
 
 IP-CIDR,185.218.6.88/29,no-resolve
 
