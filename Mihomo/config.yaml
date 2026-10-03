@@ -416,6 +416,7 @@ dns:
     - '2400:3200:baba::1'
   proxy-server-nameserver: *cndoh
   nameserver-policy:
+    '.eu.cc': *cgdoh
     'RULE-SET:ads-all,awavenue,rejects': rcode://success
     'RULE-SET:cn,apple,microsoft,directs': *cndoh
     'RULE-SET:geolocation-!cn,proxys': *cgdoh
