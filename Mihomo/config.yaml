@@ -56,6 +56,7 @@ proxies:
   uselightgbm: true
   collectdata: false
   prefer-asn: true
+  url: "https://captive.apple.com"
   lazy: false
   hidden: true
 
@@ -68,6 +69,7 @@ proxies:
     - 日本
     - 美国
     - 自由
+  url: "https://captive.apple.com"
   hidden: false
 
 # 代理组
