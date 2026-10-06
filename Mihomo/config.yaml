@@ -67,7 +67,7 @@ proxies:
     - 狮城
     - 日本
     - 美国
-    - 其他
+    - 自由
   hidden: false
 
 # 代理组
@@ -121,10 +121,10 @@ proxy-groups:
     <<: *Smartp
     filter: '(?i)(?:美国|🇺🇸|US|States|America)'
     icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/United_States.png"
-  - name: 其他
+  - name: 自由
     <<: *Smartp
-    exclude-filter: '(?i)(?:VPS|hkv|香港|🇭🇰|HK|Hong\s?Kong|新加坡|🇸🇬|SG|Singapore|日本|🇯🇵|JP|Japan|美国|🇺🇸|US|States|America)'
-    icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Global.png"
+    filter: '(?i)(?:VPS|hkv|自建|小鸡)'
+    icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png"
 
 # 规则集锚点
 rule-anchor:
@@ -416,7 +416,6 @@ dns:
     - '2400:3200:baba::1'
   proxy-server-nameserver: *cndoh
   nameserver-policy:
-    '.eu.cc': *cgdoh
     'RULE-SET:ads-all,awavenue,rejects': rcode://success
     'RULE-SET:cn,apple,microsoft,directs': *cndoh
     'RULE-SET:geolocation-!cn,proxys': *cgdoh
