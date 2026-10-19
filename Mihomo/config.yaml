@@ -386,11 +386,6 @@ tun:
   auto-detect-interface: true
   strict-route: true
 
-# hosts
-hosts:
-  services.googleapis.cn:
-    - services.googleapis.com
-
 # DNS
 dns:
   enable: true
@@ -410,11 +405,10 @@ dns:
     - "+.msftconnecttest.com"
     - "+.msftncsi.com"
     - "+.captive.apple.com"
-  国内DNS: &cndoh
+  cndoh: &cndoh
     - 'quic://dns.alidns.com'
     - 'https://dns.alidns.com/dns-query'
-  
-  国外DNS: &cgdoh
+  cgdoh: &cgdoh
     - 'https://dns.google/dns-query#Google'
     - 'https://cloudflare-dns.com/dns-query#Cloudflare'
   default-nameserver:
