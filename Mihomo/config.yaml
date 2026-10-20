@@ -147,26 +147,14 @@ rule-providers:
     <<: *dom
     path: ./rules/directs.mrs
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct/Direct.mrs"
-  directs_ip:
-    <<: *ipc
-    path: ./rules/directs_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct/Direct_ip.mrs"
   rejects:
     <<: *dom
     path: ./rules/rejects.mrs
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject/Reject.mrs"
-  rejects_ip:
-    <<: *ipc
-    path: ./rules/rejects_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject/Reject_ip.mrs"
   proxys:
     <<: *dom
     path: ./rules/proxys.mrs
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy/Proxy.mrs"
-  proxys_ip:
-    <<: *ipc
-    path: ./rules/proxys_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy/Proxy_ip.mrs"
   emby:
     <<: *dom
     path: ./rules/emby.mrs
@@ -263,11 +251,8 @@ rules:
   - RULE-SET,ads-all,🚫 拒绝
   - RULE-SET,awavenue,🚫 拒绝
   - RULE-SET,rejects,🚫 拒绝
-  - RULE-SET,rejects_ip,🚫 拒绝,no-resolve
   - RULE-SET,directs,Domestic
-  - RULE-SET,directs_ip,Domestic,no-resolve
   - RULE-SET,proxys,Foreign
-  - RULE-SET,proxys_ip,Foreign,no-resolve
   - RULE-SET,cn,Domestic
   - RULE-SET,cn_ip,Domestic,no-resolve
   - RULE-SET,emby,Emby
