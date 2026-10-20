@@ -317,6 +317,7 @@ sniffer:
 listeners:
   - name: ebpf-in
     type: ebpf
+    mode: hybrid
     network:
       - tcp
       - udp
@@ -324,7 +325,6 @@ listeners:
     bypass-rule-set:
       - cn_ip
     local:
-      enabled: true
       data-plane: cgroup
       dns-mode: hijack
       ipv6: true
@@ -332,7 +332,6 @@ listeners:
       include-package: []
       exclude-package: []
     shared:
-      enabled: true
       data-plane: packet_rewrite
       interface:
         - wlan0
@@ -383,7 +382,6 @@ dns:
   国内DNS: &cndoh
     - 'quic://dns.alidns.com'
     - 'https://dns.alidns.com/dns-query'
-  
   国外DNS: &cgdoh
     - 'https://dns.google/dns-query#Google'
     - 'https://cloudflare-dns.com/dns-query#Cloudflare'
