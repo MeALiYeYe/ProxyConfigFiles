@@ -11,15 +11,6 @@
     User-Agent:
       - "clash.meta"
       - "mihomo"
-      
-免流混淆: &host
-  override-expr:
-    - .servername = "m.youku.com"
-    - .sni = .servername
-    - (select(.network == "ws") | .["ws-opts"].headers.Host) = .servername
-    - (select(.network == "http") | .["http-opts"].headers.Host) = [.servername]
-    - (select(.network == "h2") | .["h2-opts"].headers.Host) = [.servername]
-    - (select(.network == "xhttp") | .["xhttp-opts"].headers.Host) = .servername
 
 # 代理集
 proxy-providers:
@@ -31,12 +22,6 @@ proxy-providers:
     <<: *Proxyer
     path: ./proxies/VPS.yaml
     url: "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
-  Best:
-    <<: *Proxyer
-    path: ./proxies/Free.yaml
-    url: "http://127.0.0.1:3000/download/Best?target=ClashMeta"
-    override:
-      <<: *host
 
 # 出站代理
 proxies:
