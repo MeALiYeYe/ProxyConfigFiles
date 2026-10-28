@@ -309,9 +309,9 @@ sniffer:
         - 443
         - 8443
   force-domain:
-    - "+.v2ex.com"
+    - "RULE-SET:geolocation-!cn"
   skip-domain:
-    - "miwifi.com"
+    - "RULE-SET:private"
 
 # 入栈监听
 listeners:
@@ -374,8 +374,6 @@ dns:
     - "RULE-SET:private"
     - "RULE-SET:googlefcm"
     - "RULE-SET:ntp"
-    - "+.lan"
-    - "+.local"
     - "+.msftconnecttest.com"
     - "+.msftncsi.com"
     - "+.captive.apple.com"
