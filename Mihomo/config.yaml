@@ -11,15 +11,6 @@
     User-Agent:
       - "clash.meta"
       - "mihomo"
-      
-免流混淆: &host
-  override-expr:
-    - .servername = "m.youku.com"
-    - .sni = .servername
-    - (select(.network == "ws") | .["ws-opts"].headers.Host) = .servername
-    - (select(.network == "http") | .["http-opts"].headers.Host) = [.servername]
-    - (select(.network == "h2") | .["h2-opts"].headers.Host) = [.servername]
-    - (select(.network == "xhttp") | .["xhttp-opts"].headers.Host) = .servername
 
 # 代理集
 proxy-providers:
@@ -31,12 +22,6 @@ proxy-providers:
     <<: *Proxyer
     path: ./proxies/VPS.yaml
     url: "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
-  Best:
-    <<: *Proxyer
-    path: ./proxies/Free.yaml
-    url: "http://127.0.0.1:3000/download/Best?target=ClashMeta"
-    override:
-      <<: *host
 
 # 出站代理
 proxies:
@@ -147,26 +132,14 @@ rule-providers:
     <<: *dom
     path: ./rules/directs.mrs
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct/Direct.mrs"
-  directs_ip:
-    <<: *ipc
-    path: ./rules/directs_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct/Direct_ip.mrs"
   rejects:
     <<: *dom
     path: ./rules/rejects.mrs
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject/Reject.mrs"
-  rejects_ip:
-    <<: *ipc
-    path: ./rules/rejects_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject/Reject_ip.mrs"
   proxys:
     <<: *dom
     path: ./rules/proxys.mrs
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy/Proxy.mrs"
-  proxys_ip:
-    <<: *ipc
-    path: ./rules/proxys_ip.mrs
-    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy/Proxy_ip.mrs"
   emby:
     <<: *dom
     path: ./rules/emby.mrs
@@ -263,11 +236,8 @@ rules:
   - RULE-SET,ads-all,🚫 拒绝
   - RULE-SET,awavenue,🚫 拒绝
   - RULE-SET,rejects,🚫 拒绝
-  - RULE-SET,rejects_ip,🚫 拒绝,no-resolve
   - RULE-SET,directs,Domestic
-  - RULE-SET,directs_ip,Domestic,no-resolve
   - RULE-SET,proxys,Foreign
-  - RULE-SET,proxys_ip,Foreign,no-resolve
   - RULE-SET,cn,Domestic
   - RULE-SET,cn_ip,Domestic,no-resolve
   - RULE-SET,emby,Emby
@@ -339,14 +309,15 @@ sniffer:
         - 443
         - 8443
   force-domain:
-    - "+.v2ex.com"
+    - "RULE-SET:geolocation-!cn"
   skip-domain:
-    - "miwifi.com"
+    - "RULE-SET:private"
 
 # 入栈监听
 listeners:
   - name: ebpf-in
     type: ebpf
+    mode: hybrid
     network:
       - tcp
       - udp
@@ -354,7 +325,6 @@ listeners:
     bypass-rule-set:
       - cn_ip
     local:
-      enabled: true
       data-plane: cgroup
       dns-mode: hijack
       ipv6: true
@@ -362,7 +332,6 @@ listeners:
       include-package: []
       exclude-package: []
     shared:
-      enabled: true
       data-plane: packet_rewrite
       interface:
         - wlan0
@@ -386,6 +355,11 @@ tun:
   auto-detect-interface: true
   strict-route: true
 
+# hosts
+hosts:
+  services.googleapis.cn:
+    - services.googleapis.com
+
 # DNS
 dns:
   enable: true
@@ -400,15 +374,13 @@ dns:
     - "RULE-SET:private"
     - "RULE-SET:googlefcm"
     - "RULE-SET:ntp"
-    - "+.lan"
-    - "+.local"
     - "+.msftconnecttest.com"
     - "+.msftncsi.com"
     - "+.captive.apple.com"
-  cndoh: &cndoh
+  国内DNS: &cndoh
     - 'quic://dns.alidns.com'
     - 'https://dns.alidns.com/dns-query'
-  cgdoh: &cgdoh
+  国外DNS: &cgdoh
     - 'https://dns.google/dns-query#Google'
     - 'https://cloudflare-dns.com/dns-query#Cloudflare'
   default-nameserver:
