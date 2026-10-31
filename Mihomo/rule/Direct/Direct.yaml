@@ -1,4 +1,5 @@
 payload:
+  - lsposed.zip
   - +.akile.ai
   - +.codebuddy.ai
   - +.gwm-mn.beantechyun.com
@@ -7,6 +8,7 @@ payload:
   - +.gwmapp-h.com
   - +.gwmapp-w.com
   - +.haval.com.cn
+  - +.kernelsu.org
   - +.newsntp.com
   - +.newsntp.net
   - +.nsloon.com
