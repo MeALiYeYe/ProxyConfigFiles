@@ -17,11 +17,11 @@ proxy-providers:
   Sub:
     <<: *Proxyer
     path: ./proxies/Sub.yaml
-    url: "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
+    url: http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta
   VPS:
     <<: *Proxyer
     path: ./proxies/VPS.yaml
-    url: "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
+    url: http://127.0.0.1:3000/download/VPS?target=ClashMeta
 
 # 出站代理
 proxies:
@@ -30,8 +30,6 @@ proxies:
     udp: true
   - name: 🚫 拒绝
     type: reject
-  - name: ⭕️ DNS_Hijack
-    type: dns
 
 # 代理组锚点
 智能节点地区组: &Smartp
@@ -110,7 +108,7 @@ proxy-groups:
     icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/United_States.png"
   - name: 自由
     <<: *Smartp
-    filter: '(?i)(?:VPS|hkv|自建|小鸡)'
+    filter: '(?i)(?:VPS|hkv|自建)'
     icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png"
 
 # 规则集锚点
@@ -229,30 +227,30 @@ rule-providers:
 rules:
   - DST-PORT,123,🟢 直连
   - DST-PORT,5228-5230,🟢 直连
-  - RULE-SET,ntp,🟢 直连
-  - RULE-SET,googlefcm,🟢 直连
-  - RULE-SET,private,🟢 直连
-  - RULE-SET,private_ip,🟢 直连,no-resolve
-  - RULE-SET,ads-all,🚫 拒绝
-  - RULE-SET,awavenue,🚫 拒绝
-  - RULE-SET,rejects,🚫 拒绝
-  - RULE-SET,directs,Domestic
-  - RULE-SET,proxys,Foreign
-  - RULE-SET,cn,Domestic
-  - RULE-SET,cn_ip,Domestic,no-resolve
-  - RULE-SET,emby,Emby
-  - RULE-SET,ai-chat-!cn,Ai
-  - RULE-SET,telegram,Telegram
-  - RULE-SET,telegram_ip,Telegram,no-resolve
-  - RULE-SET,google,Google
-  - RULE-SET,google_ip,Google,no-resolve
-  - RULE-SET,cloudflare,Cloudflare
-  - RULE-SET,cloudflare_ip,Cloudflare,no-resolve
-  - RULE-SET,github,Github
-  - RULE-SET,apple,Apple
-  - RULE-SET,apple_ip,Apple,no-resolve
-  - RULE-SET,microsoft,Microsoft
-  - RULE-SET,geolocation-!cn,Foreign
+  - rule-set,ntp,🟢 直连
+  - rule-set,googlefcm,🟢 直连
+  - rule-set,private,🟢 直连
+  - rule-set,private_ip,🟢 直连,no-resolve
+  - rule-set,ads-all,🚫 拒绝
+  - rule-set,awavenue,🚫 拒绝
+  - rule-set,rejects,🚫 拒绝
+  - rule-set,directs,Domestic
+  - rule-set,proxys,Foreign
+  - rule-set,cn,Domestic
+  - rule-set,cn_ip,Domestic,no-resolve
+  - rule-set,emby,Emby
+  - rule-set,ai-chat-!cn,Ai
+  - rule-set,telegram,Telegram
+  - rule-set,telegram_ip,Telegram,no-resolve
+  - rule-set,google,Google
+  - rule-set,google_ip,Google,no-resolve
+  - rule-set,cloudflare,Cloudflare
+  - rule-set,cloudflare_ip,Cloudflare,no-resolve
+  - rule-set,github,Github
+  - rule-set,apple,Apple
+  - rule-set,apple_ip,Apple,no-resolve
+  - rule-set,microsoft,Microsoft
+  - rule-set,geolocation-!cn,Foreign
   - MATCH,Final
 
 # 全局设置
@@ -309,9 +307,9 @@ sniffer:
         - 443
         - 8443
   force-domain:
-    - "+.v2ex.com"
+    - "rule-set:geolocation-!cn"
   skip-domain:
-    - "miwifi.com"
+    - "rule-set:private"
 
 # 入栈监听
 listeners:
@@ -337,7 +335,6 @@ listeners:
         - wlan0
         - ap0
         - rndis0
-        - br-lan
       dns-mode: hijack
       ipv6: true
       bypass-private-address: false
@@ -371,11 +368,9 @@ dns:
   fake-ip-range: 198.18.0.0/16
   fake-ip-range6: fdfe:dcba:9876::/64
   fake-ip-filter:
-    - "RULE-SET:private"
-    - "RULE-SET:googlefcm"
-    - "RULE-SET:ntp"
-    - "+.lan"
-    - "+.local"
+    - "rule-set:private"
+    - "rule-set:googlefcm"
+    - "rule-set:ntp"
     - "+.msftconnecttest.com"
     - "+.msftncsi.com"
     - "+.captive.apple.com"
@@ -392,7 +387,7 @@ dns:
     - '2400:3200:baba::1'
   proxy-server-nameserver: *cndoh
   nameserver-policy:
-    'RULE-SET:ads-all,awavenue,rejects': rcode://success
-    'RULE-SET:cn,apple,microsoft,directs': *cndoh
-    'RULE-SET:geolocation-!cn,proxys': *cgdoh
+    'rule-set:ads-all,awavenue,rejects': rcode://success
+    'rule-set:cn,apple,microsoft,directs': *cndoh
+    'rule-set:geolocation-!cn,proxys': *cgdoh
   nameserver: *cndoh
