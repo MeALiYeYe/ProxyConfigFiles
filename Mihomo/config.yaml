@@ -11,17 +11,32 @@
     User-Agent:
       - "clash.meta"
       - "mihomo"
+      
+免流混淆: &host
+  override-expr:
+    - .servername = "m.youku.com"
+    - .sni = .servername
+    - (select(.network == "ws") | .["ws-opts"].headers.Host) = .servername
+    - (select(.network == "http") | .["http-opts"].headers.Host) = [.servername]
+    - (select(.network == "h2") | .["h2-opts"].headers.Host) = [.servername]
+    - (select(.network == "xhttp") | .["xhttp-opts"].headers.Host) = .servername
 
 # 代理集
 proxy-providers:
   Sub:
     <<: *Proxyer
     path: ./proxies/Sub.yaml
-    url: http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta
+    url: "http://127.0.0.1:3000/download/collection/Sub?target=ClashMeta"
   VPS:
     <<: *Proxyer
     path: ./proxies/VPS.yaml
-    url: http://127.0.0.1:3000/download/VPS?target=ClashMeta
+    url: "http://127.0.0.1:3000/download/VPS?target=ClashMeta"
+  Best:
+    <<: *Proxyer
+    path: ./proxies/Free.yaml
+    url: "http://127.0.0.1:3000/download/Best?target=ClashMeta"
+    override:
+      <<: *host
 
 # 出站代理
 proxies:
@@ -30,6 +45,8 @@ proxies:
     udp: true
   - name: 🚫 拒绝
     type: reject
+  - name: ⭕️ DNS_Hijack
+    type: dns
 
 # 代理组锚点
 智能节点地区组: &Smartp
@@ -108,7 +125,7 @@ proxy-groups:
     icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/United_States.png"
   - name: 自由
     <<: *Smartp
-    filter: '(?i)(?:VPS|hkv|自建)'
+    filter: '(?i)(?:VPS|hkv|自建|小鸡)'
     icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png"
 
 # 规则集锚点
@@ -130,14 +147,26 @@ rule-providers:
     <<: *dom
     path: ./rules/directs.mrs
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct/Direct.mrs"
+  directs_ip:
+    <<: *ipc
+    path: ./rules/directs_ip.mrs
+    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Direct/Direct_ip.mrs"
   rejects:
     <<: *dom
     path: ./rules/rejects.mrs
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject/Reject.mrs"
+  rejects_ip:
+    <<: *ipc
+    path: ./rules/rejects_ip.mrs
+    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Reject/Reject_ip.mrs"
   proxys:
     <<: *dom
     path: ./rules/proxys.mrs
     url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy/Proxy.mrs"
+  proxys_ip:
+    <<: *ipc
+    path: ./rules/proxys_ip.mrs
+    url: "https://cdn.jsdelivr.net/gh/MeALiYeYe/ProxyConfigFiles@main/Mihomo/rule/Proxy/Proxy_ip.mrs"
   emby:
     <<: *dom
     path: ./rules/emby.mrs
@@ -227,30 +256,33 @@ rule-providers:
 rules:
   - DST-PORT,123,🟢 直连
   - DST-PORT,5228-5230,🟢 直连
-  - rule-set,ntp,🟢 直连
-  - rule-set,googlefcm,🟢 直连
-  - rule-set,private,🟢 直连
-  - rule-set,private_ip,🟢 直连,no-resolve
-  - rule-set,ads-all,🚫 拒绝
-  - rule-set,awavenue,🚫 拒绝
-  - rule-set,rejects,🚫 拒绝
-  - rule-set,directs,Domestic
-  - rule-set,proxys,Foreign
-  - rule-set,cn,Domestic
-  - rule-set,cn_ip,Domestic,no-resolve
-  - rule-set,emby,Emby
-  - rule-set,ai-chat-!cn,Ai
-  - rule-set,telegram,Telegram
-  - rule-set,telegram_ip,Telegram,no-resolve
-  - rule-set,google,Google
-  - rule-set,google_ip,Google,no-resolve
-  - rule-set,cloudflare,Cloudflare
-  - rule-set,cloudflare_ip,Cloudflare,no-resolve
-  - rule-set,github,Github
-  - rule-set,apple,Apple
-  - rule-set,apple_ip,Apple,no-resolve
-  - rule-set,microsoft,Microsoft
-  - rule-set,geolocation-!cn,Foreign
+  - RULE-SET,ntp,🟢 直连
+  - RULE-SET,googlefcm,🟢 直连
+  - RULE-SET,private,🟢 直连
+  - RULE-SET,private_ip,🟢 直连,no-resolve
+  - RULE-SET,ads-all,🚫 拒绝
+  - RULE-SET,awavenue,🚫 拒绝
+  - RULE-SET,rejects,🚫 拒绝
+  - RULE-SET,rejects_ip,🚫 拒绝,no-resolve
+  - RULE-SET,directs,Domestic
+  - RULE-SET,directs_ip,Domestic,no-resolve
+  - RULE-SET,proxys,Foreign
+  - RULE-SET,proxys_ip,Foreign,no-resolve
+  - RULE-SET,cn,Domestic
+  - RULE-SET,cn_ip,Domestic,no-resolve
+  - RULE-SET,emby,Emby
+  - RULE-SET,ai-chat-!cn,Ai
+  - RULE-SET,telegram,Telegram
+  - RULE-SET,telegram_ip,Telegram,no-resolve
+  - RULE-SET,google,Google
+  - RULE-SET,google_ip,Google,no-resolve
+  - RULE-SET,cloudflare,Cloudflare
+  - RULE-SET,cloudflare_ip,Cloudflare,no-resolve
+  - RULE-SET,github,Github
+  - RULE-SET,apple,Apple
+  - RULE-SET,apple_ip,Apple,no-resolve
+  - RULE-SET,microsoft,Microsoft
+  - RULE-SET,geolocation-!cn,Foreign
   - MATCH,Final
 
 # 全局设置
@@ -307,15 +339,14 @@ sniffer:
         - 443
         - 8443
   force-domain:
-    - "rule-set:geolocation-!cn"
+    - "+.v2ex.com"
   skip-domain:
-    - "rule-set:private"
+    - "miwifi.com"
 
 # 入栈监听
 listeners:
   - name: ebpf-in
     type: ebpf
-    mode: hybrid
     network:
       - tcp
       - udp
@@ -323,6 +354,7 @@ listeners:
     bypass-rule-set:
       - cn_ip
     local:
+      enabled: true
       data-plane: cgroup
       dns-mode: hijack
       ipv6: true
@@ -330,11 +362,13 @@ listeners:
       include-package: []
       exclude-package: []
     shared:
+      enabled: true
       data-plane: packet_rewrite
       interface:
         - wlan0
         - ap0
         - rndis0
+        - br-lan
       dns-mode: hijack
       ipv6: true
       bypass-private-address: false
@@ -352,11 +386,6 @@ tun:
   auto-detect-interface: true
   strict-route: true
 
-# hosts
-hosts:
-  services.googleapis.cn:
-    - services.googleapis.com
-
 # DNS
 dns:
   enable: true
@@ -368,16 +397,18 @@ dns:
   fake-ip-range: 198.18.0.0/16
   fake-ip-range6: fdfe:dcba:9876::/64
   fake-ip-filter:
-    - "rule-set:private"
-    - "rule-set:googlefcm"
-    - "rule-set:ntp"
+    - "RULE-SET:private"
+    - "RULE-SET:googlefcm"
+    - "RULE-SET:ntp"
+    - "+.lan"
+    - "+.local"
     - "+.msftconnecttest.com"
     - "+.msftncsi.com"
     - "+.captive.apple.com"
-  国内DNS: &cndoh
+  cndoh: &cndoh
     - 'quic://dns.alidns.com'
     - 'https://dns.alidns.com/dns-query'
-  国外DNS: &cgdoh
+  cgdoh: &cgdoh
     - 'https://dns.google/dns-query#Google'
     - 'https://cloudflare-dns.com/dns-query#Cloudflare'
   default-nameserver:
@@ -387,7 +418,7 @@ dns:
     - '2400:3200:baba::1'
   proxy-server-nameserver: *cndoh
   nameserver-policy:
-    'rule-set:ads-all,awavenue,rejects': rcode://success
-    'rule-set:cn,apple,microsoft,directs': *cndoh
-    'rule-set:geolocation-!cn,proxys': *cgdoh
+    'RULE-SET:ads-all,awavenue,rejects': rcode://success
+    'RULE-SET:cn,apple,microsoft,directs': *cndoh
+    'RULE-SET:geolocation-!cn,proxys': *cgdoh
   nameserver: *cndoh
