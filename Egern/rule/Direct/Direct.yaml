@@ -8,7 +8,6 @@ domain_suffix_set:
   - gwmapp-h.com
   - gwmapp-w.com
   - haval.com.cn
-  - kernelsu.org
   - newsntp.com
   - newsntp.net
   - nsloon.com
@@ -16,7 +15,6 @@ domain_suffix_set:
   - qiyoujiage.com
   - qweather.com
   - qweatherapi.com
-  - shvip888.com
   - snssdk.com
   - sntp.dev
   - sntp.me
@@ -25,6 +23,3 @@ domain_suffix_set:
   - workbuddy.ai
   - xianniu.cc
   - xianniu.com
-domain_set:
-  - lsposed.zip
-  - modules.lsposed.org

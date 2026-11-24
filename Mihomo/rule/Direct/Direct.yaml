@@ -1,6 +1,4 @@
 payload:
-  - lsposed.zip
-  - modules.lsposed.org
   - +.akile.ai
   - +.codebuddy.ai
   - +.eu.cc
@@ -10,7 +8,6 @@ payload:
   - +.gwmapp-h.com
   - +.gwmapp-w.com
   - +.haval.com.cn
-  - +.kernelsu.org
   - +.newsntp.com
   - +.newsntp.net
   - +.nsloon.com
@@ -18,7 +15,6 @@ payload:
   - +.qiyoujiage.com
   - +.qweather.com
   - +.qweatherapi.com
-  - +.shvip888.com
   - +.snssdk.com
   - +.sntp.dev
   - +.sntp.me
