@@ -15,6 +15,7 @@ payload:
   - c.tieba.baidu.com
   - china-img.soulapp.cn
   - cmt.ithome.com
+  - dotsocr.xiaohongshu.com
   - druidv6.if.qidian.com
   - dt.netease.im
   - fclog.baidu.com
@@ -92,6 +93,9 @@ payload:
   - +.music.163.com.163jiasu.com
   - +.music.ntes53.netease.com
   - +.pstatp.com
+  - +.rednote.com
+  - +.rednotecdn.com
+  - +.rnote.com
   - +.sinaimg.cn
   - +.snssdk.com
   - +.soulapp.cn

@@ -38,6 +38,9 @@ domain_suffix_set:
   - music.163.com.163jiasu.com
   - music.ntes53.netease.com
   - pstatp.com
+  - rednote.com
+  - rednotecdn.com
+  - rnote.com
   - sinaimg.cn
   - snssdk.com
   - soulapp.cn
@@ -80,6 +83,7 @@ domain_set:
   - c.tieba.baidu.com
   - china-img.soulapp.cn
   - cmt.ithome.com
+  - dotsocr.xiaohongshu.com
   - druidv6.if.qidian.com
   - dt.netease.im
   - fclog.baidu.com
@@ -130,6 +134,7 @@ domain_keyword_set:
   - core-lq
   - normal-c-lq
   - normal-lq
+  - rednote
   - search-lq
   - search-quic-lq
   - weibo

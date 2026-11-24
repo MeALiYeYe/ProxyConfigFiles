@@ -14,6 +14,7 @@ DOMAIN,bbs.nga.cn
 DOMAIN,c.tieba.baidu.com
 DOMAIN,china-img.soulapp.cn,DIRECT
 DOMAIN,cmt.ithome.com
+DOMAIN,dotsocr.xiaohongshu.com,DIRECT
 DOMAIN,druidv6.if.qidian.com
 DOMAIN,dt.netease.im
 DOMAIN,fclog.baidu.com
@@ -91,6 +92,9 @@ DOMAIN-SUFFIX,music.163.com
 DOMAIN-SUFFIX,music.163.com.163jiasu.com
 DOMAIN-SUFFIX,music.ntes53.netease.com
 DOMAIN-SUFFIX,pstatp.com
+DOMAIN-SUFFIX,rednote.com
+DOMAIN-SUFFIX,rednotecdn.com,DIRECT
+DOMAIN-SUFFIX,rnote.com
 DOMAIN-SUFFIX,sinaimg.cn
 DOMAIN-SUFFIX,snssdk.com
 DOMAIN-SUFFIX,soulapp.cn
@@ -126,6 +130,7 @@ DOMAIN-KEYWORD,core-c-lq
 DOMAIN-KEYWORD,core-lq
 DOMAIN-KEYWORD,normal-c-lq
 DOMAIN-KEYWORD,normal-lq
+DOMAIN-KEYWORD,rednote
 DOMAIN-KEYWORD,search-lq
 DOMAIN-KEYWORD,search-quic-lq
 DOMAIN-KEYWORD,weibo
